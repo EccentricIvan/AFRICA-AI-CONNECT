@@ -407,6 +407,7 @@ Guidelines:
         suggestions,
         languageService,
         message,
+        answer,
         contextMessages,
       );
 
@@ -425,6 +426,7 @@ Guidelines:
         const [],
         languageService,
         message,
+        rawText,
         contextMessages,
       ),
       usedOffline: false,
@@ -465,9 +467,26 @@ Guidelines:
     List<String> suggestions,
     OfflineLanguageService languageService,
     String message,
+    String answer,
     Iterable<String> contextMessages,
   ) {
     final merged = <String>[];
+    final groundedSuggestions = languageService.getOfflineSuggestedQuestions(
+      message,
+      contextMessages: [
+        ...contextMessages,
+        if (answer.trim().isNotEmpty) answer,
+      ],
+      assistantAnswer: answer,
+      limit: 3,
+    );
+    final relevanceContext = [
+      message,
+      answer,
+      if (_currentTopic != null) _currentTopic!,
+      ...contextMessages,
+      ...groundedSuggestions,
+    ].join(' ');
 
     void addSuggestion(String suggestion) {
       final trimmed = suggestion.trim();
@@ -480,21 +499,50 @@ Guidelines:
     }
 
     for (final suggestion in suggestions) {
-      addSuggestion(suggestion);
-    }
-
-    if (merged.length < 2) {
-      for (final suggestion in languageService.getOfflineSuggestedQuestions(
-        message,
-        contextMessages: contextMessages,
-        limit: 3,
-      )) {
+      if (_isSuggestionRelevant(suggestion, relevanceContext)) {
         addSuggestion(suggestion);
-        if (merged.length >= 3) break;
       }
     }
 
+    for (final suggestion in groundedSuggestions) {
+      addSuggestion(suggestion);
+      if (merged.length >= 3) break;
+    }
+
     return List.unmodifiable(merged.take(3));
+  }
+
+  bool _isSuggestionRelevant(String suggestion, String context) {
+    final suggestionTerms = _suggestionTerms(suggestion);
+    if (suggestionTerms.isEmpty) return false;
+
+    final contextTerms = _suggestionTerms(context);
+    if (contextTerms.isEmpty) return true;
+
+    for (final term in suggestionTerms) {
+      if (contextTerms.contains(term)) return true;
+    }
+
+    return false;
+  }
+
+  Set<String> _suggestionTerms(String value) {
+    final normalized =
+        value
+            .toLowerCase()
+            .replaceAll(RegExp(r'[_\-/]'), ' ')
+            .replaceAll(RegExp(r"[^a-z0-9\s']"), ' ')
+            .replaceAll("'", ' ')
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim();
+    if (normalized.isEmpty) return const {};
+
+    return normalized
+        .split(' ')
+        .where(
+          (term) => term.length > 2 && !_suggestionStopWords.contains(term),
+        )
+        .toSet();
   }
 
   void _updateTopicFromOfflineResult(OfflineChatResult result) {
@@ -581,4 +629,38 @@ Guidelines:
       _history.removeAt(0);
     }
   }
+
+  static const _suggestionStopWords = {
+    'about',
+    'and',
+    'are',
+    'can',
+    'could',
+    'for',
+    'from',
+    'how',
+    'should',
+    'that',
+    'the',
+    'this',
+    'what',
+    'when',
+    'where',
+    'with',
+    'you',
+    'your',
+    'kwa',
+    'jinsi',
+    'gani',
+    'nini',
+    'na',
+    'ya',
+    'za',
+    'ku',
+    'ni',
+    'oba',
+    'era',
+    'nga',
+    'tya',
+  };
 }

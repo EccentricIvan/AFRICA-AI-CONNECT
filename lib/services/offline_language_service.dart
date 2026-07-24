@@ -274,6 +274,7 @@ class OfflineLanguageService extends ChangeNotifier {
         suggestedQuestions: getOfflineSuggestedQuestions(
           userMessage,
           contextMessages: contextMessages,
+          assistantAnswer: answer,
         ),
       );
     }
@@ -285,18 +286,21 @@ class OfflineLanguageService extends ChangeNotifier {
       limit: 4,
     );
     final selectedEntries = [primary, ...related];
+    final answer = _buildReasonedOfflineAnswer(
+      userMessage,
+      primary: primary,
+      related: related,
+      intent: intent,
+      isFollowUp: isFollowUp,
+      isRepeatedTopic: primary.id == previousEntryId,
+    );
     return OfflineChatResult(
-      answer: _buildReasonedOfflineAnswer(
-        userMessage,
-        primary: primary,
-        related: related,
-        intent: intent,
-        isFollowUp: isFollowUp,
-        isRepeatedTopic: primary.id == previousEntryId,
-      ),
+      answer: answer,
       suggestedQuestions: getOfflineSuggestedQuestions(
         userMessage,
         contextMessages: contextMessages,
+        assistantAnswer: answer,
+        matchedEntries: selectedEntries,
       ),
       matchedContentIds: List.unmodifiable(
         selectedEntries.map((entry) => entry.id),
@@ -310,17 +314,36 @@ class OfflineLanguageService extends ChangeNotifier {
   List<String> getOfflineSuggestedQuestions(
     String userMessage, {
     Iterable<String> contextMessages = const [],
+    String assistantAnswer = '',
+    Iterable<ContentEntry> matchedEntries = const <ContentEntry>[],
     int limit = 3,
   }) {
     if (limit <= 0 || _contentEntries.isEmpty) return const [];
 
     final intent = _detectIntent(userMessage);
+    final answerAwareContext = [
+      ...contextMessages,
+      if (assistantAnswer.trim().isNotEmpty) assistantAnswer,
+    ];
     final matches = searchContent(
       userMessage,
-      contextMessages: contextMessages,
+      contextMessages: answerAwareContext,
       limit: 8,
     );
     final suggestions = <String>[];
+    final relevantEntries = <ContentEntry>[];
+
+    void addRelevantEntry(ContentEntry entry) {
+      if (relevantEntries.any((item) => item.id == entry.id)) return;
+      relevantEntries.add(entry);
+    }
+
+    for (final entry in matchedEntries) {
+      addRelevantEntry(entry);
+    }
+    for (final entry in matches) {
+      addRelevantEntry(entry);
+    }
 
     void addSuggestion(String question) {
       final trimmedQuestion = question.trim();
@@ -333,6 +356,14 @@ class OfflineLanguageService extends ChangeNotifier {
       );
 
       if (alreadyAdded || normalizedQuestion == normalizedMessage) return;
+      if (!_isSuggestionConnected(
+        trimmedQuestion,
+        userMessage,
+        assistantAnswer,
+        relevantEntries,
+      )) {
+        return;
+      }
 
       suggestions.add(trimmedQuestion);
     }
@@ -344,14 +375,22 @@ class OfflineLanguageService extends ChangeNotifier {
       addSuggestion(question);
     }
 
-    if (matches.isNotEmpty) {
+    if (relevantEntries.isNotEmpty) {
+      final primary = relevantEntries.first;
       final related = _relatedEntries(
-        matches.first,
-        matches,
+        primary,
+        relevantEntries,
         excludedIds: const {},
         limit: 5,
       );
-      final allRelevant = [matches.first, ...related, ...matches.skip(1)];
+      final allRelevant = [
+        primary,
+        ...related,
+        ...relevantEntries.skip(1),
+      ].fold<List<ContentEntry>>([], (unique, entry) {
+        if (!unique.any((item) => item.id == entry.id)) unique.add(entry);
+        return unique;
+      });
 
       for (final entry in allRelevant) {
         if (suggestions.length >= limit) break;
@@ -361,24 +400,29 @@ class OfflineLanguageService extends ChangeNotifier {
         }
       }
 
-      for (final suggestion in _intentSuggestedQuestions(
-        intent,
-        matches.first,
-      )) {
+      for (final suggestion in _intentSuggestedQuestions(intent, primary)) {
         if (suggestions.length >= limit) break;
         addSuggestion(suggestion);
       }
 
-      final topicTerms = _searchTerms(matches.first.category);
+      final topicTerms = {
+        ..._searchTerms(primary.category),
+        ..._searchTerms(primary.title),
+        ...primary.keywords.expand(_searchTerms),
+      };
       for (final entry in _contentEntries) {
         if (suggestions.length >= limit) break;
-        if (entry.id == matches.first.id) continue;
-        if (_hasTermOverlap(topicTerms, _searchTerms(entry.category))) {
+        if (entry.id == primary.id) continue;
+        if (_hasTermOverlap(topicTerms, {
+          ..._searchTerms(entry.category),
+          ..._searchTerms(entry.title),
+          ...entry.keywords.expand(_searchTerms),
+        })) {
           addEntryQuestion(entry);
         }
       }
 
-      for (final entry in matches) {
+      for (final entry in relevantEntries) {
         if (suggestions.length >= limit) break;
         addEntryQuestion(entry);
       }
@@ -386,6 +430,7 @@ class OfflineLanguageService extends ChangeNotifier {
 
     for (final entry in _contentEntries) {
       if (suggestions.length >= limit) break;
+      if (suggestions.isNotEmpty) break;
       if (_normalizeForSearch(entry.category).contains('greeting') ||
           _normalizeForSearch(entry.category).contains('salamu') ||
           _normalizeForSearch(entry.category).contains('okulamusa')) {
@@ -1550,11 +1595,11 @@ class OfflineLanguageService extends ChangeNotifier {
             'Mpa ekyokulabirako kya $topic.',
           ],
           _OfflineIntent.steps => [
-            'Kiki kye nsaanidde okusooka okukola?',
-            'Buzibu ki bwe nsaanidde okwegendereza?',
+            'Kiki kye nsaanidde okusooka okukola ku $topic?',
+            'Buzibu ki bwe nsaanidde okwegendereza ku $topic?',
           ],
           _OfflineIntent.example => [
-            'Nnyonnyola omutendera oguddako.',
+            'Nnyonnyola omutendera oguddako ku $topic.',
             'Kino nnyinza ntya okukikozesa mu busubuzi?',
           ],
           _OfflineIntent.advantages => [
@@ -1563,13 +1608,16 @@ class OfflineLanguageService extends ChangeNotifier {
           ],
           _OfflineIntent.disadvantages => [
             'Nnyinza ntya okwewala obuzibu obwo?',
-            'Kiki kye nsaanidde okukakasa nga tonnatandika?',
+            'Kiki kye nsaanidde okukakasa nga tonnatandika $topic?',
           ],
           _OfflineIntent.comparison => [
             'Kiruwa ekisinga ku mbeera yange?',
             'Mpa ekyokulabirako ekyangu.',
           ],
-          _ => ['Nnyonnyola ekyo mu bujjuvu.', 'Mpa emitendera egyangu.'],
+          _ => [
+            'Nnyonnyola $topic mu bujjuvu.',
+            'Mpa emitendera egyangu ku $topic.',
+          ],
         };
       case 'sw':
         return switch (intent) {
@@ -1578,11 +1626,11 @@ class OfflineLanguageService extends ChangeNotifier {
             'Nipe mfano wa $topic.',
           ],
           _OfflineIntent.steps => [
-            'Nianze na hatua gani kwanza?',
-            'Ni changamoto gani niangalie?',
+            'Nianze na hatua gani kwanza kuhusu $topic?',
+            'Ni changamoto gani niangalie kuhusu $topic?',
           ],
           _OfflineIntent.example => [
-            'Eleza hatua inayofuata.',
+            'Eleza hatua inayofuata kuhusu $topic.',
             'Ninawezaje kutumia hili kwenye biashara?',
           ],
           _OfflineIntent.advantages => [
@@ -1591,13 +1639,16 @@ class OfflineLanguageService extends ChangeNotifier {
           ],
           _OfflineIntent.disadvantages => [
             'Ninawezaje kuepuka changamoto hizo?',
-            'Nihakikishe nini kabla ya kuanza?',
+            'Nihakikishe nini kabla ya kuanza $topic?',
           ],
           _OfflineIntent.comparison => [
             'Kipi kinafaa zaidi kwa hali yangu?',
             'Nipe mfano rahisi.',
           ],
-          _ => ['Eleza hilo kwa undani zaidi.', 'Nipe hatua rahisi.'],
+          _ => [
+            'Eleza $topic kwa undani zaidi.',
+            'Nipe hatua rahisi kuhusu $topic.',
+          ],
         };
       default:
         return switch (intent) {
@@ -1606,11 +1657,11 @@ class OfflineLanguageService extends ChangeNotifier {
             'Can you give a practical example of $topic?',
           ],
           _OfflineIntent.steps => [
-            'What should I do first?',
-            'What risks should I watch for?',
+            'What should I do first with $topic?',
+            'What risks should I watch for with $topic?',
           ],
           _OfflineIntent.example => [
-            'Explain the next step.',
+            'Explain the next step for $topic.',
             'How can I use this in business?',
           ],
           _OfflineIntent.advantages => [
@@ -1619,18 +1670,51 @@ class OfflineLanguageService extends ChangeNotifier {
           ],
           _OfflineIntent.disadvantages => [
             'How can I avoid those problems?',
-            'What should I check before I start?',
+            'What should I check before I start $topic?',
           ],
           _OfflineIntent.comparison => [
             'Which option fits my situation better?',
             'Can you give a simple example?',
           ],
           _ => [
-            'Can you explain that in more detail?',
-            'Can you give me simple steps?',
+            'Can you explain $topic in more detail?',
+            'Can you give me simple steps for $topic?',
           ],
         };
     }
+  }
+
+  bool _isSuggestionConnected(
+    String question,
+    String userMessage,
+    String assistantAnswer,
+    Iterable<ContentEntry> relevantEntries,
+  ) {
+    final suggestionTerms = _searchTerms(question);
+    if (suggestionTerms.isEmpty) return false;
+
+    final contextTerms = <String>{
+      ..._searchTerms(userMessage),
+      ..._searchTerms(assistantAnswer),
+    };
+
+    for (final entry in relevantEntries) {
+      contextTerms
+        ..addAll(_searchTerms(entry.id))
+        ..addAll(_searchTerms(entry.category))
+        ..addAll(_searchTerms(entry.title))
+        ..addAll(_searchTerms(entry.question))
+        ..addAll(entry.keywords.expand(_searchTerms));
+
+      for (final followUp in entry.followUpQuestions) {
+        if (_normalizeForSearch(followUp) == _normalizeForSearch(question)) {
+          return true;
+        }
+      }
+    }
+
+    if (contextTerms.isEmpty && relevantEntries.isEmpty) return true;
+    return _hasTermOverlap(suggestionTerms, contextTerms);
   }
 
   bool _containsAny(String normalizedMessage, Iterable<String> values) {

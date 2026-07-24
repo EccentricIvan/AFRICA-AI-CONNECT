@@ -12,6 +12,8 @@ class AiChatScreen extends ConsumerStatefulWidget {
 }
 
 class _AiChatScreenState extends ConsumerState<AiChatScreen> {
+  static const _minimumThinkingDuration = Duration(milliseconds: 1200);
+
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _groq = GeminiService();
@@ -66,6 +68,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     });
     _controller.clear();
     _scrollToBottom();
+    final thinkingStartedAt = DateTime.now();
 
     final locale = ref.read(localeProvider);
     final languageService = ref.read(offlineLanguageServiceProvider);
@@ -75,12 +78,19 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     try {
       reply = await _groq.sendMessage(text, locale);
     } catch (_) {
+      final answer = languageService.getOfflineChatReply(text);
       reply = ChatReply(
-        answer: languageService.getOfflineChatReply(text),
-        suggestedQuestions: languageService.getOfflineSuggestedQuestions(text),
+        answer: answer,
+        suggestedQuestions: languageService.getOfflineSuggestedQuestions(
+          text,
+          assistantAnswer: answer,
+        ),
         usedOffline: true,
       );
     }
+
+    await _waitForThinkingCue(thinkingStartedAt);
+    if (!mounted) return;
 
     setState(() {
       _messages.add(
@@ -94,6 +104,15 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       _isLoading = false;
     });
     _scrollToBottom();
+  }
+
+  Future<void> _waitForThinkingCue(DateTime startedAt) async {
+    final elapsed = DateTime.now().difference(startedAt);
+    final remainingMs =
+        _minimumThinkingDuration.inMilliseconds - elapsed.inMilliseconds;
+    if (remainingMs > 0) {
+      await Future.delayed(Duration(milliseconds: remainingMs));
+    }
   }
 
   void _clearChat() {
