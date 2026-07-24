@@ -75,6 +75,8 @@ Guidelines:
 - Be culturally sensitive to East African context.
 - When discussing health topics, recommend consulting a healthcare professional for serious concerns.
 - Preserve conversation flow and treat short follow-up questions as connected to the recent topic.
+- Use human-reviewed dataset context as grounding when provided, but do not copy dataset answers directly.
+- Connect related dataset ideas into a fresh answer that fits the user's actual question.
 - Suggest 2 or 3 helpful follow-up questions related to the user's current topic.
 - Keep responses focused unless asked for detail.''';
 
@@ -82,7 +84,10 @@ Guidelines:
   String? _historyLanguageCode;
   String? _lastMatchedEntryId;
   String? _lastMatchedCategory;
+  List<String> _lastMatchedContentIds = const [];
   String? _currentTopic;
+  String? _lastUserQuestion;
+  String? _lastAssistantAnswer;
 
   Future<ChatReply> sendMessage(
     String message,
@@ -102,6 +107,7 @@ Guidelines:
       _historyLanguageCode = selectedLanguageCode;
     }
 
+    _lastUserQuestion = message;
     _history.add({'role': 'user', 'content': message});
     _trimHistory();
 
@@ -125,9 +131,15 @@ Guidelines:
             'The answer and suggestedQuestions must be in the selected '
             'language ($selectedLanguageCode). Include 2 or 3 suggestions. '
             'Use the recent conversation history to understand follow-up '
-            'questions. If the provided reference context is relevant, ground '
-            'your answer in it and do not contradict it.',
+            'questions. If the provided reference context is relevant, reason '
+            'from it, connect related ideas, give practical examples, and do '
+            'not copy stored answers directly or contradict the context.',
       },
+      if (_currentTopic != null && _currentTopic!.trim().isNotEmpty)
+        {
+          'role': 'system',
+          'content': 'Current topic from recent conversation: $_currentTopic',
+        },
       if (referenceContext.isNotEmpty)
         {'role': 'system', 'content': referenceContext},
       ..._history,
@@ -161,7 +173,10 @@ Guidelines:
     _history.clear();
     _lastMatchedEntryId = null;
     _lastMatchedCategory = null;
+    _lastMatchedContentIds = const [];
     _currentTopic = null;
+    _lastUserQuestion = null;
+    _lastAssistantAnswer = null;
   }
 
   Future<bool> _isOffline() async {
@@ -185,6 +200,7 @@ Guidelines:
     );
     _updateTopicFromOfflineResult(offlineResult);
 
+    _lastAssistantAnswer = offlineResult.answer;
     _history.add({'role': 'assistant', 'content': offlineResult.answer});
     _trimHistory();
     return ChatReply(
@@ -300,6 +316,7 @@ Guidelines:
       contextMessages,
     );
     _updateTopicFromSearch(languageService, message, contextMessages);
+    _lastAssistantAnswer = reply.answer;
     _history.add({'role': 'assistant', 'content': reply.answer});
     _trimHistory();
     return reply;
@@ -316,8 +333,16 @@ Guidelines:
           ..writeln('Selected language code: ${effectiveLocale.name}.')
           ..writeln(
             'Answer naturally and helpfully in the selected language. '
-            'Use the recent conversation to understand follow-up questions.',
+            'Use the recent conversation to understand follow-up questions. '
+            'Reason from the dataset context if it is relevant, but do not '
+            'copy stored answers directly.',
           );
+
+    if (_currentTopic != null && _currentTopic!.trim().isNotEmpty) {
+      buffer
+        ..writeln()
+        ..writeln('Current topic: $_currentTopic');
+    }
 
     if (contextMessages.isNotEmpty) {
       buffer
@@ -339,7 +364,10 @@ Guidelines:
       ..writeln('Current user message:')
       ..writeln(message)
       ..writeln()
-      ..writeln('Suggest 2 or 3 useful follow-up questions if appropriate.');
+      ..writeln(
+        'Suggest 2 or 3 useful, topic-specific follow-up questions if '
+        'appropriate.',
+      );
 
     return buffer.toString().trim();
   }
@@ -476,7 +504,11 @@ Guidelines:
 
     _lastMatchedEntryId = result.matchedEntryId;
     _lastMatchedCategory = result.matchedCategory;
+    _lastMatchedContentIds = result.matchedContentIds;
     _currentTopic = result.matchedCategory;
+    if (result.currentTopic != null && result.currentTopic!.trim().isNotEmpty) {
+      _currentTopic = '${result.matchedCategory}: ${result.currentTopic}';
+    }
   }
 
   void _updateTopicFromSearch(
@@ -487,20 +519,30 @@ Guidelines:
     final matches = languageService.searchContent(
       message,
       contextMessages: contextMessages,
-      limit: 1,
+      limit: 5,
     );
     if (matches.isEmpty) return;
 
     final entry = matches.first;
     _lastMatchedEntryId = entry.id;
     _lastMatchedCategory = entry.category;
-    _currentTopic = '${entry.category}: ${entry.question}';
+    _lastMatchedContentIds = List.unmodifiable(
+      matches.map((match) => match.id).take(5),
+    );
+    _currentTopic = '${entry.category}: ${entry.title}';
   }
 
   List<String> _topicContextMessages({required bool excludeLast}) {
     final messages = <String>[
       if (_currentTopic != null && _currentTopic!.trim().isNotEmpty)
         'current topic: $_currentTopic',
+      if (_lastMatchedContentIds.isNotEmpty)
+        'last matched content ids: ${_lastMatchedContentIds.join(', ')}',
+      if (_lastUserQuestion != null && _lastUserQuestion!.trim().isNotEmpty)
+        'last user question: ${_summarizeForContext(_lastUserQuestion!)}',
+      if (_lastAssistantAnswer != null &&
+          _lastAssistantAnswer!.trim().isNotEmpty)
+        'last assistant answer: ${_summarizeForContext(_lastAssistantAnswer!)}',
       ..._recentContextMessages(excludeLast: excludeLast),
     ];
 
