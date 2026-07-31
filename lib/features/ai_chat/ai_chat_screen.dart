@@ -14,7 +14,7 @@ class AiChatScreen extends ConsumerStatefulWidget {
 class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
-  final _groq = GeminiService();
+  final _chatService = GeminiService();
   bool _isLoading = false;
   late List<_ChatMessage> _messages;
   bool _initialized = false;
@@ -61,7 +61,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
-    final response = await _groq.sendMessage(text, locale);
+    final response = await _chatService.sendMessage(text, locale);
 
     setState(() {
       _messages.add(_ChatMessage(response, false));
@@ -71,7 +71,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   }
 
   void _clearChat() {
-    _groq.clearHistory();
+    _chatService.clearHistory();
     setState(() {
       _messages.clear();
       _messages.add(_ChatMessage(_t('chat_cleared'), false));

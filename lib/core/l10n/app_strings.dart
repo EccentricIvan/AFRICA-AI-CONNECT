@@ -979,9 +979,9 @@ class S {
 
     // ── AI Chat screen ──
     'powered_by_groq': {
-      AppLocale.en: 'Powered by Groq · Llama 3.3',
-      AppLocale.lg: 'Yakozesebwa Groq · Llama 3.3',
-      AppLocale.sw: 'Inayotumia Groq · Llama 3.3',
+      AppLocale.en: 'Powered by OTIC AI',
+      AppLocale.lg: 'Ekozesebwa OTIC AI',
+      AppLocale.sw: 'Inaendeshwa na OTIC AI',
     },
     'ai_greeting': {
       AppLocale.en:

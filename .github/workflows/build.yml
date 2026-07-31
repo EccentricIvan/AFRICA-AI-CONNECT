@@ -38,10 +38,25 @@ jobs:
       - name: Generate code (Drift, etc.)
         run: dart run build_runner build --delete-conflicting-outputs
 
+      - name: Analyze Flutter code
+        run: flutter analyze
+
+      - name: Run Flutter tests
+        run: flutter test
+
+      - name: Validate production backend URL
+        env:
+          BACKEND_BASE_URL: ${{ vars.BACKEND_BASE_URL }}
+        run: |
+          if [[ -z "$BACKEND_BASE_URL" || "$BACKEND_BASE_URL" != https://* ]]; then
+            echo "Set the repository variable BACKEND_BASE_URL to the public HTTPS FastAPI URL."
+            exit 1
+          fi
+
       - name: Build release APK (split per ABI)
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: flutter build apk --release --split-per-abi --dart-define=GROQ_API_KEY="${GROQ_API_KEY:-}"
+          BACKEND_BASE_URL: ${{ vars.BACKEND_BASE_URL }}
+        run: flutter build apk --release --split-per-abi --dart-define=BACKEND_BASE_URL="$BACKEND_BASE_URL"
 
       - name: Upload arm64 APK (main target)
         uses: actions/upload-artifact@v4

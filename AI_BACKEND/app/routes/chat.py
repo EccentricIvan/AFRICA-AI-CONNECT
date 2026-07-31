@@ -1,57 +1,20 @@
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, HTTPException, status
 
+from app.schemas import ChatRequest, ChatResponse
 from app.services.chat_service import chat_service
 
-
-router = APIRouter()
-
-
-class ChatRequest(BaseModel):
-    message: str = Field(..., min_length=1)
-    language: str = Field(..., examples=["english", "luganda", "swahili"])
+router = APIRouter(prefix="/chat", tags=["Chat"])
 
 
-@router.get("/")
-def chat_status():
-    return {
-        "status": "ok",
-        "service": "OTIC local language chat",
-        "supported_languages": ["english", "luganda", "swahili"],
-        "mode": "fast-rich-local-mode",
-        "flow": [
-            "English chat uses Groq directly",
-            "Local chat translates user message to English if needed",
-            "Groq answers directly in Luganda or Swahili",
-            "Fine-tuned LoRA repairs the response only if English leaks",
-        ],
-    }
-
-
-@router.post("/")
-def chat(request: ChatRequest):
+@router.post("", response_model=ChatResponse)
+@router.post("/", response_model=ChatResponse, include_in_schema=False)
+def chat(request: ChatRequest) -> ChatResponse:
     try:
-        reply = chat_service.chat(
-            message=request.message,
-            language=request.language,
+        result = chat_service.chat(request.message, request.language, request.context)
+        return ChatResponse(
+            language=request.language, response=result.response, provider=result.provider
         )
-
-        return {
-            "language": request.language,
-            "message": request.message,
-            "response": reply,
-            "reply": reply,
-            "answer": reply,
-        }
-
-    except ValueError as error:
-        raise HTTPException(
-            status_code=400,
-            detail=str(error),
-        )
-
-    except Exception as error:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Chat service error: {str(error)}",
-        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc

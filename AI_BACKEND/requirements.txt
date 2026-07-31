@@ -1,12 +1,9 @@
 fastapi
 uvicorn[standard]
-transformers
-torch
-sentencepiece
 pydantic
-python-dotenv
-requests
-datasets
+torch
+transformers
 peft
-accelerate
-safetensors
+requests
+python-dotenv
+datasets

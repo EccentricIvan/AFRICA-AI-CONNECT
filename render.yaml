@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: otic-connect-api
+    runtime: python
+    rootDir: AI_BACKEND
+    buildCommand: pip install --upgrade pip && pip install -r requirements-cloud.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: TRANSLATION_PROVIDER
+        value: sunbird
+      - key: SUNBIRD_CHAT_MODEL
+        value: sunflower-14b
+      - key: SUNBIRD_API_TOKEN
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.1-8b-instant
