@@ -16,6 +16,9 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final _scrollController = ScrollController();
   final _chatService = GeminiService();
   bool _isLoading = false;
+  String? _failedMessage;
+  String? _errorCode;
+  bool _errorRetryable = false;
   late List<_ChatMessage> _messages;
   bool _initialized = false;
 
@@ -49,22 +52,47 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     });
   }
 
-  Future<void> _send() async {
-    final text = _controller.text.trim();
+  String _errorText(String? code) {
+    switch (code) {
+      case 'CHAT_NETWORK_OFFLINE':
+        return _t('chat_offline_error');
+      case 'CHAT_PROVIDER_AUTH_FAILED':
+        return _t('chat_authentication_error');
+      default:
+        return _t('chat_connection_error');
+    }
+  }
+
+  Future<void> _send({String? retryMessage}) async {
+    final text = (retryMessage ?? _controller.text).trim();
     if (text.isEmpty || _isLoading) return;
 
     setState(() {
-      _messages.add(_ChatMessage(text, true));
+      if (retryMessage == null) {
+        _messages.add(_ChatMessage(text, true));
+      }
       _isLoading = true;
+      _errorCode = null;
     });
     _controller.clear();
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
-    final response = await _chatService.sendMessage(text, locale);
+    final result = await _chatService.sendMessage(text, locale);
 
     setState(() {
-      _messages.add(_ChatMessage(response, false));
+      if (result.isSuccess) {
+        _messages.add(_ChatMessage(result.text!, false));
+        _failedMessage = null;
+        _errorCode = null;
+        _errorRetryable = false;
+      } else {
+        _failedMessage = text;
+        _errorCode = result.errorCode;
+        _errorRetryable = result.retryable;
+        _controller.text = text;
+        _controller.selection = TextSelection.collapsed(offset: text.length);
+      }
       _isLoading = false;
     });
     _scrollToBottom();
@@ -73,6 +101,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   void _clearChat() {
     _chatService.clearHistory();
     setState(() {
+      _failedMessage = null;
+      _errorCode = null;
+      _errorRetryable = false;
+      _controller.clear();
       _messages.clear();
       _messages.add(_ChatMessage(_t('chat_cleared'), false));
     });
@@ -81,6 +113,15 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
+    ref.listen<AppLocale>(localeProvider, (previous, next) {
+      if (_messages.every((message) => !message.isUser)) {
+        setState(() {
+          _messages = [
+            _ChatMessage(S.trFromLocale('ai_greeting', next), false),
+          ];
+        });
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -101,19 +142,32 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                 _send();
               }, t: _t),
               Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  reverse: true,
-                  itemCount: _messages.length + (_isLoading ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (_isLoading && index == 0) {
-                      return _TypingIndicator(t: _t);
-                    }
-                    final msgIndex = _isLoading ? index - 1 : index;
-                    final msg = _messages[_messages.length - 1 - msgIndex];
-                    return _MessageBubble(message: msg);
-                  },
+                child: Column(
+                  children: [
+                    if (_errorCode != null)
+                      _ChatError(
+                        message: _errorText(_errorCode),
+                        retryLabel: _t('chat_retry'),
+                        retryable: _errorRetryable,
+                        onRetry: () => _send(retryMessage: _failedMessage),
+                      ),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        reverse: true,
+                        itemCount: _messages.length + (_isLoading ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (_isLoading && index == 0) {
+                            return _TypingIndicator(t: _t);
+                          }
+                          final msgIndex = _isLoading ? index - 1 : index;
+                          final msg = _messages[_messages.length - 1 - msgIndex];
+                          return _MessageBubble(message: msg);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
               _ChatInput(
@@ -155,12 +209,12 @@ class _ChatAppBar extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'AI Assistant',
+                Text(
+                  t('chat_assistant_title'),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                 ),
                 Text(
-                  t('powered_by_groq'),
+                  t('app_powered_by'),
                   style: const TextStyle(fontSize: 11, color: AppColors.textHint),
                 ),
               ],
@@ -272,6 +326,47 @@ class _TypingIndicator extends StatelessWidget {
   }
 }
 
+class _ChatError extends StatelessWidget {
+  const _ChatError({
+    required this.message,
+    required this.retryLabel,
+    required this.retryable,
+    required this.onRetry,
+  });
+
+  final String message;
+  final String retryLabel;
+  final bool retryable;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.orange.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(color: AppColors.textSecondary),
+              ),
+            ),
+            if (retryable)
+              TextButton(onPressed: onRetry, child: Text(retryLabel)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _MessageBubble extends StatelessWidget {
   const _MessageBubble({required this.message});
   final _ChatMessage message;
@@ -348,9 +443,12 @@ class _ChatInput extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          GestureDetector(
-            onTap: isLoading ? null : onSend,
-            child: Container(
+          Semantics(
+            button: true,
+            label: t('chat_send'),
+            child: GestureDetector(
+              onTap: isLoading ? null : onSend,
+              child: Container(
               width: 44, height: 44,
               decoration: BoxDecoration(
                 color: isLoading ? const Color(0x223A2E29) : AppColors.accent,
@@ -362,10 +460,11 @@ class _ChatInput extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(
-                Icons.send_rounded,
-                color: isLoading ? const Color(0x443A2E29) : Colors.white,
-                size: 20,
+                child: Icon(
+                  Icons.send_rounded,
+                  color: isLoading ? const Color(0x443A2E29) : Colors.white,
+                  size: 20,
+                ),
               ),
             ),
           ),

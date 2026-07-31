@@ -1,7 +1,12 @@
+import logging
+
 from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import JSONResponse
 
 from app.schemas import ChatRequest, ChatResponse
-from app.services.chat_service import chat_service
+from app.services.chat_service import ChatProviderError, chat_service
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -16,5 +21,19 @@ def chat(request: ChatRequest) -> ChatResponse:
         )
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    except ChatProviderError as exc:
+        logger.warning("Chat provider failure: code=%s retryable=%s", exc.code, exc.retryable)
+        status_code = (
+            status.HTTP_503_SERVICE_UNAVAILABLE
+            if exc.retryable else status.HTTP_502_BAD_GATEWAY
+        )
+        return JSONResponse(
+            status_code=status_code,
+            content={"error": {"code": exc.code, "retryable": exc.retryable}},
+        )
     except RuntimeError as exc:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
+        logger.exception("Unexpected chat service failure")
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={"error": {"code": "CHAT_PROVIDER_UNAVAILABLE", "retryable": True}},
+        )

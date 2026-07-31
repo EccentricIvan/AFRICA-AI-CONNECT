@@ -1,12 +1,34 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
 import '../core/l10n/app_strings.dart';
 import 'api_config.dart';
 
-/// OTIC backend chat client. Provider secrets remain on the FastAPI server.
+class ChatServiceResult {
+  const ChatServiceResult.success(this.text)
+      : errorCode = null,
+        retryable = false;
+
+  const ChatServiceResult.failure(this.errorCode, {required this.retryable})
+      : text = null;
+
+  final String? text;
+  final String? errorCode;
+  final bool retryable;
+  bool get isSuccess => text != null;
+}
+
+/// Africa AI Connect backend client. Provider secrets stay on FastAPI.
 class GeminiService {
+  GeminiService({http.Client? client, String? backendBaseUrl})
+      : _client = client ?? http.Client(),
+        _backendBaseUrl = backendBaseUrl ?? ApiConfig.backendBaseUrl;
+
+  final http.Client _client;
+  final String _backendBaseUrl;
   final List<Map<String, String>> _history = [];
 
   String _languageCode(AppLocale locale) {
@@ -20,23 +42,25 @@ class GeminiService {
     }
   }
 
-  Future<String> sendMessage(String message, AppLocale selectedLocale) async {
-    if (ApiConfig.backendBaseUrl.isEmpty) {
-      return 'Backend URL not configured. Please contact support.';
+  Future<ChatServiceResult> sendMessage(
+    String message,
+    AppLocale selectedLocale,
+  ) async {
+    if (_backendBaseUrl.isEmpty) {
+      return const ChatServiceResult.failure(
+        'CHAT_PROVIDER_UNAVAILABLE',
+        retryable: true,
+      );
     }
 
     final context = _history
-        .map((item) => {
-              'role': item['role'],
-              'content': item['content'],
-            })
+        .map((item) => {'role': item['role'], 'content': item['content']})
         .toList(growable: false);
-    _history.add({'role': 'user', 'content': message});
 
     try {
-      final response = await http
+      final response = await _client
           .post(
-            Uri.parse(ApiConfig.chatUrl),
+            Uri.parse('${_backendBaseUrl.replaceAll(RegExp(r'/+$'), '')}/chat'),
             headers: const {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
@@ -53,21 +77,52 @@ class GeminiService {
       if (response.statusCode == 200 && data is Map<String, dynamic>) {
         final text = data['response'];
         if (text is String && text.trim().isNotEmpty) {
-          _history.add({'role': 'assistant', 'content': text.trim()});
-          return text.trim();
+          _history
+            ..add({'role': 'user', 'content': message})
+            ..add({'role': 'assistant', 'content': text.trim()});
+          return ChatServiceResult.success(text.trim());
         }
       }
 
-      final detail = data is Map<String, dynamic> ? data['detail'] : null;
-      return detail is String
-          ? 'Sorry, the assistant is unavailable: $detail'
-          : 'Sorry, the assistant is temporarily unavailable.';
-    } on FormatException {
-      return 'The server returned an invalid response. Please try again.';
+      if (data is Map<String, dynamic> && data['error'] is Map) {
+        final error = Map<String, dynamic>.from(data['error'] as Map);
+        final code = error['code'];
+        final retryable = error['retryable'];
+        if (code is String) {
+          return ChatServiceResult.failure(
+            code,
+            retryable: retryable is bool ? retryable : false,
+          );
+        }
+      }
+      return const ChatServiceResult.failure(
+        'CHAT_PROVIDER_UNAVAILABLE',
+        retryable: true,
+      );
+    } on SocketException catch (_) {
+      return const ChatServiceResult.failure(
+        'CHAT_NETWORK_OFFLINE',
+        retryable: true,
+      );
+    } on TimeoutException catch (_) {
+      return const ChatServiceResult.failure(
+        'CHAT_PROVIDER_UNAVAILABLE',
+        retryable: true,
+      );
+    } on FormatException catch (_) {
+      return const ChatServiceResult.failure(
+        'CHAT_PROVIDER_UNAVAILABLE',
+        retryable: true,
+      );
     } catch (_) {
-      return 'I\'m having trouble connecting. Please check your internet connection and try again.';
+      return const ChatServiceResult.failure(
+        'CHAT_NETWORK_OFFLINE',
+        retryable: true,
+      );
     }
   }
 
   void clearHistory() => _history.clear();
+
+  int get historyLength => _history.length;
 }

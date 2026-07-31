@@ -8,6 +8,7 @@ from typing import Any
 
 import requests
 
+from app.config import get_groq_api_key
 from app.services.sunbird_service import SunbirdError, sunbird_service
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -46,6 +47,13 @@ QUANTITY_WORDS = {
 class ChatResult:
     response: str
     provider: str
+
+
+class ChatProviderError(RuntimeError):
+    def __init__(self, code: str, retryable: bool) -> None:
+        super().__init__(code)
+        self.code = code
+        self.retryable = retryable
 
 
 def build_system_prompt(language_code: str) -> str:
@@ -110,9 +118,9 @@ def quality_issues(message: str, answer: str, language_code: str) -> list[str]:
 
 class ChatService:
     def _groq(self, messages: list[dict[str, str]]) -> str:
-        api_key = os.getenv("GROQ_API_KEY")
+        api_key = get_groq_api_key()
         if not api_key:
-            raise RuntimeError("GROQ_API_KEY is not configured")
+            raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
         try:
             response = requests.post(
                 GROQ_API_URL,
@@ -120,12 +128,18 @@ class ChatService:
                 json={"model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), "messages": messages, "temperature": 0.5, "max_tokens": 650},
                 timeout=45,
             )
+            if response.status_code in {401, 403}:
+                raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
             response.raise_for_status()
             answer = response.json()["choices"][0]["message"]["content"]
+        except ChatProviderError:
+            raise
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True) from exc
         except (requests.RequestException, KeyError, IndexError, TypeError, ValueError) as exc:
-            raise RuntimeError(f"Chat provider request failed: {exc}") from exc
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True) from exc
         if not isinstance(answer, str) or not answer.strip():
-            raise RuntimeError("Chat provider returned an empty response")
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True)
         return answer.strip()
 
     def _generate(self, provider: str, message: str, language_code: str, context: list[dict[str, str]], correction: str | None = None) -> str:

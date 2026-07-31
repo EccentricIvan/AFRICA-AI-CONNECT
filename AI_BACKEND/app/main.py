@@ -1,6 +1,5 @@
 """FastAPI application entry point for OTIC-CONNECT."""
 import sys
-import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -15,6 +14,7 @@ from app.routes.feedback import router as feedback_router
 from app.routes.translate import router as translate_router
 from app.translator import translator
 from app.services.sunbird_service import sunbird_service
+from app.config import get_groq_api_key, validate_provider_configuration
 
 app = FastAPI(
     title="OTIC-CONNECT API",
@@ -33,6 +33,13 @@ app.include_router(chat_router)
 app.include_router(feedback_router)
 
 
+@app.on_event("startup")
+def validate_startup_configuration() -> None:
+    # Missing Groq configuration is reported safely; Sunbird/local translation
+    # endpoints can still operate, so the whole API is not terminated.
+    validate_provider_configuration()
+
+
 @app.get("/", tags=["System"])
 def root() -> dict:
     return {
@@ -49,7 +56,7 @@ def health() -> dict:
         "status": "ok",
         "translation_provider": "sunbird" if sunbird_service.is_configured else "local_lora",
         "sunbird_status": "configured" if sunbird_service.is_configured else "not_configured",
-        "groq_status": "configured" if os.getenv("GROQ_API_KEY") else "not_configured",
+        "groq_status": "configured" if get_groq_api_key() else "not_configured",
         "local_model_status": "loaded" if translator.is_initialized else "standby",
         "local_model_device": str(translator.device),
     }

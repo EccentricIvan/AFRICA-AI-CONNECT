@@ -17,7 +17,14 @@ final localeProvider = StateNotifierProvider<LocaleNotifier, AppLocale>((ref) {
 });
 
 class LocaleNotifier extends StateNotifier<AppLocale> {
-  LocaleNotifier() : super(AppLocale.en);
+  LocaleNotifier([AppLocale initialLocale = AppLocale.en]) : super(initialLocale);
+
+  static AppLocale fromSaved(String? saved) {
+    return AppLocale.values.firstWhere(
+      (locale) => locale.name == saved,
+      orElse: () => AppLocale.en,
+    );
+  }
 
   void set(AppLocale locale) {
     state = locale;
@@ -55,6 +62,16 @@ class S {
       AppLocale.en: 'Africa AI Connect',
       AppLocale.lg: 'Africa AI Connect',
       AppLocale.sw: 'Africa AI Connect',
+    },
+    'app_powered_by': {
+      AppLocale.en: 'Powered by Africa AI Connect',
+      AppLocale.lg: 'Ekozesebwa Africa AI Connect',
+      AppLocale.sw: 'Inaendeshwa na Africa AI Connect',
+    },
+    'app_tagline': {
+      AppLocale.en: 'Connecting Women to Opportunity',
+      AppLocale.lg: 'Okuyunga Abakyala ku Mikisa',
+      AppLocale.sw: 'Kuwaunganisha Wanawake na Fursa',
     },
     'online': {
       AppLocale.en: 'Online',
@@ -147,7 +164,7 @@ class S {
     // ── Pillars ──
     'learn': {
       AppLocale.en: 'Learn',
-      AppLocale.lg: 'Soma',
+      AppLocale.lg: 'Yiga',
       AppLocale.sw: 'Jifunze',
     },
     'earn': {AppLocale.en: 'Earn', AppLocale.lg: 'Funa', AppLocale.sw: 'Pata'},
@@ -223,7 +240,7 @@ class S {
     },
     'community': {
       AppLocale.en: 'Community',
-      AppLocale.lg: 'Ekibiina',
+      AppLocale.lg: 'Abantu',
       AppLocale.sw: 'Jamii',
     },
     'wellbeing': {
@@ -248,8 +265,8 @@ class S {
     },
     'home': {
       AppLocale.en: 'Home',
-      AppLocale.lg: 'Ennyumba',
-      AppLocale.sw: 'Nyumbani',
+      AppLocale.lg: 'Awaka',
+      AppLocale.sw: 'Mwanzo',
     },
     'market': {
       AppLocale.en: 'Market',
@@ -258,8 +275,18 @@ class S {
     },
     'chat': {
       AppLocale.en: 'Chat',
-      AppLocale.lg: 'Yogera',
-      AppLocale.sw: 'Soga',
+      AppLocale.lg: 'Emboozi',
+      AppLocale.sw: 'Gumzo',
+    },
+    'nav_learn_earn': {
+      AppLocale.en: 'Learn & Earn',
+      AppLocale.lg: 'Yiga era Ofune',
+      AppLocale.sw: 'Jifunze na Upate',
+    },
+    'nav_account': {
+      AppLocale.en: 'Account',
+      AppLocale.lg: 'Akawunti',
+      AppLocale.sw: 'Akaunti',
     },
 
     // ── Daily tips ──
@@ -571,7 +598,7 @@ class S {
     },
     'ask_anything': {
       AppLocale.en: 'Ask anything...',
-      AppLocale.lg: 'Buuza ekikyamu kyonna...',
+      AppLocale.lg: 'Buuza ekintu kyonna...',
       AppLocale.sw: 'Uliza chochote...',
     },
     'thinking': {
@@ -978,10 +1005,10 @@ class S {
     },
 
     // ── AI Chat screen ──
-    'powered_by_groq': {
-      AppLocale.en: 'Powered by OTIC AI',
-      AppLocale.lg: 'Ekozesebwa OTIC AI',
-      AppLocale.sw: 'Inaendeshwa na OTIC AI',
+    'chat_assistant_title': {
+      AppLocale.en: 'AI Assistant',
+      AppLocale.lg: 'Omuyambi wa AI',
+      AppLocale.sw: 'Msaidizi wa AI',
     },
     'ai_greeting': {
       AppLocale.en:
@@ -995,6 +1022,31 @@ class S {
       AppLocale.en: 'Chat cleared! How can I help you?',
       AppLocale.lg: 'Emboozi esaziddwa! Nsobola kukuyamba otya?',
       AppLocale.sw: 'Mazungumzo yamesafishwa! Ninawezaje kukusaidia?',
+    },
+    'chat_send': {
+      AppLocale.en: 'Send message',
+      AppLocale.lg: 'Weereza obubaka',
+      AppLocale.sw: 'Tuma ujumbe',
+    },
+    'chat_retry': {
+      AppLocale.en: 'Retry',
+      AppLocale.lg: 'Gezaako nate',
+      AppLocale.sw: 'Jaribu tena',
+    },
+    'chat_connection_error': {
+      AppLocale.en: 'We couldn’t connect to the assistant. Please try again shortly.',
+      AppLocale.lg: 'Wabaddewo obuzibu mu kuyungibwa ku muyambi. Gezaako nate mu kaseera katono.',
+      AppLocale.sw: 'Kumetokea tatizo la kuunganisha na msaidizi. Tafadhali jaribu tena baada ya muda mfupi.',
+    },
+    'chat_offline_error': {
+      AppLocale.en: 'Check your internet connection and try again.',
+      AppLocale.lg: 'Kebera omukutu gwo ogwa yintaneeti, oddemu ogezeeko.',
+      AppLocale.sw: 'Angalia muunganisho wako wa intaneti kisha ujaribu tena.',
+    },
+    'chat_authentication_error': {
+      AppLocale.en: 'The assistant is temporarily unavailable.',
+      AppLocale.lg: 'Omuyambi taliko mu kiseera kino.',
+      AppLocale.sw: 'Msaidizi hapatikani kwa sasa.',
     },
     'topic_business_q': {
       AppLocale.en: 'How do I start a small business?',
