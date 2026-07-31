@@ -63,29 +63,32 @@ class SunbirdService:
             raise SunbirdError("Sunbird returned no translated text")
         return translated.strip()
 
-    def chat(self, message: str, language: str, context: list[str] | None = None) -> str:
+    def chat(
+        self, message: str, language: str,
+        context: list[dict[str, str]] | None = None, *,
+        system_prompt: str | None = None, correction_prompt: str | None = None,
+    ) -> str:
         if language not in SUPPORTED_LANGUAGES:
             raise ValueError("Sunbird chat language must be 'lug' or 'swa'")
-        language_name = "Luganda" if language == "lug" else "Swahili"
         messages: list[dict[str, str]] = [{
             "role": "system",
-            "content": (
-                f"You are OTIC CONNECT, a practical assistant for African youth. "
-                f"Respond naturally and only in {language_name}. Preserve names and facts. "
-                "Use prior context when relevant and keep the response concise."
-            ),
+            "content": system_prompt or "Reply naturally in the selected language.",
         }]
         for item in (context or [])[-20:]:
-            if item.strip():
-                messages.append({"role": "user", "content": item.strip()})
+            role = item.get("role")
+            content = item.get("content", "").strip()
+            if role in {"user", "assistant"} and content:
+                messages.append({"role": role, "content": content})
         messages.append({"role": "user", "content": message.strip()})
+        if correction_prompt:
+            messages.append({"role": "system", "content": correction_prompt})
         data = self._post(
             "chat/completions",
             {
                 "model": os.getenv("SUNBIRD_CHAT_MODEL", "sunflower-14b"),
                 "messages": messages,
-                "temperature": 0.2,
-                "max_tokens": 420,
+                "temperature": 0.5,
+                "max_tokens": 650,
             },
             timeout=90,
         )

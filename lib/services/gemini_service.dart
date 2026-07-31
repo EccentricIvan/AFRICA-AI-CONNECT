@@ -26,7 +26,10 @@ class GeminiService {
     }
 
     final context = _history
-        .map((item) => '${item['role']}: ${item['content']}')
+        .map((item) => {
+              'role': item['role'],
+              'content': item['content'],
+            })
         .toList(growable: false);
     _history.add({'role': 'user', 'content': message});
 

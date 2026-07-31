@@ -1,4 +1,6 @@
 """API request and response schemas."""
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -17,10 +19,16 @@ class TranslationResponse(BaseModel):
     alternatives_evaluated: int = Field(ge=0)
 
 
+class ChatHistoryMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str = Field(min_length=1, max_length=5000)
+
+
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=5000)
     language: str = Field(default="eng", examples=["lug", "swa", "eng"])
-    context: list[str] = Field(default_factory=list, max_length=20)
+    # Strings remain accepted for compatibility with already-installed APKs.
+    context: list[ChatHistoryMessage | str] = Field(default_factory=list, max_length=20)
 
 
 class ChatResponse(BaseModel):
