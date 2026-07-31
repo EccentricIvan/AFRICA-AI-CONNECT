@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+**/__pycache__/
+Luganda_Merged/
+Swahili_Merged/
+nllb_600m_base/
+otic_nllb_luganda_lora_full_final/
+otic_nllb_swahili_lora_full_final/
+scripts/
+app/Data/external/
