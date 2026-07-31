@@ -64,7 +64,6 @@ flutter:
 
   assets:
     - assets/branding/
-    - assets/curriculum/
 
   fonts:
     - family: PlusJakartaSans
