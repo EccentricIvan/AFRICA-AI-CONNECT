@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import os
+import logging
+import time
 from typing import Any
 
 import requests
@@ -12,6 +14,7 @@ SUNBIRD_BASE_URL = os.getenv("SUNBIRD_BASE_URL", "https://api.sunbird.ai/tasks")
 SUPPORTED_LANGUAGES = {"eng", "lug", "swa"}
 SUPPORTED_CHAT_MODELS = {"sunflower-9b", "sunflower-14b"}
 DEFAULT_CHAT_MODEL = "sunflower-9b"
+LOGGER = logging.getLogger(__name__)
 
 
 class SunbirdError(RuntimeError):
@@ -19,6 +22,10 @@ class SunbirdError(RuntimeError):
 
 
 class SunbirdService:
+    def __init__(self) -> None:
+        # Keep the TCP/TLS connection pool alive across requests in a warm process.
+        self._session = requests.Session()
+
     @property
     def chat_model(self) -> str:
         model = os.getenv("SUNBIRD_CHAT_MODEL", DEFAULT_CHAT_MODEL).strip().lower()
@@ -40,7 +47,8 @@ class SunbirdService:
         if not token:
             raise SunbirdError("SUNBIRD_API_TOKEN is not configured")
         try:
-            response = requests.post(
+            started = time.perf_counter()
+            response = self._session.post(
                 f"{SUNBIRD_BASE_URL}/{endpoint.lstrip('/')}",
                 headers={
                     "Accept": "application/json",
@@ -50,6 +58,7 @@ class SunbirdService:
                 json=payload,
                 timeout=timeout,
             )
+            LOGGER.info("Sunbird %s completed in %.2fs", endpoint, time.perf_counter() - started)
             response.raise_for_status()
             data = response.json()
         except requests.RequestException as exc:
@@ -108,7 +117,7 @@ class SunbirdService:
                 "model": self.chat_model,
                 "messages": messages,
                 "temperature": 0.5,
-                "max_tokens": 650,
+                "max_tokens": 320,
             },
             timeout=90,
         )

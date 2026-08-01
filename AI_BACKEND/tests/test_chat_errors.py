@@ -17,7 +17,7 @@ class ChatProviderConfigurationTests(unittest.TestCase):
             "choices": [{"message": {"content": "Hello! How can I help?"}}]
         }
         with patch.dict(os.environ, {"GROQ_API_KEY": "  valid-test-key  "}), patch(
-            "app.services.chat_service.requests.post", return_value=response
+            "app.services.chat_service.GROQ_SESSION.post", return_value=response
         ) as post:
             result = ChatService().chat("Hi there.", "eng")
         self.assertEqual(result.response, "Hello! How can I help?")
@@ -36,7 +36,7 @@ class ChatProviderConfigurationTests(unittest.TestCase):
     def test_401_becomes_safe_structured_error(self):
         response = Mock(status_code=401)
         with patch.dict(os.environ, {"GROQ_API_KEY": "invalid-test-key"}), patch(
-            "app.services.chat_service.requests.post", return_value=response
+            "app.services.chat_service.GROQ_SESSION.post", return_value=response
         ):
             with self.assertRaises(ChatProviderError) as raised:
                 ChatService().chat("Hi there.", "eng")

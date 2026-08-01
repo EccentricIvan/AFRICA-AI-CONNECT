@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import os
 import re
+import logging
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -12,6 +14,11 @@ from app.config import get_groq_api_key
 from app.services.sunbird_service import SunbirdError, sunbird_service
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
+GROQ_SESSION = requests.Session()
+LOGGER = logging.getLogger(__name__)
+GROQ_MAX_TOKENS = 320
+LOCAL_CONTEXT_TURNS = 6
+LOCAL_CONTEXT_CHARS = 800
 LANGUAGE_ALIASES = {
     "en": "eng", "eng": "eng", "english": "eng",
     "lg": "lug", "lug": "lug", "luganda": "lug",
@@ -140,12 +147,14 @@ class ChatService:
         if not api_key:
             raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
         try:
-            response = requests.post(
+            started = time.perf_counter()
+            response = GROQ_SESSION.post(
                 GROQ_API_URL,
                 headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-                json={"model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), "messages": messages, "temperature": 0.5, "max_tokens": 650},
+                json={"model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), "messages": messages, "temperature": 0.5, "max_tokens": GROQ_MAX_TOKENS},
                 timeout=45,
             )
+            LOGGER.info("Groq chat completed in %.2fs", time.perf_counter() - started)
             if response.status_code in {401, 403}:
                 raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
             response.raise_for_status()
@@ -179,8 +188,8 @@ class ChatService:
     def _local_transcript(message: str, context: list[dict[str, str]]) -> str:
         """Build one translation request while retaining recent speaker turns."""
         lines = [
-            f"{turn['role'].upper()}: {turn['content'][:1200]}"
-            for turn in context[-8:]
+            f"{turn['role'].upper()}: {turn['content'][:LOCAL_CONTEXT_CHARS]}"
+            for turn in context[-LOCAL_CONTEXT_TURNS:]
         ]
         lines.append(f"LATEST USER: {message}")
         return "\n".join(lines)

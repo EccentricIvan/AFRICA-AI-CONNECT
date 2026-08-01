@@ -84,6 +84,18 @@ Bizinensi ssatu mu Kampala:
         self.assertIn("ssatu", response)
         self.assertIn("Reply entirely in Luganda", build_system_prompt("lug"))
 
+    def test_local_transcript_limits_old_context_but_keeps_latest_message(self):
+        context = [
+            {"role": "user", "content": f"turn-{index} " + ("x" * 1000)}
+            for index in range(8)
+        ]
+        transcript = self.service._local_transcript("latest request", context)
+        self.assertNotIn("turn-0", transcript)
+        self.assertNotIn("turn-1", transcript)
+        self.assertIn("turn-2", transcript)
+        self.assertIn("LATEST USER: latest request", transcript)
+        self.assertLessEqual(max(map(len, transcript.splitlines()[:-1])), 806)
+
     def test_multi_instruction_failure_triggers_one_retry(self):
         incomplete = "Osobola okutunda ebibala mu Kampala."
         complete = "Emitwalo kkumi gigabanye mu bitundu. Bizinensi ssatu mu Kampala ze bino: ebibala, amagi, ne sabbuuni."
