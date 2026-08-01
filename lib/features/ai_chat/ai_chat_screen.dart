@@ -13,6 +13,7 @@ class AiChatScreen extends ConsumerStatefulWidget {
 
 class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final _controller = TextEditingController();
+  final _inputFocusNode = FocusNode();
   final _scrollController = ScrollController();
   final _chatService = GeminiService();
   bool _isLoading = false;
@@ -36,6 +37,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   @override
   void dispose() {
     _controller.dispose();
+    _inputFocusNode.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -75,11 +77,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       _errorCode = null;
     });
     _controller.clear();
+    _inputFocusNode.requestFocus();
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
     final result = await _chatService.sendMessage(text, locale);
 
+    if (!mounted) return;
     setState(() {
       if (result.isSuccess) {
         _messages.add(_ChatMessage(result.text!, false));
@@ -90,11 +94,14 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
         _failedMessage = text;
         _errorCode = result.errorCode;
         _errorRetryable = result.retryable;
-        _controller.text = text;
-        _controller.selection = TextSelection.collapsed(offset: text.length);
+        if (_controller.text.trim().isEmpty) {
+          _controller.text = text;
+          _controller.selection = TextSelection.collapsed(offset: text.length);
+        }
       }
       _isLoading = false;
     });
+    _inputFocusNode.requestFocus();
     _scrollToBottom();
   }
 
@@ -108,6 +115,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       _messages.clear();
       _messages.add(_ChatMessage(_t('chat_cleared'), false));
     });
+    _inputFocusNode.requestFocus();
   }
 
   @override
@@ -172,6 +180,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
               ),
               _ChatInput(
                 controller: _controller,
+                focusNode: _inputFocusNode,
                 onSend: _send,
                 isLoading: _isLoading,
                 t: _t,
@@ -406,8 +415,15 @@ class _MessageBubble extends StatelessWidget {
 }
 
 class _ChatInput extends StatelessWidget {
-  const _ChatInput({required this.controller, required this.onSend, required this.isLoading, required this.t});
+  const _ChatInput({
+    required this.controller,
+    required this.focusNode,
+    required this.onSend,
+    required this.isLoading,
+    required this.t,
+  });
   final TextEditingController controller;
+  final FocusNode focusNode;
   final VoidCallback onSend;
   final bool isLoading;
   final String Function(String) t;
@@ -421,6 +437,7 @@ class _ChatInput extends StatelessWidget {
         border: Border(top: BorderSide(color: Color(0x223A2E29))),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             child: Container(
@@ -430,6 +447,10 @@ class _ChatInput extends StatelessWidget {
               ),
               child: TextField(
                 controller: controller,
+                focusNode: focusNode,
+                minLines: 1,
+                maxLines: 5,
+                keyboardType: TextInputType.multiline,
                 style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
                 decoration: InputDecoration(
                   hintText: t('ask_anything'),
@@ -437,8 +458,7 @@ class _ChatInput extends StatelessWidget {
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
-                onSubmitted: (_) => onSend(),
-                textInputAction: TextInputAction.send,
+                textInputAction: TextInputAction.newline,
               ),
             ),
           ),
