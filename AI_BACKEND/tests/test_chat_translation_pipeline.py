@@ -10,6 +10,20 @@ from app.services.sunbird_service import SunbirdError
 
 
 class ChatTranslationPipelineTests(unittest.TestCase):
+    def test_additional_ugandan_languages_use_translation_pipeline(self):
+        for language in ("nyn", "teo", "nyo", "ach", "laj"):
+            service = ChatService()
+            with self.subTest(language=language), patch.object(
+                service, "_translate", side_effect=["English request", "Local answer"]
+            ) as translate, patch.object(
+                service, "_reason_from_transcript", return_value="English answer"
+            ):
+                result = service.chat("Local request", language)
+                self.assertEqual(result.response, "Local answer")
+                self.assertEqual(result.provider, "sunbird+groq+sunbird")
+                self.assertEqual(translate.call_args_list[0].args[2], language)
+                self.assertEqual(translate.call_args_list[1].args[1], language)
+
     def setUp(self):
         self.service = ChatService()
 

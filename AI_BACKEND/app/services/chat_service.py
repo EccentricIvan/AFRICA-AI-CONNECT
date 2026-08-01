@@ -23,8 +23,17 @@ LANGUAGE_ALIASES = {
     "en": "eng", "eng": "eng", "english": "eng",
     "lg": "lug", "lug": "lug", "luganda": "lug",
     "sw": "swa", "swa": "swa", "swh": "swa", "swahili": "swa", "kiswahili": "swa",
+    "nyn": "nyn", "runyankore": "nyn", "runyankole": "nyn",
+    "teo": "teo", "ateso": "teo",
+    "nyo": "nyo", "runyoro": "nyo",
+    "ach": "ach", "acholi": "ach",
+    "laj": "laj", "langi": "laj", "lango": "laj",
 }
-LANGUAGE_NAMES = {"eng": "English", "lug": "Luganda", "swa": "Swahili"}
+LANGUAGE_NAMES = {
+    "eng": "English", "lug": "Luganda", "swa": "Swahili",
+    "nyn": "Runyankore", "teo": "Ateso", "nyo": "Runyoro",
+    "ach": "Acholi", "laj": "Langi (Lango)",
+}
 
 SYSTEM_PROMPT_TEMPLATE = """You are OTIC CONNECT, a practical assistant for African youth.
 
@@ -96,7 +105,7 @@ def mostly_wrong_language(text: str, language_code: str) -> bool:
     if len(words) < 4:
         return False
     english = sum(word in COMMON_ENGLISH for word in words)
-    local = sum(word in LANGUAGE_MARKERS[language_code] for word in words)
+    local = sum(word in LANGUAGE_MARKERS.get(language_code, set()) for word in words)
     return english >= 3 and english > local * 2
 
 
@@ -109,7 +118,7 @@ def quality_issues(message: str, answer: str, language_code: str) -> list[str]:
         if detail not in answer:
             missing.append(detail)
     lower_message, lower_answer = message.lower(), answer.lower()
-    for word in QUANTITY_WORDS[language_code]:
+    for word in QUANTITY_WORDS.get(language_code, set()):
         if re.search(rf"\b{word}\b", lower_message) and not re.search(rf"\b{word}\b", lower_answer):
             missing.append(word)
     for match in re.finditer(r"\b[A-Z][a-z]{2,}\b", message):
@@ -209,9 +218,15 @@ class ChatService:
             "user did not provide income or an amount, do not invent one; give a percentage "
             "or method and ask for the amount needed to make a precise plan."
             if language_code == "lug"
-            else "The user is a Swahili speaker in East Africa. Follow any location they "
-            "provide; otherwise give regionally practical advice without inventing a country, "
-            "currency, or foreign financial product."
+            else (
+                "The user speaks Swahili in East Africa. Follow any location they provide; "
+                "otherwise give regionally practical advice without inventing a country, "
+                "currency, or foreign financial product."
+                if language_code == "swa"
+                else f"The user is a {LANGUAGE_NAMES[language_code]} speaker in Uganda unless "
+                "they explicitly name another location. Give practical Ugandan advice, use UGX "
+                "when currency is needed, and do not invent institutions, programs, or amounts."
+            )
         )
         instruction = (
             "The text below is an English translation of a conversation. "
@@ -235,7 +250,7 @@ class ChatService:
     def chat(self, message: str, language: str, context: list[Any] | None = None) -> ChatResult:
         language_code = LANGUAGE_ALIASES.get(language.strip().lower())
         if language_code is None:
-            raise ValueError("language must be English, Luganda, or Swahili")
+            raise ValueError("unsupported chat language")
         clean_message, turns = message.strip(), normalise_context(context)
 
         if language_code == "eng":

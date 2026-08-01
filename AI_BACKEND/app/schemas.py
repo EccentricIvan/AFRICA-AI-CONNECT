@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 class TranslationRequest(BaseModel):
     text: str = Field(min_length=1, max_length=5000)
-    target_lang: str = Field(pattern=r"^(lug|swa)$", examples=["lug"])
+    target_lang: str = Field(pattern=r"^(lug|swa|nyn|teo|nyo|ach|laj)$", examples=["lug"])
 
 
 class TranslationResponse(BaseModel):

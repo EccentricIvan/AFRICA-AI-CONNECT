@@ -29,6 +29,14 @@ void main() {
     expect(LocaleNotifier.fromSaved('sw'), AppLocale.sw);
     expect(LocaleNotifier.fromSaved(null), AppLocale.en);
   });
+
+  test('additional Sunflower languages can be selected and restored', () {
+    expect(LocaleNotifier.fromSaved('nyn'), AppLocale.nyn);
+    expect(LocaleNotifier.fromSaved('teo'), AppLocale.teo);
+    expect(LocaleNotifier.fromSaved('nyo'), AppLocale.nyo);
+    expect(LocaleNotifier.fromSaved('ach'), AppLocale.ach);
+    expect(LocaleNotifier.fromSaved('laj'), AppLocale.laj);
+  });
 }
 
 const _chatKeys = [

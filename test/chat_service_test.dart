@@ -7,6 +7,33 @@ import 'package:otic_connect/core/l10n/app_strings.dart';
 import 'package:otic_connect/services/gemini_service.dart';
 
 void main() {
+  test('all supported local languages are sent with Sunbird codes', () async {
+    final expectedCodes = {
+      AppLocale.nyn: 'nyn',
+      AppLocale.teo: 'teo',
+      AppLocale.nyo: 'nyo',
+      AppLocale.ach: 'ach',
+      AppLocale.laj: 'laj',
+    };
+
+    for (final entry in expectedCodes.entries) {
+      late Map<String, dynamic> payload;
+      final service = GeminiService(
+        backendBaseUrl: 'https://example.test',
+        client: MockClient((request) async {
+          payload = jsonDecode(request.body) as Map<String, dynamic>;
+          return http.Response(
+            jsonEncode({'response': 'Local answer', 'provider': 'sunbird+groq+sunbird'}),
+            200,
+          );
+        }),
+      );
+
+      await service.sendMessage('Local question', entry.key);
+      expect(payload['language'], entry.value);
+    }
+  });
+
   test('structured authentication error contains no provider details', () async {
     final service = GeminiService(
       backendBaseUrl: 'https://example.test',

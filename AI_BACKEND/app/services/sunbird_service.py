@@ -11,7 +11,7 @@ import requests
 import app.config  # noqa: F401  # Load AI_BACKEND/.env before reading settings.
 
 SUNBIRD_BASE_URL = os.getenv("SUNBIRD_BASE_URL", "https://api.sunbird.ai/tasks").rstrip("/")
-SUPPORTED_LANGUAGES = {"eng", "lug", "swa"}
+SUPPORTED_LANGUAGES = {"eng", "lug", "swa", "nyn", "teo", "nyo", "ach", "laj"}
 SUPPORTED_CHAT_MODELS = {"sunflower-9b", "sunflower-14b"}
 DEFAULT_CHAT_MODEL = "sunflower-9b"
 LOGGER = logging.getLogger(__name__)
@@ -73,9 +73,9 @@ class SunbirdService:
         self, text: str, target_language: str, source_language: str = "eng"
     ) -> str:
         if source_language not in SUPPORTED_LANGUAGES:
-            raise ValueError("Sunbird source language must be 'eng', 'lug', or 'swa'")
+            raise ValueError("Unsupported Sunbird source language")
         if target_language not in SUPPORTED_LANGUAGES:
-            raise ValueError("Sunbird target language must be 'eng', 'lug', or 'swa'")
+            raise ValueError("Unsupported Sunbird target language")
         if source_language == target_language:
             return text.strip()
         data = self._post(
@@ -98,7 +98,7 @@ class SunbirdService:
         system_prompt: str | None = None, correction_prompt: str | None = None,
     ) -> str:
         if language not in SUPPORTED_LANGUAGES:
-            raise ValueError("Sunbird chat language must be 'lug' or 'swa'")
+            raise ValueError("Unsupported Sunbird chat language")
         messages: list[dict[str, str]] = [{
             "role": "system",
             "content": system_prompt or "Reply naturally in the selected language.",

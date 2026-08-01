@@ -37,6 +37,16 @@ class GeminiService {
         return 'lug';
       case AppLocale.sw:
         return 'swa';
+      case AppLocale.nyn:
+        return 'nyn';
+      case AppLocale.teo:
+        return 'teo';
+      case AppLocale.nyo:
+        return 'nyo';
+      case AppLocale.ach:
+        return 'ach';
+      case AppLocale.laj:
+        return 'laj';
       case AppLocale.en:
         return 'eng';
     }

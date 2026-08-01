@@ -20,6 +20,7 @@ BASE_MODEL_PATH = PROJECT_ROOT / "nllb_600m_base"
 LUGANDA_ADAPTER_PATH = PROJECT_ROOT / "otic_nllb_luganda_lora_full_final"
 SWAHILI_ADAPTER_PATH = PROJECT_ROOT / "otic_nllb_swahili_lora_full_final"
 TARGET_LANGUAGES = {"lug": "lug_Latn", "swa": "swh_Latn"}
+SUNBIRD_ONLY_LANGUAGES = {"nyn", "teo", "nyo", "ach", "laj"}
 ADAPTER_NAMES = {"lug": "luganda", "swa": "swahili"}
 
 
@@ -93,8 +94,8 @@ class LocalTranslator:
         if not clean_text:
             raise ValueError("text must not be empty")
         language = target_lang.strip().lower()
-        if language not in TARGET_LANGUAGES:
-            raise ValueError("target_lang must be either 'lug' or 'swa'")
+        if language not in TARGET_LANGUAGES and language not in SUNBIRD_ONLY_LANGUAGES:
+            raise ValueError("unsupported target language")
 
         remembered = translation_memory.lookup(clean_text, language)
         if remembered:
@@ -109,6 +110,11 @@ class LocalTranslator:
                 return TranslationResult(translated, None, None, "sunbird", 1)
             except SunbirdError as exc:
                 logger.warning("Sunbird unavailable; using local LoRA fallback: %s", exc)
+
+        if language in SUNBIRD_ONLY_LANGUAGES:
+            raise RuntimeError(
+                f"Sunbird is required to translate to {language}; no local adapter is available"
+            )
 
         self.initialize()
         assert self.tokenizer is not None and self.model is not None and self._torch is not None

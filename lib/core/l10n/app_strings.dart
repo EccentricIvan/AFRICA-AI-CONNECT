@@ -5,7 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum AppLocale {
   en('English', 'EN'),
   lg('Luganda', 'LG'),
-  sw('Kiswahili', 'SW');
+  sw('Kiswahili', 'SW'),
+  nyn('Runyankore', 'NYN'),
+  teo('Ateso', 'TEO'),
+  nyo('Runyoro', 'NYO'),
+  ach('Acholi', 'ACH'),
+  laj('Langi', 'LAJ');
 
   const AppLocale(this.label, this.code);
   final String label;
