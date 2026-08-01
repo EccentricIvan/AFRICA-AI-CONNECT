@@ -41,6 +41,8 @@ class ChatTranslationPipelineTests(unittest.TestCase):
         self.assertIn("translated conversation", reasoning_prompt.lower())
         self.assertIn("UGX", reasoning_prompt)
         self.assertIn("401(k)", reasoning_prompt)
+        self.assertIn("Do not name a specific bank", reasoning_prompt)
+        self.assertIn("do not invent one", reasoning_prompt)
 
     def test_swahili_uses_the_same_pipeline(self):
         with patch(
