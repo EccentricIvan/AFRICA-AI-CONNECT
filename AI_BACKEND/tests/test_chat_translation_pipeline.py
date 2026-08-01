@@ -1,7 +1,11 @@
 import unittest
 from unittest.mock import patch
 
-from app.services.chat_service import ChatProviderError, ChatService
+from app.services.chat_service import (
+    ChatProviderError,
+    ChatService,
+    english_grounding_issues,
+)
 from app.services.sunbird_service import SunbirdError
 
 
@@ -72,6 +76,16 @@ class ChatTranslationPipelineTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "CHAT_PROVIDER_UNAVAILABLE")
         self.assertTrue(raised.exception.retryable)
         self.assertNotIn("technical", str(raised.exception))
+
+    def test_unrequested_brands_and_amounts_trigger_rewrite(self):
+        issues = english_grounding_issues(
+            "Nnyinza ntya okutereka ensimbi?",
+            "LATEST USER: How can I save money?",
+            "Save UGX 50,000 using MTN Mobile Money or Airtel Money.",
+        )
+        self.assertEqual(len(issues), 2)
+        self.assertIn("mtn", issues[0])
+        self.assertIn("invented currency", issues[1])
 
 
 if __name__ == "__main__":

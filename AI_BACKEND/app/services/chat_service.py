@@ -116,6 +116,24 @@ def quality_issues(message: str, answer: str, language_code: str) -> list[str]:
     return issues
 
 
+def english_grounding_issues(
+    original_message: str, translated_transcript: str, english_answer: str
+) -> list[str]:
+    """Reject financial specifics that were not supplied by the user."""
+    issues: list[str] = []
+    source = f"{original_message}\n{translated_transcript}".lower()
+    answer = english_answer.lower()
+    named_products = ("401(k)", "mtn", "airtel", "stanbic", "dfcu", "pride sacco", "post office")
+    introduced = [name for name in named_products if name in answer and name not in source]
+    if introduced:
+        issues.append("Remove unrequested named institutions or products: " + ", ".join(introduced) + ".")
+    source_has_amount = bool(re.search(r"(?:UGX|USD|\$|\b\d[\d,]{2,})", source, re.I))
+    answer_has_amount = bool(re.search(r"(?:UGX|USD|\$|\b\d[\d,]{2,})", english_answer, re.I))
+    if answer_has_amount and not source_has_amount:
+        issues.append("Remove invented currency amounts; ask the user for their income or budget.")
+    return issues
+
+
 class ChatService:
     def _groq(self, messages: list[dict[str, str]]) -> str:
         api_key = get_groq_api_key()
@@ -220,6 +238,20 @@ class ChatService:
             english_answer = self._reason_from_transcript(
                 translated_transcript, language_code
             )
+            grounding = english_grounding_issues(
+                clean_message, translated_transcript, english_answer
+            )
+            if grounding:
+                correction = (
+                    "Rewrite the draft and fix every grounding problem: "
+                    + " ".join(grounding)
+                    + " Keep the useful advice generic and locally appropriate.\n\n"
+                    "Draft to rewrite:\n"
+                    + english_answer
+                )
+                english_answer = self._reason_from_transcript(
+                    translated_transcript, language_code, correction
+                )
             answer = self._translate(english_answer, language_code, "eng")
             provider = "sunbird+groq+sunbird"
 
