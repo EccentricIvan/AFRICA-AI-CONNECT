@@ -15,18 +15,23 @@ class ChatServiceTests(unittest.TestCase):
         self.service = ChatService()
 
     def reply(self, message, answer, context=None):
-        with patch.object(self.service, "_generate", return_value=answer) as generate:
+        def translate(text, target, source):
+            return "English translated conversation" if target == "eng" else answer
+
+        with patch.object(self.service, "_translate", side_effect=translate), patch.object(
+            self.service, "_reason_from_transcript", return_value="English answer"
+        ) as reason:
             result = self.service.chat(message, "lug", context or [])
-        return result.response, generate
+        return result.response, reason
 
     def test_culturally_appropriate_luganda_greeting(self):
-        response, generate = self.reply(
+        response, reason = self.reply(
             "Mukama yebazibwe",
             "Amiina! Mukama yebazibwe nnyo. Oli otya leero?",
         )
         self.assertIn("Amiina", response)
         self.assertNotIn("support", response.lower())
-        self.assertEqual(generate.call_count, 1)
+        self.assertEqual(reason.call_count, 1)
 
     def test_short_natural_oli_otya_reply(self):
         response, _ = self.reply(
@@ -72,21 +77,25 @@ Bizinensi ssatu mu Kampala:
             {"role": "user", "content": "Emitwalo kkumi."},
             {"role": "assistant", "content": "Kale."},
         ]
-        response, generate = self.reply("Mpaayo endala ssatu.", "Ebirala ssatu bye bino: ebibala, amagi, ne sabbuuni.", context)
-        sent_context = generate.call_args.args[3]
-        self.assertEqual([turn["role"] for turn in sent_context], ["user", "assistant"] * 3)
+        response, _ = self.reply("Mpaayo endala ssatu.", "Ebirala ssatu bye bino: ebibala, amagi, ne sabbuuni.", context)
+        transcript = self.service._local_transcript("Mpaayo endala ssatu.", context)
+        self.assertIn("ASSISTANT: Ndi bulungi.", transcript)
+        self.assertIn("LATEST USER: Mpaayo endala ssatu.", transcript)
         self.assertIn("ssatu", response)
         self.assertIn("Reply entirely in Luganda", build_system_prompt("lug"))
 
     def test_multi_instruction_failure_triggers_one_retry(self):
         incomplete = "Osobola okutunda ebibala mu Kampala."
         complete = "Emitwalo kkumi gigabanye mu bitundu. Bizinensi ssatu mu Kampala ze bino: ebibala, amagi, ne sabbuuni."
-        with patch.object(self.service, "_generate", side_effect=[incomplete, complete]) as generate:
+        translations = iter(["English transcript", incomplete, complete])
+        with patch.object(self.service, "_translate", side_effect=lambda *args: next(translations)), patch.object(
+            self.service, "_reason_from_transcript", side_effect=["Incomplete English", "Complete English"]
+        ) as reason:
             result = self.service.chat(
                 "Nsalirewo emitwalo kkumi ezo mu bitundu, era ompe bizinensi ssatu ze nnyinza okutandikawo mu Kampala.",
                 "lug",
             )
-        self.assertEqual(generate.call_count, 2)
+        self.assertEqual(reason.call_count, 2)
         self.assertIn("ssatu", result.response)
         self.assertIn("emitwalo kkumi", result.response.lower())
 

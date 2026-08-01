@@ -142,35 +142,83 @@ class ChatService:
             raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True)
         return answer.strip()
 
-    def _generate(self, provider: str, message: str, language_code: str, context: list[dict[str, str]], correction: str | None = None) -> str:
-        prompt = build_system_prompt(language_code)
-        if provider == "sunbird":
-            return sunbird_service.chat(message, language_code, context, system_prompt=prompt, correction_prompt=correction)
-        messages = [{"role": "system", "content": prompt}, *context, {"role": "user", "content": message}]
+    def _generate_english(
+        self,
+        message: str,
+        context: list[dict[str, str]],
+        correction: str | None = None,
+    ) -> str:
+        messages = [
+            {"role": "system", "content": build_system_prompt("eng")},
+            *context,
+            {"role": "user", "content": message},
+        ]
         if correction:
             messages.append({"role": "system", "content": correction})
         return self._groq(messages)
+
+    @staticmethod
+    def _local_transcript(message: str, context: list[dict[str, str]]) -> str:
+        """Build one translation request while retaining recent speaker turns."""
+        lines = [
+            f"{turn['role'].upper()}: {turn['content'][:1200]}"
+            for turn in context[-8:]
+        ]
+        lines.append(f"LATEST USER: {message}")
+        return "\n".join(lines)
+
+    def _reason_from_transcript(
+        self, translated_transcript: str, correction: str | None = None
+    ) -> str:
+        instruction = (
+            "The text below is an English translation of a conversation. "
+            "Answer the LATEST USER request in English. Use earlier turns to resolve "
+            "references and follow-ups. Preserve every amount, place, requested quantity, "
+            "constraint, and task. Give a concrete, relevant, concise answer.\n\n"
+            f"TRANSLATED CONVERSATION:\n{translated_transcript}"
+        )
+        return self._generate_english(instruction, [], correction)
+
+    @staticmethod
+    def _translate(text: str, target: str, source: str) -> str:
+        try:
+            return sunbird_service.translate(
+                text, target_language=target, source_language=source
+            )
+        except (SunbirdError, ValueError) as exc:
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True) from exc
 
     def chat(self, message: str, language: str, context: list[Any] | None = None) -> ChatResult:
         language_code = LANGUAGE_ALIASES.get(language.strip().lower())
         if language_code is None:
             raise ValueError("language must be English, Luganda, or Swahili")
         clean_message, turns = message.strip(), normalise_context(context)
-        provider = "sunbird" if language_code in {"lug", "swa"} and sunbird_service.is_configured else "groq"
-        try:
-            answer = self._generate(provider, clean_message, language_code, turns)
-        except SunbirdError:
+
+        if language_code == "eng":
+            answer = self._generate_english(clean_message, turns)
             provider = "groq"
-            answer = self._generate(provider, clean_message, language_code, turns)
+        else:
+            transcript = self._local_transcript(clean_message, turns)
+            translated_transcript = self._translate(transcript, "eng", language_code)
+            english_answer = self._reason_from_transcript(translated_transcript)
+            answer = self._translate(english_answer, language_code, "eng")
+            provider = "sunbird+groq+sunbird"
 
         issues = quality_issues(clean_message, answer, language_code)
         if issues:
             correction = (
-                "Rewrite the draft answer once. " + " ".join(issues) + " "
-                f"Obey the {LANGUAGE_NAMES[language_code]}-only language lock, answer every part of the latest request using the conversation context, preserve all constraints, and output plain text only."
-                "\n\nDraft to rewrite:\n" + answer
+                "Rewrite the English answer once. " + " ".join(issues) + " "
+                "Answer every part of the latest request, preserve all constraints, and "
+                "output plain text only.\n\nEnglish draft to rewrite:\n"
+                + (english_answer if language_code != "eng" else answer)
             )
-            answer = self._generate(provider, clean_message, language_code, turns, correction)
+            if language_code == "eng":
+                answer = self._generate_english(clean_message, turns, correction)
+            else:
+                english_answer = self._reason_from_transcript(
+                    translated_transcript, correction
+                )
+                answer = self._translate(english_answer, language_code, "eng")
         return ChatResult(plain_text(answer), provider)
 
 

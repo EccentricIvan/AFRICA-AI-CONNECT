@@ -59,6 +59,7 @@ def health() -> dict:
         "translation_provider": "sunbird" if sunbird_service.is_configured else "local_lora",
         "sunbird_status": "configured" if sunbird_service.is_configured else "not_configured",
         "sunbird_chat_model": sunbird_service.chat_model,
+        "chat_pipeline": "sunbird_translate+groq+sunbird_translate",
         "groq_status": "configured" if get_groq_api_key() else "not_configured",
         "local_model_status": "loaded" if translator.is_initialized else "standby",
         "local_model_device": str(translator.device),

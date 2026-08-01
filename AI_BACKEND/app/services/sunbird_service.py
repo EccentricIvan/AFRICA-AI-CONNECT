@@ -9,7 +9,7 @@ import requests
 import app.config  # noqa: F401  # Load AI_BACKEND/.env before reading settings.
 
 SUNBIRD_BASE_URL = os.getenv("SUNBIRD_BASE_URL", "https://api.sunbird.ai/tasks").rstrip("/")
-SUPPORTED_LANGUAGES = {"lug", "swa"}
+SUPPORTED_LANGUAGES = {"eng", "lug", "swa"}
 SUPPORTED_CHAT_MODELS = {"sunflower-9b", "sunflower-14b"}
 DEFAULT_CHAT_MODEL = "sunflower-9b"
 
@@ -60,12 +60,22 @@ class SunbirdService:
             raise SunbirdError("Sunbird returned an unexpected response")
         return data
 
-    def translate(self, text: str, target_language: str) -> str:
+    def translate(
+        self, text: str, target_language: str, source_language: str = "eng"
+    ) -> str:
+        if source_language not in SUPPORTED_LANGUAGES:
+            raise ValueError("Sunbird source language must be 'eng', 'lug', or 'swa'")
         if target_language not in SUPPORTED_LANGUAGES:
-            raise ValueError("Sunbird target language must be 'lug' or 'swa'")
+            raise ValueError("Sunbird target language must be 'eng', 'lug', or 'swa'")
+        if source_language == target_language:
+            return text.strip()
         data = self._post(
             "translate",
-            {"source_language": "eng", "target_language": target_language, "text": text},
+            {
+                "source_language": source_language,
+                "target_language": target_language,
+                "text": text,
+            },
         )
         output = data.get("output", {})
         translated = output.get("translated_text") if isinstance(output, dict) else None
