@@ -12,7 +12,7 @@ services:
       - key: TRANSLATION_PROVIDER
         value: sunbird
       - key: SUNBIRD_CHAT_MODEL
-        value: sunflower-14b
+        value: sunflower-9b
       - key: SUNBIRD_API_TOKEN
         sync: false
       - key: GROQ_API_KEY

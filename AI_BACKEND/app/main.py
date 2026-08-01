@@ -38,6 +38,8 @@ def validate_startup_configuration() -> None:
     # Missing Groq configuration is reported safely; Sunbird/local translation
     # endpoints can still operate, so the whole API is not terminated.
     validate_provider_configuration()
+    # Resolve this at startup so an invalid model name fails before traffic.
+    sunbird_service.chat_model
 
 
 @app.get("/", tags=["System"])
@@ -56,6 +58,7 @@ def health() -> dict:
         "status": "ok",
         "translation_provider": "sunbird" if sunbird_service.is_configured else "local_lora",
         "sunbird_status": "configured" if sunbird_service.is_configured else "not_configured",
+        "sunbird_chat_model": sunbird_service.chat_model,
         "groq_status": "configured" if get_groq_api_key() else "not_configured",
         "local_model_status": "loaded" if translator.is_initialized else "standby",
         "local_model_device": str(translator.device),
