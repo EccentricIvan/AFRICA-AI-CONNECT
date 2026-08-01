@@ -168,13 +168,27 @@ class ChatService:
         return "\n".join(lines)
 
     def _reason_from_transcript(
-        self, translated_transcript: str, correction: str | None = None
+        self,
+        translated_transcript: str,
+        language_code: str,
+        correction: str | None = None,
     ) -> str:
+        regional_context = (
+            "The user is a Luganda speaker in Uganda unless they explicitly name another "
+            "location. Use UGX and realistic Ugandan options such as mobile money, SACCOs, "
+            "local banks, and locally available businesses. Never introduce US-specific "
+            "products such as 401(k) plans or dollar amounts."
+            if language_code == "lug"
+            else "The user is a Swahili speaker in East Africa. Follow any location they "
+            "provide; otherwise give regionally practical advice without inventing a country, "
+            "currency, or foreign financial product."
+        )
         instruction = (
             "The text below is an English translation of a conversation. "
             "Answer the LATEST USER request in English. Use earlier turns to resolve "
             "references and follow-ups. Preserve every amount, place, requested quantity, "
-            "constraint, and task. Give a concrete, relevant, concise answer.\n\n"
+            "constraint, and task. Give a concrete, relevant answer of at most 250 words. "
+            f"{regional_context}\n\n"
             f"TRANSLATED CONVERSATION:\n{translated_transcript}"
         )
         return self._generate_english(instruction, [], correction)
@@ -200,7 +214,9 @@ class ChatService:
         else:
             transcript = self._local_transcript(clean_message, turns)
             translated_transcript = self._translate(transcript, "eng", language_code)
-            english_answer = self._reason_from_transcript(translated_transcript)
+            english_answer = self._reason_from_transcript(
+                translated_transcript, language_code
+            )
             answer = self._translate(english_answer, language_code, "eng")
             provider = "sunbird+groq+sunbird"
 
@@ -216,7 +232,7 @@ class ChatService:
                 answer = self._generate_english(clean_message, turns, correction)
             else:
                 english_answer = self._reason_from_transcript(
-                    translated_transcript, correction
+                    translated_transcript, language_code, correction
                 )
                 answer = self._translate(english_answer, language_code, "eng")
         return ChatResult(plain_text(answer), provider)

@@ -37,7 +37,10 @@ class ChatTranslationPipelineTests(unittest.TestCase):
         outbound = translate.call_args_list[1]
         self.assertEqual(outbound.kwargs["source_language"], "eng")
         self.assertEqual(outbound.kwargs["target_language"], "lug")
-        self.assertIn("translated conversation", groq.call_args.args[0][1]["content"].lower())
+        reasoning_prompt = groq.call_args.args[0][1]["content"]
+        self.assertIn("translated conversation", reasoning_prompt.lower())
+        self.assertIn("UGX", reasoning_prompt)
+        self.assertIn("401(k)", reasoning_prompt)
 
     def test_swahili_uses_the_same_pipeline(self):
         with patch(
