@@ -150,13 +150,7 @@ def english_grounding_issues(
 
 
 class ChatService:
-    def _groq(
-        self,
-        messages: list[dict[str, str]],
-        *,
-        model: str | None = None,
-        temperature: float = 0.5,
-    ) -> str:
+    def _groq(self, messages: list[dict[str, str]]) -> str:
         api_key = get_groq_api_key()
         if not api_key:
             raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
@@ -165,12 +159,7 @@ class ChatService:
             response = GROQ_SESSION.post(
                 GROQ_API_URL,
                 headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-                json={
-                    "model": model or os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
-                    "messages": messages,
-                    "temperature": temperature,
-                    "max_tokens": GROQ_MAX_TOKENS,
-                },
+                json={"model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), "messages": messages, "temperature": 0.5, "max_tokens": GROQ_MAX_TOKENS},
                 timeout=45,
             )
             LOGGER.info("Groq chat completed in %.2fs", time.perf_counter() - started)
@@ -202,54 +191,6 @@ class ChatService:
         if correction:
             messages.append({"role": "system", "content": correction})
         return self._groq(messages)
-
-    def _generate_local_direct(
-        self,
-        message: str,
-        context: list[dict[str, str]],
-        language_code: str,
-        correction: str | None = None,
-    ) -> str:
-        local_instruction = (
-            f"Reply naturally and entirely in {LANGUAGE_NAMES[language_code]}. "
-            "The user is in Uganda unless they explicitly give another location. "
-            "Understand the request directly, use the conversation history, preserve all "
-            "amounts and constraints, and give practical locally relevant advice. Do not "
-            "mention translation providers or apologize for the language. Keep the answer "
-            "under 120 words. Never invent a bank, SACCO, company, program, currency amount, "
-            "interest rate, or percentage that the user did not provide."
-        )
-        messages = [
-            {"role": "system", "content": build_system_prompt(language_code)},
-            {"role": "system", "content": local_instruction},
-            *context,
-            {"role": "user", "content": message},
-        ]
-        if correction:
-            messages.append({"role": "system", "content": correction})
-        fallback_model = os.getenv(
-            "GROQ_LOCAL_FALLBACK_MODEL", "llama-3.3-70b-versatile"
-        ).strip()
-        return self._groq(messages, model=fallback_model, temperature=0.3)
-
-    def _local_fallback(
-        self, message: str, context: list[dict[str, str]], language_code: str
-    ) -> ChatResult:
-        LOGGER.warning(
-            "Sunbird translation unavailable; using Groq %s fallback",
-            language_code,
-        )
-        answer = self._generate_local_direct(message, context, language_code)
-        issues = quality_issues(message, answer, language_code)
-        issues.extend(english_grounding_issues(message, message, answer))
-        if issues:
-            answer = self._generate_local_direct(
-                message,
-                context,
-                language_code,
-                "Rewrite the answer and fix these issues: " + " ".join(issues),
-            )
-        return ChatResult(plain_text(answer), "groq-local-fallback")
 
     @staticmethod
     def _local_transcript(message: str, context: list[dict[str, str]]) -> str:
@@ -316,10 +257,7 @@ class ChatService:
             provider = "groq"
         else:
             transcript = self._local_transcript(clean_message, turns)
-            try:
-                translated_transcript = self._translate(transcript, "eng", language_code)
-            except ChatProviderError:
-                return self._local_fallback(clean_message, turns, language_code)
+            translated_transcript = self._translate(transcript, "eng", language_code)
             english_answer = self._reason_from_transcript(
                 translated_transcript, language_code
             )
@@ -337,10 +275,7 @@ class ChatService:
                 english_answer = self._reason_from_transcript(
                     translated_transcript, language_code, correction
                 )
-            try:
-                answer = self._translate(english_answer, language_code, "eng")
-            except ChatProviderError:
-                return self._local_fallback(clean_message, turns, language_code)
+            answer = self._translate(english_answer, language_code, "eng")
             provider = "sunbird+groq+sunbird"
 
         issues = quality_issues(clean_message, answer, language_code)
@@ -357,10 +292,7 @@ class ChatService:
                 english_answer = self._reason_from_transcript(
                     translated_transcript, language_code, correction
                 )
-                try:
-                    answer = self._translate(english_answer, language_code, "eng")
-                except ChatProviderError:
-                    return self._local_fallback(clean_message, turns, language_code)
+                answer = self._translate(english_answer, language_code, "eng")
         return ChatResult(plain_text(answer), provider)
 
 

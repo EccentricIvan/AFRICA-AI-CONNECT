@@ -80,58 +80,16 @@ class ChatTranslationPipelineTests(unittest.TestCase):
         self.assertEqual(result.response, "A relevant English answer.")
         translate.assert_not_called()
 
-    def test_translation_failure_uses_local_language_groq_fallback(self):
+    def test_translation_failure_is_safe_and_retryable(self):
         with patch(
             "app.services.chat_service.sunbird_service.translate",
             side_effect=SunbirdError("technical provider detail"),
-        ), patch.object(
-            self.service,
-            "_groq",
-            return_value="Ndi bulungi, weebale. Nsobola kukuyamba ntya?",
-        ) as groq:
-            result = self.service.chat("Oli otya?", "lug")
-        self.assertEqual(result.provider, "groq-local-fallback")
-        self.assertIn("weebale", result.response)
-        self.assertIn("Reply entirely in Luganda", groq.call_args.args[0][0]["content"])
-        self.assertEqual(
-            groq.call_args.kwargs["model"], "llama-3.3-70b-versatile"
-        )
-        self.assertEqual(groq.call_args.kwargs["temperature"], 0.3)
-
-    def test_outbound_translation_failure_also_uses_fallback(self):
-        with patch.object(
-            self.service,
-            "_translate",
-            side_effect=["LATEST USER: How can I save?", ChatProviderError("x", True)],
-        ), patch.object(
-            self.service,
-            "_reason_from_transcript",
-            return_value="Save a little every day.",
-        ), patch.object(
-            self.service,
-            "_generate_local_direct",
-            return_value="Tereka ensimbi entono buli lunaku.",
         ):
-            result = self.service.chat("Ntereka ntya?", "lug")
-        self.assertEqual(result.provider, "groq-local-fallback")
-        self.assertEqual(result.response, "Tereka ensimbi entono buli lunaku.")
-
-    def test_fallback_rewrites_an_invented_amount(self):
-        with patch.object(
-            self.service,
-            "_translate",
-            side_effect=ChatProviderError("x", True),
-        ), patch.object(
-            self.service,
-            "_generate_local_direct",
-            side_effect=[
-                "Weka shilingi 10,000 kila mwezi.",
-                "Weka kiasi kidogo unachoweza kumudu kila mwezi.",
-            ],
-        ) as generate:
-            result = self.service.chat("Ninawezaje kuweka akiba?", "swa")
-        self.assertEqual(generate.call_count, 2)
-        self.assertNotIn("10,000", result.response)
+            with self.assertRaises(ChatProviderError) as raised:
+                self.service.chat("Oli otya?", "lug")
+        self.assertEqual(raised.exception.code, "CHAT_PROVIDER_UNAVAILABLE")
+        self.assertTrue(raised.exception.retryable)
+        self.assertNotIn("technical", str(raised.exception))
 
     def test_unrequested_brands_and_amounts_trigger_rewrite(self):
         issues = english_grounding_issues(
