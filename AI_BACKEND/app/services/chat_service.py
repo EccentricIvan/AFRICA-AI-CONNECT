@@ -192,6 +192,48 @@ class ChatService:
             messages.append({"role": "system", "content": correction})
         return self._groq(messages)
 
+    def _generate_local_direct(
+        self,
+        message: str,
+        context: list[dict[str, str]],
+        language_code: str,
+        correction: str | None = None,
+    ) -> str:
+        local_instruction = (
+            f"Reply naturally and entirely in {LANGUAGE_NAMES[language_code]}. "
+            "The user is in Uganda unless they explicitly give another location. "
+            "Understand the request directly, use the conversation history, preserve all "
+            "amounts and constraints, and give practical locally relevant advice. Do not "
+            "mention translation providers or apologize for the language."
+        )
+        messages = [
+            {"role": "system", "content": build_system_prompt(language_code)},
+            {"role": "system", "content": local_instruction},
+            *context,
+            {"role": "user", "content": message},
+        ]
+        if correction:
+            messages.append({"role": "system", "content": correction})
+        return self._groq(messages)
+
+    def _local_fallback(
+        self, message: str, context: list[dict[str, str]], language_code: str
+    ) -> ChatResult:
+        LOGGER.warning(
+            "Sunbird translation unavailable; using Groq %s fallback",
+            language_code,
+        )
+        answer = self._generate_local_direct(message, context, language_code)
+        issues = quality_issues(message, answer, language_code)
+        if issues:
+            answer = self._generate_local_direct(
+                message,
+                context,
+                language_code,
+                "Rewrite the answer and fix these issues: " + " ".join(issues),
+            )
+        return ChatResult(plain_text(answer), "groq-local-fallback")
+
     @staticmethod
     def _local_transcript(message: str, context: list[dict[str, str]]) -> str:
         """Build one translation request while retaining recent speaker turns."""
@@ -257,7 +299,10 @@ class ChatService:
             provider = "groq"
         else:
             transcript = self._local_transcript(clean_message, turns)
-            translated_transcript = self._translate(transcript, "eng", language_code)
+            try:
+                translated_transcript = self._translate(transcript, "eng", language_code)
+            except ChatProviderError:
+                return self._local_fallback(clean_message, turns, language_code)
             english_answer = self._reason_from_transcript(
                 translated_transcript, language_code
             )
@@ -275,7 +320,10 @@ class ChatService:
                 english_answer = self._reason_from_transcript(
                     translated_transcript, language_code, correction
                 )
-            answer = self._translate(english_answer, language_code, "eng")
+            try:
+                answer = self._translate(english_answer, language_code, "eng")
+            except ChatProviderError:
+                return self._local_fallback(clean_message, turns, language_code)
             provider = "sunbird+groq+sunbird"
 
         issues = quality_issues(clean_message, answer, language_code)
@@ -292,7 +340,10 @@ class ChatService:
                 english_answer = self._reason_from_transcript(
                     translated_transcript, language_code, correction
                 )
-                answer = self._translate(english_answer, language_code, "eng")
+                try:
+                    answer = self._translate(english_answer, language_code, "eng")
+                except ChatProviderError:
+                    return self._local_fallback(clean_message, turns, language_code)
         return ChatResult(plain_text(answer), provider)
 
 

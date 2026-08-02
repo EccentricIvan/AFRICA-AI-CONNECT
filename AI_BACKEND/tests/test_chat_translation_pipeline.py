@@ -80,16 +80,37 @@ class ChatTranslationPipelineTests(unittest.TestCase):
         self.assertEqual(result.response, "A relevant English answer.")
         translate.assert_not_called()
 
-    def test_translation_failure_is_safe_and_retryable(self):
+    def test_translation_failure_uses_local_language_groq_fallback(self):
         with patch(
             "app.services.chat_service.sunbird_service.translate",
             side_effect=SunbirdError("technical provider detail"),
+        ), patch.object(
+            self.service,
+            "_groq",
+            return_value="Ndi bulungi, weebale. Nsobola kukuyamba ntya?",
+        ) as groq:
+            result = self.service.chat("Oli otya?", "lug")
+        self.assertEqual(result.provider, "groq-local-fallback")
+        self.assertIn("weebale", result.response)
+        self.assertIn("Reply entirely in Luganda", groq.call_args.args[0][0]["content"])
+
+    def test_outbound_translation_failure_also_uses_fallback(self):
+        with patch.object(
+            self.service,
+            "_translate",
+            side_effect=["LATEST USER: How can I save?", ChatProviderError("x", True)],
+        ), patch.object(
+            self.service,
+            "_reason_from_transcript",
+            return_value="Save a little every day.",
+        ), patch.object(
+            self.service,
+            "_generate_local_direct",
+            return_value="Tereka ensimbi entono buli lunaku.",
         ):
-            with self.assertRaises(ChatProviderError) as raised:
-                self.service.chat("Oli otya?", "lug")
-        self.assertEqual(raised.exception.code, "CHAT_PROVIDER_UNAVAILABLE")
-        self.assertTrue(raised.exception.retryable)
-        self.assertNotIn("technical", str(raised.exception))
+            result = self.service.chat("Ntereka ntya?", "lug")
+        self.assertEqual(result.provider, "groq-local-fallback")
+        self.assertEqual(result.response, "Tereka ensimbi entono buli lunaku.")
 
     def test_unrequested_brands_and_amounts_trigger_rewrite(self):
         issues = english_grounding_issues(
