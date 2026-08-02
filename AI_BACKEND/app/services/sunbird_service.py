@@ -11,7 +11,7 @@ import requests
 import app.config  # noqa: F401  # Load AI_BACKEND/.env before reading settings.
 
 SUNBIRD_BASE_URL = os.getenv("SUNBIRD_BASE_URL", "https://api.sunbird.ai/tasks").rstrip("/")
-SUPPORTED_LANGUAGES = {"eng", "lug", "swa", "nyn", "teo", "nyo", "ach", "laj"}
+SUPPORTED_LANGUAGES = {"eng", "lug", "swa", "nyn", "teo", "nyo", "ach"}
 SUPPORTED_CHAT_MODELS = {"sunflower-9b", "sunflower-14b"}
 DEFAULT_CHAT_MODEL = "sunflower-9b"
 LOGGER = logging.getLogger(__name__)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/l10n/app_strings.dart';
 import '../../../shared/widgets/section_header.dart';
 
 class JobsScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class JobsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Job Board'),
+        title: Text(S.literal('Job Board')),
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
         ],
@@ -25,16 +26,16 @@ class JobsScreen extends StatelessWidget {
               children: [
                 _JobsHero(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Recent Opportunities',
-                  subtitle: 'Jobs and gigs near you',
+                SectionHeader(
+                  title: S.literal('Recent Opportunities'),
+                  subtitle: S.literal('Jobs and gigs near you'),
                 ),
                 const SizedBox(height: 12),
                 _JobListings(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Build Your CV',
-                  subtitle: 'Create a professional profile',
+                SectionHeader(
+                  title: S.literal('Build Your CV'),
+                  subtitle: S.literal('Create a professional profile'),
                 ),
                 const SizedBox(height: 12),
                 _CvBuilderCard(),
@@ -73,12 +74,12 @@ class _JobsHero extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Find your next opportunity',
+                  S.literal('Find your next opportunity'),
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Browse jobs, freelance gigs, and training programmes from verified employers.',
+                  S.literal('Browse jobs, freelance gigs, and training programmes from verified employers.'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -128,9 +129,9 @@ class _JobListings extends StatelessWidget {
               ),
               child: Icon(Icons.work, color: j.color, size: 22),
             ),
-            title: Text(j.title,
+            title: Text(S.literal(j.title),
                 style: Theme.of(context).textTheme.titleMedium),
-            subtitle: Text(j.employer),
+            subtitle: Text(S.literal(j.employer)),
             trailing: Container(
               padding: const EdgeInsets.symmetric(
                   horizontal: 8, vertical: 4),
@@ -139,7 +140,7 @@ class _JobListings extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                j.type,
+                S.literal(j.type),
                 style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
@@ -180,14 +181,13 @@ class _CvBuilderCard extends StatelessWidget {
               const Icon(Icons.description,
                   color: AppColors.skillsColor, size: 24),
               const SizedBox(width: 10),
-              Text('CV Builder',
+              Text(S.literal('CV Builder'),
                   style: Theme.of(context).textTheme.titleLarge),
             ],
           ),
           const SizedBox(height: 8),
           Text(
-            'Create a professional CV that highlights your skills and experience. '
-            'AI-assisted — just answer a few questions.',
+            S.literal('Create a professional CV that highlights your skills and experience. AI-assisted — just answer a few questions.'),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 14),
@@ -196,7 +196,7 @@ class _CvBuilderCard extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.skillsColor,
             ),
-            child: const Text('Create CV'),
+            child: Text(S.literal('Create CV')),
           ),
         ],
       ),

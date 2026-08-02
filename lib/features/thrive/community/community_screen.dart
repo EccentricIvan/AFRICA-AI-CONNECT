@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/l10n/app_strings.dart';
 import '../../../shared/widgets/section_header.dart';
 
 class CommunityScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class CommunityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Community'),
+        title: Text(S.literal('Community')),
         actions: [
           IconButton(
               icon: const Icon(Icons.group_add), onPressed: () {}),
@@ -26,23 +27,23 @@ class CommunityScreen extends StatelessWidget {
               children: [
                 _CommunityHero(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Your Groups',
-                  subtitle: 'Communities you belong to',
+                SectionHeader(
+                  title: S.literal('Your Groups'),
+                  subtitle: S.literal('Communities you belong to'),
                 ),
                 const SizedBox(height: 12),
                 _EmptyGroupsState(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Discover Groups',
-                  subtitle: 'Join women\'s groups in your area',
+                SectionHeader(
+                  title: S.literal('Discover Groups'),
+                  subtitle: S.literal("Join women's groups in your area"),
                 ),
                 const SizedBox(height: 12),
                 _DiscoverGroups(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Community Feed',
-                  subtitle: 'Latest from women in your network',
+                SectionHeader(
+                  title: S.literal('Community Feed'),
+                  subtitle: S.literal('Latest from women in your network'),
                 ),
                 const SizedBox(height: 12),
                 _CommunityFeed(),
@@ -81,12 +82,12 @@ class _CommunityHero extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Stronger together',
+                  S.literal('Stronger together'),
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Connect with women\'s groups, share experiences, support each other, and grow together.',
+                  S.literal("Connect with women's groups, share experiences, support each other, and grow together."),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -125,12 +126,12 @@ class _EmptyGroupsState extends StatelessWidget {
               size: 48, color: Theme.of(context).hintColor),
           const SizedBox(height: 12),
           Text(
-            'No groups yet',
+            S.literal('No groups yet'),
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 4),
           Text(
-            'Join a group below or create your own',
+            S.literal('Join a group below or create your own'),
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
@@ -138,7 +139,7 @@ class _EmptyGroupsState extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: () {},
             icon: const Icon(Icons.add, size: 18),
-            label: const Text('Create a Group'),
+            label: Text(S.literal('Create a Group')),
           ),
         ],
       ),
@@ -173,9 +174,9 @@ class _DiscoverGroups extends StatelessWidget {
               ),
               child: Icon(g.icon, color: g.color, size: 22),
             ),
-            title: Text(g.name,
+            title: Text(S.literal(g.name),
                 style: Theme.of(context).textTheme.titleMedium),
-            subtitle: Text(g.members),
+            subtitle: Text(g.members.replaceAll('members', S.literal('members'))),
             trailing: OutlinedButton(
               onPressed: () {},
               style: OutlinedButton.styleFrom(
@@ -183,7 +184,7 @@ class _DiscoverGroups extends StatelessWidget {
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Text('Join', style: TextStyle(fontSize: 12)),
+              child: Text(S.literal('Join'), style: const TextStyle(fontSize: 12)),
             ),
           ),
         );
@@ -243,7 +244,7 @@ class _CommunityFeed extends StatelessWidget {
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14)),
-                          Text(p.time,
+                          Text(S.literal(p.time),
                               style: TextStyle(
                                   fontSize: 11,
                                   color: Theme.of(context).hintColor)),
@@ -253,7 +254,7 @@ class _CommunityFeed extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                Text(p.content,
+                Text(S.literal(p.content),
                     style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 10),
                 Row(
@@ -299,7 +300,7 @@ class _FeedAction extends StatelessWidget {
             Icon(icon, size: 16, color: Theme.of(context).hintColor),
             const SizedBox(width: 4),
             Text(
-              label,
+              S.literal(label),
               style: TextStyle(
                   fontSize: 12, color: Theme.of(context).hintColor),
             ),

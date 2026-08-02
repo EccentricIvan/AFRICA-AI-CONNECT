@@ -11,7 +11,7 @@ from app.services.sunbird_service import SunbirdError
 
 class ChatTranslationPipelineTests(unittest.TestCase):
     def test_additional_ugandan_languages_use_translation_pipeline(self):
-        for language in ("nyn", "teo", "nyo", "ach", "laj"):
+        for language in ("nyn", "teo", "nyo", "ach"):
             service = ChatService()
             with self.subTest(language=language), patch.object(
                 service, "_translate", side_effect=["English request", "Local answer"]

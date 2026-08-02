@@ -20,7 +20,7 @@ BASE_MODEL_PATH = PROJECT_ROOT / "nllb_600m_base"
 LUGANDA_ADAPTER_PATH = PROJECT_ROOT / "otic_nllb_luganda_lora_full_final"
 SWAHILI_ADAPTER_PATH = PROJECT_ROOT / "otic_nllb_swahili_lora_full_final"
 TARGET_LANGUAGES = {"lug": "lug_Latn", "swa": "swh_Latn"}
-SUNBIRD_ONLY_LANGUAGES = {"nyn", "teo", "nyo", "ach", "laj"}
+SUNBIRD_ONLY_LANGUAGES = {"nyn", "teo", "nyo", "ach"}
 ADAPTER_NAMES = {"lug": "luganda", "swa": "swahili"}
 
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
+import 'core/l10n/app_strings.dart';
 
 class AfricaAiConnectApp extends ConsumerWidget {
   const AfricaAiConnectApp({super.key});
@@ -12,7 +13,7 @@ class AfricaAiConnectApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp.router(
-      title: 'Africa AI Connect',
+      title: S.tr(context, ref, 'app_name'),
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,

@@ -27,12 +27,11 @@ LANGUAGE_ALIASES = {
     "teo": "teo", "ateso": "teo",
     "nyo": "nyo", "runyoro": "nyo",
     "ach": "ach", "acholi": "ach",
-    "laj": "laj", "langi": "laj", "lango": "laj",
 }
 LANGUAGE_NAMES = {
     "eng": "English", "lug": "Luganda", "swa": "Swahili",
     "nyn": "Runyankore", "teo": "Ateso", "nyo": "Runyoro",
-    "ach": "Acholi", "laj": "Langi (Lango)",
+    "ach": "Acholi",
 }
 
 SYSTEM_PROMPT_TEMPLATE = """You are OTIC CONNECT, a practical assistant for African youth.

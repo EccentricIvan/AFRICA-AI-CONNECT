@@ -35,7 +35,6 @@ void main() {
     expect(LocaleNotifier.fromSaved('teo'), AppLocale.teo);
     expect(LocaleNotifier.fromSaved('nyo'), AppLocale.nyo);
     expect(LocaleNotifier.fromSaved('ach'), AppLocale.ach);
-    expect(LocaleNotifier.fromSaved('laj'), AppLocale.laj);
   });
 }
 

@@ -13,7 +13,6 @@ void main() {
       AppLocale.teo: 'teo',
       AppLocale.nyo: 'nyo',
       AppLocale.ach: 'ach',
-      AppLocale.laj: 'laj',
     };
 
     for (final entry in expectedCodes.entries) {

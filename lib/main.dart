@@ -19,6 +19,7 @@ void main() async {
   final hasProfile = prefs.getBool('has_profile') ?? false;
   final savedLocale = prefs.getString('app_locale');
   final initialLocale = LocaleNotifier.fromSaved(savedLocale);
+  await S.loadBundledTranslations();
 
   runApp(
     ProviderScope(

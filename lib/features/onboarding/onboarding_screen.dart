@@ -192,6 +192,7 @@ class _LanguagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentLocale = ref.watch(localeProvider);
+    final loadingLocale = ref.watch(localeLoadingProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -204,24 +205,44 @@ class _LanguagePage extends StatelessWidget {
             width: 56, height: 56, fit: BoxFit.contain,
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Choose your language',
-            style: TextStyle(
+          Text(
+            S.tr(context, ref, 'choose_language'),
+            style: const TextStyle(
               fontSize: 28, fontWeight: FontWeight.w700,
               color: AppColors.textPrimary, height: 1.2,
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Londa olulimi lwo · Chagua lugha yako',
-            style: TextStyle(fontSize: 14, color: AppColors.textHint, height: 1.5),
+          Text(
+            S.tr(context, ref, 'app_tagline'),
+            style: const TextStyle(fontSize: 14, color: AppColors.textHint, height: 1.5),
           ),
-          const SizedBox(height: 28),
-          ...AppLocale.values.map((locale) {
-            final isSelected = currentLocale == locale;
-            return GestureDetector(
-              onTap: () => ref.read(localeProvider.notifier).set(locale),
-              child: AnimatedContainer(
+          const SizedBox(height: 20),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 12),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              itemCount: AppLocale.values.length,
+              itemBuilder: (context, index) {
+                final locale = AppLocale.values[index];
+                final isSelected = currentLocale == locale;
+                final isLoading = loadingLocale == locale;
+                return GestureDetector(
+                  onTap: loadingLocale != null
+                      ? null
+                      : () async {
+                          final ok = await selectAppLocale(ref, locale);
+                          if (!ok && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  S.literal('Could not download this language. Check your internet and try again.'),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                  child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(18),
@@ -258,7 +279,13 @@ class _LanguagePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (isSelected)
+                    if (isLoading)
+                      const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    else if (isSelected)
                       Container(
                         width: 28, height: 28,
                         decoration: const BoxDecoration(
@@ -277,9 +304,11 @@ class _LanguagePage extends StatelessWidget {
                       ),
                   ],
                 ),
-              ),
-            );
-          }),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/l10n/app_strings.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/feature_card.dart';
 import '../../../shared/widgets/helpline_sheet.dart';
@@ -10,7 +11,7 @@ class WellbeingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Wellbeing')),
+      appBar: AppBar(title: Text(S.literal('Wellbeing'))),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Align(
@@ -42,13 +43,13 @@ class WellbeingScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Your wellbeing matters',
+                            Text(S.literal('Your wellbeing matters'),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall),
                             const SizedBox(height: 6),
                             Text(
-                              'Resources for self-care, emotional support, and building resilience.',
+                              S.literal('Resources for self-care, emotional support, and building resilience.'),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -70,30 +71,30 @@ class WellbeingScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Self-Care',
-                  subtitle: 'Daily practices for a healthier mind',
+                SectionHeader(
+                  title: S.literal('Self-Care'),
+                  subtitle: S.literal('Daily practices for a healthier mind'),
                 ),
                 const SizedBox(height: 12),
                 FeatureCard(
-                  title: 'Stress Management',
-                  subtitle: 'Techniques to manage daily stress and anxiety',
+                  title: S.literal('Stress Management'),
+                  subtitle: S.literal('Techniques to manage daily stress and anxiety'),
                   icon: Icons.self_improvement,
                   color: AppColors.wellbeingColor,
                   onTap: () {},
                 ),
                 const SizedBox(height: 8),
                 FeatureCard(
-                  title: 'Positive Affirmations',
-                  subtitle: 'Daily encouragement and confidence building',
+                  title: S.literal('Positive Affirmations'),
+                  subtitle: S.literal('Daily encouragement and confidence building'),
                   icon: Icons.auto_awesome,
                   color: AppColors.earnColor,
                   onTap: () {},
                 ),
                 const SizedBox(height: 8),
                 FeatureCard(
-                  title: 'Support Resources',
-                  subtitle: 'Helplines, counselling, and safe spaces',
+                  title: S.literal('Support Resources'),
+                  subtitle: S.literal('Helplines, counselling, and safe spaces'),
                   icon: Icons.support_agent,
                   color: AppColors.communityColor,
                   onTap: () => showHelplineSheet(context),
@@ -137,11 +138,11 @@ class _SafetyCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Safety & Support',
+                Text(S.literal('Safety & Support'),
                     style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 4),
                 Text(
-                  'If you or someone you know needs help, trusted support is available.',
+                  S.literal('If you or someone you know needs help, trusted support is available.'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -154,7 +155,7 @@ class _SafetyCard extends StatelessWidget {
               backgroundColor: AppColors.accent,
               padding: const EdgeInsets.symmetric(horizontal: 16),
             ),
-            child: const Text('Get Help'),
+            child: Text(S.literal('Get Help')),
           ),
         ],
       ),

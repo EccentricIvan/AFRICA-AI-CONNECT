@@ -11,6 +11,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
+    final loadingLocale = ref.watch(localeLoadingProvider);
 
     String t(String key) => S.tr(context, ref, key);
 
@@ -48,10 +49,29 @@ class SettingsScreen extends ConsumerWidget {
                           subtitle: Text(l.code),
                           trailing: isSelected
                               ? const Icon(Icons.check_circle, color: AppColors.primary, size: 22)
+                              : loadingLocale == l
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    )
                               : null,
                           selected: isSelected,
                           selectedTileColor: AppColors.primary.withValues(alpha: 0.08),
-                          onTap: () => ref.read(localeProvider.notifier).set(l),
+                          onTap: loadingLocale != null
+                              ? null
+                              : () async {
+                                  final ok = await selectAppLocale(ref, l);
+                                  if (!ok && context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          S.literal('Could not download this language. Check your internet and try again.'),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
                         ),
                       );
                     }),
@@ -63,9 +83,8 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     SwitchListTile(
                       secondary: const Icon(Icons.cloud_sync),
-                      title: const Text('Auto-sync when online'),
-                      subtitle: const Text(
-                          'Sync your progress when connected'),
+                      title: Text(S.literal('Auto-sync when online')),
+                      subtitle: Text(S.literal('Sync your progress when connected')),
                       value: true,
                       onChanged: (v) {},
                     ),
@@ -73,8 +92,8 @@ class SettingsScreen extends ConsumerWidget {
                       color: Colors.transparent,
                       child: ListTile(
                         leading: const Icon(Icons.download),
-                        title: const Text('Download content for offline'),
-                        subtitle: const Text('Last synced: Today'),
+                        title: Text(S.literal('Download content for offline')),
+                        subtitle: Text(S.literal('Last synced: Today')),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () {},
                       ),
@@ -83,8 +102,8 @@ class SettingsScreen extends ConsumerWidget {
                       color: Colors.transparent,
                       child: ListTile(
                         leading: const Icon(Icons.storage),
-                        title: const Text('Storage usage'),
-                        subtitle: const Text('45 MB used'),
+                        title: Text(S.literal('Storage usage')),
+                        subtitle: Text(S.literal('45 MB used')),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () {},
                       ),
@@ -97,17 +116,15 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     SwitchListTile(
                       secondary: const Icon(Icons.notifications),
-                      title: const Text('Push notifications'),
-                      subtitle: const Text(
-                          'Get updates on opportunities and community'),
+                      title: Text(S.literal('Push notifications')),
+                      subtitle: Text(S.literal('Get updates on opportunities and community')),
                       value: true,
                       onChanged: (v) {},
                     ),
                     SwitchListTile(
                       secondary: const Icon(Icons.campaign),
-                      title: const Text('Community updates'),
-                      subtitle: const Text(
-                          'Posts and activity from your groups'),
+                      title: Text(S.literal('Community updates')),
+                      subtitle: Text(S.literal('Posts and activity from your groups')),
                       value: true,
                       onChanged: (v) {},
                     ),
@@ -117,16 +134,16 @@ class SettingsScreen extends ConsumerWidget {
                 _SettingsSection(
                   title: t('about'),
                   children: [
-                    const ListTile(
-                      leading: Icon(Icons.info_outline),
-                      title: Text('Africa AI Connect'),
-                      subtitle: Text('Version 1.0.0'),
+                    ListTile(
+                      leading: const Icon(Icons.info_outline),
+                      title: Text(S.literal('Africa AI Connect')),
+                      subtitle: Text(S.literal('Version 1.0.0')),
                     ),
                     Material(
                       color: Colors.transparent,
                       child: ListTile(
                         leading: const Icon(Icons.description_outlined),
-                        title: const Text('Terms of Service'),
+                        title: Text(S.literal('Terms of Service')),
                         trailing: const Icon(Icons.open_in_new, size: 16),
                         onTap: () {},
                       ),
@@ -135,7 +152,7 @@ class SettingsScreen extends ConsumerWidget {
                       color: Colors.transparent,
                       child: ListTile(
                         leading: const Icon(Icons.shield_outlined),
-                        title: const Text('Privacy Policy'),
+                        title: Text(S.literal('Privacy Policy')),
                         trailing: const Icon(Icons.open_in_new, size: 16),
                         onTap: () {},
                       ),
@@ -198,12 +215,12 @@ class _ThemeTile extends StatelessWidget {
                 ? Icons.light_mode
                 : Icons.brightness_auto,
       ),
-      title: const Text('Theme'),
+      title: Text(S.literal('Theme')),
       subtitle: Text(currentMode == ThemeMode.dark
-          ? 'Dark'
+          ? S.literal('Dark')
           : currentMode == ThemeMode.light
-              ? 'Light'
-              : 'System'),
+              ? S.literal('Light')
+              : S.literal('System')),
       trailing: SegmentedButton<ThemeMode>(
         selected: {currentMode},
         onSelectionChanged: (s) => onChanged(s.first),

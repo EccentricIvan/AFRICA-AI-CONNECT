@@ -65,6 +65,14 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     }
   }
 
+  void _focusInput() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _inputFocusNode.canRequestFocus) {
+        _inputFocusNode.requestFocus();
+      }
+    });
+  }
+
   Future<void> _send({String? retryMessage}) async {
     final text = (retryMessage ?? _controller.text).trim();
     if (text.isEmpty || _isLoading) return;
@@ -77,7 +85,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       _errorCode = null;
     });
     _controller.clear();
-    _inputFocusNode.requestFocus();
+    _focusInput();
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
@@ -101,7 +109,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       }
       _isLoading = false;
     });
-    _inputFocusNode.requestFocus();
+    _focusInput();
     _scrollToBottom();
   }
 
@@ -115,7 +123,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       _messages.clear();
       _messages.add(_ChatMessage(_t('chat_cleared'), false));
     });
-    _inputFocusNode.requestFocus();
+    _focusInput();
   }
 
   @override
@@ -448,6 +456,7 @@ class _ChatInput extends StatelessWidget {
               child: TextField(
                 controller: controller,
                 focusNode: focusNode,
+                autofocus: true,
                 minLines: 1,
                 maxLines: 5,
                 keyboardType: TextInputType.multiline,
