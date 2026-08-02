@@ -241,6 +241,7 @@ class ChatService:
         )
         answer = self._generate_local_direct(message, context, language_code)
         issues = quality_issues(message, answer, language_code)
+        issues.extend(english_grounding_issues(message, message, answer))
         if issues:
             answer = self._generate_local_direct(
                 message,

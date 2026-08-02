@@ -116,6 +116,23 @@ class ChatTranslationPipelineTests(unittest.TestCase):
         self.assertEqual(result.provider, "groq-local-fallback")
         self.assertEqual(result.response, "Tereka ensimbi entono buli lunaku.")
 
+    def test_fallback_rewrites_an_invented_amount(self):
+        with patch.object(
+            self.service,
+            "_translate",
+            side_effect=ChatProviderError("x", True),
+        ), patch.object(
+            self.service,
+            "_generate_local_direct",
+            side_effect=[
+                "Weka shilingi 10,000 kila mwezi.",
+                "Weka kiasi kidogo unachoweza kumudu kila mwezi.",
+            ],
+        ) as generate:
+            result = self.service.chat("Ninawezaje kuweka akiba?", "swa")
+        self.assertEqual(generate.call_count, 2)
+        self.assertNotIn("10,000", result.response)
+
     def test_unrequested_brands_and_amounts_trigger_rewrite(self):
         issues = english_grounding_issues(
             "Nnyinza ntya okutereka ensimbi?",
