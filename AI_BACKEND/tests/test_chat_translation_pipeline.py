@@ -93,6 +93,10 @@ class ChatTranslationPipelineTests(unittest.TestCase):
         self.assertEqual(result.provider, "groq-local-fallback")
         self.assertIn("weebale", result.response)
         self.assertIn("Reply entirely in Luganda", groq.call_args.args[0][0]["content"])
+        self.assertEqual(
+            groq.call_args.kwargs["model"], "llama-3.3-70b-versatile"
+        )
+        self.assertEqual(groq.call_args.kwargs["temperature"], 0.3)
 
     def test_outbound_translation_failure_also_uses_fallback(self):
         with patch.object(

@@ -150,7 +150,13 @@ def english_grounding_issues(
 
 
 class ChatService:
-    def _groq(self, messages: list[dict[str, str]]) -> str:
+    def _groq(
+        self,
+        messages: list[dict[str, str]],
+        *,
+        model: str | None = None,
+        temperature: float = 0.5,
+    ) -> str:
         api_key = get_groq_api_key()
         if not api_key:
             raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
@@ -159,7 +165,12 @@ class ChatService:
             response = GROQ_SESSION.post(
                 GROQ_API_URL,
                 headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-                json={"model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), "messages": messages, "temperature": 0.5, "max_tokens": GROQ_MAX_TOKENS},
+                json={
+                    "model": model or os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": GROQ_MAX_TOKENS,
+                },
                 timeout=45,
             )
             LOGGER.info("Groq chat completed in %.2fs", time.perf_counter() - started)
@@ -204,7 +215,9 @@ class ChatService:
             "The user is in Uganda unless they explicitly give another location. "
             "Understand the request directly, use the conversation history, preserve all "
             "amounts and constraints, and give practical locally relevant advice. Do not "
-            "mention translation providers or apologize for the language."
+            "mention translation providers or apologize for the language. Keep the answer "
+            "under 120 words. Never invent a bank, SACCO, company, program, currency amount, "
+            "interest rate, or percentage that the user did not provide."
         )
         messages = [
             {"role": "system", "content": build_system_prompt(language_code)},
@@ -214,7 +227,10 @@ class ChatService:
         ]
         if correction:
             messages.append({"role": "system", "content": correction})
-        return self._groq(messages)
+        fallback_model = os.getenv(
+            "GROQ_LOCAL_FALLBACK_MODEL", "llama-3.3-70b-versatile"
+        ).strip()
+        return self._groq(messages, model=fallback_model, temperature=0.3)
 
     def _local_fallback(
         self, message: str, context: list[dict[str, str]], language_code: str
