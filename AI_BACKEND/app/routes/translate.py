@@ -1,31 +1,26 @@
-from fastapi import APIRouter, HTTPException
-from app.models.translation_schema import TranslationRequest, TranslationResponse
-from app.services.translator_service import translator_service
+from fastapi import APIRouter, HTTPException, status
 
-router = APIRouter(
-    prefix="/translate",
-    tags=["Translation"]
-)
+from app.schemas import TranslationRequest, TranslationResponse
+from app.translator import translator
+
+router = APIRouter(prefix="/translate", tags=["Translation"])
 
 
-@router.post("/", response_model=TranslationResponse)
-def translate_text(request: TranslationRequest):
+@router.post("", response_model=TranslationResponse)
+@router.post("/", response_model=TranslationResponse, include_in_schema=False)
+def translate_text(request: TranslationRequest) -> TranslationResponse:
     try:
-        translated_text = translator_service.translate(
-            source_language=request.source_language,
-            target_language=request.target_language,
-            text=request.text
-        )
-
+        result = translator.translate_detailed(request.text, request.target_lang)
         return TranslationResponse(
-            source_language=request.source_language,
-            target_language=request.target_language,
             original_text=request.text,
-            translated_text=translated_text
+            translated_text=result.text,
+            target_lang=request.target_lang,
+            confidence=result.confidence,
+            meaning_similarity=result.meaning_similarity,
+            correction_source=result.source,
+            alternatives_evaluated=result.alternatives_evaluated,
         )
-
-    except ValueError as error:
-        raise HTTPException(status_code=400, detail=str(error))
-
-    except Exception as error:
-        raise HTTPException(status_code=500, detail=f"Translation failed: {str(error)}")
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    except (FileNotFoundError, RuntimeError) as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
