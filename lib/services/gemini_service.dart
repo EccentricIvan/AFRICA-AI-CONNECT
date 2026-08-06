@@ -24,6 +24,10 @@ Keep the tone warm, practical, and helpful.
 Every answer in this conversation must continue in Kiswahili.
 ''';
     case AppLocale.en:
+    case AppLocale.nyn:
+    case AppLocale.nyo:
+    case AppLocale.ach:
+    case AppLocale.teo:
       return '''
 The user selected English.
 Reply in clear, simple English.

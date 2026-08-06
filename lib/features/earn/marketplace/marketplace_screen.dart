@@ -344,32 +344,6 @@ class _FeaturedListings extends ConsumerWidget {
   final String Function(String) t;
 
   @override
-  Widget build(BuildContext context) {
-    final listings = [
-      const _Listing('Fresh Organic Vegetables', 'Sarah M. · Mukono', 'UGX 15,000', AppColors.healthColor, Icons.grass),
-      const _Listing('Handwoven Baskets', 'Grace K. · Jinja', 'UGX 35,000', AppColors.mentorshipColor, Icons.palette),
-      const _Listing('Shea Butter Soap', 'Peace N. · Gulu', 'UGX 8,000', AppColors.wellbeingColor, Icons.spa),
-    ];
-
-    return Column(
-      children: listings.map((l) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: const Color(0x123A2E29),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: const Color(0x153A2E29)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 52, height: 52,
-                decoration: BoxDecoration(
-                  color: l.color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(l.icon, color: l.color, size: 26),
   Widget build(BuildContext context, WidgetRef ref) {
     final listingsAsync = ref.watch(marketplaceListingsProvider);
     final hasFilter = ref.watch(selectedMarketplaceCategoryProvider) != null;

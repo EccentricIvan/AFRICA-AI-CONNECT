@@ -71,7 +71,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       response = offlineMatch.reply;
       isOffline = true;
     } else {
-      response = await _groq.sendMessage(text);
+      response = await _groq.sendMessage(text, locale);
       final onlineFailed =
           response.startsWith('API key not configured') ||
           response.startsWith('I\'m having trouble connecting') ||
@@ -81,7 +81,6 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
         isOffline = true;
       }
     }
-    final response = await _groq.sendMessage(text, locale);
 
     setState(() {
       _messages.add(

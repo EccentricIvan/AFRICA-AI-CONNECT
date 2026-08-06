@@ -22,13 +22,6 @@ enum AppLocale {
   final String shortCode;
   final String apiCode;
   final String flag;
-  en('English', 'EN'),
-  lg('Luganda', 'LG'),
-  sw('Kiswahili', 'SW');
-
-  const AppLocale(this.label, this.code);
-  final String label;
-  final String code;
 }
 
 final localeProvider = StateNotifierProvider<LocaleNotifier, AppLocale>((ref) {
