@@ -22,13 +22,6 @@ enum AppLocale {
   final String shortCode;
   final String apiCode;
   final String flag;
-  en('English', 'EN'),
-  lg('Luganda', 'LG'),
-  sw('Kiswahili', 'SW');
-
-  const AppLocale(this.label, this.code);
-  final String label;
-  final String code;
 }
 
 final localeProvider = StateNotifierProvider<LocaleNotifier, AppLocale>((ref) {
@@ -487,9 +480,12 @@ class S {
       AppLocale.sw: 'Msimbo huo haukufanya kazi. Tafadhali jaribu tena.',
     },
     'windows_recaptcha_note': {
-      AppLocale.en: 'On Windows, you may briefly see a verification step before your code is sent.',
-      AppLocale.lg: 'Ku Windows, oyinza okulaba akadde ak\'okukakasa nga koodi tennasindikwa.',
-      AppLocale.sw: 'Kwenye Windows, huenda ukaona hatua fupi ya uthibitisho kabla msimbo haujatumwa.',
+      AppLocale.en:
+          'On Windows, you may briefly see a verification step before your code is sent.',
+      AppLocale.lg:
+          'Ku Windows, oyinza okulaba akadde ak\'okukakasa nga koodi tennasindikwa.',
+      AppLocale.sw:
+          'Kwenye Windows, huenda ukaona hatua fupi ya uthibitisho kabla msimbo haujatumwa.',
     },
 
     // ── Roles ──
@@ -807,7 +803,8 @@ class S {
     },
     'no_listings_yet': {
       AppLocale.en: 'No listings yet — be the first to list a product!',
-      AppLocale.lg: 'Tewali kintu kyawandiikibwa — beera owasooka okuwandiika ekintu!',
+      AppLocale.lg:
+          'Tewali kintu kyawandiikibwa — beera owasooka okuwandiika ekintu!',
       AppLocale.sw: 'Hakuna bidhaa bado — kuwa wa kwanza kuorodhesha bidhaa!',
     },
     'no_listings_in_category': {

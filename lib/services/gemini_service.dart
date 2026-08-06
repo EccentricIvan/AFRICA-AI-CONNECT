@@ -23,6 +23,26 @@ If a technical word has no natural Kiswahili translation, keep the technical wor
 Keep the tone warm, practical, and helpful.
 Every answer in this conversation must continue in Kiswahili.
 ''';
+    case AppLocale.nyn:
+      return '''
+The user selected Runyankore.
+Always reply in clear, natural Runyankore. Do not switch to English unless the user asks. Keep technical terms in English only when necessary and explain them simply in Runyankore.
+''';
+    case AppLocale.nyo:
+      return '''
+The user selected Runyoro.
+Always reply in clear, natural Runyoro. Do not switch to English unless the user asks. Keep technical terms in English only when necessary and explain them simply in Runyoro.
+''';
+    case AppLocale.ach:
+      return '''
+The user selected Acholi.
+Always reply in clear, natural Acholi. Do not switch to English unless the user asks. Keep technical terms in English only when necessary and explain them simply in Acholi.
+''';
+    case AppLocale.teo:
+      return '''
+The user selected Ateso.
+Always reply in clear, natural Ateso. Do not switch to English unless the user asks. Keep technical terms in English only when necessary and explain them simply in Ateso.
+''';
     case AppLocale.en:
       return '''
 The user selected English.
