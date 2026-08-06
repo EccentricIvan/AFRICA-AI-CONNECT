@@ -204,11 +204,11 @@ class _CommunityFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final posts = [
-      _Post('Sarah M.', 'Just completed the Digital Skills course! So proud of this journey.',
+      const _Post('Sarah M.', 'Just completed the Digital Skills course! So proud of this journey.',
           '2 hours ago', AppColors.skillsColor),
-      _Post('Grace K.', 'My basket-weaving business got its first wholesale order today!',
+      const _Post('Grace K.', 'My basket-weaving business got its first wholesale order today!',
           '5 hours ago', AppColors.earnColor),
-      _Post('Peace N.', 'Looking for women interested in forming a SACCO in Gulu district.',
+      const _Post('Peace N.', 'Looking for women interested in forming a SACCO in Gulu district.',
           '1 day ago', AppColors.financeColor),
     ];
 
@@ -256,12 +256,12 @@ class _CommunityFeed extends StatelessWidget {
                 Text(p.content,
                     style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 10),
-                Row(
+                const Row(
                   children: [
                     _FeedAction(Icons.favorite_border, 'Like'),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     _FeedAction(Icons.chat_bubble_outline, 'Comment'),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     _FeedAction(Icons.share_outlined, 'Share'),
                   ],
                 ),

@@ -12,7 +12,7 @@ class OticConnectApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp.router(
-      title: 'Otic She Connect',
+      title: 'Africa AI Connect',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,

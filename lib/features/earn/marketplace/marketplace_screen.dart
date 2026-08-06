@@ -284,9 +284,9 @@ class _FeaturedListings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final listings = [
-      _Listing('Fresh Organic Vegetables', 'Sarah M. · Mukono', 'UGX 15,000', AppColors.healthColor, Icons.grass),
-      _Listing('Handwoven Baskets', 'Grace K. · Jinja', 'UGX 35,000', AppColors.mentorshipColor, Icons.palette),
-      _Listing('Shea Butter Soap', 'Peace N. · Gulu', 'UGX 8,000', AppColors.wellbeingColor, Icons.spa),
+      const _Listing('Fresh Organic Vegetables', 'Sarah M. · Mukono', 'UGX 15,000', AppColors.healthColor, Icons.grass),
+      const _Listing('Handwoven Baskets', 'Grace K. · Jinja', 'UGX 35,000', AppColors.mentorshipColor, Icons.palette),
+      const _Listing('Shea Butter Soap', 'Peace N. · Gulu', 'UGX 8,000', AppColors.wellbeingColor, Icons.spa),
     ];
 
     return Column(

@@ -30,8 +30,9 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     _ThemeTile(
                       currentMode: themeMode,
-                      onChanged: (mode) =>
-                          ref.read(themeModeProvider.notifier).set(mode),
+                      onChanged:
+                          (mode) =>
+                              ref.read(themeModeProvider.notifier).set(mode),
                     ),
                   ],
                 ),
@@ -44,14 +45,24 @@ class SettingsScreen extends ConsumerWidget {
                       return Material(
                         color: Colors.transparent,
                         child: ListTile(
-                          leading: Text(l.flag, style: const TextStyle(fontSize: 22)),
+                          leading: Text(
+                            l.flag,
+                            style: const TextStyle(fontSize: 22),
+                          ),
                           title: Text(l.label),
-                          subtitle: Text(l.code),
-                          trailing: isSelected
-                              ? const Icon(Icons.check_circle, color: AppColors.primary, size: 22)
-                              : null,
+                          subtitle: Text(l.shortCode),
+                          trailing:
+                              isSelected
+                                  ? const Icon(
+                                    Icons.check_circle,
+                                    color: AppColors.primary,
+                                    size: 22,
+                                  )
+                                  : null,
                           selected: isSelected,
-                          selectedTileColor: AppColors.primary.withValues(alpha: 0.08),
+                          selectedTileColor: AppColors.primary.withValues(
+                            alpha: 0.08,
+                          ),
                           onTap: () => ref.read(localeProvider.notifier).set(l),
                         ),
                       );
@@ -65,8 +76,7 @@ class SettingsScreen extends ConsumerWidget {
                     SwitchListTile(
                       secondary: const Icon(Icons.cloud_sync),
                       title: const Text('Auto-sync when online'),
-                      subtitle: const Text(
-                          'Sync your progress when connected'),
+                      subtitle: const Text('Sync your progress when connected'),
                       value: true,
                       onChanged: (v) {},
                     ),
@@ -100,7 +110,8 @@ class SettingsScreen extends ConsumerWidget {
                       secondary: const Icon(Icons.notifications),
                       title: const Text('Push notifications'),
                       subtitle: const Text(
-                          'Get updates on opportunities and community'),
+                        'Get updates on opportunities and community',
+                      ),
                       value: true,
                       onChanged: (v) {},
                     ),
@@ -108,7 +119,8 @@ class SettingsScreen extends ConsumerWidget {
                       secondary: const Icon(Icons.campaign),
                       title: const Text('Community updates'),
                       subtitle: const Text(
-                          'Posts and activity from your groups'),
+                        'Posts and activity from your groups',
+                      ),
                       value: true,
                       onChanged: (v) {},
                     ),
@@ -120,7 +132,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     const ListTile(
                       leading: Icon(Icons.info_outline),
-                      title: Text('Otic She Connect'),
+                      title: Text('Africa AI Connect'),
                       subtitle: Text('Version 1.0.0'),
                     ),
                     Material(
@@ -154,8 +166,7 @@ class SettingsScreen extends ConsumerWidget {
 }
 
 class _SettingsSection extends StatelessWidget {
-  const _SettingsSection(
-      {required this.title, required this.children});
+  const _SettingsSection({required this.title, required this.children});
   final String title;
   final List<Widget> children;
 
@@ -176,9 +187,7 @@ class _SettingsSection extends StatelessWidget {
             ),
           ),
         ),
-        Card(
-          child: Column(children: children),
-        ),
+        Card(child: Column(children: children)),
       ],
     );
   }
@@ -196,15 +205,17 @@ class _ThemeTile extends StatelessWidget {
         currentMode == ThemeMode.dark
             ? Icons.dark_mode
             : currentMode == ThemeMode.light
-                ? Icons.light_mode
-                : Icons.brightness_auto,
+            ? Icons.light_mode
+            : Icons.brightness_auto,
       ),
       title: const Text('Theme'),
-      subtitle: Text(currentMode == ThemeMode.dark
-          ? 'Dark'
-          : currentMode == ThemeMode.light
-              ? 'Light'
-              : 'System'),
+      subtitle: Text(
+        currentMode == ThemeMode.dark
+            ? 'Dark'
+            : currentMode == ThemeMode.light
+            ? 'Light'
+            : 'System',
+      ),
       trailing: SegmentedButton<ThemeMode>(
         selected: {currentMode},
         onSelectionChanged: (s) => onChanged(s.first),

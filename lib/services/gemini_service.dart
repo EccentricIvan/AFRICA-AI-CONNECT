@@ -6,7 +6,8 @@ class GeminiService {
   static const _model = 'llama-3.3-70b-versatile';
   static const _baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
-  static const _systemPrompt = '''You are Otic She Connect AI Assistant — a warm, supportive, and knowledgeable companion for women in Sub-Saharan Africa.
+  static const _systemPrompt =
+      '''You are Africa AI Connect AI Assistant — a warm, supportive, and knowledgeable companion for women in Sub-Saharan Africa.
 
 Your role is to help women with:
 - Business and entrepreneurship advice
@@ -41,23 +42,27 @@ Guidelines:
     ];
 
     try {
-      final response = await http.post(
-        Uri.parse(_baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${ApiConfig.groqKey}',
-        },
-        body: jsonEncode({
-          'model': _model,
-          'messages': messages,
-          'temperature': 0.7,
-          'max_tokens': 512,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final response = await http
+          .post(
+            Uri.parse(_baseUrl),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ${ApiConfig.groqKey}',
+            },
+            body: jsonEncode({
+              'model': _model,
+              'messages': messages,
+              'temperature': 0.7,
+              'max_tokens': 512,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final text = data['choices']?[0]?['message']?['content'] ?? 'I could not generate a response. Please try again.';
+        final text =
+            data['choices']?[0]?['message']?['content'] ??
+            'I could not generate a response. Please try again.';
 
         _history.add({'role': 'assistant', 'content': text});
         return text;

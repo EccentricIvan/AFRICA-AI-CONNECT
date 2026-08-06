@@ -257,7 +257,7 @@ class _ResourceCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right_rounded, color: const Color(0x553A2E29), size: 20),
+            const Icon(Icons.chevron_right_rounded, color: Color(0x553A2E29), size: 20),
           ],
         ),
       ),

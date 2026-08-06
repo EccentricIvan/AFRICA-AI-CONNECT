@@ -3,13 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppLocale {
-  en('English', 'EN', '🇬🇧'),
-  lg('Luganda', 'LG', '🇺🇬'),
-  sw('Kiswahili', 'SW', '🇰🇪');
+  en(label: 'English', shortCode: 'EN', apiCode: 'en', flag: '🇬🇧'),
+  lg(label: 'Luganda', shortCode: 'LG', apiCode: 'lg', flag: '🇺🇬'),
+  sw(label: 'Kiswahili', shortCode: 'SW', apiCode: 'sw', flag: '🇰🇪'),
+  nyn(label: 'Runyankore', shortCode: 'NYN', apiCode: 'nyn', flag: '🇺🇬'),
+  nyo(label: 'Runyoro', shortCode: 'NYO', apiCode: 'nyo', flag: '🇺🇬'),
+  ach(label: 'Acholi', shortCode: 'ACH', apiCode: 'ach', flag: '🇺🇬'),
+  teo(label: 'Ateso', shortCode: 'TEO', apiCode: 'teo', flag: '🇺🇬');
 
-  const AppLocale(this.label, this.code, this.flag);
+  const AppLocale({
+    required this.label,
+    required this.shortCode,
+    required this.apiCode,
+    required this.flag,
+  });
+
   final String label;
-  final String code;
+  final String shortCode;
+  final String apiCode;
   final String flag;
 }
 
@@ -53,9 +64,13 @@ class S {
   static const _strings = <String, Map<AppLocale, String>>{
     // ── App-wide ──
     'app_name': {
-      AppLocale.en: 'Otic She Connect',
-      AppLocale.lg: 'Otic She Connect',
-      AppLocale.sw: 'Otic She Connect',
+      AppLocale.en: 'Africa AI Connect',
+      AppLocale.lg: 'Africa AI Connect',
+      AppLocale.sw: 'Africa AI Connect',
+      AppLocale.nyn: 'Africa AI Connect',
+      AppLocale.nyo: 'Africa AI Connect',
+      AppLocale.ach: 'Africa AI Connect',
+      AppLocale.teo: 'Africa AI Connect',
     },
     'online': {
       AppLocale.en: 'Online',
@@ -332,9 +347,9 @@ class S {
 
     // ── Onboarding ──
     'welcome_to': {
-      AppLocale.en: 'Welcome to\nOtic She Connect',
-      AppLocale.lg: 'Tukusanyukira ku\nOtic She Connect',
-      AppLocale.sw: 'Karibu kwenye\nOtic She Connect',
+      AppLocale.en: 'Welcome to\nAfrica AI Connect',
+      AppLocale.lg: 'Tukusanyukira ku\nAfrica AI Connect',
+      AppLocale.sw: 'Karibu kwenye\nAfrica AI Connect',
     },
     'welcome_desc': {
       AppLocale.en:
@@ -867,6 +882,15 @@ class S {
     },
 
     // ── AI Chat screen ──
+    'offline_guidance': {
+      AppLocale.en: 'Offline guidance',
+      AppLocale.lg: 'Obulagirizi obutali ku yintaneeti',
+      AppLocale.sw: 'Mwongozo nje ya mtandao',
+      AppLocale.nyn: 'Obuhabuzi butari aha mutimbagano',
+      AppLocale.nyo: 'Obuhabuzi butali ha mutimbagano',
+      AppLocale.ach: 'Tam ma pe mito intanet',
+      AppLocale.teo: 'Aingarakina na mam erai ka internet',
+    },
     'powered_by_groq': {
       AppLocale.en: 'Powered by Groq · Llama 3.3',
       AppLocale.lg: 'Yakozesebwa Groq · Llama 3.3',
@@ -874,11 +898,11 @@ class S {
     },
     'ai_greeting': {
       AppLocale.en:
-          'Hello! I\'m your AI assistant from Otic She Connect. I can help you with business advice, farming tips, health information, financial guidance, and much more. What would you like to know?',
+          'Hello! I\'m your AI assistant from Africa AI Connect. I can help you with business advice, farming tips, health information, financial guidance, and much more. What would you like to know?',
       AppLocale.lg:
-          'Oli otya! Nze omuyambi wo wa AI okuva ku Otic She Connect. Nsobola okukuyamba n\'amagezi g\'obusubuzi, ebyobulimi, amakwate g\'obulamu, ebiragiro by\'ensimbi, n\'ebirala bingi. Oyagala okumanya ki?',
+          'Oli otya! Nze omuyambi wo wa AI okuva ku Africa AI Connect. Nsobola okukuyamba n\'amagezi g\'obusubuzi, ebyobulimi, amakwate g\'obulamu, ebiragiro by\'ensimbi, n\'ebirala bingi. Oyagala okumanya ki?',
       AppLocale.sw:
-          'Habari! Mimi ni msaidizi wako wa AI kutoka Otic She Connect. Ninaweza kukusaidia na ushauri wa biashara, vidokezo vya kilimo, habari za afya, mwongozo wa fedha, na mengi zaidi. Ungependa kujua nini?',
+          'Habari! Mimi ni msaidizi wako wa AI kutoka Africa AI Connect. Ninaweza kukusaidia na ushauri wa biashara, vidokezo vya kilimo, habari za afya, mwongozo wa fedha, na mengi zaidi. Ungependa kujua nini?',
     },
     'chat_cleared': {
       AppLocale.en: 'Chat cleared! How can I help you?',

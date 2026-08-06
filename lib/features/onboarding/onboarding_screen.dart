@@ -33,9 +33,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _next() {
     if (_page == 1 && _nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_t('please_enter_name'))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_t('please_enter_name'))));
       return;
     }
     if (_page < 2) {
@@ -96,9 +96,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       width: _page == i ? 24 : 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: _page == i
-                            ? AppColors.primary
-                            : Theme.of(context).dividerColor,
+                        color:
+                            _page == i
+                                ? AppColors.primary
+                                : Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -139,18 +140,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       flex: 2,
                       child: ElevatedButton(
                         onPressed: _saving ? null : _next,
-                        child: _saving
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
+                        child:
+                            _saving
+                                ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                                : Text(
+                                  _page < 2
+                                      ? _t('continue_btn')
+                                      : _t('start_journey'),
                                 ),
-                              )
-                            : Text(_page < 2
-                                ? _t('continue_btn')
-                                : _t('start_journey')),
                       ),
                     ),
                   ],
@@ -174,26 +178,35 @@ class _LanguagePage extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        padding: const EdgeInsets.only(bottom: 24),
+        physics: const BouncingScrollPhysics(),
         children: [
           const SizedBox(height: 12),
           Image.asset(
             'assets/branding/otic_logo.png',
-            width: 56, height: 56, fit: BoxFit.contain,
+            width: 56,
+            height: 56,
+            fit: BoxFit.contain,
           ),
           const SizedBox(height: 20),
           const Text(
             'Choose your language',
             style: TextStyle(
-              fontSize: 28, fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary, height: 1.2,
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+              height: 1.2,
             ),
           ),
           const SizedBox(height: 4),
           const Text(
             'Londa olulimi lwo · Chagua lugha yako',
-            style: TextStyle(fontSize: 14, color: AppColors.textHint, height: 1.5),
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.textHint,
+              height: 1.5,
+            ),
           ),
           const SizedBox(height: 28),
           ...AppLocale.values.map((locale) {
@@ -205,14 +218,16 @@ class _LanguagePage extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppColors.primary.withValues(alpha: 0.12)
-                      : const Color(0x123A2E29),
+                  color:
+                      isSelected
+                          ? AppColors.primary.withValues(alpha: 0.12)
+                          : const Color(0x123A2E29),
                   borderRadius: BorderRadius.circular(18),
                   border: Border.all(
-                    color: isSelected
-                        ? AppColors.primary
-                        : const Color(0x223A2E29),
+                    color:
+                        isSelected
+                            ? AppColors.primary
+                            : const Color(0x223A2E29),
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -227,33 +242,49 @@ class _LanguagePage extends StatelessWidget {
                           Text(
                             locale.label,
                             style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600,
-                              color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color:
+                                  isSelected
+                                      ? AppColors.primary
+                                      : AppColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            locale.code,
-                            style: const TextStyle(fontSize: 12, color: AppColors.textHint),
+                            locale.shortCode,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textHint,
+                            ),
                           ),
                         ],
                       ),
                     ),
                     if (isSelected)
                       Container(
-                        width: 28, height: 28,
+                        width: 28,
+                        height: 28,
                         decoration: const BoxDecoration(
                           color: AppColors.primary,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.check, color: Colors.white, size: 18),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 18,
+                        ),
                       )
                     else
                       Container(
-                        width: 28, height: 28,
+                        width: 28,
+                        height: 28,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0x443A2E29), width: 2),
+                          border: Border.all(
+                            color: const Color(0x443A2E29),
+                            width: 2,
+                          ),
                         ),
                       ),
                   ],
@@ -282,7 +313,9 @@ class _WelcomePage extends StatelessWidget {
           const SizedBox(height: 12),
           Image.asset(
             'assets/branding/otic_logo.png',
-            width: 56, height: 56, fit: BoxFit.contain,
+            width: 56,
+            height: 56,
+            fit: BoxFit.contain,
           ),
           const SizedBox(height: 16),
           Text(
@@ -333,10 +366,20 @@ class _RolePage extends StatelessWidget {
   final String Function(String) t;
 
   List<(String, String, IconData, String)> get _roles => [
-    ('role_entrepreneur', 'role_entrepreneur_desc', Icons.rocket_launch, 'Entrepreneur'),
+    (
+      'role_entrepreneur',
+      'role_entrepreneur_desc',
+      Icons.rocket_launch,
+      'Entrepreneur',
+    ),
     ('role_farmer', 'role_farmer_desc', Icons.agriculture, 'Farmer'),
     ('role_student', 'role_student_desc', Icons.school, 'Student'),
-    ('role_job_seeker', 'role_job_seeker_desc', Icons.work_outline, 'Job Seeker'),
+    (
+      'role_job_seeker',
+      'role_job_seeker_desc',
+      Icons.work_outline,
+      'Job Seeker',
+    ),
     ('role_leader', 'role_leader_desc', Icons.groups, 'Community Leader'),
     ('role_artisan', 'role_artisan_desc', Icons.palette, 'Artisan / Creator'),
   ];
@@ -349,8 +392,10 @@ class _RolePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 12),
-          Text(t('about_you'),
-              style: Theme.of(context).textTheme.headlineLarge),
+          Text(
+            t('about_you'),
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
           const SizedBox(height: 6),
           Text(
             t('about_you_desc'),
@@ -360,8 +405,10 @@ class _RolePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Text(t('what_describes_you'),
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            t('what_describes_you'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 12),
           ..._roles.map((r) {
             final isSelected = selected == r.$4;
@@ -372,14 +419,16 @@ class _RolePage extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppColors.primary.withValues(alpha: 0.08)
-                      : Theme.of(context).colorScheme.surface,
+                  color:
+                      isSelected
+                          ? AppColors.primary.withValues(alpha: 0.08)
+                          : Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: isSelected
-                        ? AppColors.primary
-                        : Theme.of(context).dividerColor,
+                    color:
+                        isSelected
+                            ? AppColors.primary
+                            : Theme.of(context).dividerColor,
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -387,9 +436,10 @@ class _RolePage extends StatelessWidget {
                   children: [
                     Icon(
                       r.$3,
-                      color: isSelected
-                          ? AppColors.primary
-                          : Theme.of(context).hintColor,
+                      color:
+                          isSelected
+                              ? AppColors.primary
+                              : Theme.of(context).hintColor,
                       size: 24,
                     ),
                     const SizedBox(width: 14),
@@ -401,9 +451,12 @@ class _RolePage extends StatelessWidget {
                             t(r.$1),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: isSelected
-                                  ? AppColors.primary
-                                  : Theme.of(context).textTheme.bodyLarge?.color,
+                              color:
+                                  isSelected
+                                      ? AppColors.primary
+                                      : Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.color,
                             ),
                           ),
                           Text(
@@ -417,16 +470,18 @@ class _RolePage extends StatelessWidget {
                       ),
                     ),
                     if (isSelected)
-                      const Icon(Icons.check_circle,
-                          color: AppColors.primary, size: 20),
+                      const Icon(
+                        Icons.check_circle,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
                   ],
                 ),
               ),
             );
           }),
           const SizedBox(height: 16),
-          Text(t('where_based'),
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(t('where_based'), style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
           TextField(
             onChanged: onLocation,

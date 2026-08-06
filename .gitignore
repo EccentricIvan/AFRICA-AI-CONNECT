@@ -78,6 +78,11 @@ AI_BACKEND/app/Data/finetune_luganda/
 AI_BACKEND/app/Data/finetune_swahili/
 *.zip
 AI_BACKEND/ai_models/
+AI_BACKEND/Luganda_Merged/
+AI_BACKEND/Swahili_Merged/
+AI_BACKEND/nllb_600m_base/
+AI_BACKEND/otic_nllb_luganda_lora_full_final/
+AI_BACKEND/otic_nllb_swahili_lora_full_final/
 *.zip
 luganda_adapter_temp/
 swahili_adapter_temp/
