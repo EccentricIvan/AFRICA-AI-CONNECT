@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "756505505117",
+    "project_id": "africa-ai-connect",
+    "storage_bucket": "africa-ai-connect.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756505505117:android:e240c06c7cd10af56f0cb4",
+        "android_client_info": {
+          "package_name": "com.oticgroup.otic_connect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW3E3y6xroQbjwP8CQkQTkrpUY-VepEWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

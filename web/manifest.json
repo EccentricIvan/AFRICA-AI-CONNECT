@@ -1,11 +1,11 @@
 {
-    "name": "otic_connect",
-    "short_name": "otic_connect",
+    "name": "Africa AI Connect",
+    "short_name": "Africa AI Connect",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FAF1EC",
+    "theme_color": "#C96F4A",
+    "description": "Africa AI Connect - Empowering Women Through Digital Inclusion",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -22,6 +22,13 @@ enum AppLocale {
   final String shortCode;
   final String apiCode;
   final String flag;
+  en('English', 'EN'),
+  lg('Luganda', 'LG'),
+  sw('Kiswahili', 'SW');
+
+  const AppLocale(this.label, this.code);
+  final String label;
+  final String code;
 }
 
 final localeProvider = StateNotifierProvider<LocaleNotifier, AppLocale>((ref) {
@@ -423,6 +430,68 @@ class S {
       AppLocale.sw: 'Tafadhali ingiza jina lako',
     },
 
+    // ── Auth (phone / OTP) ──
+    'enter_phone_number': {
+      AppLocale.en: 'Enter your phone number',
+      AppLocale.lg: 'Wandiika ennamba yo eya essimu',
+      AppLocale.sw: 'Ingiza nambari yako ya simu',
+    },
+    'phone_number_hint': {
+      AppLocale.en: 'e.g. 700 000 000',
+      AppLocale.lg: 'okugeza 700 000 000',
+      AppLocale.sw: 'mf. 700 000 000',
+    },
+    'send_code': {
+      AppLocale.en: 'Send code',
+      AppLocale.lg: 'Sindika koodi',
+      AppLocale.sw: 'Tuma msimbo',
+    },
+    'enter_otp_code': {
+      AppLocale.en: 'Enter the code we sent you',
+      AppLocale.lg: 'Wandiika koodi gye tukusindikidde',
+      AppLocale.sw: 'Ingiza msimbo tuliokutumia',
+    },
+    'otp_code_hint': {
+      AppLocale.en: '6-digit code',
+      AppLocale.lg: 'Koodi ey\'ennamba 6',
+      AppLocale.sw: 'Msimbo wa tarakimu 6',
+    },
+    'verify_code': {
+      AppLocale.en: 'Verify code',
+      AppLocale.lg: 'Kakasa koodi',
+      AppLocale.sw: 'Thibitisha msimbo',
+    },
+    'resend_code': {
+      AppLocale.en: 'Resend code',
+      AppLocale.lg: 'Ddamu osindike koodi',
+      AppLocale.sw: 'Tuma tena msimbo',
+    },
+    'invalid_phone_number': {
+      AppLocale.en: 'Please enter a valid phone number',
+      AppLocale.lg: 'Nsaba wandiike ennamba entuufu eya essimu',
+      AppLocale.sw: 'Tafadhali ingiza nambari sahihi ya simu',
+    },
+    'invalid_otp_code': {
+      AppLocale.en: 'Please enter the code we sent you',
+      AppLocale.lg: 'Nsaba wandiike koodi gye tukusindikidde',
+      AppLocale.sw: 'Tafadhali ingiza msimbo tuliokutumia',
+    },
+    'otp_send_failed': {
+      AppLocale.en: 'Could not send code. Please try again.',
+      AppLocale.lg: 'Tetusobodde kusindika koodi. Ddamu ogezeeko.',
+      AppLocale.sw: 'Imeshindwa kutuma msimbo. Tafadhali jaribu tena.',
+    },
+    'otp_verify_failed': {
+      AppLocale.en: 'That code didn\'t work. Please try again.',
+      AppLocale.lg: 'Koodi eyo teyakoze. Ddamu ogezeeko.',
+      AppLocale.sw: 'Msimbo huo haukufanya kazi. Tafadhali jaribu tena.',
+    },
+    'windows_recaptcha_note': {
+      AppLocale.en: 'On Windows, you may briefly see a verification step before your code is sent.',
+      AppLocale.lg: 'Ku Windows, oyinza okulaba akadde ak\'okukakasa nga koodi tennasindikwa.',
+      AppLocale.sw: 'Kwenye Windows, huenda ukaona hatua fupi ya uthibitisho kabla msimbo haujatumwa.',
+    },
+
     // ── Roles ──
     'role_entrepreneur': {
       AppLocale.en: 'Entrepreneur',
@@ -705,6 +774,56 @@ class S {
       AppLocale.en: 'See all',
       AppLocale.lg: 'Laba byonna',
       AppLocale.sw: 'Ona yote',
+    },
+    'listing_title_hint': {
+      AppLocale.en: 'e.g. Fresh Organic Vegetables',
+      AppLocale.lg: 'okugeza Enva endiirwa ez\'obutonde',
+      AppLocale.sw: 'mf. Mboga za asili',
+    },
+    'listing_price_hint': {
+      AppLocale.en: 'Price (UGX)',
+      AppLocale.lg: 'Omuwendo (UGX)',
+      AppLocale.sw: 'Bei (UGX)',
+    },
+    'select_category_label': {
+      AppLocale.en: 'Category',
+      AppLocale.lg: 'Ekika',
+      AppLocale.sw: 'Aina',
+    },
+    'select_category_error': {
+      AppLocale.en: 'Please select a category',
+      AppLocale.lg: 'Nsaba olondewo ekika',
+      AppLocale.sw: 'Tafadhali chagua aina',
+    },
+    'listing_title_error': {
+      AppLocale.en: 'Please enter a product title',
+      AppLocale.lg: 'Nsaba wandiike erinnya ly\'ekintu',
+      AppLocale.sw: 'Tafadhali ingiza jina la bidhaa',
+    },
+    'listing_price_error': {
+      AppLocale.en: 'Please enter a valid price',
+      AppLocale.lg: 'Nsaba wandiike omuwendo omutuufu',
+      AppLocale.sw: 'Tafadhali ingiza bei sahihi',
+    },
+    'no_listings_yet': {
+      AppLocale.en: 'No listings yet — be the first to list a product!',
+      AppLocale.lg: 'Tewali kintu kyawandiikibwa — beera owasooka okuwandiika ekintu!',
+      AppLocale.sw: 'Hakuna bidhaa bado — kuwa wa kwanza kuorodhesha bidhaa!',
+    },
+    'no_listings_in_category': {
+      AppLocale.en: 'No listings in this category yet',
+      AppLocale.lg: 'Tewali kintu mu kika kino',
+      AppLocale.sw: 'Hakuna bidhaa katika aina hii bado',
+    },
+    'listing_as': {
+      AppLocale.en: 'Listing as',
+      AppLocale.lg: 'Owandiika nga',
+      AppLocale.sw: 'Unaorodhesha kama',
+    },
+    'clear_filter': {
+      AppLocale.en: 'Clear filter',
+      AppLocale.lg: 'Ggyawo okulonda',
+      AppLocale.sw: 'Futa kichujio',
     },
     'cat_crafts': {
       AppLocale.en: 'Crafts',

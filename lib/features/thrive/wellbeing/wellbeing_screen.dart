@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/feature_card.dart';
+import '../../../shared/widgets/helpline_sheet.dart';
 
 class WellbeingScreen extends StatelessWidget {
   const WellbeingScreen({super.key});
@@ -95,7 +96,7 @@ class WellbeingScreen extends StatelessWidget {
                   subtitle: 'Helplines, counselling, and safe spaces',
                   icon: Icons.support_agent,
                   color: AppColors.communityColor,
-                  onTap: () {},
+                  onTap: () => showHelplineSheet(context),
                 ),
                 const SizedBox(height: 24),
                 _SafetyCard(),
@@ -148,7 +149,7 @@ class _SafetyCard extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => showHelplineSheet(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
               padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/section_header.dart';
+import '../../db/providers/database_provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserProvider).valueOrNull;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Profile'),
@@ -21,7 +25,11 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _ProfileHeader(),
+                _ProfileHeader(
+                  name: user?.name ?? 'Friend',
+                  role: user?.role,
+                  location: user?.location,
+                ),
                 const SizedBox(height: 24),
                 _StatsRow(),
                 const SizedBox(height: 24),
@@ -49,6 +57,11 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class _ProfileHeader extends StatelessWidget {
+  const _ProfileHeader({required this.name, this.role, this.location});
+  final String name;
+  final String? role;
+  final String? location;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -78,7 +91,7 @@ class _ProfileHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome!',
+                  name,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 4),
@@ -91,9 +104,9 @@ class _ProfileHeader extends StatelessWidget {
                     color: AppColors.earnColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
-                    'Entrepreneur',
-                    style: TextStyle(
+                  child: Text(
+                    role ?? 'Member',
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: AppColors.earnColor,
@@ -110,7 +123,7 @@ class _ProfileHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'Kampala, Uganda',
+                      location ?? 'Location not set',
                       style: TextStyle(
                         fontSize: 13,
                         color: Theme.of(context).hintColor,

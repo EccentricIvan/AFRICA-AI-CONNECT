@@ -1,5 +1,5 @@
 name: otic_connect
-description: Otic Connect - Empowering Women Through Digital Inclusion
+description: Africa AI Connect - Empowering Women Through Digital Inclusion
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -36,6 +36,14 @@ dependencies:
   # URL launcher (for external links)
   url_launcher: ^6.2.0
 
+  # File/image picking (marketplace listing photos) — file_picker over
+  # image_picker because it has real Windows desktop support, and this
+  # app is actively developed/tested on Windows, not just Android.
+  file_picker: ^8.0.0
+  firebase_core: ^4.11.0
+  firebase_auth: ^6.5.4
+  cloud_firestore: ^6.6.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,9 +55,9 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/branding/otic_logo.png"
-  adaptive_icon_background: "#0A6E6E"
-  adaptive_icon_foreground: "assets/branding/otic_logo.png"
+  image_path: "assets/branding/Africa-AI-Connect-logo.png"
+  adaptive_icon_background: "#FAF1EC"
+  adaptive_icon_foreground: "assets/branding/app_icon_mark.png"
 
 flutter:
   uses-material-design: true

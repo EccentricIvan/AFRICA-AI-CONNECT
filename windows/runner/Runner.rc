@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.oticgroup" "\0"
-            VALUE "FileDescription", "otic_connect" "\0"
+            VALUE "FileDescription", "Africa AI Connect" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "otic_connect" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.oticgroup. All rights reserved." "\0"
             VALUE "OriginalFilename", "otic_connect.exe" "\0"
-            VALUE "ProductName", "otic_connect" "\0"
+            VALUE "ProductName", "Africa AI Connect" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

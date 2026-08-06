@@ -4,8 +4,8 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 
-class OticConnectApp extends ConsumerWidget {
-  const OticConnectApp({super.key});
+class AfricaAiConnectApp extends ConsumerWidget {
+  const AfricaAiConnectApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

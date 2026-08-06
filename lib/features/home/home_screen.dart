@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../db/providers/database_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -13,19 +13,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  String _userName = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadName();
-  }
-
-  Future<void> _loadName() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() => _userName = prefs.getString('user_name') ?? 'Friend');
-  }
-
   String _t(String key) => S.tr(context, ref, key);
 
   String get _greeting {
@@ -38,6 +25,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
+    final userName = ref.watch(currentUserProvider).valueOrNull?.name ?? 'Friend';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -52,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              _HomeAppBar(userName: _userName, greeting: _greeting),
+              _HomeAppBar(userName: userName, greeting: _greeting),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -1,6 +1,35 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../core/l10n/app_strings.dart';
 import 'api_config.dart';
+
+String getAiLanguageInstruction(AppLocale locale) {
+  switch (locale) {
+    case AppLocale.lg:
+      return '''
+The user selected Luganda / Oluganda.
+You must always reply in clear, natural Luganda.
+Do not switch to English unless the user explicitly asks.
+If a technical word has no natural Luganda translation, keep the technical word in English and explain it simply in Luganda.
+Keep the tone warm, practical, and helpful for Ugandan users.
+Every answer in this conversation must continue in Luganda.
+''';
+    case AppLocale.sw:
+      return '''
+The user selected Kiswahili.
+You must always reply in clear, natural Kiswahili.
+Do not switch to English unless the user explicitly asks.
+If a technical word has no natural Kiswahili translation, keep the technical word in English and explain it simply in Kiswahili.
+Keep the tone warm, practical, and helpful.
+Every answer in this conversation must continue in Kiswahili.
+''';
+    case AppLocale.en:
+      return '''
+The user selected English.
+Reply in clear, simple English.
+''';
+  }
+}
 
 class GeminiService {
   static const _model = 'llama-3.3-70b-versatile';
@@ -29,7 +58,7 @@ Guidelines:
 
   final List<Map<String, dynamic>> _history = [];
 
-  Future<String> sendMessage(String message) async {
+  Future<String> sendMessage(String message, AppLocale selectedLocale) async {
     if (ApiConfig.groqKey.isEmpty) {
       return 'API key not configured. Please contact support.';
     }
@@ -37,6 +66,7 @@ Guidelines:
     _history.add({'role': 'user', 'content': message});
 
     final messages = [
+      {'role': 'system', 'content': getAiLanguageInstruction(selectedLocale)},
       {'role': 'system', 'content': _systemPrompt},
       ..._history,
     ];

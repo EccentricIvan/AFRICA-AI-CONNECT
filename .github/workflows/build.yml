@@ -29,22 +29,30 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Verify Flutter setup
+        run: flutter doctor -v
+
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Generate code (Drift, etc.)
+        run: dart run build_runner build --delete-conflicting-outputs
+
       - name: Build release APK (split per ABI)
-        run: flutter build apk --release --split-per-abi --dart-define=GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: flutter build apk --release --split-per-abi --dart-define=GROQ_API_KEY="${GROQ_API_KEY:-}"
 
       - name: Upload arm64 APK (main target)
         uses: actions/upload-artifact@v4
         with:
-          name: otic-connect-v${{ github.run_number }}-arm64
+          name: africa-ai-connect-v${{ github.run_number }}-arm64
           path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
           retention-days: 30
 
       - name: Upload armeabi APK (older devices)
         uses: actions/upload-artifact@v4
         with:
-          name: otic-connect-v${{ github.run_number }}-arm32
+          name: africa-ai-connect-v${{ github.run_number }}-arm32
           path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
           retention-days: 30

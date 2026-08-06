@@ -81,6 +81,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
         isOffline = true;
       }
     }
+    final response = await _groq.sendMessage(text, locale);
 
     setState(() {
       _messages.add(

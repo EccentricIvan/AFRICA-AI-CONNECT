@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/onboarding/onboarding_screen.dart';
+import '../../features/auth/phone_entry_screen.dart';
+import '../../features/auth/otp_verify_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/learn/learn_hub_screen.dart';
 import '../../features/earn/marketplace/marketplace_screen.dart';
@@ -27,11 +29,23 @@ final hasProfileProvider = StateProvider<bool>((ref) {
 });
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  // Phone auth isn't live yet (Firebase project isn't on Blaze), so startup
+  // routing doesn't gate on isAuthenticatedProvider — /auth/phone and
+  // /auth/otp stay reachable for later, but don't block anyone today.
   final hasProfile = ref.watch(hasProfileProvider);
+  final initialLocation = hasProfile ? '/' : '/onboarding';
   return GoRouter(
     navigatorKey: _rootKey,
-    initialLocation: hasProfile ? '/' : '/onboarding',
+    initialLocation: initialLocation,
     routes: [
+      GoRoute(
+        path: '/auth/phone',
+        builder: (_, __) => const PhoneEntryScreen(),
+      ),
+      GoRoute(
+        path: '/auth/otp',
+        builder: (_, __) => const OtpVerifyScreen(),
+      ),
       GoRoute(
         path: '/onboarding',
         builder: (_, __) => const OnboardingScreen(),
