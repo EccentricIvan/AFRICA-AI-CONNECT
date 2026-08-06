@@ -1,0 +1,15 @@
+AI_BACKEND/
+android/
+assets/
+build/
+docs/
+ios/
+lib/
+linux/
+macos/
+scripts/
+test/
+web/
+windows/
+.dart_tool/
+*.lock

@@ -79,6 +79,18 @@ Guidelines:
   final List<Map<String, dynamic>> _history = [];
 
   Future<String> sendMessage(String message, AppLocale selectedLocale) async {
+    if (ApiConfig.aiBackendUrl.isNotEmpty) {
+      try {
+        final backendReply = await _sendViaBackend(message, selectedLocale);
+        _history.add({'role': 'user', 'content': message});
+        _history.add({'role': 'assistant', 'content': backendReply});
+        return backendReply;
+      } catch (_) {
+        // The remote backend is optional. Preserve the APK's established
+        // direct-Groq behavior whenever Vercel is unavailable or misconfigured.
+      }
+    }
+
     if (ApiConfig.groqKey.isEmpty) {
       return 'API key not configured. Please contact support.';
     }
@@ -128,5 +140,34 @@ Guidelines:
 
   void clearHistory() {
     _history.clear();
+  }
+
+  Future<String> _sendViaBackend(
+    String message,
+    AppLocale selectedLocale,
+  ) async {
+    final baseUrl = ApiConfig.aiBackendUrl.replaceAll(RegExp(r'/+$'), '');
+    final response = await http
+        .post(
+          Uri.parse('$baseUrl/api/chat'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'message': message,
+            'language': selectedLocale.apiCode,
+            'history': _history,
+          }),
+        )
+        .timeout(const Duration(seconds: 25));
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw StateError('Backend returned ${response.statusCode}');
+    }
+
+    final data = jsonDecode(response.body);
+    final reply = (data['reply'] ?? data['response'])?.toString().trim();
+    if (reply == null || reply.isEmpty) {
+      throw const FormatException('Backend response did not contain a reply');
+    }
+    return reply;
   }
 }
