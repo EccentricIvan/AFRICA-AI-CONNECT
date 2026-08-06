@@ -70,15 +70,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           .collection('users')
           .doc(firebaseUser.uid)
           .set({
-        'name': name,
-        'role': _role,
-        'location': _location,
-        'phoneNumber': firebaseUser.phoneNumber,
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+            'name': name,
+            'role': _role,
+            'location': _location,
+            'phoneNumber': firebaseUser.phoneNumber,
+            'createdAt': FieldValue.serverTimestamp(),
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
     }
-    await ref.read(userDaoProvider).saveUser(
+    await ref
+        .read(userDaoProvider)
+        .saveUser(
           name: name,
           role: _role,
           location: _location,
@@ -206,7 +208,9 @@ class _LanguagePage extends StatelessWidget {
           const SizedBox(height: 12),
           Image.asset(
             'assets/branding/app_icon_mark.png',
-            width: 56, height: 56, fit: BoxFit.contain,
+            width: 56,
+            height: 56,
+            fit: BoxFit.contain,
           ),
           const SizedBox(height: 20),
           const Text(
@@ -324,13 +328,16 @@ class _WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        padding: const EdgeInsets.only(bottom: 24),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           const SizedBox(height: 12),
           Image.asset(
             'assets/branding/app_icon_mark.png',
-            width: 56, height: 56, fit: BoxFit.contain,
+            width: 56,
+            height: 56,
+            fit: BoxFit.contain,
           ),
           const SizedBox(height: 16),
           Text(

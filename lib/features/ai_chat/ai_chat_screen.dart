@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../services/gemini_service.dart';
@@ -63,23 +64,34 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
-    final offlineMatch = await _offlineChat.findMatch(text, locale);
+    final connectivity = await Connectivity().checkConnectivity();
+    final hasNetwork = connectivity.any(
+      (result) => result != ConnectivityResult.none,
+    );
+
     String response;
     var isOffline = false;
 
-    if (offlineMatch != null) {
-      response = offlineMatch.reply;
-      isOffline = true;
-    } else {
+    if (hasNetwork) {
       response = await _groq.sendMessage(text, locale);
-      final onlineFailed =
-          response.startsWith('API key not configured') ||
-          response.startsWith('I\'m having trouble connecting') ||
-          response.startsWith('Sorry, I encountered an error');
-      if (onlineFailed) {
-        response = await _offlineChat.getFallback(locale) ?? response;
+      final connectionFailed = response.startsWith(
+        'I\'m having trouble connecting',
+      );
+      if (connectionFailed) {
+        final offlineMatch = await _offlineChat.findMatch(text, locale);
+        response =
+            offlineMatch?.reply ??
+            await _offlineChat.getFallback(locale) ??
+            response;
         isOffline = true;
       }
+    } else {
+      final offlineMatch = await _offlineChat.findMatch(text, locale);
+      response =
+          offlineMatch?.reply ??
+          await _offlineChat.getFallback(locale) ??
+          'No offline answer is available for that question.';
+      isOffline = true;
     }
     setState(() {
       _messages.add(
