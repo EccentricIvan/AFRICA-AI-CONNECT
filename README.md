@@ -33,8 +33,14 @@ GitHub repository secrets before running the workflow:
 - `VERCEL_PROJECT_ID`
 
 Configure `GROQ_API_KEY` (and optionally `GROQ_MODEL`) in the Vercel project's
-Production environment. Set the GitHub repository variable `AI_BACKEND_URL` to
-the Vercel project's stable production URL, without a trailing slash.
+Production environment. The APK defaults to the stable production backend at
+`https://otic-connect-api.vercel.app`; the GitHub repository variable
+`AI_BACKEND_URL` can override it without a trailing slash.
+
+For all six local languages, the hosted chat path translates the conversation
+to English with Sunbird, reasons with Groq, and translates the answer back with
+Sunbird. Configure `SUNBIRD_API_TOKEN` in Vercel; `AUTH_TOKEN` remains accepted
+for compatibility with the existing deployment.
 
 The APK uses Vercel only when `AI_BACKEND_URL` is present at build time. If
 Vercel fails, it falls back to the existing direct Groq client. With no device

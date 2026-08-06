@@ -147,23 +147,31 @@ Guidelines:
     AppLocale selectedLocale,
   ) async {
     final baseUrl = ApiConfig.aiBackendUrl.replaceAll(RegExp(r'/+$'), '');
-    final response = await http
-        .post(
-          Uri.parse('$baseUrl/api/chat'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'message': message,
-            'language': selectedLocale.apiCode,
-            'history': _history,
-          }),
-        )
-        .timeout(const Duration(seconds: 25));
-
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw StateError('Backend returned ${response.statusCode}');
+    final payload = jsonEncode({
+      'message': message,
+      'language': selectedLocale.apiCode,
+      'history': _history,
+      // Accepted by the older production API during a rolling deployment.
+      'context': _history,
+    });
+    http.Response? response;
+    for (final path in const ['/api/chat', '/chat']) {
+      response = await http
+          .post(
+            Uri.parse('$baseUrl$path'),
+            headers: {'Content-Type': 'application/json'},
+            body: payload,
+          )
+          .timeout(const Duration(seconds: 55));
+      if (response.statusCode != 404) break;
     }
 
-    final data = jsonDecode(response.body);
+    final statusCode = response?.statusCode;
+    if (statusCode == null || statusCode < 200 || statusCode >= 300) {
+      throw StateError('Backend returned $statusCode');
+    }
+
+    final data = jsonDecode(response!.body);
     final reply = (data['reply'] ?? data['response'])?.toString().trim();
     if (reply == null || reply.isEmpty) {
       throw const FormatException('Backend response did not contain a reply');

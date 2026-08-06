@@ -8,6 +8,6 @@ class ApiConfig {
 
   static const aiBackendUrl = String.fromEnvironment(
     'AI_BACKEND_URL',
-    defaultValue: '',
+    defaultValue: 'https://otic-connect-api.vercel.app',
   );
 }
