@@ -205,16 +205,16 @@ class _ChatAppBar extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'AI Assistant',
-                  style: TextStyle(
+                Text(
+                  t('chat_assistant_title'),
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,
                   ),
                 ),
                 Text(
-                  t('powered_by_groq'),
+                  t('app_powered_by'),
                   style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.textHint,

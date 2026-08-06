@@ -18,6 +18,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final hasProfile = prefs.getBool('has_profile') ?? false;
   final savedLocale = prefs.getString('app_locale');
+  await S.loadBundledTranslations();
 
   runApp(
     ProviderScope(
