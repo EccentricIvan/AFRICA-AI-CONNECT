@@ -461,9 +461,9 @@ class _FeaturedListings extends ConsumerWidget {
     return listingsAsync.when(
       loading: () => const SizedBox.shrink(),
       error:
-          (e, _) => const Text(
-            'Could not load listings',
-            style: TextStyle(fontSize: 13, color: AppColors.textHint),
+          (e, _) => Text(
+            t('listings_load_error'),
+            style: const TextStyle(fontSize: 13, color: AppColors.textHint),
           ),
       data: (listings) {
         if (listings.isEmpty) {

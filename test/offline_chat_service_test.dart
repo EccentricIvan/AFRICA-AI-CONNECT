@@ -50,5 +50,40 @@ void main() {
         expect(await service.getFallback(locale), isNotEmpty);
       }
     });
+
+    test('returns matched guidance before the general fallback', () async {
+      final guidance = await service.getGuidance(
+        'How do I avoid mobile money fraud?',
+        AppLocale.en,
+      );
+
+      expect(guidance, contains('Never share your PIN'));
+    });
+
+    test(
+      'returns localized fallback for an unknown offline question',
+      () async {
+        final guidance = await service.getGuidance(
+          'What colour should I paint my room?',
+          AppLocale.sw,
+        );
+
+        expect(guidance, await service.getFallback(AppLocale.sw));
+        expect(guidance.toLowerCase(), isNot(contains('offline')));
+        expect(guidance.toLowerCase(), isNot(contains('sina jibu')));
+      },
+    );
+
+    test('unknown questions stay constructive in every language', () async {
+      for (final locale in AppLocale.values) {
+        final guidance = await service.getGuidance(
+          'xyzzy question outside the local topics',
+          locale,
+        );
+        expect(guidance, isNotEmpty, reason: locale.name);
+        expect(guidance.toLowerCase(), isNot(contains('api key')));
+        expect(guidance.toLowerCase(), isNot(contains('not configured')));
+      }
+    });
   });
 }

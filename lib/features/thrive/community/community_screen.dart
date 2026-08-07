@@ -12,8 +12,7 @@ class CommunityScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.literal('Community')),
         actions: [
-          IconButton(
-              icon: const Icon(Icons.group_add), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.group_add), onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(
@@ -73,7 +72,8 @@ class _CommunityHero extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-            color: AppColors.communityColor.withValues(alpha: 0.15)),
+          color: AppColors.communityColor.withValues(alpha: 0.15),
+        ),
       ),
       child: Row(
         children: [
@@ -87,7 +87,9 @@ class _CommunityHero extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  S.literal("Connect with women's groups, share experiences, support each other, and grow together."),
+                  S.literal(
+                    "Connect with women's groups, share experiences, support each other, and grow together.",
+                  ),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -101,8 +103,11 @@ class _CommunityHero extends StatelessWidget {
               color: AppColors.communityColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.people,
-                color: AppColors.communityColor, size: 28),
+            child: const Icon(
+              Icons.people,
+              color: AppColors.communityColor,
+              size: 28,
+            ),
           ),
         ],
       ),
@@ -122,8 +127,7 @@ class _EmptyGroupsState extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(Icons.groups,
-              size: 48, color: Theme.of(context).hintColor),
+          Icon(Icons.groups, size: 48, color: Theme.of(context).hintColor),
           const SizedBox(height: 12),
           Text(
             S.literal('No groups yet'),
@@ -149,46 +153,70 @@ class _EmptyGroupsState extends StatelessWidget {
 
 class _DiscoverGroups extends StatelessWidget {
   static const _groups = [
-    _Group('Kampala Women Entrepreneurs', '124 members',
-        Icons.trending_up, AppColors.earnColor),
-    _Group('Digital Skills Network', '89 members',
-        Icons.computer, AppColors.skillsColor),
-    _Group('Farmers United', '256 members',
-        Icons.agriculture, AppColors.healthColor),
-    _Group('Young Mothers Support', '67 members',
-        Icons.child_care, AppColors.thriveColor),
+    _Group(
+      'Kampala Women Entrepreneurs',
+      '124 members',
+      Icons.trending_up,
+      AppColors.earnColor,
+    ),
+    _Group(
+      'Digital Skills Network',
+      '89 members',
+      Icons.computer,
+      AppColors.skillsColor,
+    ),
+    _Group(
+      'Farmers United',
+      '256 members',
+      Icons.agriculture,
+      AppColors.healthColor,
+    ),
+    _Group(
+      'Young Mothers Support',
+      '67 members',
+      Icons.child_care,
+      AppColors.thriveColor,
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: _groups.map((g) {
-        return Card(
-          child: ListTile(
-            leading: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: g.color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
+      children:
+          _groups.map((g) {
+            return Card(
+              child: ListTile(
+                leading: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: g.color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(g.icon, color: g.color, size: 22),
+                ),
+                title: Text(
+                  S.literal(g.name),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                subtitle: Text(
+                  g.members.replaceAll('members', S.literal('members')),
+                ),
+                trailing: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    S.literal('Join'),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
               ),
-              child: Icon(g.icon, color: g.color, size: 22),
-            ),
-            title: Text(S.literal(g.name),
-                style: Theme.of(context).textTheme.titleMedium),
-            subtitle: Text(g.members.replaceAll('members', S.literal('members'))),
-            trailing: OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(S.literal('Join'), style: const TextStyle(fontSize: 12)),
-            ),
-          ),
-        );
-      }).toList(),
+            );
+          }).toList(),
     );
   }
 }
@@ -204,73 +232,94 @@ class _Group {
 class _CommunityFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final posts = [
-      _Post('Sarah M.', 'Just completed the Digital Skills course! So proud of this journey.',
-          '2 hours ago', AppColors.skillsColor),
-      _Post('Grace K.', 'My basket-weaving business got its first wholesale order today!',
-          '5 hours ago', AppColors.earnColor),
-      _Post('Peace N.', 'Looking for women interested in forming a SACCO in Gulu district.',
-          '1 day ago', AppColors.financeColor),
+    const posts = [
+      _Post(
+        'Sarah M.',
+        'Just completed the Digital Skills course! So proud of this journey.',
+        '2 hours ago',
+        AppColors.skillsColor,
+      ),
+      _Post(
+        'Grace K.',
+        'My basket-weaving business got its first wholesale order today!',
+        '5 hours ago',
+        AppColors.earnColor,
+      ),
+      _Post(
+        'Peace N.',
+        'Looking for women interested in forming a SACCO in Gulu district.',
+        '1 day ago',
+        AppColors.financeColor,
+      ),
     ];
 
     return Column(
-      children: posts.map((p) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+      children:
+          posts.map((p) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: p.color.withValues(alpha: 0.12),
-                      child: Text(
-                        p.author[0],
-                        style: TextStyle(
-                          color: p.color,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 18,
+                          backgroundColor: p.color.withValues(alpha: 0.12),
+                          child: Text(
+                            p.author[0],
+                            style: TextStyle(
+                              color: p.color,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(p.author,
-                              style: const TextStyle(
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                p.author,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 14)),
-                          Text(S.literal(p.time),
-                              style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                S.literal(p.time),
+                                style: TextStyle(
                                   fontSize: 11,
-                                  color: Theme.of(context).hintColor)),
-                        ],
-                      ),
+                                  color: Theme.of(context).hintColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      S.literal(p.content),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 10),
+                    const Row(
+                      children: [
+                        _FeedAction(Icons.favorite_border, 'Like'),
+                        SizedBox(width: 16),
+                        _FeedAction(Icons.chat_bubble_outline, 'Comment'),
+                        SizedBox(width: 16),
+                        _FeedAction(Icons.share_outlined, 'Share'),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                Text(S.literal(p.content),
-                    style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    _FeedAction(Icons.favorite_border, 'Like'),
-                    const SizedBox(width: 16),
-                    _FeedAction(Icons.chat_bubble_outline, 'Comment'),
-                    const SizedBox(width: 16),
-                    _FeedAction(Icons.share_outlined, 'Share'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+              ),
+            );
+          }).toList(),
     );
   }
 }
@@ -302,7 +351,9 @@ class _FeedAction extends StatelessWidget {
             Text(
               S.literal(label),
               style: TextStyle(
-                  fontSize: 12, color: Theme.of(context).hintColor),
+                fontSize: 12,
+                color: Theme.of(context).hintColor,
+              ),
             ),
           ],
         ),

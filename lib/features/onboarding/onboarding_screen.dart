@@ -213,9 +213,9 @@ class _LanguagePage extends StatelessWidget {
             fit: BoxFit.contain,
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Choose your language',
-            style: TextStyle(
+          Text(
+            S.tr(context, ref, 'choose_language'),
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w700,
               color: AppColors.textPrimary,
@@ -223,9 +223,9 @@ class _LanguagePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Londa olulimi lwo · Chagua lugha yako',
-            style: TextStyle(
+          Text(
+            S.tr(context, ref, 'language_selection_help'),
+            style: const TextStyle(
               fontSize: 14,
               color: AppColors.textHint,
               height: 1.5,

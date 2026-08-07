@@ -44,7 +44,7 @@ Future<bool> selectAppLocale(WidgetRef ref, AppLocale locale) async {
 }
 
 class LocaleNotifier extends StateNotifier<AppLocale> {
-  LocaleNotifier([AppLocale initialLocale = AppLocale.en]) : super(initialLocale);
+  LocaleNotifier([super.state = AppLocale.en]);
 
   static AppLocale fromSaved(String? saved) {
     return AppLocale.values.firstWhere(
@@ -79,77 +79,156 @@ class S {
   static AppLocale _activeLocale = AppLocale.en;
 
   static const _uiLiterals = <String>[
-    'My Profile', 'Friend', 'My Progress', 'Track your learning and growth',
+    'My Profile',
+    'Friend',
+    'My Progress',
+    'Track your learning and growth',
     'Could not download this language. Check your internet and try again.',
-    'Achievements', "Badges you've earned", 'Member', 'Location not set',
-    'Courses', 'Points', 'Streak', 'days', 'Badges', 'Digital Skills',
-    'Financial Literacy', 'Entrepreneurship', 'First Step', 'Quick Learner',
-    'Community Star', 'Entrepreneur', 'Consistent', 'Auto-sync when online',
-    'Sync your progress when connected', 'Download content for offline',
-    'Last synced: Today', 'Storage usage', '45 MB used', 'Push notifications',
-    'Get updates on opportunities and community', 'Community updates',
-    'Posts and activity from your groups', 'Version 1.0.0', 'Terms of Service',
-    'Privacy Policy', 'Theme', 'Dark', 'Light', 'System', 'Financial Hub',
-    'Financial Tools', 'Manage your money wisely', 'Savings Tracker',
-    'Set goals and track your savings progress', 'Budget Planner',
-    'Plan your income and expenses', 'SACCO Directory',
-    'Find savings groups and cooperatives near you', 'Mobile Money Guide',
+    'Achievements',
+    "Badges you've earned",
+    'Member',
+    'Location not set',
+    'Courses',
+    'Points',
+    'Streak',
+    'days',
+    'Badges',
+    'Digital Skills',
+    'Financial Literacy',
+    'Entrepreneurship',
+    'First Step',
+    'Quick Learner',
+    'Community Star',
+    'Entrepreneur',
+    'Consistent',
+    'Auto-sync when online',
+    'Sync your progress when connected',
+    'Download content for offline',
+    'Last synced: Today',
+    'Storage usage',
+    '45 MB used',
+    'Push notifications',
+    'Get updates on opportunities and community',
+    'Community updates',
+    'Posts and activity from your groups',
+    'Version 1.0.0',
+    'Terms of Service',
+    'Privacy Policy',
+    'Theme',
+    'Dark',
+    'Light',
+    'System',
+    'Financial Hub',
+    'Financial Tools',
+    'Manage your money wisely',
+    'Savings Tracker',
+    'Set goals and track your savings progress',
+    'Budget Planner',
+    'Plan your income and expenses',
+    'SACCO Directory',
+    'Find savings groups and cooperatives near you',
+    'Mobile Money Guide',
     'Learn to send, receive, and save with mobile money',
-    'Build your money knowledge', 'Take control of your finances',
+    'Build your money knowledge',
+    'Take control of your finances',
     'Tools and resources to help you save, budget, and grow your money.',
-    'Start Small', 'Even saving 500 UGX a day adds up over time',
-    'Track Expenses', 'Know where your money goes each week', 'Join a SACCO',
-    'Group savings help you access loans and support', 'Job Board',
-    'Recent Opportunities', 'Jobs and gigs near you', 'Build Your CV',
-    'Create a professional profile', 'Find your next opportunity',
+    'Start Small',
+    'Even saving 500 UGX a day adds up over time',
+    'Track Expenses',
+    'Know where your money goes each week',
+    'Join a SACCO',
+    'Group savings help you access loans and support',
+    'Job Board',
+    'Recent Opportunities',
+    'Jobs and gigs near you',
+    'Build Your CV',
+    'Create a professional profile',
+    'Find your next opportunity',
     'Browse jobs, freelance gigs, and training programmes from verified employers.',
-    'Community Health Worker', 'NGO Partner · Kampala', 'Full-time',
-    'Digital Marketing Assistant', 'Tech Hub · Remote', 'Part-time',
-    'Agricultural Extension Officer', 'District Gov · Mbale', 'Contract',
-    'Tailoring Trainer', "Women's Centre · Jinja", 'CV Builder',
+    'Community Health Worker',
+    'NGO Partner · Kampala',
+    'Full-time',
+    'Digital Marketing Assistant',
+    'Tech Hub · Remote',
+    'Part-time',
+    'Agricultural Extension Officer',
+    'District Gov · Mbale',
+    'Contract',
+    'Tailoring Trainer',
+    "Women's Centre · Jinja",
+    'CV Builder',
     'Create a professional CV that highlights your skills and experience. AI-assisted — just answer a few questions.',
-    'Create CV', 'Skills & Training', 'Build future-ready skills',
+    'Create CV',
+    'Skills & Training',
+    'Build future-ready skills',
     'Practical training programmes to boost your career and business.',
-    'Training Programmes', 'Upskill with structured courses',
-    'Digital Literacy', 'Phone, internet, and computer basics',
-    'Business Management', 'Planning, accounting, and operations',
-    'Value Addition', 'Processing, packaging, and branding products',
-    'Communication Skills', 'Negotiation, presentation, and networking',
-    'Your Groups', 'Communities you belong to', 'Discover Groups',
-    "Join women's groups in your area", 'Community Feed',
-    'Latest from women in your network', 'Stronger together',
+    'Training Programmes',
+    'Upskill with structured courses',
+    'Digital Literacy',
+    'Phone, internet, and computer basics',
+    'Business Management',
+    'Planning, accounting, and operations',
+    'Value Addition',
+    'Processing, packaging, and branding products',
+    'Communication Skills',
+    'Negotiation, presentation, and networking',
+    'Your Groups',
+    'Communities you belong to',
+    'Discover Groups',
+    "Join women's groups in your area",
+    'Community Feed',
+    'Latest from women in your network',
+    'Stronger together',
     "Connect with women's groups, share experiences, support each other, and grow together.",
-    'No groups yet', 'Join a group below or create your own', 'Create a Group',
-    'Kampala Women Entrepreneurs', 'members', 'Digital Skills Network',
-    'Farmers United', 'Young Mothers Support', 'Join', 'Like', 'Comment', 'Share',
+    'No groups yet',
+    'Join a group below or create your own',
+    'Create a Group',
+    'Kampala Women Entrepreneurs',
+    'members',
+    'Digital Skills Network',
+    'Farmers United',
+    'Young Mothers Support',
+    'Join',
+    'Like',
+    'Comment',
+    'Share',
     'Just completed the Digital Skills course! So proud of this journey.',
     'My basket-weaving business got its first wholesale order today!',
     'Looking for women interested in forming a SACCO in Gulu district.',
-    '2 hours ago', '5 hours ago', '1 day ago',
+    '2 hours ago',
+    '5 hours ago',
+    '1 day ago',
     'Your wellbeing matters',
     'Resources for self-care, emotional support, and building resilience.',
-    'Self-Care', 'Daily practices for a healthier mind', 'Stress Management',
-    'Techniques to manage daily stress and anxiety', 'Positive Affirmations',
-    'Daily encouragement and confidence building', 'Support Resources',
-    'Helplines, counselling, and safe spaces', 'Safety & Support',
+    'Self-Care',
+    'Daily practices for a healthier mind',
+    'Stress Management',
+    'Techniques to manage daily stress and anxiety',
+    'Positive Affirmations',
+    'Daily encouragement and confidence building',
+    'Support Resources',
+    'Helplines, counselling, and safe spaces',
+    'Safety & Support',
     'If you or someone you know needs help, trusted support is available.',
-    'Get Help', 'Uganda Police Emergency',
+    'Get Help',
+    'Uganda Police Emergency',
     'For immediate danger or a safety emergency',
-    'Uganda Emergency Services (alt.)', 'Alternate national emergency line',
+    'Uganda Emergency Services (alt.)',
+    'Alternate national emergency line',
     'Talk to someone you trust',
     "A family member, friend, or community leader can help you find local support even when a hotline isn't available.",
     'If you are in immediate danger, contact emergency services now.',
   ];
 
   static String _apiCode(AppLocale locale) => switch (locale) {
-        AppLocale.en => 'eng',
-        AppLocale.lg => 'lug',
-        AppLocale.sw => 'swa',
-        AppLocale.nyn => 'nyn',
-        AppLocale.teo => 'teo',
-        AppLocale.nyo => 'nyo',
-        AppLocale.ach => 'ach',
-      };
+    AppLocale.en => 'eng',
+    AppLocale.lg => 'lug',
+    AppLocale.sw => 'swa',
+    AppLocale.nyn => 'nyn',
+    AppLocale.teo => 'teo',
+    AppLocale.nyo => 'nyo',
+    AppLocale.ach => 'ach',
+  };
 
   static Map<String, String> _sourceCatalog() {
     final source = <String, String>{
@@ -167,9 +246,7 @@ class S {
       'assets/localization/${_apiCode(locale)}.json',
     );
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
-    final bundle = decoded.map(
-      (key, value) => MapEntry(key, value.toString()),
-    );
+    final bundle = decoded.map((key, value) => MapEntry(key, value.toString()));
     final expected = _sourceCatalog().keys.toSet();
     if (bundle.keys.toSet().difference(expected).isNotEmpty ||
         expected.difference(bundle.keys.toSet()).isNotEmpty) {
@@ -180,9 +257,14 @@ class S {
 
   static Future<void> loadBundledTranslations() async {
     await Future.wait(
-      AppLocale.values.where((locale) => locale != AppLocale.en).map(ensureBundle),
+      AppLocale.values
+          .where((locale) => locale != AppLocale.en)
+          .map(ensureBundle),
     );
   }
+
+  /// Every key that can produce built-in, user-visible copy.
+  static Set<String> get catalogKeys => _sourceCatalog().keys.toSet();
 
   static String tr(BuildContext context, WidgetRef ref, String key) {
     final locale = ref.watch(localeProvider);
@@ -202,7 +284,8 @@ class S {
     for (final entry in _strings.entries) {
       if (entry.value[AppLocale.en] == text) {
         return _downloaded[_activeLocale]?[entry.key] ??
-            entry.value[_activeLocale] ?? text;
+            entry.value[_activeLocale] ??
+            text;
       }
     }
     final index = _uiLiterals.indexOf(text);
@@ -582,6 +665,11 @@ class S {
       AppLocale.lg: 'Londa olulimi lwo',
       AppLocale.sw: 'Chagua lugha yako',
     },
+    'language_selection_help': {
+      AppLocale.en: 'Select the language you want to use in the app',
+      AppLocale.lg: 'Londa olulimi lw’oyagala okukozesa mu app',
+      AppLocale.sw: 'Chagua lugha unayotaka kutumia katika programu',
+    },
     'please_enter_name': {
       AppLocale.en: 'Please enter your name',
       AppLocale.lg: 'Nsaba wandiike erinnya lyo',
@@ -645,9 +733,12 @@ class S {
       AppLocale.sw: 'Msimbo huo haukufanya kazi. Tafadhali jaribu tena.',
     },
     'windows_recaptcha_note': {
-      AppLocale.en: 'On Windows, you may briefly see a verification step before your code is sent.',
-      AppLocale.lg: 'Ku Windows, oyinza okulaba akadde ak\'okukakasa nga koodi tennasindikwa.',
-      AppLocale.sw: 'Kwenye Windows, huenda ukaona hatua fupi ya uthibitisho kabla msimbo haujatumwa.',
+      AppLocale.en:
+          'On Windows, you may briefly see a verification step before your code is sent.',
+      AppLocale.lg:
+          'Ku Windows, oyinza okulaba akadde ak\'okukakasa nga koodi tennasindikwa.',
+      AppLocale.sw:
+          'Kwenye Windows, huenda ukaona hatua fupi ya uthibitisho kabla msimbo haujatumwa.',
     },
 
     // ── Roles ──
@@ -953,6 +1044,11 @@ class S {
       AppLocale.lg: 'Nsaba olondewo ekika',
       AppLocale.sw: 'Tafadhali chagua aina',
     },
+    'listings_load_error': {
+      AppLocale.en: 'Could not load listings',
+      AppLocale.lg: 'Tekisobose kutikka lukalala lw’ebitundibwa',
+      AppLocale.sw: 'Imeshindikana kupakia orodha',
+    },
     'listing_title_error': {
       AppLocale.en: 'Please enter a product title',
       AppLocale.lg: 'Nsaba wandiike erinnya ly\'ekintu',
@@ -965,7 +1061,8 @@ class S {
     },
     'no_listings_yet': {
       AppLocale.en: 'No listings yet — be the first to list a product!',
-      AppLocale.lg: 'Tewali kintu kyawandiikibwa — beera owasooka okuwandiika ekintu!',
+      AppLocale.lg:
+          'Tewali kintu kyawandiikibwa — beera owasooka okuwandiika ekintu!',
       AppLocale.sw: 'Hakuna bidhaa bado — kuwa wa kwanza kuorodhesha bidhaa!',
     },
     'no_listings_in_category': {
@@ -1188,9 +1285,12 @@ class S {
       AppLocale.sw: 'Jaribu tena',
     },
     'chat_connection_error': {
-      AppLocale.en: 'We couldn’t connect to the assistant. Please try again shortly.',
-      AppLocale.lg: 'Wabaddewo obuzibu mu kuyungibwa ku muyambi. Gezaako nate mu kaseera katono.',
-      AppLocale.sw: 'Kumetokea tatizo la kuunganisha na msaidizi. Tafadhali jaribu tena baada ya muda mfupi.',
+      AppLocale.en:
+          'We couldn’t connect to the assistant. Please try again shortly.',
+      AppLocale.lg:
+          'Wabaddewo obuzibu mu kuyungibwa ku muyambi. Gezaako nate mu kaseera katono.',
+      AppLocale.sw:
+          'Kumetokea tatizo la kuunganisha na msaidizi. Tafadhali jaribu tena baada ya muda mfupi.',
     },
     'chat_offline_error': {
       AppLocale.en: 'Check your internet connection and try again.',

@@ -64,35 +64,34 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
-    final connectivity = await Connectivity().checkConnectivity();
-    final hasNetwork = connectivity.any(
-      (result) => result != ConnectivityResult.none,
-    );
+    var hasNetwork = false;
+    try {
+      final connectivity = await Connectivity().checkConnectivity();
+      hasNetwork = connectivity.any(
+        (result) => result != ConnectivityResult.none,
+      );
+    } catch (_) {
+      // If the platform cannot report connectivity, use the bundled knowledge
+      // base instead of leaving the chat request in a loading state.
+    }
 
     String response;
     var isOffline = false;
 
-    if (hasNetwork) {
-      response = await _groq.sendMessage(text, locale);
-      final connectionFailed = response.startsWith(
-        'I\'m having trouble connecting',
-      );
-      if (connectionFailed) {
-        final offlineMatch = await _offlineChat.findMatch(text, locale);
-        response =
-            offlineMatch?.reply ??
-            await _offlineChat.getFallback(locale) ??
-            response;
+    try {
+      if (hasNetwork) {
+        response = await _groq.sendMessage(text, locale);
+      } else {
+        response = await _offlineChat.getGuidance(text, locale);
         isOffline = true;
       }
-    } else {
-      final offlineMatch = await _offlineChat.findMatch(text, locale);
-      response =
-          offlineMatch?.reply ??
-          await _offlineChat.getFallback(locale) ??
-          'No offline answer is available for that question.';
+    } catch (_) {
+      // Provider errors, missing keys, timeouts, and malformed remote replies
+      // are implementation details. Always continue with local guidance.
+      response = await _offlineChat.getGuidance(text, locale);
       isOffline = true;
     }
+    if (!mounted) return;
     setState(() {
       _messages.add(
         _ChatMessage(
