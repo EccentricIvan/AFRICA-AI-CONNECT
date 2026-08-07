@@ -1,0 +1,137 @@
+name: Build Africa AI Connect APK
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-backend:
+    name: Deploy Vercel Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backend dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Validate backend source
+        run: |
+          python -m py_compile api/index.py test/test_vercel_api.py
+          python -m unittest discover -s test -p "test_vercel_api.py"
+
+      - name: Check Vercel configuration
+        id: vercel-config
+        shell: bash
+        run: |
+          if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_ORG_ID" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Vercel deployment skipped: add VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID as repository secrets."
+          fi
+
+      - name: Install Vercel CLI
+        if: steps.vercel-config.outputs.configured == 'true'
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel production settings
+        if: steps.vercel-config.outputs.configured == 'true'
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Build Vercel backend
+        if: steps.vercel-config.outputs.configured == 'true'
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy Vercel backend
+        if: steps.vercel-config.outputs.configured == 'true'
+        shell: bash
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "Backend deployed to $DEPLOYMENT_URL"
+          curl --fail --retry 5 --retry-delay 3 "$DEPLOYMENT_URL/api/health"
+          curl --fail --retry 3 --retry-delay 3 \
+            -H "Content-Type: application/json" \
+            -d '{"message":"Reply with OK","language":"en"}' \
+            "$DEPLOYMENT_URL/api/chat"
+
+  build-apk:
+    name: Build Android APK
+    needs: deploy-backend
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Ensure Android platform exists
+        run: |
+          if [ ! -d "android" ]; then
+            flutter create --platforms=android .
+          fi
+
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      - name: Generate Drift code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Check code
+        run: flutter analyze --no-fatal-infos
+
+      - name: Build debug APK
+        env:
+          AI_BACKEND_URL: ${{ vars.AI_BACKEND_URL }}
+        run: |
+          if [ -n "$AI_BACKEND_URL" ]; then
+            echo "Building with configured AI backend."
+            flutter build apk --debug \
+              --dart-define=AI_BACKEND_URL="$AI_BACKEND_URL"
+          else
+            echo "No AI_BACKEND_URL configured. Building offline-first APK."
+            flutter build apk --debug
+          fi
+
+      - name: Rename APK
+        run: |
+          cp build/app/outputs/flutter-apk/app-debug.apk \
+             build/app/outputs/flutter-apk/Africa-AI-Connect-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Africa-AI-Connect-APK
+          path: build/app/outputs/flutter-apk/Africa-AI-Connect-debug.apk
+          if-no-files-found: error
+          retention-days: 14

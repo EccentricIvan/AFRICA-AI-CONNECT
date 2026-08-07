@@ -1,25 +1,60 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppLocale {
   en('English', 'EN'),
   lg('Luganda', 'LG'),
-  sw('Kiswahili', 'SW');
+  sw('Kiswahili', 'SW'),
+  nyn('Runyankore', 'NYN'),
+  teo('Ateso', 'TEO'),
+  nyo('Runyoro', 'NYO'),
+  ach('Acholi', 'ACH');
 
   const AppLocale(this.label, this.code);
   final String label;
   final String code;
+
+  String get shortCode => code;
+  String get apiCode => name;
 }
 
 final localeProvider = StateNotifierProvider<LocaleNotifier, AppLocale>((ref) {
   return LocaleNotifier();
 });
 
+final localeLoadingProvider = StateProvider<AppLocale?>((ref) => null);
+
+Future<bool> selectAppLocale(WidgetRef ref, AppLocale locale) async {
+  final loadingNotifier = ref.read(localeLoadingProvider.notifier);
+  final localeNotifier = ref.read(localeProvider.notifier);
+  loadingNotifier.state = locale;
+  try {
+    await S.ensureBundle(locale);
+    localeNotifier.set(locale);
+    return true;
+  } catch (_) {
+    return false;
+  } finally {
+    loadingNotifier.state = null;
+  }
+}
+
 class LocaleNotifier extends StateNotifier<AppLocale> {
-  LocaleNotifier() : super(AppLocale.en);
+  LocaleNotifier([AppLocale initialLocale = AppLocale.en]) : super(initialLocale);
+
+  static AppLocale fromSaved(String? saved) {
+    return AppLocale.values.firstWhere(
+      (locale) => locale.name == saved,
+      orElse: () => AppLocale.en,
+    );
+  }
 
   void set(AppLocale locale) {
+    S._activeLocale = locale;
     state = locale;
     SharedPreferences.getInstance().then(
       (p) => p.setString('app_locale', locale.name),
@@ -40,13 +75,139 @@ class LocaleNotifier extends StateNotifier<AppLocale> {
 class S {
   S._();
 
+  static final Map<AppLocale, Map<String, String>> _downloaded = {};
+  static AppLocale _activeLocale = AppLocale.en;
+
+  static const _uiLiterals = <String>[
+    'My Profile', 'Friend', 'My Progress', 'Track your learning and growth',
+    'Could not download this language. Check your internet and try again.',
+    'Achievements', "Badges you've earned", 'Member', 'Location not set',
+    'Courses', 'Points', 'Streak', 'days', 'Badges', 'Digital Skills',
+    'Financial Literacy', 'Entrepreneurship', 'First Step', 'Quick Learner',
+    'Community Star', 'Entrepreneur', 'Consistent', 'Auto-sync when online',
+    'Sync your progress when connected', 'Download content for offline',
+    'Last synced: Today', 'Storage usage', '45 MB used', 'Push notifications',
+    'Get updates on opportunities and community', 'Community updates',
+    'Posts and activity from your groups', 'Version 1.0.0', 'Terms of Service',
+    'Privacy Policy', 'Theme', 'Dark', 'Light', 'System', 'Financial Hub',
+    'Financial Tools', 'Manage your money wisely', 'Savings Tracker',
+    'Set goals and track your savings progress', 'Budget Planner',
+    'Plan your income and expenses', 'SACCO Directory',
+    'Find savings groups and cooperatives near you', 'Mobile Money Guide',
+    'Learn to send, receive, and save with mobile money',
+    'Build your money knowledge', 'Take control of your finances',
+    'Tools and resources to help you save, budget, and grow your money.',
+    'Start Small', 'Even saving 500 UGX a day adds up over time',
+    'Track Expenses', 'Know where your money goes each week', 'Join a SACCO',
+    'Group savings help you access loans and support', 'Job Board',
+    'Recent Opportunities', 'Jobs and gigs near you', 'Build Your CV',
+    'Create a professional profile', 'Find your next opportunity',
+    'Browse jobs, freelance gigs, and training programmes from verified employers.',
+    'Community Health Worker', 'NGO Partner · Kampala', 'Full-time',
+    'Digital Marketing Assistant', 'Tech Hub · Remote', 'Part-time',
+    'Agricultural Extension Officer', 'District Gov · Mbale', 'Contract',
+    'Tailoring Trainer', "Women's Centre · Jinja", 'CV Builder',
+    'Create a professional CV that highlights your skills and experience. AI-assisted — just answer a few questions.',
+    'Create CV', 'Skills & Training', 'Build future-ready skills',
+    'Practical training programmes to boost your career and business.',
+    'Training Programmes', 'Upskill with structured courses',
+    'Digital Literacy', 'Phone, internet, and computer basics',
+    'Business Management', 'Planning, accounting, and operations',
+    'Value Addition', 'Processing, packaging, and branding products',
+    'Communication Skills', 'Negotiation, presentation, and networking',
+    'Your Groups', 'Communities you belong to', 'Discover Groups',
+    "Join women's groups in your area", 'Community Feed',
+    'Latest from women in your network', 'Stronger together',
+    "Connect with women's groups, share experiences, support each other, and grow together.",
+    'No groups yet', 'Join a group below or create your own', 'Create a Group',
+    'Kampala Women Entrepreneurs', 'members', 'Digital Skills Network',
+    'Farmers United', 'Young Mothers Support', 'Join', 'Like', 'Comment', 'Share',
+    'Just completed the Digital Skills course! So proud of this journey.',
+    'My basket-weaving business got its first wholesale order today!',
+    'Looking for women interested in forming a SACCO in Gulu district.',
+    '2 hours ago', '5 hours ago', '1 day ago',
+    'Your wellbeing matters',
+    'Resources for self-care, emotional support, and building resilience.',
+    'Self-Care', 'Daily practices for a healthier mind', 'Stress Management',
+    'Techniques to manage daily stress and anxiety', 'Positive Affirmations',
+    'Daily encouragement and confidence building', 'Support Resources',
+    'Helplines, counselling, and safe spaces', 'Safety & Support',
+    'If you or someone you know needs help, trusted support is available.',
+    'Get Help', 'Uganda Police Emergency',
+    'For immediate danger or a safety emergency',
+    'Uganda Emergency Services (alt.)', 'Alternate national emergency line',
+    'Talk to someone you trust',
+    "A family member, friend, or community leader can help you find local support even when a hotline isn't available.",
+    'If you are in immediate danger, contact emergency services now.',
+  ];
+
+  static String _apiCode(AppLocale locale) => switch (locale) {
+        AppLocale.en => 'eng',
+        AppLocale.lg => 'lug',
+        AppLocale.sw => 'swa',
+        AppLocale.nyn => 'nyn',
+        AppLocale.teo => 'teo',
+        AppLocale.nyo => 'nyo',
+        AppLocale.ach => 'ach',
+      };
+
+  static Map<String, String> _sourceCatalog() {
+    final source = <String, String>{
+      for (final entry in _strings.entries)
+        entry.key: entry.value[AppLocale.en] ?? entry.key,
+      for (var index = 0; index < _uiLiterals.length; index++)
+        '__literal_$index': _uiLiterals[index],
+    };
+    return source;
+  }
+
+  static Future<void> ensureBundle(AppLocale locale) async {
+    if (locale == AppLocale.en || _downloaded.containsKey(locale)) return;
+    final raw = await rootBundle.loadString(
+      'assets/localization/${_apiCode(locale)}.json',
+    );
+    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    final bundle = decoded.map(
+      (key, value) => MapEntry(key, value.toString()),
+    );
+    final expected = _sourceCatalog().keys.toSet();
+    if (bundle.keys.toSet().difference(expected).isNotEmpty ||
+        expected.difference(bundle.keys.toSet()).isNotEmpty) {
+      throw StateError('Bundled translation catalog is incomplete');
+    }
+    _downloaded[locale] = bundle;
+  }
+
+  static Future<void> loadBundledTranslations() async {
+    await Future.wait(
+      AppLocale.values.where((locale) => locale != AppLocale.en).map(ensureBundle),
+    );
+  }
+
   static String tr(BuildContext context, WidgetRef ref, String key) {
     final locale = ref.watch(localeProvider);
+    _activeLocale = locale;
+    final downloaded = _downloaded[locale]?[key];
+    if (downloaded != null && downloaded.isNotEmpty) return downloaded;
     return _strings[key]?[locale] ?? _strings[key]?[AppLocale.en] ?? key;
   }
 
   static String trFromLocale(String key, AppLocale locale) {
+    final downloaded = _downloaded[locale]?[key];
+    if (downloaded != null && downloaded.isNotEmpty) return downloaded;
     return _strings[key]?[locale] ?? _strings[key]?[AppLocale.en] ?? key;
+  }
+
+  static String literal(String text) {
+    for (final entry in _strings.entries) {
+      if (entry.value[AppLocale.en] == text) {
+        return _downloaded[_activeLocale]?[entry.key] ??
+            entry.value[_activeLocale] ?? text;
+      }
+    }
+    final index = _uiLiterals.indexOf(text);
+    if (index < 0) return text;
+    return _downloaded[_activeLocale]?['__literal_$index'] ?? text;
   }
 
   static const _strings = <String, Map<AppLocale, String>>{
@@ -55,6 +216,16 @@ class S {
       AppLocale.en: 'Africa AI Connect',
       AppLocale.lg: 'Africa AI Connect',
       AppLocale.sw: 'Africa AI Connect',
+    },
+    'app_powered_by': {
+      AppLocale.en: 'Powered by Africa AI Connect',
+      AppLocale.lg: 'Ekozesebwa Africa AI Connect',
+      AppLocale.sw: 'Inaendeshwa na Africa AI Connect',
+    },
+    'app_tagline': {
+      AppLocale.en: 'Connecting Women to Opportunity',
+      AppLocale.lg: 'Okuyunga Abakyala ku Mikisa',
+      AppLocale.sw: 'Kuwaunganisha Wanawake na Fursa',
     },
     'online': {
       AppLocale.en: 'Online',
@@ -147,7 +318,7 @@ class S {
     // ── Pillars ──
     'learn': {
       AppLocale.en: 'Learn',
-      AppLocale.lg: 'Soma',
+      AppLocale.lg: 'Yiga',
       AppLocale.sw: 'Jifunze',
     },
     'earn': {AppLocale.en: 'Earn', AppLocale.lg: 'Funa', AppLocale.sw: 'Pata'},
@@ -223,7 +394,7 @@ class S {
     },
     'community': {
       AppLocale.en: 'Community',
-      AppLocale.lg: 'Ekibiina',
+      AppLocale.lg: 'Abantu',
       AppLocale.sw: 'Jamii',
     },
     'wellbeing': {
@@ -248,8 +419,8 @@ class S {
     },
     'home': {
       AppLocale.en: 'Home',
-      AppLocale.lg: 'Ennyumba',
-      AppLocale.sw: 'Nyumbani',
+      AppLocale.lg: 'Awaka',
+      AppLocale.sw: 'Mwanzo',
     },
     'market': {
       AppLocale.en: 'Market',
@@ -258,8 +429,18 @@ class S {
     },
     'chat': {
       AppLocale.en: 'Chat',
-      AppLocale.lg: 'Yogera',
-      AppLocale.sw: 'Soga',
+      AppLocale.lg: 'Emboozi',
+      AppLocale.sw: 'Gumzo',
+    },
+    'nav_learn_earn': {
+      AppLocale.en: 'Learn & Earn',
+      AppLocale.lg: 'Yiga era Ofune',
+      AppLocale.sw: 'Jifunze na Upate',
+    },
+    'nav_account': {
+      AppLocale.en: 'Account',
+      AppLocale.lg: 'Akawunti',
+      AppLocale.sw: 'Akaunti',
     },
 
     // ── Daily tips ──
@@ -571,7 +752,7 @@ class S {
     },
     'ask_anything': {
       AppLocale.en: 'Ask anything...',
-      AppLocale.lg: 'Buuza ekikyamu kyonna...',
+      AppLocale.lg: 'Buuza ekintu kyonna...',
       AppLocale.sw: 'Uliza chochote...',
     },
     'thinking': {
@@ -978,10 +1159,10 @@ class S {
     },
 
     // ── AI Chat screen ──
-    'powered_by_groq': {
-      AppLocale.en: 'Powered by Groq · Llama 3.3',
-      AppLocale.lg: 'Yakozesebwa Groq · Llama 3.3',
-      AppLocale.sw: 'Inayotumia Groq · Llama 3.3',
+    'chat_assistant_title': {
+      AppLocale.en: 'AI Assistant',
+      AppLocale.lg: 'Omuyambi wa AI',
+      AppLocale.sw: 'Msaidizi wa AI',
     },
     'ai_greeting': {
       AppLocale.en:
@@ -995,6 +1176,31 @@ class S {
       AppLocale.en: 'Chat cleared! How can I help you?',
       AppLocale.lg: 'Emboozi esaziddwa! Nsobola kukuyamba otya?',
       AppLocale.sw: 'Mazungumzo yamesafishwa! Ninawezaje kukusaidia?',
+    },
+    'chat_send': {
+      AppLocale.en: 'Send message',
+      AppLocale.lg: 'Weereza obubaka',
+      AppLocale.sw: 'Tuma ujumbe',
+    },
+    'chat_retry': {
+      AppLocale.en: 'Retry',
+      AppLocale.lg: 'Gezaako nate',
+      AppLocale.sw: 'Jaribu tena',
+    },
+    'chat_connection_error': {
+      AppLocale.en: 'We couldn’t connect to the assistant. Please try again shortly.',
+      AppLocale.lg: 'Wabaddewo obuzibu mu kuyungibwa ku muyambi. Gezaako nate mu kaseera katono.',
+      AppLocale.sw: 'Kumetokea tatizo la kuunganisha na msaidizi. Tafadhali jaribu tena baada ya muda mfupi.',
+    },
+    'chat_offline_error': {
+      AppLocale.en: 'Check your internet connection and try again.',
+      AppLocale.lg: 'Kebera omukutu gwo ogwa yintaneeti, oddemu ogezeeko.',
+      AppLocale.sw: 'Angalia muunganisho wako wa intaneti kisha ujaribu tena.',
+    },
+    'chat_authentication_error': {
+      AppLocale.en: 'The assistant is temporarily unavailable.',
+      AppLocale.lg: 'Omuyambi taliko mu kiseera kino.',
+      AppLocale.sw: 'Msaidizi hapatikani kwa sasa.',
     },
     'topic_business_q': {
       AppLocale.en: 'How do I start a small business?',

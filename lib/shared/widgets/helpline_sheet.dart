@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/l10n/app_strings.dart';
 
 class _Helpline {
   const _Helpline(this.name, this.description, this.phone);
@@ -63,12 +64,12 @@ Future<void> showHelplineSheet(BuildContext context) {
               children: [
                 const Icon(Icons.shield, color: AppColors.accent, size: 22),
                 const SizedBox(width: 10),
-                Text('Safety & Support', style: Theme.of(context).textTheme.headlineSmall),
+                Text(S.literal('Safety & Support'), style: Theme.of(context).textTheme.headlineSmall),
               ],
             ),
             const SizedBox(height: 4),
             Text(
-              'If you are in immediate danger, contact emergency services now.',
+              S.literal('If you are in immediate danger, contact emergency services now.'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
@@ -100,9 +101,9 @@ class _HelplineTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(helpline.name, style: Theme.of(context).textTheme.titleMedium),
+                Text(S.literal(helpline.name), style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 2),
-                Text(helpline.description, style: Theme.of(context).textTheme.bodyMedium),
+                Text(S.literal(helpline.description), style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           ),

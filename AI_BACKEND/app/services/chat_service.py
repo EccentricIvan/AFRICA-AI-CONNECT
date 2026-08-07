@@ -1,204 +1,299 @@
-﻿import os
+"""Context-aware, language-locked chat orchestration."""
+from __future__ import annotations
+
+import os
 import re
-from typing import List
+import logging
+import time
+from dataclasses import dataclass
+from typing import Any
 
 import requests
-from dotenv import load_dotenv
 
-from app.services.translator_service import translator_service
+from app.config import get_groq_api_key
+from app.services.sunbird_service import SunbirdError, sunbird_service
 
-
-load_dotenv()
-
-
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-
-
+GROQ_SESSION = requests.Session()
+LOGGER = logging.getLogger(__name__)
+GROQ_MAX_TOKENS = 320
+LOCAL_CONTEXT_TURNS = 6
+LOCAL_CONTEXT_CHARS = 800
 LANGUAGE_ALIASES = {
-    "en": "english",
-    "eng": "english",
-    "english": "english",
+    "en": "eng", "eng": "eng", "english": "eng",
+    "lg": "lug", "lug": "lug", "luganda": "lug",
+    "sw": "swa", "swa": "swa", "swh": "swa", "swahili": "swa", "kiswahili": "swa",
+    "nyn": "nyn", "runyankore": "nyn", "runyankole": "nyn",
+    "teo": "teo", "ateso": "teo",
+    "nyo": "nyo", "runyoro": "nyo",
+    "ach": "ach", "acholi": "ach",
+}
+LANGUAGE_NAMES = {
+    "eng": "English", "lug": "Luganda", "swa": "Swahili",
+    "nyn": "Runyankore", "teo": "Ateso", "nyo": "Runyoro",
+    "ach": "Acholi",
+}
 
-    "lg": "luganda",
-    "lug": "luganda",
-    "luganda": "luganda",
+SYSTEM_PROMPT_TEMPLATE = """You are OTIC CONNECT, a practical assistant for African youth.
 
-    "sw": "swahili",
-    "swa": "swahili",
-    "swh": "swahili",
-    "kiswahili": "swahili",
-    "swahili": "swahili",
+LANGUAGE LOCK: Reply entirely in {language_name}. This instruction applies to every turn. Do not switch to or translate the final answer into another language. Keep names, numbers, currencies, and place names accurate. Avoid mixing English unless a term is commonly used locally or has no clear equivalent.
+
+Before answering, silently identify every instruction in the user's complete request. Answer every part directly. Never replace a specific instruction with general advice. Preserve the requested location, amount, number of examples, constraints, and format. Use relevant conversation history to resolve follow-ups such as “that money”, “three more”, or “which of these”. Silently check the finished answer against the request; do not reveal this review or private reasoning.
+
+Be concise, concrete, and useful. For money or business questions, use the exact amount, give a practical budget where requested, suggest options that genuinely fit the budget and location, and include concrete next steps. Do not invent certainty.
+
+For Luganda, write like a fluent Ugandan Luganda speaker: use natural conversational wording, short clear sentences, culturally appropriate greeting replies, and correct common spellings such as “weebale”. Avoid word-for-word English constructions and repeated generic support paragraphs. Ask a follow-up question only when it helps.
+
+Return plain text only. Do not use Markdown markers such as **, __, #, or backticks. Numbered lists and ordinary line breaks are allowed."""
+
+COMMON_ENGLISH = {"the", "and", "you", "your", "is", "are", "to", "of", "for", "with", "can", "this", "that", "business", "money", "start", "please", "would", "should", "have"}
+LANGUAGE_MARKERS = {
+    "lug": {"nga", "era", "nnyo", "weebale", "oli", "ndi", "osobola", "okutandika", "ensimbi", "obusuubuzi", "omutwalo", "emitwalo", "bizinensi", "ku", "mu", "ne", "ggwe"},
+    "swa": {"na", "kwa", "ya", "ni", "unaweza", "asante", "habari", "biashara", "fedha", "katika"},
+}
+QUANTITY_WORDS = {
+    "lug": {"emu", "bbiri", "ssatu", "nnya", "ttaano", "mukaaga", "musanvu", "munaana", "mwenda", "kkumi"},
+    "swa": {"moja", "mbili", "tatu", "nne", "tano", "sita", "saba", "nane", "tisa", "kumi"},
+    "eng": {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"},
 }
 
 
+@dataclass(frozen=True)
+class ChatResult:
+    response: str
+    provider: str
+
+
+class ChatProviderError(RuntimeError):
+    def __init__(self, code: str, retryable: bool) -> None:
+        super().__init__(code)
+        self.code = code
+        self.retryable = retryable
+
+
+def build_system_prompt(language_code: str) -> str:
+    return SYSTEM_PROMPT_TEMPLATE.format(language_name=LANGUAGE_NAMES[language_code])
+
+
+def normalise_context(context: list[Any] | None) -> list[dict[str, str]]:
+    """Keep real user/assistant roles while accepting legacy flattened strings."""
+    turns: list[dict[str, str]] = []
+    for item in (context or [])[-20:]:
+        if isinstance(item, str):
+            match = re.match(r"^(user|assistant)\s*:\s*(.+)$", item.strip(), re.I | re.S)
+            role, content = (match.group(1).lower(), match.group(2)) if match else ("user", item)
+        else:
+            data = item.model_dump() if hasattr(item, "model_dump") else item
+            role, content = data.get("role"), data.get("content", "")
+        if role in {"user", "assistant"} and isinstance(content, str) and content.strip():
+            turns.append({"role": role, "content": content.strip()})
+    return turns
+
+
+def plain_text(text: str) -> str:
+    text = re.sub(r"```(?:\w+)?\s*|```", "", text)
+    text = re.sub(r"\*\*(.*?)\*\*|__(.*?)__", lambda m: m.group(1) or m.group(2), text)
+    text = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", text).replace("`", "")
+    return re.sub(r"[ \t]+\n", "\n", text).strip()
+
+
+def mostly_wrong_language(text: str, language_code: str) -> bool:
+    if language_code == "eng":
+        return False
+    words = re.findall(r"[A-Za-zÀ-ž’']+", text.lower())
+    if len(words) < 4:
+        return False
+    english = sum(word in COMMON_ENGLISH for word in words)
+    local = sum(word in LANGUAGE_MARKERS.get(language_code, set()) for word in words)
+    return english >= 3 and english > local * 2
+
+
+def quality_issues(message: str, answer: str, language_code: str) -> list[str]:
+    issues: list[str] = []
+    if mostly_wrong_language(answer, language_code):
+        issues.append(f"The draft is not consistently in {LANGUAGE_NAMES[language_code]}.")
+    missing: list[str] = []
+    for detail in re.findall(r"\b\d[\d,.]*\b", message):
+        if detail not in answer:
+            missing.append(detail)
+    lower_message, lower_answer = message.lower(), answer.lower()
+    for word in QUANTITY_WORDS.get(language_code, set()):
+        if re.search(rf"\b{word}\b", lower_message) and not re.search(rf"\b{word}\b", lower_answer):
+            missing.append(word)
+    for match in re.finditer(r"\b[A-Z][a-z]{2,}\b", message):
+        place = match.group(0)
+        if match.start() > 0 and place.lower() not in lower_answer:
+            missing.append(place)
+    if missing:
+        issues.append("The draft omitted requested details: " + ", ".join(dict.fromkeys(missing)) + ".")
+    if re.search(r"\*\*|__|```|^\s*#", answer, flags=re.MULTILINE):
+        issues.append("The draft contains Markdown symbols.")
+    return issues
+
+
+def english_grounding_issues(
+    original_message: str, translated_transcript: str, english_answer: str
+) -> list[str]:
+    """Reject financial specifics that were not supplied by the user."""
+    issues: list[str] = []
+    source = f"{original_message}\n{translated_transcript}".lower()
+    answer = english_answer.lower()
+    named_products = ("401(k)", "mtn", "airtel", "stanbic", "dfcu", "pride sacco", "post office")
+    introduced = [name for name in named_products if name in answer and name not in source]
+    if introduced:
+        issues.append("Remove unrequested named institutions or products: " + ", ".join(introduced) + ".")
+    source_has_amount = bool(re.search(r"(?:UGX|USD|\$|\b\d[\d,]{2,})", source, re.I))
+    answer_has_amount = bool(re.search(r"(?:UGX|USD|\$|\b\d[\d,]{2,})", english_answer, re.I))
+    if answer_has_amount and not source_has_amount:
+        issues.append("Remove invented currency amounts; ask the user for their income or budget.")
+    return issues
+
+
 class ChatService:
-    def normalize_language(self, language: str) -> str:
-        cleaned = str(language).lower().strip()
-
-        if cleaned not in LANGUAGE_ALIASES:
-            raise ValueError(f"Unsupported language: {language}")
-
-        return LANGUAGE_ALIASES[cleaned]
-
-    def call_groq(self, system_prompt: str, user_prompt: str) -> str:
-        if not GROQ_API_KEY:
-            raise RuntimeError("GROQ_API_KEY is missing. Add it to AI_BACKEND/.env")
-
-        headers = {
-            "Authorization": f"Bearer {GROQ_API_KEY}",
-            "Content-Type": "application/json",
-        }
-
-        payload = {
-            "model": GROQ_MODEL,
-            "messages": [
-                {
-                    "role": "system",
-                    "content": system_prompt,
-                },
-                {
-                    "role": "user",
-                    "content": user_prompt,
-                },
-            ],
-            "temperature": 0.35,
-            "max_tokens": 420,
-        }
-
-        response = requests.post(
-            GROQ_API_URL,
-            headers=headers,
-            json=payload,
-            timeout=45,
-        )
-
-        response.raise_for_status()
-        data = response.json()
-
-        return data["choices"][0]["message"]["content"].strip()
-
-    def build_english_system_prompt(self) -> str:
-        return (
-            "You are OTIC CONNECT, a helpful assistant for students and young people. "
-            "Answer with simple, practical, realistic advice. "
-            "Use plain English. "
-            "Avoid repetition. "
-            "Avoid markdown formatting. "
-            "Avoid long sentences."
-        )
-
-    def clean_text_for_translation(self, text: str) -> str:
-        text = text.replace("**", "")
-        text = text.replace("*", "")
-        text = text.replace("#", "")
-        text = text.replace("`", "")
-        text = re.sub(r"\n{3,}", "\n\n", text)
-        return text.strip()
-
-    def translate_user_message_to_english(self, message: str, selected_language: str) -> str:
-        if selected_language == "english":
-            return message
-
-        translated = translator_service.translate(
-            source_language=selected_language,
-            target_language="english",
-            text=message,
-        )
-
-        return translated or message
-
-    def split_for_local_translation(self, text: str) -> List[str]:
-        lines = [line.strip() for line in text.splitlines() if line.strip()]
-
-        if lines:
-            return lines[:6]
-
-        sentences = re.split(r"(?<=[.!?])\s+", text.strip())
-        sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
-
-        return sentences[:6] if sentences else [text.strip()]
-
-    def translate_structured_english_to_local(self, text: str, target_language: str) -> str:
-        clean_text = self.clean_text_for_translation(text)
-        chunks = self.split_for_local_translation(clean_text)
-        translated_chunks = []
-
-        for chunk in chunks:
-            match = re.match(r"^(\s*(?:[-*•]|\d+[.)])\s*)(.+)$", chunk)
-
-            if match:
-                prefix = match.group(1)
-                content = match.group(2)
-            else:
-                prefix = ""
-                content = chunk
-
-            translated = translator_service.translate(
-                source_language="english",
-                target_language=target_language,
-                text=content,
+    def _groq(self, messages: list[dict[str, str]]) -> str:
+        api_key = get_groq_api_key()
+        if not api_key:
+            raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
+        try:
+            started = time.perf_counter()
+            response = GROQ_SESSION.post(
+                GROQ_API_URL,
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json={"model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), "messages": messages, "temperature": 0.5, "max_tokens": GROQ_MAX_TOKENS},
+                timeout=45,
             )
+            LOGGER.info("Groq chat completed in %.2fs", time.perf_counter() - started)
+            if response.status_code in {401, 403}:
+                raise ChatProviderError("CHAT_PROVIDER_AUTH_FAILED", retryable=False)
+            response.raise_for_status()
+            answer = response.json()["choices"][0]["message"]["content"]
+        except ChatProviderError:
+            raise
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True) from exc
+        except (requests.RequestException, KeyError, IndexError, TypeError, ValueError) as exc:
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True) from exc
+        if not isinstance(answer, str) or not answer.strip():
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True)
+        return answer.strip()
 
-            if translated:
-                translated_chunks.append(f"{prefix}{translated}")
-            else:
-                translated_chunks.append(chunk)
+    def _generate_english(
+        self,
+        message: str,
+        context: list[dict[str, str]],
+        correction: str | None = None,
+    ) -> str:
+        messages = [
+            {"role": "system", "content": build_system_prompt("eng")},
+            *context,
+            {"role": "user", "content": message},
+        ]
+        if correction:
+            messages.append({"role": "system", "content": correction})
+        return self._groq(messages)
 
-        return "\n".join(translated_chunks).strip()
+    @staticmethod
+    def _local_transcript(message: str, context: list[dict[str, str]]) -> str:
+        """Build one translation request while retaining recent speaker turns."""
+        lines = [
+            f"{turn['role'].upper()}: {turn['content'][:LOCAL_CONTEXT_CHARS]}"
+            for turn in context[-LOCAL_CONTEXT_TURNS:]
+        ]
+        lines.append(f"LATEST USER: {message}")
+        return "\n".join(lines)
 
-    def build_structured_english_answer(self, english_meaning: str) -> str:
-        english_prompt = (
-            f"The user asked this question:\n\n"
-            f"{english_meaning}\n\n"
-            "Answer in plain simple English for translation into a local African language. "
-            "Give exactly 4 numbered points. "
-            "Each point must be one short sentence only. "
-            "Use everyday words. "
-            "Do not use bold text. "
-            "Do not use markdown. "
-            "Do not use headings. "
-            "Do not use idioms. "
-            "Do not repeat the same idea. "
-            "Focus on realistic advice for the user's situation."
-        )
-
-        english_response = self.call_groq(
-            system_prompt=self.build_english_system_prompt(),
-            user_prompt=english_prompt,
-        )
-
-        return self.clean_text_for_translation(english_response)
-
-    def chat(self, message: str, language: str) -> str:
-        selected_language = self.normalize_language(language)
-        message = str(message).strip()
-
-        if not message:
-            return "Please enter a message."
-
-        if selected_language == "english":
-            return self.call_groq(
-                system_prompt=self.build_english_system_prompt(),
-                user_prompt=message,
+    def _reason_from_transcript(
+        self,
+        translated_transcript: str,
+        language_code: str,
+        correction: str | None = None,
+    ) -> str:
+        regional_context = (
+            "The user is a Luganda speaker in Uganda unless they explicitly name another "
+            "location. Use UGX and realistic Ugandan options such as mobile money, SACCOs, "
+            "local banks, and locally available businesses. Never introduce US-specific "
+            "products such as 401(k) plans or dollar amounts. Do not name a specific bank, "
+            "SACCO, company, or government program unless the user named it first. If the "
+            "user did not provide income or an amount, do not invent one; give a percentage "
+            "or method and ask for the amount needed to make a precise plan."
+            if language_code == "lug"
+            else (
+                "The user speaks Swahili in East Africa. Follow any location they provide; "
+                "otherwise give regionally practical advice without inventing a country, "
+                "currency, or foreign financial product."
+                if language_code == "swa"
+                else f"The user is a {LANGUAGE_NAMES[language_code]} speaker in Uganda unless "
+                "they explicitly name another location. Give practical Ugandan advice, use UGX "
+                "when currency is needed, and do not invent institutions, programs, or amounts."
             )
-
-        english_meaning = self.translate_user_message_to_english(
-            message=message,
-            selected_language=selected_language,
         )
-
-        english_response = self.build_structured_english_answer(
-            english_meaning=english_meaning,
+        instruction = (
+            "The text below is an English translation of a conversation. "
+            "Answer the LATEST USER request in English. Use earlier turns to resolve "
+            "references and follow-ups. Preserve every amount, place, requested quantity, "
+            "constraint, and task. Give a complete, concrete answer of at most 160 words. "
+            f"{regional_context}\n\n"
+            f"TRANSLATED CONVERSATION:\n{translated_transcript}"
         )
+        return self._generate_english(instruction, [], correction)
 
-        local_response = self.translate_structured_english_to_local(
-            text=english_response,
-            target_language=selected_language,
-        )
+    @staticmethod
+    def _translate(text: str, target: str, source: str) -> str:
+        try:
+            return sunbird_service.translate(
+                text, target_language=target, source_language=source
+            )
+        except (SunbirdError, ValueError) as exc:
+            raise ChatProviderError("CHAT_PROVIDER_UNAVAILABLE", retryable=True) from exc
 
-        return local_response or english_response
+    def chat(self, message: str, language: str, context: list[Any] | None = None) -> ChatResult:
+        language_code = LANGUAGE_ALIASES.get(language.strip().lower())
+        if language_code is None:
+            raise ValueError("unsupported chat language")
+        clean_message, turns = message.strip(), normalise_context(context)
+
+        if language_code == "eng":
+            answer = self._generate_english(clean_message, turns)
+            provider = "groq"
+        else:
+            transcript = self._local_transcript(clean_message, turns)
+            translated_transcript = self._translate(transcript, "eng", language_code)
+            english_answer = self._reason_from_transcript(
+                translated_transcript, language_code
+            )
+            grounding = english_grounding_issues(
+                clean_message, translated_transcript, english_answer
+            )
+            if grounding:
+                correction = (
+                    "Rewrite the draft and fix every grounding problem: "
+                    + " ".join(grounding)
+                    + " Keep the useful advice generic and locally appropriate.\n\n"
+                    "Draft to rewrite:\n"
+                    + english_answer
+                )
+                english_answer = self._reason_from_transcript(
+                    translated_transcript, language_code, correction
+                )
+            answer = self._translate(english_answer, language_code, "eng")
+            provider = "sunbird+groq+sunbird"
+
+        issues = quality_issues(clean_message, answer, language_code)
+        if issues:
+            correction = (
+                "Rewrite the English answer once. " + " ".join(issues) + " "
+                "Answer every part of the latest request, preserve all constraints, and "
+                "output plain text only.\n\nEnglish draft to rewrite:\n"
+                + (english_answer if language_code != "eng" else answer)
+            )
+            if language_code == "eng":
+                answer = self._generate_english(clean_message, turns, correction)
+            else:
+                english_answer = self._reason_from_transcript(
+                    translated_transcript, language_code, correction
+                )
+                answer = self._translate(english_answer, language_code, "eng")
+        return ChatResult(plain_text(answer), provider)
 
 
 chat_service = ChatService()

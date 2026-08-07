@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/l10n/app_strings.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/feature_card.dart';
 
@@ -9,7 +10,7 @@ class FinancialHubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Financial Hub')),
+      appBar: AppBar(title: Text(S.literal('Financial Hub'))),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Align(
@@ -21,46 +22,46 @@ class FinancialHubScreen extends StatelessWidget {
               children: [
                 _FinanceHero(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Financial Tools',
-                  subtitle: 'Manage your money wisely',
+                SectionHeader(
+                  title: S.literal('Financial Tools'),
+                  subtitle: S.literal('Manage your money wisely'),
                 ),
                 const SizedBox(height: 12),
                 FeatureCard(
-                  title: 'Savings Tracker',
-                  subtitle: 'Set goals and track your savings progress',
+                  title: S.literal('Savings Tracker'),
+                  subtitle: S.literal('Set goals and track your savings progress'),
                   icon: Icons.savings,
                   color: AppColors.financeColor,
                   onTap: () {},
                 ),
                 const SizedBox(height: 8),
                 FeatureCard(
-                  title: 'Budget Planner',
-                  subtitle: 'Plan your income and expenses',
+                  title: S.literal('Budget Planner'),
+                  subtitle: S.literal('Plan your income and expenses'),
                   icon: Icons.pie_chart,
                   color: AppColors.earnColor,
                   onTap: () {},
                 ),
                 const SizedBox(height: 8),
                 FeatureCard(
-                  title: 'SACCO Directory',
-                  subtitle: 'Find savings groups and cooperatives near you',
+                  title: S.literal('SACCO Directory'),
+                  subtitle: S.literal('Find savings groups and cooperatives near you'),
                   icon: Icons.groups,
                   color: AppColors.communityColor,
                   onTap: () {},
                 ),
                 const SizedBox(height: 8),
                 FeatureCard(
-                  title: 'Mobile Money Guide',
-                  subtitle: 'Learn to send, receive, and save with mobile money',
+                  title: S.literal('Mobile Money Guide'),
+                  subtitle: S.literal('Learn to send, receive, and save with mobile money'),
                   icon: Icons.phone_android,
                   color: AppColors.primary,
                   onTap: () {},
                 ),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Financial Literacy',
-                  subtitle: 'Build your money knowledge',
+                SectionHeader(
+                  title: S.literal('Financial Literacy'),
+                  subtitle: S.literal('Build your money knowledge'),
                 ),
                 const SizedBox(height: 12),
                 _FinancialTips(),
@@ -99,12 +100,12 @@ class _FinanceHero extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Take control of your finances',
+                  S.literal('Take control of your finances'),
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Tools and resources to help you save, budget, and grow your money.',
+                  S.literal('Tools and resources to help you save, budget, and grow your money.'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -150,9 +151,9 @@ class _FinancialTips extends StatelessWidget {
               child: const Icon(Icons.lightbulb,
                   color: AppColors.earnColor, size: 18),
             ),
-            title: Text(t.$1,
+            title: Text(S.literal(t.$1),
                 style: Theme.of(context).textTheme.titleMedium),
-            subtitle: Text(t.$2),
+            subtitle: Text(S.literal(t.$2)),
           ),
         );
       }).toList(),

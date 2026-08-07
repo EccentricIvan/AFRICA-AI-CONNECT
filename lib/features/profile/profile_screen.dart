@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../shared/widgets/section_header.dart';
 import '../../db/providers/database_provider.dart';
 
@@ -13,7 +14,7 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: Text(S.literal('My Profile')),
         actions: [IconButton(icon: const Icon(Icons.edit), onPressed: () {})],
       ),
       body: SingleChildScrollView(
@@ -26,23 +27,23 @@ class ProfileScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _ProfileHeader(
-                  name: user?.name ?? 'Friend',
+                  name: user?.name ?? S.literal('Friend'),
                   role: user?.role,
                   location: user?.location,
                 ),
                 const SizedBox(height: 24),
                 _StatsRow(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'My Progress',
-                  subtitle: 'Track your learning and growth',
+                SectionHeader(
+                  title: S.literal('My Progress'),
+                  subtitle: S.literal('Track your learning and growth'),
                 ),
                 const SizedBox(height: 12),
                 _ProgressCards(),
                 const SizedBox(height: 24),
-                const SectionHeader(
-                  title: 'Achievements',
-                  subtitle: 'Badges you\'ve earned',
+                SectionHeader(
+                  title: S.literal('Achievements'),
+                  subtitle: S.literal("Badges you've earned"),
                 ),
                 const SizedBox(height: 12),
                 _AchievementsGrid(),
@@ -105,7 +106,7 @@ class _ProfileHeader extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    role ?? 'Member',
+                    role ?? S.literal('Member'),
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -123,7 +124,7 @@ class _ProfileHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      location ?? 'Location not set',
+                      location ?? S.literal('Location not set'),
                       style: TextStyle(
                         fontSize: 13,
                         color: Theme.of(context).hintColor,
@@ -164,7 +165,7 @@ class _StatsRow extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  s.value,
+                  s.label == 'Streak' ? '7 ${S.literal('days')}' : s.value,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -173,7 +174,7 @@ class _StatsRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  s.label,
+                  S.literal(s.label),
                   style: TextStyle(
                     fontSize: 11,
                     color: Theme.of(context).hintColor,
@@ -216,7 +217,7 @@ class _ProgressCards extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        p.$1,
+                        S.literal(p.$1),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
@@ -277,7 +278,7 @@ class _AchievementsGrid extends StatelessWidget {
               Icon(b.$2, color: b.$3, size: 28),
               const SizedBox(height: 6),
               Text(
-                b.$1,
+                S.literal(b.$1),
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,

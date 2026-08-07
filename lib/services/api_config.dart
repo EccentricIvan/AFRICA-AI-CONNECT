@@ -5,4 +5,9 @@ class ApiConfig {
     'GROQ_API_KEY',
     defaultValue: '',
   );
+
+  static const aiBackendUrl = String.fromEnvironment(
+    'AI_BACKEND_URL',
+    defaultValue: 'https://otic-connect-api.vercel.app',
+  );
 }

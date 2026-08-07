@@ -191,11 +191,11 @@ class _LearnHero extends StatelessWidget {
                 const SizedBox(height: 5),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(3),
-                  child: LinearProgressIndicator(
+                  child: const LinearProgressIndicator(
                     value: 0.9,
                     minHeight: 5,
-                    backgroundColor: const Color(0x1A3A2E29),
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.gold),
+                    backgroundColor: Color(0x1A3A2E29),
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.gold),
                   ),
                 ),
               ],

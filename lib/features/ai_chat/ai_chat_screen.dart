@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../services/gemini_service.dart';
+import '../../services/offline_chat_service.dart';
 
 class AiChatScreen extends ConsumerStatefulWidget {
   const AiChatScreen({super.key});
@@ -15,6 +17,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _groq = GeminiService();
+  final _offlineChat = OfflineChatService();
   bool _isLoading = false;
   late List<_ChatMessage> _messages;
   bool _initialized = false;
@@ -61,10 +64,44 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
-    final response = await _groq.sendMessage(text, locale);
+    final connectivity = await Connectivity().checkConnectivity();
+    final hasNetwork = connectivity.any(
+      (result) => result != ConnectivityResult.none,
+    );
 
+    String response;
+    var isOffline = false;
+
+    if (hasNetwork) {
+      response = await _groq.sendMessage(text, locale);
+      final connectionFailed = response.startsWith(
+        'I\'m having trouble connecting',
+      );
+      if (connectionFailed) {
+        final offlineMatch = await _offlineChat.findMatch(text, locale);
+        response =
+            offlineMatch?.reply ??
+            await _offlineChat.getFallback(locale) ??
+            response;
+        isOffline = true;
+      }
+    } else {
+      final offlineMatch = await _offlineChat.findMatch(text, locale);
+      response =
+          offlineMatch?.reply ??
+          await _offlineChat.getFallback(locale) ??
+          'No offline answer is available for that question.';
+      isOffline = true;
+    }
     setState(() {
-      _messages.add(_ChatMessage(response, false));
+      _messages.add(
+        _ChatMessage(
+          response,
+          false,
+          isOffline: isOffline,
+          offlineLabel: isOffline ? _t('offline_guidance') : null,
+        ),
+      );
       _isLoading = false;
     });
     _scrollToBottom();
@@ -96,14 +133,20 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
           child: Column(
             children: [
               _ChatAppBar(onClear: _clearChat, t: _t),
-              _SuggestedTopics(onTap: (topic) {
-                _controller.text = topic;
-                _send();
-              }, t: _t),
+              _SuggestedTopics(
+                onTap: (topic) {
+                  _controller.text = topic;
+                  _send();
+                },
+                t: _t,
+              ),
               Expanded(
                 child: ListView.builder(
                   controller: _scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   reverse: true,
                   itemCount: _messages.length + (_isLoading ? 1 : 0),
                   itemBuilder: (context, index) {
@@ -142,26 +185,40 @@ class _ChatAppBar extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 38, height: 38,
+            width: 38,
+            height: 38,
             decoration: BoxDecoration(
               color: AppColors.chatColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(11),
-              border: Border.all(color: AppColors.chatColor.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: AppColors.chatColor.withValues(alpha: 0.3),
+              ),
             ),
-            child: const Icon(Icons.smart_toy_rounded, color: AppColors.chatColor, size: 20),
+            child: const Icon(
+              Icons.smart_toy_rounded,
+              color: AppColors.chatColor,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'AI Assistant',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                Text(
+                  t('chat_assistant_title'),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 Text(
-                  t('powered_by_groq'),
-                  style: const TextStyle(fontSize: 11, color: AppColors.textHint),
+                  t('app_powered_by'),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textHint,
+                  ),
                 ),
               ],
             ),
@@ -177,9 +234,19 @@ class _ChatAppBar extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.refresh_rounded, size: 14, color: AppColors.textSecondary),
+                  const Icon(
+                    Icons.refresh_rounded,
+                    size: 14,
+                    color: AppColors.textSecondary,
+                  ),
                   const SizedBox(width: 4),
-                  Text(t('new_chat'), style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  Text(
+                    t('new_chat'),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -224,7 +291,10 @@ class _SuggestedTopics extends StatelessWidget {
               ),
               child: Text(
                 topics[i],
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
               ),
             ),
           );
@@ -254,7 +324,8 @@ class _TypingIndicator extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 16, height: 16,
+              width: 16,
+              height: 16,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 color: AppColors.accent.withValues(alpha: 0.7),
@@ -263,7 +334,11 @@ class _TypingIndicator extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               t('thinking'),
-              style: const TextStyle(fontSize: 13, color: AppColors.textHint, fontStyle: FontStyle.italic),
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textHint,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ],
         ),
@@ -297,13 +372,40 @@ class _MessageBubble extends StatelessWidget {
           ),
           border: isUser ? null : Border.all(color: const Color(0x183A2E29)),
         ),
-        child: Text(
-          message.text,
-          style: TextStyle(
-            color: isUser ? Colors.white : AppColors.textSecondary,
-            fontSize: 14,
-            height: 1.5,
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (message.isOffline) ...[
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.offline_bolt_rounded,
+                    size: 13,
+                    color: AppColors.textHint,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    message.offlineLabel ?? 'Offline guidance',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.textHint,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+            ],
+            Text(
+              message.text,
+              style: TextStyle(
+                color: isUser ? Colors.white : AppColors.textSecondary,
+                fontSize: 14,
+                height: 1.5,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -311,7 +413,12 @@ class _MessageBubble extends StatelessWidget {
 }
 
 class _ChatInput extends StatelessWidget {
-  const _ChatInput({required this.controller, required this.onSend, required this.isLoading, required this.t});
+  const _ChatInput({
+    required this.controller,
+    required this.onSend,
+    required this.isLoading,
+    required this.t,
+  });
   final TextEditingController controller;
   final VoidCallback onSend;
   final bool isLoading;
@@ -320,7 +427,12 @@ class _ChatInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, MediaQuery.of(context).padding.bottom + 8),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        8,
+        16,
+        MediaQuery.of(context).padding.bottom + 8,
+      ),
       decoration: const BoxDecoration(
         color: AppColors.surface,
         border: Border(top: BorderSide(color: Color(0x223A2E29))),
@@ -335,12 +447,18 @@ class _ChatInput extends StatelessWidget {
               ),
               child: TextField(
                 controller: controller,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
+                ),
                 decoration: InputDecoration(
                   hintText: t('ask_anything'),
                   hintStyle: const TextStyle(color: AppColors.textHint),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                 ),
                 onSubmitted: (_) => onSend(),
                 textInputAction: TextInputAction.send,
@@ -351,16 +469,21 @@ class _ChatInput extends StatelessWidget {
           GestureDetector(
             onTap: isLoading ? null : onSend,
             child: Container(
-              width: 44, height: 44,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 color: isLoading ? const Color(0x223A2E29) : AppColors.accent,
                 borderRadius: BorderRadius.circular(14),
-                boxShadow: isLoading ? null : [
-                  BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.4),
-                    blurRadius: 8, offset: const Offset(0, 3),
-                  ),
-                ],
+                boxShadow:
+                    isLoading
+                        ? null
+                        : [
+                          BoxShadow(
+                            color: AppColors.accent.withValues(alpha: 0.4),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
               ),
               child: Icon(
                 Icons.send_rounded,
@@ -376,7 +499,14 @@ class _ChatInput extends StatelessWidget {
 }
 
 class _ChatMessage {
-  const _ChatMessage(this.text, this.isUser);
+  const _ChatMessage(
+    this.text,
+    this.isUser, {
+    this.isOffline = false,
+    this.offlineLabel,
+  });
   final String text;
   final bool isUser;
+  final bool isOffline;
+  final String? offlineLabel;
 }
