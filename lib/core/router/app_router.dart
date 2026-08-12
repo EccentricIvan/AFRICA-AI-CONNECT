@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/auth/phone_entry_screen.dart';
 import '../../features/auth/otp_verify_screen.dart';
-import '../../features/home/home_screen.dart';
+import '../../features/home/home_screen_v2.dart';
 import '../../features/learn/learn_hub_screen.dart';
 import '../../features/earn/marketplace/marketplace_screen.dart';
 import '../../features/earn/financial/financial_hub_screen.dart';
@@ -55,7 +55,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state, child) => AppShell(child: child),
         routes: [
           // ── Core tabs ──
-          GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
+          GoRoute(path: '/', builder: (_, __) => const HomeScreenV2()),
           GoRoute(
               path: '/learn', builder: (_, __) => const LearnHubScreen()),
           GoRoute(

@@ -257,9 +257,9 @@ class S {
 
     // ── Home screen ──
     'hero_title': {
-      AppLocale.en: 'Empowering your\ndigital journey',
-      AppLocale.lg: 'Tukubudde mu\nntambula yo ey\'ekikompyuta',
-      AppLocale.sw: 'Kuwezesha safari\nyako ya kidijitali',
+      AppLocale.en: 'Your journey. Your future.',
+      AppLocale.lg: 'Olugendo lwo. Obudde bwo.',
+      AppLocale.sw: 'Safari yako. Mustakabali wako.',
     },
     'hero_subtitle': {
       AppLocale.en:
@@ -275,9 +275,9 @@ class S {
       AppLocale.sw: 'Endelea Kujifunza',
     },
     'day_streak': {
-      AppLocale.en: 'day streak!',
-      AppLocale.lg: 'ennaku empita!',
-      AppLocale.sw: 'siku mfululizo!',
+      AppLocale.en: 'day streak',
+      AppLocale.lg: 'ennaku empita',
+      AppLocale.sw: 'siku mfululizo',
     },
     'your_progress': {
       AppLocale.en: 'YOUR PROGRESS',
