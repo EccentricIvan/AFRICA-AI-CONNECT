@@ -44,7 +44,7 @@ Future<bool> selectAppLocale(WidgetRef ref, AppLocale locale) async {
 }
 
 class LocaleNotifier extends StateNotifier<AppLocale> {
-  LocaleNotifier([AppLocale initialLocale = AppLocale.en]) : super(initialLocale);
+  LocaleNotifier([super.state = AppLocale.en]);
 
   static AppLocale fromSaved(String? saved) {
     return AppLocale.values.firstWhere(

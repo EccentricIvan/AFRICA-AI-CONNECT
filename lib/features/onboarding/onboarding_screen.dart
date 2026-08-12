@@ -374,15 +374,15 @@ class _LanguagePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text.rich(
+          const Text.rich(
             TextSpan(
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: AppColors.textHint,
                 height: 1.45,
               ),
-              children: const [
+              children: [
                 TextSpan(text: 'Londa olulimi lwo '),
                 TextSpan(
                   text: '•',
