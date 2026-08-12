@@ -41,23 +41,23 @@ class _CommunityData {
 
   static const groups = [
     _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
-        Color(0xFF2E8B8B), 'Business'),
+        Color(0xFF2E8B8B), 'Business', 'Kampala'),
     _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
-        'Digital Skills'),
+        'Digital Skills', 'Kampala'),
     _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
-        'Agriculture'),
+        'Agriculture', 'Gulu'),
     _Group('Young Mothers Support', 67, Icons.child_care, Color(0xFFB4436C),
-        'Family & Support'),
+        'Family & Support', 'Mbale'),
     _Group('Tailors & Textile Circle', 52, Icons.checkroom, Color(0xFFD4A24E),
-        'Fashion & Crafts'),
+        'Fashion & Crafts', 'Jinja'),
     _Group('Savings Circle Kampala', 143, Icons.savings, Color(0xFF5B8AA8),
-        'Finance'),
+        'Finance', 'Kampala'),
   ];
 
   static const conversations = [
     _Conversation(
       _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
-          Color(0xFF2E8B8B), 'Business'),
+          Color(0xFF2E8B8B), 'Business', 'Kampala'),
       'Grace',
       'Anyone free for the Saturday market meet-up?',
       '12m',
@@ -66,7 +66,7 @@ class _CommunityData {
     ),
     _Conversation(
       _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
-          'Digital Skills'),
+          'Digital Skills', 'Kampala'),
       'Amina',
       'Just shared the new tutorial link!',
       '2h',
@@ -75,7 +75,7 @@ class _CommunityData {
     ),
     _Conversation(
       _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
-          'Agriculture'),
+          'Agriculture', 'Gulu'),
       'You',
       'Thanks everyone, see you at the training.',
       '1d',
@@ -474,20 +474,31 @@ class _DiscoverTab extends StatefulWidget {
 class _DiscoverTabState extends State<_DiscoverTab> {
   String _query = '';
   final Set<String> _categories = {};
+  final Set<String> _locations = {};
+
+  bool get _hasActiveFilters => _categories.isNotEmpty || _locations.isNotEmpty;
 
   Future<void> _openFilter() async {
-    final result = await showModalBottomSheet<Set<String>>(
+    final result = await showModalBottomSheet<(Set<String>, Set<String>)>(
       context: context,
       backgroundColor: CommunityUi.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (_) => _CategoryFilterSheet(initial: _categories),
+      builder: (_) => _FilterSheet(
+        initialCategories: _categories,
+        initialLocations: _locations,
+      ),
     );
     if (result != null && mounted) {
-      setState(() => _categories
-        ..clear()
-        ..addAll(result));
+      setState(() {
+        _categories
+          ..clear()
+          ..addAll(result.$1);
+        _locations
+          ..clear()
+          ..addAll(result.$2);
+      });
     }
   }
 
@@ -498,7 +509,9 @@ class _DiscoverTabState extends State<_DiscoverTab> {
       final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
       final matchesCategory =
           _categories.isEmpty || _categories.contains(g.category);
-      return matchesQuery && matchesCategory;
+      final matchesLocation =
+          _locations.isEmpty || _locations.contains(g.location);
+      return matchesQuery && matchesCategory && matchesLocation;
     }).toList();
 
     return _TabScaffold(
@@ -512,17 +525,16 @@ class _DiscoverTabState extends State<_DiscoverTab> {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: _categories.isEmpty
-                ? CommunityUi.card
-                : CommunityUi.accent.withValues(alpha: 0.14),
+            color: _hasActiveFilters
+                ? CommunityUi.accent.withValues(alpha: 0.14)
+                : CommunityUi.card,
             borderRadius: BorderRadius.circular(25),
-            boxShadow: CommunityUi.softShadow,
           ),
           child: Icon(Icons.tune_rounded,
               size: 20,
-              color: _categories.isEmpty
-                  ? CommunityUi.textSecondary
-                  : CommunityUi.accent),
+              color: _hasActiveFilters
+                  ? CommunityUi.accent
+                  : CommunityUi.textSecondary),
         ),
       ),
       child: list.isEmpty
@@ -538,18 +550,20 @@ class _DiscoverTabState extends State<_DiscoverTab> {
   }
 }
 
-class _CategoryFilterSheet extends StatefulWidget {
-  const _CategoryFilterSheet({required this.initial});
-  final Set<String> initial;
+class _FilterSheet extends StatefulWidget {
+  const _FilterSheet({required this.initialCategories, required this.initialLocations});
+  final Set<String> initialCategories;
+  final Set<String> initialLocations;
 
   @override
-  State<_CategoryFilterSheet> createState() => _CategoryFilterSheetState();
+  State<_FilterSheet> createState() => _FilterSheetState();
 }
 
-class _CategoryFilterSheetState extends State<_CategoryFilterSheet> {
-  late final Set<String> _selected = {...widget.initial};
+class _FilterSheetState extends State<_FilterSheet> {
+  late final Set<String> _categories = {...widget.initialCategories};
+  late final Set<String> _locations = {...widget.initialLocations};
 
-  static const _categories = [
+  static const _categoryOptions = [
     'Business',
     'Digital Skills',
     'Agriculture',
@@ -557,6 +571,56 @@ class _CategoryFilterSheetState extends State<_CategoryFilterSheet> {
     'Fashion & Crafts',
     'Finance',
   ];
+
+  static const _locationOptions = [
+    'Kampala',
+    'Gulu',
+    'Mbale',
+    'Jinja',
+  ];
+
+  Widget _chipRow(
+    String label,
+    List<String> options,
+    Set<String> selected,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          S.literal(label),
+          style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: CommunityUi.textPrimary),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          runSpacing: 10,
+          children: options.map((c) {
+            final isSelected = selected.contains(c);
+            return ChoiceChip(
+              label: Text(c),
+              selected: isSelected,
+              onSelected: (_) => setState(
+                  () => isSelected ? selected.remove(c) : selected.add(c)),
+              selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
+              labelStyle: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color:
+                    isSelected ? CommunityUi.accent : CommunityUi.textSecondary,
+              ),
+              side: BorderSide(
+                color: isSelected ? CommunityUi.accent : CommunityUi.border,
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -585,37 +649,17 @@ class _CategoryFilterSheetState extends State<_CategoryFilterSheet> {
                 fontWeight: FontWeight.w700,
                 color: CommunityUi.textPrimary),
           ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 10,
-            children: _categories.map((c) {
-              final isSelected = _selected.contains(c);
-              return ChoiceChip(
-                label: Text(c),
-                selected: isSelected,
-                onSelected: (_) => setState(
-                    () => isSelected ? _selected.remove(c) : _selected.add(c)),
-                selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
-                labelStyle: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: isSelected
-                      ? CommunityUi.accent
-                      : CommunityUi.textSecondary,
-                ),
-                side: BorderSide(
-                  color: isSelected ? CommunityUi.accent : CommunityUi.border,
-                ),
-              );
-            }).toList(),
-          ),
+          const SizedBox(height: 18),
+          _chipRow('Category', _categoryOptions, _categories),
+          const SizedBox(height: 18),
+          _chipRow('Location', _locationOptions, _locations),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: TapScale(
               borderRadius: CommunityUi.radiusBtn,
-              onTap: () => Navigator.of(context).pop(_selected),
+              onTap: () =>
+                  Navigator.of(context).pop((_categories, _locations)),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 alignment: Alignment.center,
@@ -654,7 +698,6 @@ class _SearchField extends StatelessWidget {
       decoration: BoxDecoration(
         color: CommunityUi.card,
         borderRadius: BorderRadius.circular(25),
-        boxShadow: CommunityUi.softShadow,
       ),
       child: TextField(
         onChanged: onChanged,
@@ -1204,7 +1247,22 @@ class _GroupPreviewCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  _CategoryTag(color: g.color, label: g.category),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _CategoryTag(color: g.color, label: g.category),
+                      const SizedBox(width: 6),
+                      Icon(Icons.location_on_rounded, size: 13, color: g.color),
+                      const SizedBox(width: 2),
+                      Text(
+                        S.literal(g.location),
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: g.color),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 8),
                   _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
                   const SizedBox(height: 12),
@@ -1245,19 +1303,29 @@ class _DiscoverGroupRow extends StatelessWidget {
       onTap: () => _showGroupPreview(context, g),
       leading: CommunityAvatar(color: g.color, initial: g.name[0]),
       title: S.literal(g.name),
-      subtitle: _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _CategoryTag(color: g.color, label: g.category),
+          const SizedBox(height: 5),
+          _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
+        ],
+      ),
       trailing: _JoinButton(color: g.color, groupName: g.name),
     );
   }
 }
 
 class _Group {
-  const _Group(this.name, this.members, this.icon, this.color, this.category);
+  const _Group(this.name, this.members, this.icon, this.color, this.category,
+      this.location);
   final String name;
   final int members;
   final IconData icon;
   final Color color;
   final String category;
+  final String location;
 
   String get memberCount => '$members';
 }
@@ -1338,7 +1406,22 @@ class _GroupDetailPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  _CategoryTag(color: g.color, label: g.category),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _CategoryTag(color: g.color, label: g.category),
+                      const SizedBox(width: 6),
+                      Icon(Icons.location_on_rounded, size: 13, color: g.color),
+                      const SizedBox(width: 2),
+                      Text(
+                        S.literal(g.location),
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: g.color),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 8),
                   _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
                   const SizedBox(height: 4),
@@ -1882,7 +1965,6 @@ class _FeedPostCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: CommunityUi.card,
         borderRadius: BorderRadius.circular(CommunityUi.radiusCard),
-        boxShadow: CommunityUi.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1939,68 +2021,133 @@ class _FeedPostCard extends StatelessWidget {
   }
 }
 
+/// LinkedIn-style multi-image layout: 1 image is a single full-width tile,
+/// 2 are side by side, 3 is one large + two stacked, 4+ is a 2x2 grid with
+/// a "+N" overlay on the last tile for any images beyond the 4 shown.
+/// Tapping any tile opens the full swipeable viewer at that tile's index.
 class _FeedImages extends StatelessWidget {
   const _FeedImages({required this.post});
   final _Post post;
 
   String get _postId => '${post.author}-${post.time}';
 
+  void _open(BuildContext context, int index) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.black87,
+        pageBuilder: (_, __, ___) =>
+            _ImageViewerPage(post: post, initialIndex: index),
+      ),
+    );
+  }
+
+  Widget _tile(BuildContext context, int index, {int? overlayCount}) {
+    return TapScale(
+      borderRadius: 0,
+      onTap: () => _open(context, index),
+      child: Hero(
+        tag: '$_postId-img-$index',
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            _PhotoPlaceholder(
+              color: Color.lerp(post.color, Colors.white, (index % 3) * 0.14)!,
+              radius: 0,
+            ),
+            if (overlayCount != null)
+              Container(
+                color: Colors.black.withValues(alpha: 0.55),
+                alignment: Alignment.center,
+                child: Text(
+                  '+$overlayCount',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final count = post.imageCount;
-    return TapScale(
-      borderRadius: CommunityUi.radiusChip,
-      onTap: () => Navigator.of(context).push(
-        PageRouteBuilder(
-          opaque: false,
-          barrierColor: Colors.black87,
-          pageBuilder: (_, __, ___) =>
-              _ImageViewerPage(post: post, initialIndex: 0),
+    const gap = 2.0;
+    Widget grid;
+
+    if (count == 1) {
+      grid = AspectRatio(aspectRatio: 4 / 3, child: _tile(context, 0));
+    } else if (count == 2) {
+      grid = AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Row(
+          children: [
+            Expanded(child: _tile(context, 0)),
+            const SizedBox(width: gap),
+            Expanded(child: _tile(context, 1)),
+          ],
         ),
-      ),
-      child: Hero(
-        tag: '$_postId-img-0',
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(CommunityUi.radiusChip),
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                _PhotoPlaceholder(color: post.color, radius: 0),
-                if (count > 1)
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.55),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.collections_rounded,
-                              size: 13, color: Colors.white),
-                          const SizedBox(width: 4),
-                          Text(
-                            '$count',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
+      );
+    } else if (count == 3) {
+      grid = AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Row(
+          children: [
+            Expanded(child: _tile(context, 0)),
+            const SizedBox(width: gap),
+            Expanded(
+              child: Column(
+                children: [
+                  Expanded(child: _tile(context, 1)),
+                  const SizedBox(height: gap),
+                  Expanded(child: _tile(context, 2)),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
-      ),
+      );
+    } else {
+      final extra = count - 4;
+      grid = AspectRatio(
+        aspectRatio: 1,
+        child: Column(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(child: _tile(context, 0)),
+                  const SizedBox(width: gap),
+                  Expanded(child: _tile(context, 1)),
+                ],
+              ),
+            ),
+            const SizedBox(height: gap),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(child: _tile(context, 2)),
+                  const SizedBox(width: gap),
+                  Expanded(
+                    child: _tile(context, 3,
+                        overlayCount: extra > 0 ? extra : null),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(CommunityUi.radiusChip),
+      child: grid,
     );
   }
 }

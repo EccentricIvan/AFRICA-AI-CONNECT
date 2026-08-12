@@ -37,10 +37,18 @@ class CommunityHeroCard extends StatelessWidget {
           final compact = outer.maxWidth < 360;
           final pad = compact ? 16.0 : 20.0;
           final titleSize = compact ? 18.0 : 20.0;
+          // The photo fills the card's full width (its 16:9 crop is wider
+          // than the card is tall), so the safe text zone scales with card
+          // width, not a fixed px amount — otherwise wide windows push the
+          // subject far enough left that fixed padding stops covering it.
+          final photoReserve = (outer.maxWidth * 0.44).clamp(100.0, 230.0);
 
           return Container(
             width: outer.maxWidth,
-            constraints: BoxConstraints(minHeight: compact ? 268 : 286),
+            // Trimmed to match the content's real height (title+body+
+            // avatar row+button) so the card doesn't carry dead space below
+            // the button — it was previously taller than its own content.
+            constraints: BoxConstraints(minHeight: compact ? 244 : 262),
             decoration: BoxDecoration(
               color: CommunityUi.card,
               borderRadius: BorderRadius.circular(CommunityUi.radiusHero),
@@ -109,12 +117,12 @@ class CommunityHeroCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          SizedBox(width: compact ? 72 : 100),
+                          SizedBox(width: photoReserve),
                         ],
                       ),
                       const SizedBox(height: 10),
                       Padding(
-                        padding: EdgeInsets.only(right: compact ? 88 : 120),
+                        padding: EdgeInsets.only(right: photoReserve),
                         child: Text(
                           body,
                           style: TextStyle(
@@ -132,7 +140,7 @@ class CommunityHeroCard extends StatelessWidget {
                       Padding(
                         // Same right-edge stop as the body text above —
                         // this row must never run into the photo either.
-                        padding: EdgeInsets.only(right: compact ? 88 : 120),
+                        padding: EdgeInsets.only(right: photoReserve),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [

@@ -35,7 +35,6 @@ class CommunityGroupCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: CommunityUi.card,
           borderRadius: BorderRadius.circular(CommunityUi.radiusCard),
-          boxShadow: CommunityUi.softShadow,
         ),
         child: Row(
           children: [
