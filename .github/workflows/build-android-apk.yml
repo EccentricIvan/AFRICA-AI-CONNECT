@@ -113,14 +113,16 @@ jobs:
       - name: Build debug APK
         env:
           AI_BACKEND_URL: ${{ vars.AI_BACKEND_URL }}
+          GRADLE_OPTS: -Xmx3072m -Dorg.gradle.daemon=false -Dkotlin.daemon.jvm.options=-Xmx1024m
         run: |
           if [ -n "$AI_BACKEND_URL" ]; then
             echo "Building with configured AI backend."
             flutter build apk --debug \
+              --no-tree-shake-icons \
               --dart-define=AI_BACKEND_URL="$AI_BACKEND_URL"
           else
             echo "No AI_BACKEND_URL configured. Building offline-first APK."
-            flutter build apk --debug
+            flutter build apk --debug --no-tree-shake-icons
           fi
 
       - name: Rename APK
