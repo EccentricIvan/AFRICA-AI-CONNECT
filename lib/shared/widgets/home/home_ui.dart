@@ -1,21 +1,60 @@
 import 'package:flutter/material.dart';
 
-/// Presentation tokens for Home Premium Visual Pass (V3).
+/// Presentation tokens for Home Premium Visual Pass (V3) — now brightness-
+/// aware. Surfaces/text/border swap between [light] and [darkTheme]; brand
+/// and pillar accent colors stay identical in both (they're colorful pops
+/// against a card, not a background, so they read fine either way).
+/// Widgets fetch the active palette via `HomeUi.of(context)` instead of
+/// static constants, since the two variants aren't compile-time constants
+/// of each other.
 class HomeUi {
-  HomeUi._();
+  const HomeUi._({
+    required this.card,
+    required this.surface,
+    required this.pageBg,
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.border,
+    required this.isDark,
+  });
 
-  static const Color card = Color(0xFFFFFFFF);
-  static const Color surface = Color(0xFFF3EEE8);
-  static const Color pageBg = Color(0xFFFAF8F6);
-  static const Color textPrimary = Color(0xFF1A1A1A);
-  static const Color textSecondary = Color(0xFF6B6B6B);
-  static const Color border = Color(0xFFECE8E3);
+  final Color card;
+  final Color surface;
+  final Color pageBg;
+  final Color textPrimary;
+  final Color textSecondary;
+  final Color border;
+  final bool isDark;
+
+  static const HomeUi light = HomeUi._(
+    card: Color(0xFFFFFFFF),
+    surface: Color(0xFFF3EEE8),
+    pageBg: Color(0xFFFAF8F6),
+    textPrimary: Color(0xFF1A1A1A),
+    textSecondary: Color(0xFF6B6B6B),
+    border: Color(0xFFECE8E3),
+    isDark: false,
+  );
+
+  static const HomeUi darkTheme = HomeUi._(
+    card: Color(0xFF212121),
+    surface: Color(0xFF1A1A1A),
+    pageBg: Color(0xFF121212),
+    textPrimary: Color(0xFFF2F0EE),
+    textSecondary: Color(0xFFA6A19C),
+    border: Color(0xFF322F2C),
+    isDark: true,
+  );
+
+  static HomeUi of(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? darkTheme : light;
+
+  // Brand/pillar/status accents — identical in both themes.
   static const Color accent = Color(0xFFF26B2D);
   static const Color accentDeep = Color(0xFFE85A1C);
   static const Color dark = Color(0xFF1A1A1A);
   static const Color success = Color(0xFF4D8B55);
 
-  // Pillar icon-only accents (white card backgrounds).
   static const Color learn = Color(0xFF4A6FA5);
   static const Color earn = Color(0xFFC4783A);
   static const Color grow = Color(0xFF4D8B55);
@@ -36,19 +75,25 @@ class HomeUi {
   static const String heroBackgroundAsset =
       'assets/branding/card_background_light.png';
 
-  static List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: const Color(0xFF1A1A1A).withValues(alpha: 0.07),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ];
+  // Shadows barely register against a dark surface and just look like a
+  // muddy halo — cards lean on [border] alone for definition in dark mode.
+  List<BoxShadow> get softShadow => isDark
+      ? const []
+      : [
+          BoxShadow(
+            color: const Color(0xFF1A1A1A).withValues(alpha: 0.07),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ];
 
-  static List<BoxShadow> get navShadow => [
-        BoxShadow(
-          color: const Color(0xFF1A1A1A).withValues(alpha: 0.10),
-          blurRadius: 28,
-          offset: const Offset(0, 10),
-        ),
-      ];
+  List<BoxShadow> get navShadow => isDark
+      ? const []
+      : [
+          BoxShadow(
+            color: const Color(0xFF1A1A1A).withValues(alpha: 0.10),
+            blurRadius: 28,
+            offset: const Offset(0, 10),
+          ),
+        ];
 }

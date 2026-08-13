@@ -43,26 +43,29 @@ class HomeProgressCard extends StatelessWidget {
         ),
     };
 
+    final ui = HomeUi.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
       decoration: BoxDecoration(
-        color: HomeUi.card,
+        color: ui.card,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: HomeUi.border),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1A1A1A).withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(color: ui.border),
+        boxShadow: ui.isDark
+            ? const []
+            : [
+                BoxShadow(
+                  color: const Color(0xFF1A1A1A).withValues(alpha: 0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            HomeUi.card,
-            theme.$1.withValues(alpha: 0.05),
+            ui.card,
+            theme.$1.withValues(alpha: ui.isDark ? 0.16 : 0.05),
           ],
         ),
       ),
@@ -79,11 +82,11 @@ class HomeProgressCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Saira',
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: HomeUi.textPrimary,
+              color: ui.textPrimary,
               height: 1,
             ),
           ),
@@ -92,17 +95,17 @@ class HomeProgressCard extends StatelessWidget {
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
-              color: HomeUi.textPrimary,
+              color: ui.textPrimary,
             ),
           ),
           Text(
             theme.$4,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 8, color: HomeUi.textSecondary),
+            style: TextStyle(fontSize: 8, color: ui.textSecondary),
           ),
           const Spacer(),
           SizedBox(
@@ -193,7 +196,8 @@ class _CoursesFooter extends StatelessWidget {
           children: [
             Text(
               '$pct%',
-              style: const TextStyle(fontSize: 8, color: HomeUi.textSecondary),
+              style:
+                  TextStyle(fontSize: 8, color: HomeUi.of(context).textSecondary),
             ),
             const Spacer(),
             Text(
@@ -225,18 +229,19 @@ class _PointsFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     final ring = (progress * 100).clamp(0, 100).round();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F5F1),
+        color: ui.isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF8F5F1),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
           Icon(Icons.workspace_premium_outlined, size: 11, color: color),
           const SizedBox(width: 4),
-          const Expanded(
+          Expanded(
             child: Text(
               'Next 550',
               maxLines: 1,
@@ -244,7 +249,7 @@ class _PointsFooter extends StatelessWidget {
               style: TextStyle(
                 fontSize: 8,
                 fontWeight: FontWeight.w600,
-                color: HomeUi.textPrimary,
+                color: ui.textPrimary,
               ),
             ),
           ),
@@ -319,12 +324,13 @@ class _StreakFooter extends StatelessWidget {
           children: [
             Icon(Icons.star_rounded, size: 10, color: color),
             const SizedBox(width: 2),
-            const Expanded(
+            Expanded(
               child: Text(
                 'Best: 12d',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 8, color: HomeUi.textSecondary),
+                style:
+                    TextStyle(fontSize: 8, color: HomeUi.of(context).textSecondary),
               ),
             ),
           ],

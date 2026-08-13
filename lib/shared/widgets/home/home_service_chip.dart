@@ -16,6 +16,7 @@ class HomeServiceChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return TapScale(
       onTap: onTap,
       borderRadius: HomeUi.radiusPill,
@@ -23,24 +24,24 @@ class HomeServiceChip extends StatelessWidget {
         height: 52,
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
-          color: HomeUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(HomeUi.radiusPill),
-          border: Border.all(color: HomeUi.border),
-          boxShadow: HomeUi.softShadow,
+          border: Border.all(color: ui.border),
+          boxShadow: ui.softShadow,
         ),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: HomeUi.textPrimary),
+            Icon(icon, size: 20, color: ui.textPrimary),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: HomeUi.textPrimary,
+                  color: ui.textPrimary,
                 ),
               ),
             ),

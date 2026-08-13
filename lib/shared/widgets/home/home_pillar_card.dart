@@ -20,21 +20,22 @@ class HomePillarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return TapScale(
       onTap: onTap,
       borderRadius: HomeUi.radiusCard,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(18, 18, 16, 16),
+        padding: const EdgeInsets.fromLTRB(18, 18, 16, 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(HomeUi.radiusCard),
-          border: Border.all(color: HomeUi.border),
-          boxShadow: HomeUi.softShadow,
+          border: Border.all(color: ui.border),
+          boxShadow: ui.softShadow,
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              HomeUi.card,
-              accent.withValues(alpha: 0.06),
+              ui.card,
+              accent.withValues(alpha: ui.isDark ? 0.14 : 0.06),
             ],
           ),
         ),
@@ -45,11 +46,11 @@ class HomePillarCard extends StatelessWidget {
             const Spacer(),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Saira',
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: HomeUi.textPrimary,
+                color: ui.textPrimary,
               ),
             ),
             const SizedBox(height: 6),
@@ -57,13 +58,13 @@ class HomePillarCard extends StatelessWidget {
               description,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 height: 1.35,
-                color: HomeUi.textSecondary,
+                color: ui.textSecondary,
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
               child: Container(

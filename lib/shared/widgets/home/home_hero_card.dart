@@ -21,12 +21,12 @@ class HomeHeroCard extends StatelessWidget {
   final String ctaLabel;
   final VoidCallback onCta;
 
-  List<InlineSpan> _titleSpans(String raw, double fontSize) {
+  List<InlineSpan> _titleSpans(String raw, double fontSize, Color textColor) {
     final dark = TextStyle(
       fontFamily: 'Saira',
       fontSize: fontSize,
       fontWeight: FontWeight.w700,
-      color: HomeUi.textPrimary,
+      color: textColor,
       height: 1.1,
       letterSpacing: -0.4,
     );
@@ -57,6 +57,7 @@ class HomeHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     final scaler = MediaQuery.textScalerOf(context);
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
@@ -75,8 +76,8 @@ class HomeHeroCard extends StatelessWidget {
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(HomeUi.radiusHero),
-              boxShadow: HomeUi.softShadow,
-              border: Border.all(color: HomeUi.border),
+              boxShadow: ui.softShadow,
+              border: Border.all(color: ui.border),
               image: const DecorationImage(
                 image: AssetImage(HomeUi.heroBackgroundAsset),
                 fit: BoxFit.cover,
@@ -131,7 +132,7 @@ class HomeHeroCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w600,
-                                    color: HomeUi.textPrimary,
+                                    color: HomeUi.dark,
                                   ),
                                 ),
                               ],
@@ -152,7 +153,7 @@ class HomeHeroCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w600,
-                                    color: HomeUi.textPrimary,
+                                    color: HomeUi.dark,
                                   ),
                                 ),
                               ],
@@ -161,8 +162,14 @@ class HomeHeroCard extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: compact ? 14 : 18),
+                      // Title/subtitle stay a fixed dark tone regardless of
+                      // app theme — this card always sits on the same
+                      // bright photo, so it needs the same legible-on-light
+                      // text either way, not the page's light/dark swap.
                       Text.rich(
-                        TextSpan(children: _titleSpans(title, titleSize)),
+                        TextSpan(
+                          children: _titleSpans(title, titleSize, HomeUi.dark),
+                        ),
                       ),
                       SizedBox(height: compact ? 8 : 10),
                       Text(
@@ -170,7 +177,7 @@ class HomeHeroCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: subtitleSize,
                           height: 1.4,
-                          color: HomeUi.textSecondary.withValues(alpha: 0.95),
+                          color: const Color(0xFF4A4A4A),
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -251,7 +258,7 @@ class _HeroChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.78),
         borderRadius: BorderRadius.circular(99),
-        border: Border.all(color: HomeUi.border),
+        border: Border.all(color: HomeUi.light.border),
       ),
       child: child,
     );
