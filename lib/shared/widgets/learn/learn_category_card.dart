@@ -20,15 +20,16 @@ class LearnCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = LearnUi.of(context);
     return TapScale(
       borderRadius: LearnUi.radiusCard,
       onTap: onTap ?? () {},
       child: Container(
         padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
         decoration: BoxDecoration(
-          color: LearnUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(LearnUi.radiusCard),
-          boxShadow: LearnUi.softShadow,
+          boxShadow: ui.softShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,18 +38,18 @@ class LearnCategoryCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFF4F0EC),
+                color: ui.isDark ? const Color(0xFF2A2622) : const Color(0xFFF4F0EC),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Icon(icon, size: 22, color: LearnUi.textPrimary),
+              child: Icon(icon, size: 22, color: ui.textPrimary),
             ),
             const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: LearnUi.textPrimary,
+                color: ui.textPrimary,
                 height: 1.25,
               ),
               maxLines: 2,
@@ -57,9 +58,9 @@ class LearnCategoryCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
-                color: LearnUi.textSecondary,
+                color: ui.textSecondary,
                 height: 1.3,
               ),
               maxLines: 2,

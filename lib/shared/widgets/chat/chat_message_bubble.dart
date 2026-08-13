@@ -19,6 +19,7 @@ class ChatMessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxW = MediaQuery.sizeOf(context).width * 0.82;
+    final ui = ChatUi.of(context);
 
     if (isUser) {
       return Align(
@@ -28,7 +29,7 @@ class ChatMessageBubble extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           constraints: BoxConstraints(maxWidth: maxW),
           decoration: BoxDecoration(
-            color: ChatUi.userBubble,
+            color: ui.userBubble,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
@@ -39,8 +40,8 @@ class ChatMessageBubble extends StatelessWidget {
           ),
           child: Text(
             text,
-            style: const TextStyle(
-              color: ChatUi.textPrimary,
+            style: TextStyle(
+              color: ui.textPrimary,
               fontSize: 14.5,
               height: 1.5,
               fontWeight: FontWeight.w500,
@@ -68,15 +69,15 @@ class ChatMessageBubble extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 decoration: BoxDecoration(
-                  color: ChatUi.card,
+                  color: ui.card,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(6),
                     topRight: Radius.circular(20),
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                   ),
-                  boxShadow: ChatUi.softShadow,
-                  border: Border.all(color: ChatUi.border),
+                  boxShadow: ui.softShadow,
+                  border: Border.all(color: ui.border),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,17 +86,17 @@ class ChatMessageBubble extends StatelessWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.offline_bolt_outlined,
                             size: 13,
-                            color: ChatUi.textSecondary,
+                            color: ui.textSecondary,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             offlineLabel ?? 'Offline guidance',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 10,
-                              color: ChatUi.textSecondary,
+                              color: ui.textSecondary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -105,8 +106,8 @@ class ChatMessageBubble extends StatelessWidget {
                     ],
                     Text(
                       text,
-                      style: const TextStyle(
-                        color: ChatUi.textPrimary,
+                      style: TextStyle(
+                        color: ui.textPrimary,
                         fontSize: 14.5,
                         height: 1.55,
                       ),

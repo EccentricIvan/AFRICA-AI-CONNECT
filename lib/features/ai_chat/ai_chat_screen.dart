@@ -175,16 +175,24 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
         ? _messages.first.text
         : _t('ai_greeting');
 
+    final chatUi = ChatUi.of(context);
     return Scaffold(
-      backgroundColor: ChatUi.pageBg,
+      backgroundColor: chatUi.pageBg,
       body: Container(
-        decoration: const BoxDecoration(
-          color: ChatUi.pageBg,
-          image: DecorationImage(
-            image: AssetImage(ChatUi.pageBackgroundAsset),
-            fit: BoxFit.cover,
-            alignment: Alignment.centerRight,
-          ),
+        decoration: BoxDecoration(
+          color: chatUi.pageBg,
+          // The branded background photo is a light, cream-toned image —
+          // it only stays legible under light-mode's dark text. In dark
+          // mode we drop it and just show the solid dark page color, or
+          // every title/label sitting directly on the page (not inside an
+          // opaque card) would wash out against it, exactly as reported.
+          image: chatUi.isDark
+              ? null
+              : const DecorationImage(
+                  image: AssetImage(ChatUi.pageBackgroundAsset),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerRight,
+                ),
         ),
         child: SafeArea(
           child: Column(
@@ -224,12 +232,12 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                             body: welcomeBody,
                           ),
                           const SizedBox(height: 28),
-                          const Text(
+                          Text(
                             'Explore popular topics',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: ChatUi.textPrimary,
+                              color: chatUi.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 14),

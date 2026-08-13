@@ -22,14 +22,15 @@ class LearnJourneyTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = LearnUi.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 10),
       decoration: BoxDecoration(
-        color: LearnUi.card,
+        color: ui.card,
         borderRadius: BorderRadius.circular(LearnUi.radiusCard),
-        border: Border.all(color: LearnUi.border),
-        boxShadow: LearnUi.softShadow,
+        border: Border.all(color: ui.border),
+        boxShadow: ui.softShadow,
       ),
       child: Column(
         children: [
@@ -52,6 +53,7 @@ class _JourneyRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = LearnUi.of(context);
     final isDone = item.status == LearnJourneyStatus.completed;
     final isCurrent = item.status == LearnJourneyStatus.current;
 
@@ -61,7 +63,7 @@ class _JourneyRow extends StatelessWidget {
     } else if (isCurrent) {
       dotColor = LearnUi.accent;
     } else {
-      dotColor = LearnUi.border;
+      dotColor = ui.border;
     }
 
     return IntrinsicHeight(
@@ -76,10 +78,10 @@ class _JourneyRow extends StatelessWidget {
                   width: 18,
                   height: 18,
                   decoration: BoxDecoration(
-                    color: isDone || isCurrent ? dotColor : LearnUi.card,
+                    color: isDone || isCurrent ? dotColor : ui.card,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isDone || isCurrent ? dotColor : LearnUi.textSecondary,
+                      color: isDone || isCurrent ? dotColor : ui.textSecondary,
                       width: 2,
                     ),
                   ),
@@ -92,7 +94,7 @@ class _JourneyRow extends StatelessWidget {
                     child: Container(
                       width: 2,
                       margin: const EdgeInsets.symmetric(vertical: 4),
-                      color: LearnUi.border,
+                      color: ui.border,
                     ),
                   ),
               ],
@@ -114,8 +116,8 @@ class _JourneyRow extends StatelessWidget {
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: isCurrent
-                                ? LearnUi.textPrimary
-                                : LearnUi.textPrimary.withValues(
+                                ? ui.textPrimary
+                                : ui.textPrimary.withValues(
                                     alpha: isDone ? 0.85 : 0.55,
                                   ),
                           ),
@@ -132,7 +134,7 @@ class _JourneyRow extends StatelessWidget {
                               ? LearnUi.success
                               : isCurrent
                                   ? LearnUi.accent
-                                  : LearnUi.textSecondary,
+                                  : ui.textSecondary,
                         ),
                       ),
                     ],
@@ -140,9 +142,9 @@ class _JourneyRow extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     item.subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: LearnUi.textSecondary,
+                      color: ui.textSecondary,
                       height: 1.35,
                     ),
                     maxLines: 2,

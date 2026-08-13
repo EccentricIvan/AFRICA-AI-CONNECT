@@ -18,6 +18,7 @@ class ChatTopicChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = ChatUi.of(context);
     return TapScale(
       borderRadius: 18,
       onTap: onTap,
@@ -25,10 +26,10 @@ class ChatTopicChip extends StatelessWidget {
         width: 86,
         padding: const EdgeInsets.fromLTRB(8, 12, 8, 10),
         decoration: BoxDecoration(
-          color: ChatUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(18),
-          boxShadow: ChatUi.softShadow,
-          border: Border.all(color: ChatUi.border),
+          boxShadow: ui.softShadow,
+          border: Border.all(color: ui.border),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -46,10 +47,10 @@ class ChatTopicChip extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: ChatUi.textPrimary,
+                color: ui.textPrimary,
                 height: 1.2,
               ),
               maxLines: 2,

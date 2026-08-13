@@ -131,7 +131,7 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: LearnUi.pageBg,
+      backgroundColor: LearnUi.of(context).pageBg,
       body: SafeArea(
         child: Column(
           children: [

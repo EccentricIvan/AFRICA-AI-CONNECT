@@ -16,6 +16,7 @@ class ChatSuggestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = ChatUi.of(context);
     return TapScale(
       borderRadius: ChatUi.radiusCard,
       onTap: onTap,
@@ -23,10 +24,10 @@ class ChatSuggestionCard extends StatelessWidget {
         width: 220,
         padding: const EdgeInsets.fromLTRB(12, 12, 10, 12),
         decoration: BoxDecoration(
-          color: ChatUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(ChatUi.radiusCard),
-          boxShadow: ChatUi.softShadow,
-          border: Border.all(color: ChatUi.border),
+          boxShadow: ui.softShadow,
+          border: Border.all(color: ui.border),
         ),
         child: Row(
           children: [
@@ -34,7 +35,7 @@ class ChatSuggestionCard extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: ChatUi.iconWell,
+                color: ui.iconWell,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, size: 18, color: ChatUi.accent),
@@ -43,10 +44,10 @@ class ChatSuggestionCard extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: ChatUi.textPrimary,
+                  color: ui.textPrimary,
                   height: 1.3,
                 ),
                 maxLines: 2,
@@ -54,10 +55,10 @@ class ChatSuggestionCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
               size: 18,
-              color: ChatUi.textSecondary,
+              color: ui.textSecondary,
             ),
           ],
         ),

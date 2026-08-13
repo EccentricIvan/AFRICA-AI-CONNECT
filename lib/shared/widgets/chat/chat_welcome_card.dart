@@ -14,14 +14,15 @@ class ChatWelcomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = ChatUi.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
       decoration: BoxDecoration(
-        color: ChatUi.card.withValues(alpha: 0.96),
+        color: ui.card.withValues(alpha: 0.96),
         borderRadius: BorderRadius.circular(ChatUi.radiusHero),
-        boxShadow: ChatUi.softShadow,
-        border: Border.all(color: ChatUi.border),
+        boxShadow: ui.softShadow,
+        border: Border.all(color: ui.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,21 +31,21 @@ class ChatWelcomeCard extends StatelessWidget {
           const SizedBox(height: 14),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Saira',
               fontSize: 17,
               fontWeight: FontWeight.w700,
-              color: ChatUi.textPrimary,
+              color: ui.textPrimary,
               height: 1.25,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             body,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: ChatUi.textSecondary,
+              color: ui.textSecondary,
               height: 1.5,
             ),
           ),

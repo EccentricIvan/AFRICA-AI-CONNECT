@@ -19,6 +19,7 @@ class MarketHeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = MarketUi.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
       child: Row(
@@ -31,11 +32,11 @@ class MarketHeaderBar extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Saira',
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
-                    color: MarketUi.textPrimary,
+                    color: ui.textPrimary,
                     height: 1.15,
                     letterSpacing: -0.3,
                   ),
@@ -43,10 +44,10 @@ class MarketHeaderBar extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
-                    color: MarketUi.textSecondary,
+                    color: ui.textSecondary,
                     height: 1.3,
                   ),
                   maxLines: 1,
@@ -72,6 +73,7 @@ class _GlassCircleBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = MarketUi.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -81,11 +83,11 @@ class _GlassCircleBtn extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: MarketUi.card,
+            color: ui.card,
             shape: BoxShape.circle,
-            boxShadow: MarketUi.softShadow,
+            boxShadow: ui.softShadow,
           ),
-          child: Icon(icon, size: 22, color: MarketUi.textPrimary),
+          child: Icon(icon, size: 22, color: ui.textPrimary),
         ),
       ),
     );
@@ -99,6 +101,7 @@ class _GlassAddBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = MarketUi.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -108,9 +111,9 @@ class _GlassAddBtn extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: MarketUi.card,
+            color: ui.card,
             borderRadius: BorderRadius.circular(14),
-            boxShadow: MarketUi.softShadow,
+            boxShadow: ui.softShadow,
           ),
           child: const Icon(
             Icons.storefront_outlined,

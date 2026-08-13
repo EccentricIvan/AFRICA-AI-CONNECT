@@ -24,21 +24,22 @@ class MarketEmptyListings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = MarketUi.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 32, 24, 28),
       decoration: BoxDecoration(
-        color: MarketUi.card,
+        color: ui.card,
         borderRadius: BorderRadius.circular(MarketUi.radiusCard),
-        boxShadow: MarketUi.softShadow,
+        boxShadow: ui.softShadow,
       ),
       child: Column(
         children: [
           Container(
             width: 72,
             height: 72,
-            decoration: const BoxDecoration(
-              color: MarketUi.iconWell,
+            decoration: BoxDecoration(
+              color: ui.iconWell,
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -51,20 +52,20 @@ class MarketEmptyListings extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Saira',
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: MarketUi.textPrimary,
+              color: ui.textPrimary,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: MarketUi.textSecondary,
+              color: ui.textSecondary,
               height: 1.4,
             ),
           ),

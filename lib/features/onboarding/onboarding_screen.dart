@@ -94,15 +94,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.bgTop, AppColors.bgBottom],
+            colors: [ac.bgTop, ac.bgBottom],
           ),
         ),
         child: SafeArea(
@@ -235,21 +236,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                       if (_page == 0) ...[
                         const SizedBox(height: 14),
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.verified_user_rounded,
                               size: 14,
                               color: AppColors.primary,
                             ),
-                            SizedBox(width: 6),
+                            const SizedBox(width: 6),
                             Text(
                               'Secure. Private. Built for you.',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
-                                color: AppColors.textHint,
+                                color: ac.textHint,
                                 height: 1.3,
                               ),
                             ),
@@ -325,6 +326,7 @@ class _LanguagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     final currentLocale = ref.watch(localeProvider);
     final heading = S.tr(context, ref, 'choose_language');
     final brandName = S.tr(context, ref, 'app_name');
@@ -348,11 +350,11 @@ class _LanguagePage extends StatelessWidget {
                 Text(
                   brandName,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Saira',
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ac.textPrimary,
                     height: 1.15,
                     letterSpacing: -0.3,
                   ),
@@ -364,25 +366,25 @@ class _LanguagePage extends StatelessWidget {
           Text(
             heading,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Saira',
               fontSize: 28,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ac.textPrimary,
               height: 1.15,
               letterSpacing: -0.4,
             ),
           ),
           const SizedBox(height: 8),
-          const Text.rich(
+          Text.rich(
             TextSpan(
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: AppColors.textHint,
+                color: ac.textHint,
                 height: 1.45,
               ),
-              children: [
+              children: const [
                 TextSpan(text: 'Londa olulimi lwo '),
                 TextSpan(
                   text: '•',
@@ -418,17 +420,17 @@ class _LanguagePage extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppColors.primary.withValues(alpha: 0.08)
-                          : AppColors.surface,
+                          : ac.surface,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: isSelected
                             ? AppColors.primary
-                            : AppColors.border,
+                            : ac.border,
                         width: isSelected ? 1.5 : 1,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.textPrimary.withValues(
+                          color: ac.textPrimary.withValues(
                             alpha: isSelected ? 0.06 : 0.03,
                           ),
                           blurRadius: isSelected ? 12 : 8,
@@ -459,21 +461,21 @@ class _LanguagePage extends StatelessWidget {
                             children: [
                               Text(
                                 locale.label,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontFamily: 'Saira',
                                   fontSize: 17,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
+                                  color: ac.textPrimary,
                                   height: 1.2,
                                 ),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 locale.shortCode,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: AppColors.textHint,
+                                  color: ac.textHint,
                                   letterSpacing: 0.5,
                                 ),
                               ),
@@ -550,12 +552,13 @@ class _WelcomePage extends ConsumerWidget {
     return (full, full);
   }
 
-  List<InlineSpan> _titleSpans(String title, {required double fontSize}) {
+  List<InlineSpan> _titleSpans(BuildContext context, String title,
+      {required double fontSize}) {
     final base = TextStyle(
       fontFamily: 'Saira',
       fontSize: fontSize,
       fontWeight: FontWeight.w700,
-      color: AppColors.textPrimary,
+      color: AppColors.of(context).textPrimary,
       height: 1.15,
       letterSpacing: -0.3,
     );
@@ -677,16 +680,17 @@ class _WelcomePage extends ConsumerWidget {
     );
   }
 
-  Widget _nameCard() {
+  Widget _nameCard(BuildContext context) {
+    final ac = AppColors.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: ac.surface,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.textPrimary.withValues(alpha: 0.06),
+            color: ac.textPrimary.withValues(alpha: 0.06),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -717,19 +721,19 @@ class _WelcomePage extends ConsumerWidget {
                   children: [
                     Text(
                       t('whats_your_name'),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Saira',
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: ac.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       S.literal("Let's get to know you."),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textHint,
+                        color: ac.textHint,
                       ),
                     ),
                   ],
@@ -779,6 +783,7 @@ class _WelcomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ac = AppColors.of(context);
     final locale = ref.watch(localeProvider);
     final (companionDesc, offlineDesc) = _splitWelcomeDesc(t('welcome_desc'));
     final size = MediaQuery.sizeOf(context);
@@ -804,7 +809,7 @@ class _WelcomePage extends ConsumerWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.bgBottom.withValues(alpha: 0),
+                    ac.bgBottom.withValues(alpha: 0),
                     const Color(0xFFE8C4D8).withValues(alpha: 0.08),
                     AppColors.primary.withValues(alpha: 0.05),
                   ],
@@ -850,6 +855,7 @@ class _WelcomePage extends ConsumerWidget {
                           Text.rich(
                             TextSpan(
                               children: _titleSpans(
+                                context,
                                 t('welcome_to'),
                                 fontSize: titleSize,
                               ),
@@ -870,7 +876,7 @@ class _WelcomePage extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: compact ? 13 : 13.5,
                               height: 1.45,
-                              color: AppColors.textHint,
+                              color: ac.textHint,
                             ),
                           ),
                         ],
@@ -893,7 +899,7 @@ class _WelcomePage extends ConsumerWidget {
                 SizedBox(height: gapAfterHero),
                 _offlineCard(offlineDesc),
                 SizedBox(height: gapAfterOffline),
-                _nameCard(),
+                _nameCard(context),
                 SizedBox(height: compact ? 20.0 : 22.0),
                 _WelcomeFeatureStrip(narrow: size.width < 360),
                 SizedBox(height: compact ? 20.0 : 24.0),
@@ -967,18 +973,18 @@ class _WelcomePage extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.lock_outline_rounded,
                       size: 13,
-                      color: AppColors.textHint,
+                      color: ac.textHint,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       S.literal('Your data is secure with us.'),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.textHint,
+                        color: ac.textHint,
                         height: 1.3,
                       ),
                     ),
@@ -1044,13 +1050,13 @@ class _WelcomeFeatureStrip extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'What you can do',
           style: TextStyle(
             fontFamily: 'Saira',
             fontSize: 17,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: AppColors.of(context).textPrimary,
             height: 1.2,
           ),
         ),
@@ -1099,15 +1105,16 @@ class _WelcomeFeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: ac.surface,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: AppColors.textPrimary.withValues(alpha: 0.06),
+            color: ac.textPrimary.withValues(alpha: 0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -1129,11 +1136,11 @@ class _WelcomeFeatureCard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Saira',
               fontSize: 13.5,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ac.textPrimary,
               height: 1.2,
             ),
           ),
@@ -1141,10 +1148,10 @@ class _WelcomeFeatureCard extends StatelessWidget {
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: AppColors.textHint,
+              color: ac.textHint,
               height: 1.25,
             ),
           ),
@@ -1160,8 +1167,9 @@ class _WelcomeLanguageChip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ac = AppColors.of(context);
     return Material(
-      color: AppColors.surface,
+      color: ac.surface,
       borderRadius: BorderRadius.circular(99),
       child: InkWell(
         borderRadius: BorderRadius.circular(99),
@@ -1189,11 +1197,11 @@ class _WelcomeLanguageChip extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: ac.surface,
             borderRadius: BorderRadius.circular(99),
             boxShadow: [
               BoxShadow(
-                color: AppColors.textPrimary.withValues(alpha: 0.06),
+                color: ac.textPrimary.withValues(alpha: 0.06),
                 blurRadius: 10,
                 offset: const Offset(0, 3),
               ),
@@ -1202,24 +1210,24 @@ class _WelcomeLanguageChip extends ConsumerWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.language_rounded,
                 size: 16,
-                color: AppColors.textSecondary,
+                color: ac.textSecondary,
               ),
               const SizedBox(width: 6),
               Text(
                 locale.label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: ac.textPrimary,
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.keyboard_arrow_down_rounded,
                 size: 18,
-                color: AppColors.textHint,
+                color: ac.textHint,
               ),
             ],
           ),
