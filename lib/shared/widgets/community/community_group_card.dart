@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../tap_scale.dart';
 import 'community_ui.dart';
@@ -26,6 +28,7 @@ class CommunityGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     return TapScale(
       borderRadius: CommunityUi.radiusCard,
       onTap: onTap ?? () {},
@@ -33,7 +36,7 @@ class CommunityGroupCard extends StatelessWidget {
         margin: EdgeInsets.only(bottom: dense ? 8 : 12),
         padding: EdgeInsets.all(dense ? 12 : 14),
         decoration: BoxDecoration(
-          color: CommunityUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(CommunityUi.radiusCard),
         ),
         child: Row(
@@ -46,10 +49,10 @@ class CommunityGroupCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: CommunityUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -70,19 +73,23 @@ class CommunityGroupCard extends StatelessWidget {
   }
 }
 
-/// A group/person avatar circle — a gradient wash with an initial,
-/// standing in for a real profile photo (none exist yet).
+/// A group/person avatar circle — shows a real photo when [imagePath] is
+/// given (e.g. the signed-in user's own saved profile picture), otherwise
+/// falls back to a gradient wash with an initial, standing in for a real
+/// profile photo (none exist for the mock community members).
 class CommunityAvatar extends StatelessWidget {
   const CommunityAvatar({
     super.key,
     required this.color,
     required this.initial,
     this.size = 46,
+    this.imagePath,
   });
 
   final Color color;
   final String initial;
   final double size;
+  final String? imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -101,14 +108,22 @@ class CommunityAvatar extends StatelessWidget {
         ),
       ),
       alignment: Alignment.center,
-      child: Text(
-        initial,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          fontSize: size * 0.4,
-        ),
-      ),
+      clipBehavior: Clip.antiAlias,
+      child: imagePath != null
+          ? Image.file(
+              File(imagePath!),
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+            )
+          : Text(
+              initial,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: size * 0.4,
+              ),
+            ),
     );
   }
 }

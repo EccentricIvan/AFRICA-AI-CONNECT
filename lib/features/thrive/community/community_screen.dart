@@ -2,11 +2,13 @@ import 'dart:io';
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../db/providers/database_provider.dart';
 import '../../../shared/widgets/tap_scale.dart';
 import '../../../shared/widgets/community/community_group_card.dart';
 import '../../../shared/widgets/community/community_header_bar.dart';
@@ -130,7 +132,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: CommunityUi.card,
+      backgroundColor: CommunityUi.of(context).card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -140,11 +142,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final totalMembers =
         _CommunityData.groups.fold<int>(0, (sum, g) => sum + g.members);
 
     return Scaffold(
-      backgroundColor: CommunityUi.pageBg,
+      backgroundColor: ui.pageBg,
       body: SafeArea(
         child: Column(
           children: [
@@ -237,6 +240,7 @@ class _CommunityTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final labels = [
       S.literal('Chats'),
       S.literal('Feed'),
@@ -245,7 +249,7 @@ class _CommunityTabBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: CommunityUi.iconWell,
+        color: ui.iconWell,
         borderRadius: BorderRadius.circular(CommunityUi.radiusChip + 4),
       ),
       child: Row(
@@ -280,6 +284,7 @@ class _TabSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     return TapScale(
       borderRadius: CommunityUi.radiusChip,
       onTap: onTap,
@@ -288,9 +293,9 @@ class _TabSegment extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: active ? CommunityUi.card : Colors.transparent,
+          color: active ? ui.card : Colors.transparent,
           borderRadius: BorderRadius.circular(CommunityUi.radiusChip),
-          boxShadow: active ? CommunityUi.pillShadow : const [],
+          boxShadow: active ? ui.pillShadow : const [],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -301,7 +306,7 @@ class _TabSegment extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.5,
                 fontWeight: active ? FontWeight.w700 : FontWeight.w600,
-                color: active ? CommunityUi.accent : CommunityUi.textSecondary,
+                color: active ? CommunityUi.accent : ui.textSecondary,
               ),
             ),
             if (badge != null) ...[
@@ -348,6 +353,7 @@ class _TabScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -355,11 +361,11 @@ class _TabScaffold extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Saira',
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: CommunityUi.textPrimary,
+              color: ui.textPrimary,
             ),
           ),
         ),
@@ -397,6 +403,7 @@ class _ChatsTabState extends State<_ChatsTab> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
     final list = q.isEmpty
         ? _CommunityData.conversations
@@ -413,8 +420,8 @@ class _ChatsTabState extends State<_ChatsTab> {
       child: list.isEmpty
           ? Center(
               child: Text(S.literal('No conversations found'),
-                  style: const TextStyle(
-                      fontSize: 13, color: CommunityUi.textSecondary)))
+                  style: TextStyle(
+                      fontSize: 13, color: ui.textSecondary)))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               children:
@@ -436,6 +443,7 @@ class _FeedTabState extends State<_FeedTab> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
     final list = q.isEmpty
         ? _CommunityData.posts
@@ -452,8 +460,8 @@ class _FeedTabState extends State<_FeedTab> {
       child: list.isEmpty
           ? Center(
               child: Text(S.literal('No posts found'),
-                  style: const TextStyle(
-                      fontSize: 13, color: CommunityUi.textSecondary)))
+                  style: TextStyle(
+                      fontSize: 13, color: ui.textSecondary)))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               children: list.map((post) => _FeedPostCard(post: post)).toList(),
@@ -481,7 +489,7 @@ class _DiscoverTabState extends State<_DiscoverTab> {
   Future<void> _openFilter() async {
     final result = await showModalBottomSheet<(Set<String>, Set<String>)>(
       context: context,
-      backgroundColor: CommunityUi.card,
+      backgroundColor: CommunityUi.of(context).card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -504,6 +512,7 @@ class _DiscoverTabState extends State<_DiscoverTab> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
     final list = _CommunityData.groups.where((g) {
       final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
@@ -527,21 +536,21 @@ class _DiscoverTabState extends State<_DiscoverTab> {
           decoration: BoxDecoration(
             color: _hasActiveFilters
                 ? CommunityUi.accent.withValues(alpha: 0.14)
-                : CommunityUi.card,
+                : ui.card,
             borderRadius: BorderRadius.circular(25),
           ),
           child: Icon(Icons.tune_rounded,
               size: 20,
               color: _hasActiveFilters
                   ? CommunityUi.accent
-                  : CommunityUi.textSecondary),
+                  : ui.textSecondary),
         ),
       ),
       child: list.isEmpty
           ? Center(
               child: Text(S.literal('No groups found'),
-                  style: const TextStyle(
-                      fontSize: 13, color: CommunityUi.textSecondary)))
+                  style: TextStyle(
+                      fontSize: 13, color: ui.textSecondary)))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               children: list.map((g) => _DiscoverGroupRow(group: g)).toList(),
@@ -584,15 +593,16 @@ class _FilterSheetState extends State<_FilterSheet> {
     List<String> options,
     Set<String> selected,
   ) {
+    final ui = CommunityUi.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           S.literal(label),
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: CommunityUi.textPrimary),
+              color: ui.textPrimary),
         ),
         const SizedBox(height: 10),
         Wrap(
@@ -610,10 +620,10 @@ class _FilterSheetState extends State<_FilterSheet> {
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color:
-                    isSelected ? CommunityUi.accent : CommunityUi.textSecondary,
+                    isSelected ? CommunityUi.accent : ui.textSecondary,
               ),
               side: BorderSide(
-                color: isSelected ? CommunityUi.accent : CommunityUi.border,
+                color: isSelected ? CommunityUi.accent : ui.border,
               ),
             );
           }).toList(),
@@ -624,6 +634,7 @@ class _FilterSheetState extends State<_FilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
       child: Column(
@@ -636,18 +647,18 @@ class _FilterSheetState extends State<_FilterSheet> {
               height: 4,
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                color: CommunityUi.border,
+                color: ui.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
           Text(
             S.literal('Filter Communities'),
-            style: const TextStyle(
+            style: TextStyle(
                 fontFamily: 'Saira',
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
-                color: CommunityUi.textPrimary),
+                color: ui.textPrimary),
           ),
           const SizedBox(height: 18),
           _chipRow('Category', _categoryOptions, _categories),
@@ -690,24 +701,25 @@ class _SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     // A true pill (radius = height / 2), generous icon padding — matching
     // the reference search bar's proportions, just in this app's light
     // "Markenzy" palette instead of a dark glass style. No filter icon.
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color: CommunityUi.card,
+        color: ui.card,
         borderRadius: BorderRadius.circular(25),
       ),
       child: TextField(
         onChanged: onChanged,
-        style: const TextStyle(fontSize: 14, color: CommunityUi.textPrimary),
+        style: TextStyle(fontSize: 14, color: ui.textPrimary),
         decoration: InputDecoration(
           isDense: true,
           hintText: hint,
-          hintStyle: const TextStyle(fontSize: 14, color: CommunityUi.textSecondary),
-          prefixIcon: const Icon(Icons.search_rounded,
-              size: 21, color: CommunityUi.textSecondary),
+          hintStyle: TextStyle(fontSize: 14, color: ui.textSecondary),
+          prefixIcon: Icon(Icons.search_rounded,
+              size: 21, color: ui.textSecondary),
           prefixIconConstraints: const BoxConstraints(minWidth: 52),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -780,6 +792,7 @@ class _MemberAvatars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     const size = 22.0;
     const overlap = size * 0.62;
     return Row(
@@ -809,10 +822,10 @@ class _MemberAvatars extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           count,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: CommunityUi.textSecondary,
+            color: ui.textSecondary,
           ),
         ),
       ],
@@ -844,7 +857,7 @@ class _JoinButtonState extends State<_JoinButton> {
       SnackBar(
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: CommunityUi.textPrimary,
+        backgroundColor: CommunityUi.of(context).textPrimary,
         content: Text(
           _joined
               ? '${S.literal('Joined')} ${widget.groupName}'
@@ -857,6 +870,7 @@ class _JoinButtonState extends State<_JoinButton> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final color = widget.color;
     return TapScale(
       borderRadius: 20,
@@ -872,7 +886,7 @@ class _JoinButtonState extends State<_JoinButton> {
               : LinearGradient(
                   colors: [color, Color.lerp(color, Colors.black, 0.15)!],
                 ),
-          color: _joined ? CommunityUi.iconWell : null,
+          color: _joined ? ui.iconWell : null,
           borderRadius: BorderRadius.circular(20),
           boxShadow: _joined
               ? []
@@ -965,7 +979,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: CommunityUi.textPrimary,
+        backgroundColor: CommunityUi.of(context).textPrimary,
         content: Text(
           '${S.literal('Community created')}: $name',
           style: const TextStyle(color: Colors.white, fontSize: 13),
@@ -976,6 +990,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SafeArea(
@@ -993,18 +1008,18 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                     height: 4,
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                      color: CommunityUi.border,
+                      color: ui.border,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
                 Text(
                   S.literal('Create a Community'),
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontFamily: 'Saira',
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: CommunityUi.textPrimary),
+                      color: ui.textPrimary),
                 ),
                 const SizedBox(height: 18),
                 Center(
@@ -1015,7 +1030,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                       height: 84,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: _imagePath == null ? CommunityUi.iconWell : null,
+                        color: _imagePath == null ? ui.iconWell : null,
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: _pickingImage
@@ -1062,10 +1077,10 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                 const SizedBox(height: 14),
                 Text(
                   S.literal('Category'),
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: CommunityUi.textPrimary),
+                      color: ui.textPrimary),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -1083,11 +1098,11 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                         fontWeight: FontWeight.w600,
                         color: isSelected
                             ? CommunityUi.accent
-                            : CommunityUi.textSecondary,
+                            : ui.textSecondary,
                       ),
                       side: BorderSide(
                         color:
-                            isSelected ? CommunityUi.accent : CommunityUi.border,
+                            isSelected ? CommunityUi.accent : ui.border,
                       ),
                     );
                   }).toList(),
@@ -1176,6 +1191,7 @@ class _GroupPreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final g = group;
     return Material(
       color: Colors.transparent,
@@ -1183,7 +1199,7 @@ class _GroupPreviewCard extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 340),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: CommunityUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(CommunityUi.radiusCard),
           boxShadow: [
             BoxShadow(
@@ -1239,11 +1255,11 @@ class _GroupPreviewCard extends StatelessWidget {
                 children: [
                   Text(
                     S.literal(g.name),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Saira',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: CommunityUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -1272,9 +1288,9 @@ class _GroupPreviewCard extends StatelessWidget {
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: CommunityUi.textSecondary,
+                      color: ui.textSecondary,
                       height: 1.4,
                     ),
                   ),
@@ -1355,10 +1371,11 @@ class _GroupDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final g = group;
     final creator = _mockMembers.first;
     return Scaffold(
-      backgroundColor: CommunityUi.pageBg,
+      backgroundColor: ui.pageBg,
       body: SafeArea(
         child: Column(
           children: [
@@ -1398,11 +1415,11 @@ class _GroupDetailPage extends StatelessWidget {
                   const SizedBox(height: 18),
                   Text(
                     S.literal(g.name),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Saira',
                       fontSize: 19,
                       fontWeight: FontWeight.w700,
-                      color: CommunityUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -1427,8 +1444,8 @@ class _GroupDetailPage extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     '${S.literal('Created by')} ${creator.name}',
-                    style: const TextStyle(
-                        fontSize: 12, color: CommunityUi.textSecondary),
+                    style: TextStyle(
+                        fontSize: 12, color: ui.textSecondary),
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -1456,10 +1473,10 @@ class _GroupDetailPage extends StatelessWidget {
                   const SizedBox(height: 20),
                   Text(
                     S.literal('About'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: CommunityUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -1467,19 +1484,19 @@ class _GroupDetailPage extends StatelessWidget {
                     S.literal(
                       'A place for women in this community to share opportunities, ask questions, and support one another\'s growth.',
                     ),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: CommunityUi.textSecondary,
+                      color: ui.textSecondary,
                       height: 1.5,
                     ),
                   ),
                   const SizedBox(height: 20),
                   Text(
                     '${S.literal('Members')} (${g.memberCount})',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: CommunityUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -1501,6 +1518,7 @@ class _MemberListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final m = member;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1516,10 +1534,10 @@ class _MemberListRow extends StatelessWidget {
                 Row(
                   children: [
                     Text(m.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
-                            color: CommunityUi.textPrimary)),
+                            color: ui.textPrimary)),
                     if (m.isAdmin) ...[
                       const SizedBox(width: 6),
                       const _AdminBadge(),
@@ -1597,18 +1615,19 @@ class _RoleChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: CommunityUi.iconWell,
+        color: ui.iconWell,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         S.literal(label),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w600,
-          color: CommunityUi.textSecondary,
+          color: ui.textSecondary,
         ),
       ),
     );
@@ -1623,6 +1642,7 @@ class _ConversationRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final c = conversation;
     return CommunityGroupCard(
       onTap: () => Navigator.of(context).push(
@@ -1636,7 +1656,7 @@ class _ConversationRow extends StatelessWidget {
         '${c.lastSender}: ${c.lastMessage}',
         style: TextStyle(
           fontSize: 12,
-          color: c.unread > 0 ? CommunityUi.textPrimary : CommunityUi.textSecondary,
+          color: c.unread > 0 ? ui.textPrimary : ui.textSecondary,
           fontWeight: c.unread > 0 ? FontWeight.w600 : FontWeight.w400,
         ),
         maxLines: 1,
@@ -1648,7 +1668,7 @@ class _ConversationRow extends StatelessWidget {
         children: [
           Text(
             c.time,
-            style: const TextStyle(fontSize: 11, color: CommunityUi.textSecondary),
+            style: TextStyle(fontSize: 11, color: ui.textSecondary),
           ),
           const SizedBox(height: 6),
           if (c.unread > 0)
@@ -1687,15 +1707,15 @@ class _Conversation {
   final Color senderColor;
 }
 
-class _ChatRoomPage extends StatefulWidget {
+class _ChatRoomPage extends ConsumerStatefulWidget {
   const _ChatRoomPage({required this.conversation});
   final _Conversation conversation;
 
   @override
-  State<_ChatRoomPage> createState() => _ChatRoomPageState();
+  ConsumerState<_ChatRoomPage> createState() => _ChatRoomPageState();
 }
 
-class _ChatRoomPageState extends State<_ChatRoomPage> {
+class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
   late final List<(String sender, String text, bool isMe)> _messages;
   final _controller = TextEditingController();
   final _scroll = ScrollController();
@@ -1734,9 +1754,11 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final g = widget.conversation.group;
+    final me = ref.watch(currentUserProvider).valueOrNull;
     return Scaffold(
-      backgroundColor: CommunityUi.pageBg,
+      backgroundColor: ui.pageBg,
       body: SafeArea(
         child: Column(
           children: [
@@ -1766,17 +1788,17 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
                               children: [
                                 Text(
                                   S.literal(g.name),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
-                                      color: CommunityUi.textPrimary),
+                                      color: ui.textPrimary),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   '${g.memberCount} ${S.literal('members')} · ${S.literal('tap for details')}',
-                                  style: const TextStyle(
-                                      fontSize: 11, color: CommunityUi.textSecondary),
+                                  style: TextStyle(
+                                      fontSize: 11, color: ui.textSecondary),
                                 ),
                               ],
                             ),
@@ -1808,14 +1830,14 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
                                 Color.lerp(g.color, Colors.black, 0.12)!,
                               ])
                             : null,
-                        color: isMe ? null : CommunityUi.card,
+                        color: isMe ? null : ui.card,
                         borderRadius: BorderRadius.only(
                           topLeft: const Radius.circular(16),
                           topRight: const Radius.circular(16),
                           bottomLeft: Radius.circular(isMe ? 16 : 4),
                           bottomRight: Radius.circular(isMe ? 4 : 16),
                         ),
-                        boxShadow: CommunityUi.softShadow,
+                        boxShadow: ui.softShadow,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1838,7 +1860,7 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
                             style: TextStyle(
                               fontSize: 13,
                               color:
-                                  isMe ? Colors.white : CommunityUi.textPrimary,
+                                  isMe ? Colors.white : ui.textPrimary,
                               height: 1.4,
                             ),
                           ),
@@ -1847,16 +1869,30 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
                     );
 
                     // Group chats show who spoke — a small avatar sits
-                    // next to every incoming bubble. Outgoing ("me")
-                    // bubbles skip it, per normal chat convention.
+                    // next to every bubble, including your own outgoing
+                    // ones (using your real saved photo when you've set
+                    // one), not just incoming messages.
                     if (isMe) {
-                      return Align(
-                        alignment: Alignment.centerRight,
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: MediaQuery.sizeOf(context).width * 0.72),
-                          child: bubble,
-                        ),
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.sizeOf(context).width * 0.64),
+                            child: bubble,
+                          ),
+                          const SizedBox(width: 8),
+                          CommunityAvatar(
+                            color: g.color,
+                            initial: (me?.name.isNotEmpty ?? false)
+                                ? me!.name[0]
+                                : 'Y',
+                            imagePath: me?.avatarPath,
+                            size: 30,
+                          ),
+                        ],
                       );
                     }
                     return Row(
@@ -1882,7 +1918,7 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
             Container(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
               decoration: BoxDecoration(
-                color: CommunityUi.card,
+                color: ui.card,
                 boxShadow: [
                   BoxShadow(
                     color: const Color(0xFF202020).withValues(alpha: 0.06),
@@ -1896,7 +1932,7 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: CommunityUi.iconWell,
+                        color: ui.iconWell,
                         borderRadius: BorderRadius.circular(24),
                       ),
                       child: TextField(
@@ -1905,8 +1941,8 @@ class _ChatRoomPageState extends State<_ChatRoomPage> {
                         decoration: InputDecoration(
                           isDense: true,
                           hintText: S.literal('Message'),
-                          hintStyle: const TextStyle(
-                              fontSize: 13, color: CommunityUi.textSecondary),
+                          hintStyle: TextStyle(
+                              fontSize: 13, color: ui.textSecondary),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 18, vertical: 12),
@@ -1958,12 +1994,13 @@ class _FeedPostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final p = post;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: CommunityUi.card,
+        color: ui.card,
         borderRadius: BorderRadius.circular(CommunityUi.radiusCard),
       ),
       child: Column(
@@ -1978,13 +2015,13 @@ class _FeedPostCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(p.author,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
-                            color: CommunityUi.textPrimary)),
+                            color: ui.textPrimary)),
                     Text(S.literal(p.time),
-                        style: const TextStyle(
-                            fontSize: 11, color: CommunityUi.textSecondary)),
+                        style: TextStyle(
+                            fontSize: 11, color: ui.textSecondary)),
                   ],
                 ),
               ),
@@ -1994,9 +2031,9 @@ class _FeedPostCard extends StatelessWidget {
           Text(S.literal(p.content),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: CommunityUi.textPrimary,
+                color: ui.textPrimary,
                 height: 1.4,
               )),
           if (p.imageCount > 0) ...[
@@ -2004,7 +2041,7 @@ class _FeedPostCard extends StatelessWidget {
             _FeedImages(post: p),
           ],
           const SizedBox(height: 8),
-          const Divider(height: 1, color: CommunityUi.border),
+          Divider(height: 1, color: ui.border),
           const SizedBox(height: 4),
           const Row(
             children: [
@@ -2357,8 +2394,9 @@ class _FeedAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     final color =
-        light ? Colors.white.withValues(alpha: 0.9) : CommunityUi.textSecondary;
+        light ? Colors.white.withValues(alpha: 0.9) : ui.textSecondary;
     return TapScale(
       borderRadius: 10,
       onTap: () {},

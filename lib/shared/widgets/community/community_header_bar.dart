@@ -27,11 +27,11 @@ class CommunityHeaderBar extends StatelessWidget {
             child: Center(
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Saira',
                   fontSize: 19,
                   fontWeight: FontWeight.w700,
-                  color: CommunityUi.textPrimary,
+                  color: CommunityUi.of(context).textPrimary,
                   letterSpacing: -0.2,
                 ),
               ),
@@ -70,11 +70,11 @@ class CommunitySubPageHeaderBar extends StatelessWidget {
             Expanded(
               child: Text(
                 title!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Saira',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: CommunityUi.textPrimary,
+                  color: CommunityUi.of(context).textPrimary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -105,6 +105,7 @@ class GlassCircleBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -114,14 +115,14 @@ class GlassCircleBtn extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: CommunityUi.card,
+            color: ui.card,
             shape: BoxShape.circle,
-            boxShadow: CommunityUi.softShadow,
+            boxShadow: ui.softShadow,
           ),
           child: Icon(
             icon,
             size: 22,
-            color: filled ? CommunityUi.accent : CommunityUi.textPrimary,
+            color: filled ? CommunityUi.accent : ui.textPrimary,
           ),
         ),
       ),
