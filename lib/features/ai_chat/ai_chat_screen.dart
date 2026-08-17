@@ -143,31 +143,31 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     final popularTopics = [
       (
         Icons.work_outline_rounded,
-        'Business\nAdvice',
+        _t('marketplace'),
         const Color(0xFFF28C28),
         _t('topic_business_q'),
       ),
       (
         Icons.eco_outlined,
-        'Farming\nTips',
+        _t('topic_farming_q'),
         const Color(0xFF4D8B55),
         _t('topic_farming_q'),
       ),
       (
         Icons.favorite_border_rounded,
-        'Health\nInfo',
+        _t('health'),
         const Color(0xFF4A6FA5),
-        'Health tips for my family',
+        _t('health'),
       ),
       (
         Icons.bar_chart_rounded,
-        'Finance\nGuidance',
+        _t('finance'),
         const Color(0xFFE07818),
         _t('topic_savings_q'),
       ),
       (
         Icons.more_horiz_rounded,
-        'More\nTopics',
+        _t('community'),
         const Color(0xFF7C5CBF),
         _t('topic_sell_online_q'),
       ),
@@ -223,13 +223,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                         padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
                         children: [
                           ChatWelcomeCard(
-                            title: 'Hello, I\'m your AI Assistant',
+                            title: _t('chat_assistant_title'),
                             body: welcomeBody,
                           ),
                           const SizedBox(height: 28),
-                          const Text(
-                            'Explore popular topics',
-                            style: TextStyle(
+                          Text(
+                            _t('explore_pillars'),
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: ChatUi.textPrimary,

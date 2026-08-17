@@ -194,7 +194,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size.fromHeight(52),
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
+                                  horizontal: 12,
                                   vertical: 16,
                                 ),
                                 shape: RoundedRectangleBorder(
@@ -269,7 +269,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 }
 
-/// Presentational only — maps each locale to a Material icon + tint for the
+/// Presentational only â€” maps each locale to a Material icon + tint for the
 /// language card tile. Does not affect selection, persistence, or localization.
 class _LanguageVisual {
   const _LanguageVisual({
@@ -387,7 +387,7 @@ class _LanguagePage extends StatelessWidget {
               children: [
                 TextSpan(text: 'Londa olulimi lwo '),
                 TextSpan(
-                  text: '•',
+                  text: 'â€¢',
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w700,
@@ -951,7 +951,7 @@ class _WelcomePage extends ConsumerWidget {
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(52),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
+                            horizontal: 12,
                             vertical: 16,
                           ),
                           shape: RoundedRectangleBorder(
