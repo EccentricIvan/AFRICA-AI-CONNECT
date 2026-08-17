@@ -57,9 +57,9 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/branding/Africa-AI-Connect-logo.png"
-  adaptive_icon_background: "#FAF1EC"
-  adaptive_icon_foreground: "assets/branding/app_icon_mark.png"
+  image_path: "assets/branding/ai_connect_africa_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/branding/ai_connect_africa_icon.png"
 
 flutter:
   uses-material-design: true
