@@ -42,13 +42,15 @@ class MarketListingCard extends StatelessWidget {
               child: SizedBox(
                 width: 64,
                 height: 64,
-                child: imagePath != null
-                    ? Image.file(
-                        File(imagePath!),
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _Fallback(icon: fallbackIcon),
-                      )
-                    : _Fallback(icon: fallbackIcon),
+                child:
+                    imagePath != null
+                        ? Image.file(
+                          File(imagePath!),
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (_, __, ___) => _Fallback(icon: fallbackIcon),
+                        )
+                        : _Fallback(icon: fallbackIcon),
               ),
             ),
             const SizedBox(width: 14),

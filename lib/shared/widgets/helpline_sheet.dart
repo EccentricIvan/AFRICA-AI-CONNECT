@@ -42,42 +42,48 @@ Future<void> showHelplineSheet(BuildContext context) {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
-    builder: (context) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: AppColors.border,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            Row(
+    builder:
+        (context) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.shield, color: AppColors.accent, size: 22),
-                const SizedBox(width: 10),
-                Text(S.literal('Safety & Support'), style: Theme.of(context).textTheme.headlineSmall),
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.shield, color: AppColors.accent, size: 22),
+                    const SizedBox(width: 10),
+                    Text(
+                      S.literal('Safety & Support'),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  S.literal(
+                    'If you are in immediate danger, contact emergency services now.',
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                ..._helplines.map((h) => _HelplineTile(helpline: h)),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              S.literal('If you are in immediate danger, contact emergency services now.'),
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            ..._helplines.map((h) => _HelplineTile(helpline: h)),
-          ],
+          ),
         ),
-      ),
-    ),
   );
 }
 
@@ -101,9 +107,15 @@ class _HelplineTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(S.literal(helpline.name), style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  S.literal(helpline.name),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 2),
-                Text(S.literal(helpline.description), style: Theme.of(context).textTheme.bodyMedium),
+                Text(
+                  S.literal(helpline.description),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             ),
           ),

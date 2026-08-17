@@ -124,8 +124,9 @@ class LearnHeroCard extends StatelessWidget {
                               onTap: onPrimary,
                               child: Container(
                                 height: btnH,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
                                     begin: Alignment.topLeft,
@@ -135,12 +136,14 @@ class LearnHeroCard extends StatelessWidget {
                                       LearnUi.accentDeep,
                                     ],
                                   ),
-                                  borderRadius:
-                                      BorderRadius.circular(LearnUi.radiusBtn),
+                                  borderRadius: BorderRadius.circular(
+                                    LearnUi.radiusBtn,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: LearnUi.accent
-                                          .withValues(alpha: 0.35),
+                                      color: LearnUi.accent.withValues(
+                                        alpha: 0.35,
+                                      ),
                                       blurRadius: 12,
                                       offset: const Offset(0, 6),
                                     ),
@@ -180,12 +183,14 @@ class LearnHeroCard extends StatelessWidget {
                               onTap: onSecondary,
                               child: Container(
                                 height: btnH,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
                                 decoration: BoxDecoration(
                                   color: LearnUi.card,
-                                  borderRadius:
-                                      BorderRadius.circular(LearnUi.radiusBtn),
+                                  borderRadius: BorderRadius.circular(
+                                    LearnUi.radiusBtn,
+                                  ),
                                   boxShadow: LearnUi.pillShadow,
                                 ),
                                 child: Row(

@@ -29,9 +29,9 @@ SUNBIRD_CODES = {
 }
 
 app = FastAPI(
-    title="Africa AI Connect API",
+    title="AI Connect Africa API",
     version="1.0.0",
-    description="Lightweight synchronized chat backend for Africa AI Connect",
+    description="Lightweight synchronized chat backend for AI Connect Africa",
 )
 
 allowed_origins = [
@@ -158,7 +158,7 @@ def _groq_chat(message: str, history: list[ChatMessage], system_prompt: str) -> 
 def chat(request: ChatRequest) -> dict:
     language = LANGUAGE_NAMES[request.language]
     system_prompt = (
-        "You are Africa AI Connect, a warm and practical assistant for women "
+        "You are AI Connect Africa, a warm and practical assistant for women "
         "in Sub-Saharan Africa. Help with business, agriculture, financial "
         "literacy, health, digital skills, jobs, leadership, and wellbeing. "
         f"Always answer in clear, natural {language}. Do not change language "
@@ -190,7 +190,7 @@ def chat(request: ChatRequest) -> dict:
             f"{english_transcript}"
         )
         english_system_prompt = (
-            "You are Africa AI Connect, a warm and practical assistant for women "
+            "You are AI Connect Africa, a warm and practical assistant for women "
             "in Sub-Saharan Africa. Answer in clear English with concise, actionable "
             "advice. Be culturally sensitive and preserve the user's exact constraints."
         )

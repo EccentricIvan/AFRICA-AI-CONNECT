@@ -27,8 +27,7 @@ class SectionHeader extends StatelessWidget {
               Text(title, style: Theme.of(context).textTheme.headlineSmall),
               if (subtitle != null) ...[
                 const SizedBox(height: 3),
-                Text(subtitle!,
-                    style: Theme.of(context).textTheme.bodyMedium),
+                Text(subtitle!, style: Theme.of(context).textTheme.bodyMedium),
               ],
             ],
           ),

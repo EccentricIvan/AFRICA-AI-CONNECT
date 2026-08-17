@@ -24,12 +24,12 @@ class _HomeUi {
   static const double radiusMd = 18;
 
   static List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: const Color(0xFF1F1F1F).withValues(alpha: 0.06),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF1F1F1F).withValues(alpha: 0.06),
+      blurRadius: 20,
+      offset: const Offset(0, 8),
+    ),
+  ];
 }
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -300,9 +300,7 @@ class _HeroBanner extends StatelessWidget {
               ),
             ),
           ),
-          Positioned.fill(
-            child: CustomPaint(painter: _HeroDecorPainter()),
-          ),
+          Positioned.fill(child: CustomPaint(painter: _HeroDecorPainter())),
           Padding(
             padding: const EdgeInsets.fromLTRB(22, 20, 14, 22),
             child: IntrinsicHeight(
@@ -510,10 +508,11 @@ class _HeroDecorPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final origin = Offset(size.width * 0.82, size.height * 0.78);
-    final ring = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0
-      ..color = Colors.white.withValues(alpha: 0.08);
+    final ring =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.0
+          ..color = Colors.white.withValues(alpha: 0.08);
     for (var i = 1; i <= 5; i++) {
       canvas.drawCircle(origin, 36.0 * i, ring);
     }
@@ -567,7 +566,9 @@ class _HeroDecorPainter extends CustomPainter {
     for (var i = 0; i < 40; i++) {
       final x = size.width * (0.55 + rng.nextDouble() * 0.42);
       final y = size.height * (0.08 + rng.nextDouble() * 0.84);
-      paint.color = _HomeUi.accent.withValues(alpha: 0.08 + rng.nextDouble() * 0.12);
+      paint.color = _HomeUi.accent.withValues(
+        alpha: 0.08 + rng.nextDouble() * 0.12,
+      );
       canvas.drawCircle(Offset(x, y), 1.0 + rng.nextDouble(), paint);
     }
   }
@@ -720,11 +721,7 @@ class _ProgressRow extends StatelessWidget {
                       color: _HomeUi.dark,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      items[i].icon,
-                      color: Colors.white,
-                      size: 18,
-                    ),
+                    child: Icon(items[i].icon, color: Colors.white, size: 18),
                   ),
                   const SizedBox(height: 14),
                   Text(
@@ -752,8 +749,7 @@ class _ProgressRow extends StatelessWidget {
                       value: items[i].progress,
                       minHeight: 5,
                       backgroundColor: _HomeUi.border,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(items[i].color),
+                      valueColor: AlwaysStoppedAnimation<Color>(items[i].color),
                     ),
                   ),
                 ],

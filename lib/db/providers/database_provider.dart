@@ -26,11 +26,15 @@ final marketplaceDaoProvider = Provider<MarketplaceDao>((ref) {
 });
 
 /// Which category chip is currently active as a filter. null = "See all".
-final selectedMarketplaceCategoryProvider = StateProvider<String?>((ref) => null);
+final selectedMarketplaceCategoryProvider = StateProvider<String?>(
+  (ref) => null,
+);
 
 /// Reactive listings, automatically refiltered whenever
 /// [selectedMarketplaceCategoryProvider] changes.
-final marketplaceListingsProvider = StreamProvider<List<MarketplaceListing>>((ref) {
+final marketplaceListingsProvider = StreamProvider<List<MarketplaceListing>>((
+  ref,
+) {
   final category = ref.watch(selectedMarketplaceCategoryProvider);
   return ref.watch(marketplaceDaoProvider).watchListings(category: category);
 });

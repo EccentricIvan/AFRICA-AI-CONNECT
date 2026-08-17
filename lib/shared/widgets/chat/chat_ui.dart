@@ -25,18 +25,18 @@ class ChatUi {
       'assets/branding/chat_background.png';
 
   static List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: const Color(0xFF1F1F1F).withValues(alpha: 0.06),
-          blurRadius: 22,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF1F1F1F).withValues(alpha: 0.06),
+      blurRadius: 22,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
   static List<BoxShadow> get glowShadow => [
-        BoxShadow(
-          color: accent.withValues(alpha: 0.28),
-          blurRadius: 14,
-          offset: const Offset(0, 6),
-        ),
-      ];
+    BoxShadow(
+      color: accent.withValues(alpha: 0.28),
+      blurRadius: 14,
+      offset: const Offset(0, 6),
+    ),
+  ];
 }

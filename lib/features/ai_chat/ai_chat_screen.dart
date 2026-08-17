@@ -93,14 +93,16 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       );
       if (connectionFailed) {
         final offlineMatch = await _offlineChat.findMatch(text, locale);
-        response = offlineMatch?.reply ??
+        response =
+            offlineMatch?.reply ??
             await _offlineChat.getFallback(locale) ??
             response;
         isOffline = true;
       }
     } else {
       final offlineMatch = await _offlineChat.findMatch(text, locale);
-      response = offlineMatch?.reply ??
+      response =
+          offlineMatch?.reply ??
           await _offlineChat.getFallback(locale) ??
           'No offline answer is available for that question.';
       isOffline = true;
@@ -171,9 +173,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       ),
     ];
 
-    final welcomeBody = _messages.isNotEmpty && !_messages.first.isUser
-        ? _messages.first.text
-        : _t('ai_greeting');
+    final welcomeBody =
+        _messages.isNotEmpty && !_messages.first.isUser
+            ? _messages.first.text
+            : _t('ai_greeting');
 
     return Scaffold(
       backgroundColor: ChatUi.pageBg,
@@ -238,8 +241,8 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: popularTopics.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 10),
+                              separatorBuilder:
+                                  (_, __) => const SizedBox(width: 10),
                               itemBuilder: (context, i) {
                                 final topic = popularTopics[i];
                                 return ChatTopicChip(

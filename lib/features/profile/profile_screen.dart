@@ -91,10 +91,7 @@ class _ProfileHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
+                Text(name, style: Theme.of(context).textTheme.headlineSmall),
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -152,39 +149,40 @@ class _StatsRow extends StatelessWidget {
     ];
 
     return Row(
-      children: stats.map((s) {
-        return Expanded(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: s.color.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: s.color.withValues(alpha: 0.15)),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  s.label == 'Streak' ? '7 ${S.literal('days')}' : s.value,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: s.color,
-                  ),
+      children:
+          stats.map((s) {
+            return Expanded(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: s.color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: s.color.withValues(alpha: 0.15)),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  S.literal(s.label),
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Theme.of(context).hintColor,
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      s.label == 'Streak' ? '7 ${S.literal('days')}' : s.value,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: s.color,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      S.literal(s.label),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+              ),
+            );
+          }).toList(),
     );
   }
 }
@@ -206,46 +204,47 @@ class _ProgressCards extends StatelessWidget {
     ];
 
     return Column(
-      children: items.map((p) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+      children:
+          items.map((p) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        S.literal(p.$1),
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            S.literal(p.$1),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                        Text(
+                          '${(p.$2 * 100).round()}%',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: p.$3,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '${(p.$2 * 100).round()}%',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: p.$3,
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: p.$2,
+                        minHeight: 6,
+                        backgroundColor: Theme.of(context).dividerColor,
+                        valueColor: AlwaysStoppedAnimation<Color>(p.$3),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: p.$2,
-                    minHeight: 6,
-                    backgroundColor: Theme.of(context).dividerColor,
-                    valueColor: AlwaysStoppedAnimation<Color>(p.$3),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+              ),
+            );
+          }).toList(),
     );
   }
 }
@@ -264,32 +263,33 @@ class _AchievementsGrid extends StatelessWidget {
     return Wrap(
       spacing: 12,
       runSpacing: 12,
-      children: _badges.map((b) {
-        return Container(
-          width: 80,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: b.$3.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: b.$3.withValues(alpha: 0.2)),
-          ),
-          child: Column(
-            children: [
-              Icon(b.$2, color: b.$3, size: 28),
-              const SizedBox(height: 6),
-              Text(
-                S.literal(b.$1),
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
+      children:
+          _badges.map((b) {
+            return Container(
+              width: 80,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: b.$3.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: b.$3.withValues(alpha: 0.2)),
               ),
-            ],
-          ),
-        );
-      }).toList(),
+              child: Column(
+                children: [
+                  Icon(b.$2, color: b.$3, size: 28),
+                  const SizedBox(height: 6),
+                  Text(
+                    S.literal(b.$1),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
     );
   }
 }

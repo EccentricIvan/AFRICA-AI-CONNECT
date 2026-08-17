@@ -56,7 +56,7 @@ class GeminiService {
   static const _baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
   static const _systemPrompt =
-      '''You are Africa AI Connect AI Assistant — a warm, supportive, and knowledgeable companion for women in Sub-Saharan Africa.
+      '''You are AI Connect Africa AI Assistant — a warm, supportive, and knowledgeable companion for women in Sub-Saharan Africa.
 
 Your role is to help women with:
 - Business and entrepreneurship advice

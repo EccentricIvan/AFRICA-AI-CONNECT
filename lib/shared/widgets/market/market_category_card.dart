@@ -32,7 +32,8 @@ class MarketCategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(MarketUi.radiusCard),
           boxShadow: MarketUi.softShadow,
           border: Border.all(
-            color: selected ? accent.withValues(alpha: 0.55) : Colors.transparent,
+            color:
+                selected ? accent.withValues(alpha: 0.55) : Colors.transparent,
             width: selected ? 1.5 : 0,
           ),
         ),

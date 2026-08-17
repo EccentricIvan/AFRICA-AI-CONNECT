@@ -65,8 +65,10 @@ class ChatMessageBubble extends StatelessWidget {
             const SizedBox(width: 10),
             Flexible(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: ChatUi.card,
                   borderRadius: const BorderRadius.only(

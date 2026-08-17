@@ -69,21 +69,23 @@ class ChatComposer extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: isLoading
-                      ? null
-                      : const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [ChatUi.accent, ChatUi.accentDeep],
-                        ),
+                  gradient:
+                      isLoading
+                          ? null
+                          : const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [ChatUi.accent, ChatUi.accentDeep],
+                          ),
                   color: isLoading ? ChatUi.border : null,
                   boxShadow: isLoading ? null : ChatUi.glowShadow,
                 ),
                 child: Icon(
                   Icons.send_rounded,
-                  color: isLoading
-                      ? ChatUi.textSecondary.withValues(alpha: 0.5)
-                      : Colors.white,
+                  color:
+                      isLoading
+                          ? ChatUi.textSecondary.withValues(alpha: 0.5)
+                          : Colors.white,
                   size: 20,
                 ),
               ),

@@ -1,7 +1,7 @@
-# Africa AI Connect
+# AI Connect Africa
 
 ## Project Overview
-Africa AI Connect is an offline-first, AI-powered digital empowerment ecosystem for women in Sub-Saharan Africa. Built with Flutter, it supports Android, Windows, and Web. It evolved from Otic Studio v3, under the working name "Otic Connect" — some internal identifiers (Dart package name `otic_connect`, Android `applicationId com.oticgroup.otic_connect`, local SQLite filename) intentionally still use the old name to avoid breaking app updates/signing continuity for existing installs. User-facing text, the app icon, and all display names use the new branding.
+AI Connect Africa is an offline-first, AI-powered digital empowerment ecosystem for women in Sub-Saharan Africa. Built with Flutter, it supports Android, Windows, and Web. It evolved from Otic Studio v3, under the working name "Otic Connect" — some internal identifiers (Dart package name `otic_connect`, Android `applicationId com.oticgroup.otic_connect`, local SQLite filename) intentionally still use the old name to avoid breaking app updates/signing continuity for existing installs. User-facing text, the app icon, and all display names use the new branding.
 
 ## Tech Stack
 - **Framework**: Flutter 3.44+ / Dart 3.12+

@@ -37,18 +37,18 @@ class HomeUi {
       'assets/branding/card_background_light.png';
 
   static List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: const Color(0xFF1A1A1A).withValues(alpha: 0.07),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF1A1A1A).withValues(alpha: 0.07),
+      blurRadius: 20,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
   static List<BoxShadow> get navShadow => [
-        BoxShadow(
-          color: const Color(0xFF1A1A1A).withValues(alpha: 0.10),
-          blurRadius: 28,
-          offset: const Offset(0, 10),
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF1A1A1A).withValues(alpha: 0.10),
+      blurRadius: 28,
+      offset: const Offset(0, 10),
+    ),
+  ];
 }

@@ -192,18 +192,21 @@ class _CategoriesGrid extends ConsumerWidget {
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
       childAspectRatio: 0.88,
-      children: _categoryMeta.map((c) {
-        final isSelected = selected == c.key;
-        return MarketCategoryCard(
-          label: t(c.labelKey),
-          icon: c.icon,
-          accent: c.color,
-          selected: isSelected,
-          onTap: () =>
-              ref.read(selectedMarketplaceCategoryProvider.notifier).state =
-                  isSelected ? null : c.key,
-        );
-      }).toList(),
+      children:
+          _categoryMeta.map((c) {
+            final isSelected = selected == c.key;
+            return MarketCategoryCard(
+              label: t(c.labelKey),
+              icon: c.icon,
+              accent: c.color,
+              selected: isSelected,
+              onTap:
+                  () =>
+                      ref
+                          .read(selectedMarketplaceCategoryProvider.notifier)
+                          .state = isSelected ? null : c.key,
+            );
+          }).toList(),
     );
   }
 }
@@ -219,51 +222,57 @@ class _FeaturedListings extends ConsumerWidget {
     final hasFilter = ref.watch(selectedMarketplaceCategoryProvider) != null;
 
     return listingsAsync.when(
-      loading: () => const SizedBox(
-        height: 80,
-        child: Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: MarketUi.accent,
+      loading:
+          () => const SizedBox(
+            height: 80,
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: MarketUi.accent,
+              ),
+            ),
           ),
-        ),
-      ),
-      error: (e, _) => const Text(
-        'Could not load listings',
-        style: TextStyle(fontSize: 13, color: MarketUi.textSecondary),
-      ),
+      error:
+          (e, _) => const Text(
+            'Could not load listings',
+            style: TextStyle(fontSize: 13, color: MarketUi.textSecondary),
+          ),
       data: (listings) {
         if (listings.isEmpty) {
           return MarketEmptyListings(
-            title: hasFilter
-                ? t('no_listings_in_category')
-                : t('no_listings_yet'),
-            subtitle: hasFilter
-                ? t('browse_products')
-                : 'Be the first to list a product!',
+            title:
+                hasFilter ? t('no_listings_in_category') : t('no_listings_yet'),
+            subtitle:
+                hasFilter
+                    ? t('browse_products')
+                    : 'Be the first to list a product!',
             ctaLabel: t('list_product_btn'),
             onCta: onAdd,
             showClearFilter: hasFilter,
             clearLabel: t('clear_filter'),
-            onClear: () =>
-                ref.read(selectedMarketplaceCategoryProvider.notifier).state =
-                    null,
+            onClear:
+                () =>
+                    ref
+                        .read(selectedMarketplaceCategoryProvider.notifier)
+                        .state = null,
           );
         }
         return Column(
-          children: listings.map((l) {
-            final meta = _metaFor(l.category);
-            final sellerLine = l.location != null
-                ? '${l.sellerName} · ${l.location}'
-                : l.sellerName;
-            return MarketListingCard(
-              title: l.title,
-              sellerLine: sellerLine,
-              priceLabel: _formatUgx(l.price),
-              fallbackIcon: meta.icon,
-              imagePath: l.imagePath,
-            );
-          }).toList(),
+          children:
+              listings.map((l) {
+                final meta = _metaFor(l.category);
+                final sellerLine =
+                    l.location != null
+                        ? '${l.sellerName} · ${l.location}'
+                        : l.sellerName;
+                return MarketListingCard(
+                  title: l.title,
+                  sellerLine: sellerLine,
+                  priceLabel: _formatUgx(l.price),
+                  fallbackIcon: meta.icon,
+                  imagePath: l.imagePath,
+                );
+              }).toList(),
         );
       },
     );
@@ -310,23 +319,26 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_t('select_category_error'))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_t('select_category_error'))));
       return;
     }
     final seller = ref.read(currentUserProvider).valueOrNull?.name;
     if (seller == null) return;
 
     setState(() => _saving = true);
-    await ref.read(marketplaceDaoProvider).addListing(
+    await ref
+        .read(marketplaceDaoProvider)
+        .addListing(
           title: _titleController.text.trim(),
           price: double.parse(_priceController.text.trim()),
           category: _selectedCategory!,
           sellerName: seller,
-          location: _locationController.text.trim().isEmpty
-              ? null
-              : _locationController.text.trim(),
+          location:
+              _locationController.text.trim().isEmpty
+                  ? null
+                  : _locationController.text.trim(),
           imagePath: _imagePath,
         );
     if (mounted) Navigator.of(context).pop();
@@ -390,48 +402,50 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                         border: Border.all(color: MarketUi.border),
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child: _pickingImage
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: MarketUi.accent,
-                              ),
-                            )
-                          : _imagePath != null
+                      child:
+                          _pickingImage
+                              ? const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: MarketUi.accent,
+                                ),
+                              )
+                              : _imagePath != null
                               ? Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    Image.file(
-                                      File(_imagePath!),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    Positioned(
-                                      top: 4,
-                                      right: 4,
-                                      child: GestureDetector(
-                                        onTap: () =>
-                                            setState(() => _imagePath = null),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(3),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black54,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(
-                                            Icons.close,
-                                            size: 14,
-                                            color: Colors.white,
-                                          ),
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.file(
+                                    File(_imagePath!),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: GestureDetector(
+                                      onTap:
+                                          () =>
+                                              setState(() => _imagePath = null),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black54,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 14,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                )
+                                  ),
+                                ],
+                              )
                               : const Icon(
-                                  Icons.add_a_photo_outlined,
-                                  color: MarketUi.textSecondary,
-                                  size: 28,
-                                ),
+                                Icons.add_a_photo_outlined,
+                                color: MarketUi.textSecondary,
+                                size: 28,
+                              ),
                     ),
                   ),
                 ),
@@ -442,9 +456,11 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                   decoration: InputDecoration(
                     hintText: _t('listing_title_hint'),
                   ),
-                  validator: (v) => (v == null || v.trim().isEmpty)
-                      ? _t('listing_title_error')
-                      : null,
+                  validator:
+                      (v) =>
+                          (v == null || v.trim().isEmpty)
+                              ? _t('listing_title_error')
+                              : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -475,24 +491,25 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _categoryMeta.map((c) {
-                    final isSelected = _selectedCategory == c.key;
-                    return ChoiceChip(
-                      label: Text(_t(c.labelKey)),
-                      selected: isSelected,
-                      onSelected: (_) =>
-                          setState(() => _selectedCategory = c.key),
-                      selectedColor: c.color.withValues(alpha: 0.2),
-                      labelStyle: TextStyle(
-                        color:
-                            isSelected ? c.color : MarketUi.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      side: BorderSide(
-                        color: isSelected ? c.color : MarketUi.border,
-                      ),
-                    );
-                  }).toList(),
+                  children:
+                      _categoryMeta.map((c) {
+                        final isSelected = _selectedCategory == c.key;
+                        return ChoiceChip(
+                          label: Text(_t(c.labelKey)),
+                          selected: isSelected,
+                          onSelected:
+                              (_) => setState(() => _selectedCategory = c.key),
+                          selectedColor: c.color.withValues(alpha: 0.2),
+                          labelStyle: TextStyle(
+                            color:
+                                isSelected ? c.color : MarketUi.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          side: BorderSide(
+                            color: isSelected ? c.color : MarketUi.border,
+                          ),
+                        );
+                      }).toList(),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -510,20 +527,20 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                       elevation: 0,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(MarketUi.radiusBtn),
+                        borderRadius: BorderRadius.circular(MarketUi.radiusBtn),
                       ),
                     ),
-                    child: _saving
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Text(_t('list_product_btn')),
+                    child:
+                        _saving
+                            ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                            : Text(_t('list_product_btn')),
                   ),
                 ),
               ],

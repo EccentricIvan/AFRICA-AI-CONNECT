@@ -94,12 +94,7 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
         Icons.rocket_launch_outlined,
         10,
       ),
-      _Cat(
-        t('cat_agri'),
-        t('cat_agri_desc'),
-        Icons.agriculture_outlined,
-        7,
-      ),
+      _Cat(t('cat_agri'), t('cat_agri_desc'), Icons.agriculture_outlined, 7),
       _Cat(
         t('cat_health_nut'),
         t('cat_health_nut_desc'),
@@ -114,10 +109,11 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
       ),
     ];
 
-    final continueCourses =
-        categories.where((c) => c.progress > 0).toList();
+    final continueCourses = categories.where((c) => c.progress > 0).toList();
     final featured =
-        continueCourses.isNotEmpty ? continueCourses : categories.take(3).toList();
+        continueCourses.isNotEmpty
+            ? continueCourses
+            : categories.take(3).toList();
     final recommended = categories.where((c) => c.progress == 0).toList();
     final journey = _journeyFrom(categories);
 
@@ -217,11 +213,11 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
                       itemCount: categories.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.92,
-                      ),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 0.92,
+                          ),
                       itemBuilder: (context, i) {
                         final c = categories[i];
                         return LearnCategoryCard(
@@ -282,11 +278,11 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
                       itemCount: tools.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 2.6,
-                      ),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
+                            childAspectRatio: 2.6,
+                          ),
                       itemBuilder: (context, i) {
                         final tool = tools[i];
                         return LearnToolChip(
@@ -308,7 +304,13 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
 }
 
 class _Cat {
-  const _Cat(this.title, this.subtitle, this.icon, this.count, {this.progress = 0});
+  const _Cat(
+    this.title,
+    this.subtitle,
+    this.icon,
+    this.count, {
+    this.progress = 0,
+  });
   final String title;
   final String subtitle;
   final IconData icon;

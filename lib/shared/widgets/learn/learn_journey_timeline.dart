@@ -34,10 +34,7 @@ class LearnJourneyTimeline extends StatelessWidget {
       child: Column(
         children: [
           for (var i = 0; i < items.length; i++)
-            _JourneyRow(
-              item: items[i],
-              isLast: i == items.length - 1,
-            ),
+            _JourneyRow(item: items[i], isLast: i == items.length - 1),
         ],
       ),
     );
@@ -79,13 +76,21 @@ class _JourneyRow extends StatelessWidget {
                     color: isDone || isCurrent ? dotColor : LearnUi.card,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isDone || isCurrent ? dotColor : LearnUi.textSecondary,
+                      color:
+                          isDone || isCurrent
+                              ? dotColor
+                              : LearnUi.textSecondary,
                       width: 2,
                     ),
                   ),
-                  child: isDone
-                      ? const Icon(Icons.check, size: 11, color: Colors.white)
-                      : null,
+                  child:
+                      isDone
+                          ? const Icon(
+                            Icons.check,
+                            size: 11,
+                            color: Colors.white,
+                          )
+                          : null,
                 ),
                 if (!isLast)
                   Expanded(
@@ -113,11 +118,12 @@ class _JourneyRow extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: isCurrent
-                                ? LearnUi.textPrimary
-                                : LearnUi.textPrimary.withValues(
-                                    alpha: isDone ? 0.85 : 0.55,
-                                  ),
+                            color:
+                                isCurrent
+                                    ? LearnUi.textPrimary
+                                    : LearnUi.textPrimary.withValues(
+                                      alpha: isDone ? 0.85 : 0.55,
+                                    ),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -128,9 +134,10 @@ class _JourneyRow extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: isDone
-                              ? LearnUi.success
-                              : isCurrent
+                          color:
+                              isDone
+                                  ? LearnUi.success
+                                  : isCurrent
                                   ? LearnUi.accent
                                   : LearnUi.textSecondary,
                         ),

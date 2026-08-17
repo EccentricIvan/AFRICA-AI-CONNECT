@@ -22,18 +22,18 @@ class MarketUi {
       'assets/branding/market_background.png';
 
   static List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: const Color(0xFF202020).withValues(alpha: 0.06),
-          blurRadius: 22,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF202020).withValues(alpha: 0.06),
+      blurRadius: 22,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
   static List<BoxShadow> get pillShadow => [
-        BoxShadow(
-          color: const Color(0xFF202020).withValues(alpha: 0.07),
-          blurRadius: 14,
-          offset: const Offset(0, 6),
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF202020).withValues(alpha: 0.07),
+      blurRadius: 14,
+      offset: const Offset(0, 6),
+    ),
+  ];
 }
