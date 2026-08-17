@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
+import 'language_selector.dart';
 
 class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.child});
@@ -174,7 +175,27 @@ class AppShell extends ConsumerWidget {
       child: Scaffold(
         key: mobileScaffoldKey,
         backgroundColor: Colors.transparent,
-        body: child,
+        body: Column(
+          children: [
+            const SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 6),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: LanguageSelector(),
+                ),
+              ),
+            ),
+            Expanded(
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: child,
+              ),
+            ),
+          ],
+        ),
         drawer: _AppDrawer(selectedIndex: selectedIndex, t: t),
         bottomNavigationBar: SafeArea(
           minimum: const EdgeInsets.fromLTRB(20, 0, 20, 14),
