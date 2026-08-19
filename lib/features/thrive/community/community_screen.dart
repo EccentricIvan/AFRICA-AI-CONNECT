@@ -1651,9 +1651,9 @@ class _ConversationRow extends StatelessWidget {
       // The last sender's own avatar, not the group's — matches how a
       // real chat list shows who most recently spoke.
       leading: CommunityAvatar(color: c.senderColor, initial: c.lastSender[0]),
-      title: S.literal(c.group.name),
+      title: c.group.name,
       subtitle: Text(
-        '${c.lastSender}: ${S.literal(c.lastMessage)}',
+        '${c.lastSender}: ${c.lastMessage}',
         style: TextStyle(
           fontSize: 12,
           color: c.unread > 0 ? ui.textPrimary : ui.textSecondary,
@@ -1725,10 +1725,10 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
     super.initState();
     final c = widget.conversation;
     _messages = [
-      (c.lastSender, S.literal("Hey everyone, hope you're all doing well this week!"),
+      (c.lastSender, "Hey everyone, hope you're all doing well this week!",
           c.lastSender == 'You'),
-      ('You', S.literal('Doing great, thanks for asking!'), true),
-      (c.lastSender, S.literal(c.lastMessage), c.lastSender == 'You'),
+      ('You', 'Doing great, thanks for asking!', true),
+      (c.lastSender, c.lastMessage, c.lastSender == 'You'),
     ];
   }
 
