@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../../../core/l10n/app_strings.dart';
 import 'home_ui.dart';
 
 enum HomeProgressKind { courses, points, streak }
@@ -27,19 +28,19 @@ class HomeProgressCard extends StatelessWidget {
           const Color(0xFF7BA8E0),
           Icons.menu_book_rounded,
           '↑ 20%',
-          'Keep learning',
+          S.literal('Keep learning'),
         ),
       HomeProgressKind.points => (
           const Color(0xFFF0A878),
           Icons.star_rounded,
           '↑ 12%',
-          'Awesome progress!',
+          S.literal('Awesome progress!'),
         ),
       HomeProgressKind.streak => (
           const Color(0xFFE89A9A),
           Icons.local_fire_department_rounded,
           '↑ 1d',
-          "You're on fire!",
+          S.literal("You're on fire!"),
         ),
     };
 
@@ -201,7 +202,7 @@ class _CoursesFooter extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              '$left left',
+              '$left ${S.literal('left')}',
               style: TextStyle(
                 fontSize: 8,
                 fontWeight: FontWeight.w600,
@@ -243,7 +244,7 @@ class _PointsFooter extends StatelessWidget {
           const SizedBox(width: 4),
           Expanded(
             child: Text(
-              'Next 550',
+              S.literal('Next 550'),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -326,7 +327,7 @@ class _StreakFooter extends StatelessWidget {
             const SizedBox(width: 2),
             Expanded(
               child: Text(
-                'Best: 12d',
+                S.literal('Best: 12d'),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style:

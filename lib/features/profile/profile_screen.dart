@@ -170,8 +170,9 @@ class _ProfileHeroBanner extends StatelessWidget {
     final hasAbout = about != null && about!.trim().isNotEmpty;
     final aboutLine =
         hasAbout ? about! : S.literal('Add a short bio to introduce yourself');
-    final roleLine =
-        role != null && role!.trim().isNotEmpty ? role! : S.literal('Add role');
+    final roleLine = role != null && role!.trim().isNotEmpty
+        ? S.literal(role!)
+        : S.literal('Add role');
     final locationLine = location != null && location!.trim().isNotEmpty
         ? location!
         : S.literal('Location not set');
@@ -983,7 +984,7 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
                     children: _roles.map((r) {
                       final isSelected = _selectedRole == r;
                       return ChoiceChip(
-                        label: Text(r),
+                        label: Text(S.literal(r)),
                         selected: isSelected,
                         onSelected: (_) => setState(() => _selectedRole = r),
                         selectedColor: HomeUi.accent.withValues(alpha: 0.16),

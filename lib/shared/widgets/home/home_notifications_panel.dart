@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/l10n/app_strings.dart';
 import 'home_ui.dart';
 
 class _NotificationItem {
@@ -25,51 +26,53 @@ class _NotificationItem {
 class HomeNotificationsPanel extends StatelessWidget {
   const HomeNotificationsPanel({super.key});
 
-  static const _items = [
+  static List<_NotificationItem> get _items => [
     _NotificationItem(
       Icons.emoji_events_rounded,
       HomeUi.grow,
-      'New badge unlocked',
-      'You earned "Quick Learner" for finishing 3 lessons this week.',
-      '2m ago',
+      S.literal('New badge unlocked'),
+      S.literal(
+        'You earned "Quick Learner" for finishing 3 lessons this week.',
+      ),
+      S.literal('2m ago'),
       unread: true,
     ),
     _NotificationItem(
       Icons.groups_rounded,
       HomeUi.thrive,
-      'Community activity',
-      'Grace replied in Kampala Women Entrepreneurs.',
-      '25m ago',
+      S.literal('Community activity'),
+      S.literal('Grace replied in Kampala Women Entrepreneurs.'),
+      S.literal('25m ago'),
       unread: true,
     ),
     _NotificationItem(
       Icons.local_fire_department_rounded,
       HomeUi.accent,
-      "Don't lose your streak",
-      "You're 1 lesson away from a 7-day streak.",
-      '3h ago',
+      S.literal("Don't lose your streak"),
+      S.literal("You're 1 lesson away from a 7-day streak."),
+      S.literal('3h ago'),
       unread: true,
     ),
     _NotificationItem(
       Icons.work_outline_rounded,
       HomeUi.learn,
-      'New job match',
-      'A "Digital Marketing Assistant" role matches your profile.',
-      '1d ago',
+      S.literal('New job match'),
+      S.literal('A "Digital Marketing Assistant" role matches your profile.'),
+      S.literal('1d ago'),
     ),
     _NotificationItem(
       Icons.diversity_1_outlined,
       HomeUi.earn,
-      'Mentorship request',
-      'Peace N. wants to connect with you as a mentee.',
-      '2d ago',
+      S.literal('Mentorship request'),
+      S.literal('Peace N. wants to connect with you as a mentee.'),
+      S.literal('2d ago'),
     ),
     _NotificationItem(
       Icons.menu_book_rounded,
       HomeUi.learn,
-      'Course update',
-      'A new module was added to Digital Skills 101.',
-      '4d ago',
+      S.literal('Course update'),
+      S.literal('A new module was added to Digital Skills 101.'),
+      S.literal('4d ago'),
     ),
   ];
 
@@ -104,7 +107,7 @@ class HomeNotificationsPanel extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'Notifications',
+                    S.literal('Notifications'),
                     style: TextStyle(
                       fontFamily: 'Saira',
                       fontSize: 16,

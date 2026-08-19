@@ -256,7 +256,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             const SizedBox(width: 6),
                             Flexible(
                               child: Text(
-                                'Secure. Private. Built for you.',
+                                S.literal('Secure. Private. Built for you.'),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
@@ -1033,33 +1033,34 @@ class _WelcomeFeatureStrip extends StatelessWidget {
   const _WelcomeFeatureStrip({required this.narrow});
   final bool narrow;
 
-  static const _features = <({
-    IconData icon,
-    String title,
-    String subtitle,
-    Color accent,
-    Color tint,
-  })>[
+  static List<
+      ({
+        IconData icon,
+        String title,
+        String subtitle,
+        Color accent,
+        Color tint,
+      })> get _features => [
     (
       icon: Icons.school_rounded,
-      title: 'Learn AI',
-      subtitle: 'Courses & skills',
+      title: S.literal('Learn AI'),
+      subtitle: S.literal('Courses & skills'),
       accent: AppColors.primary,
-      tint: Color(0xFFF6E4DA),
+      tint: const Color(0xFFF6E4DA),
     ),
     (
       icon: Icons.work_outline_rounded,
-      title: 'Earn',
-      subtitle: 'Find opportunities',
+      title: S.literal('Earn'),
+      subtitle: S.literal('Find opportunities'),
       accent: AppColors.learnColor,
-      tint: Color(0xFFEBE4F5),
+      tint: const Color(0xFFEBE4F5),
     ),
     (
       icon: Icons.show_chart_rounded,
-      title: 'Grow',
-      subtitle: 'Build your future',
+      title: S.literal('Grow'),
+      subtitle: S.literal('Build your future'),
       accent: AppColors.agricultureColor,
-      tint: Color(0xFFE4F0DE),
+      tint: const Color(0xFFE4F0DE),
     ),
   ];
 
@@ -1080,7 +1081,7 @@ class _WelcomeFeatureStrip extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'What you can do',
+          S.literal('What you can do'),
           style: TextStyle(
             fontFamily: 'Saira',
             fontSize: 17,
