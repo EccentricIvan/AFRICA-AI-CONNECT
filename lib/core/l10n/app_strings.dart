@@ -12,7 +12,8 @@ enum AppLocale {
   nyn('Runyankore', 'NYN'),
   teo('Ateso', 'TEO'),
   nyo('Runyoro', 'NYO'),
-  ach('Acholi', 'ACH');
+  ach('Acholi', 'ACH'),
+  rw('Kinyarwanda', 'RW');
 
   const AppLocale(this.label, this.code);
   final String label;
@@ -139,6 +140,101 @@ class S {
     'Talk to someone you trust',
     "A family member, friend, or community leader can help you find local support even when a hotline isn't available.",
     'If you are in immediate danger, contact emergency services now.',
+    // ── Added for Community/AI Chat/Learn/Profile coverage ──
+    "Let's get to know you.",
+    'Your data is secure with us.',
+    'Connect. Learn. Grow.',
+    'women across',
+    'communities',
+    'Create a Community',
+    'Chats',
+    'Feed',
+    'Discover',
+    'Search your communities',
+    'No conversations found',
+    'Search posts from your communities',
+    'No posts found',
+    'Communities',
+    'Search groups to join',
+    'No groups found',
+    'Location',
+    'Filter Communities',
+    'Apply',
+    'Joined',
+    'Left',
+    'Please choose a category',
+    'Community created',
+    'Group name',
+    'Enter a group name',
+    'What is this group about?',
+    'Create Community',
+    'Dismiss',
+    'Created by',
+    "You're a member",
+    'Members',
+    'Admin',
+    'tap for details',
+    'Message',
+    'A place for women in this community to share opportunities, ask questions, and support one another.',
+    "A place for women in this community to share opportunities, ask questions, and support one another's growth.",
+    'Business',
+    'Family & Support',
+    'Fashion & Crafts',
+    'Tailors & Textile Circle',
+    'Savings Circle Kampala',
+    'Anyone free for the Saturday market meet-up?',
+    'Just shared the new tutorial link!',
+    'Thanks everyone, see you at the training.',
+    '12m',
+    '2h',
+    '1d',
+    "Hey everyone, hope you're all doing well this week!",
+    'Doing great, thanks for asking!',
+    'Mentor',
+    'Trader',
+    'Volunteer',
+    'Downloads',
+    'Certificates',
+    'Bookmarks',
+    'Notes',
+    'History',
+    'Your Learning Progress',
+    'Courses Completed',
+    'Days Streak',
+    'Points Earned',
+    'Complete 2 more lessons to reach your next milestone',
+    'Recommended',
+    'Learning Journey',
+    'Daily Insight',
+    'Read more',
+    'Quick Tools',
+    'Keep learning.',
+    'Keep growing.',
+    "Hello, I'm your AI Assistant",
+    'Explore popular topics',
+    'Business\nAdvice',
+    'Farming\nTips',
+    'Health\nInfo',
+    'Health tips for my family',
+    'Finance\nGuidance',
+    'More\nTopics',
+    'Be the first to list a product!',
+    'Could not load listings',
+    'Offline guidance',
+    'Completed Courses',
+    'Communities Joined',
+    'Badges Earned',
+    'Your Streak Progress',
+    'Ongoing Courses',
+    "You're on fire!",
+    'Best',
+    'Edit Profile',
+    'Your name',
+    'Tell others a little about yourself',
+    'I am a',
+    'Save Changes',
+    'Add a short bio to introduce yourself',
+    'Add role',
   ];
 
   static String _apiCode(AppLocale locale) => switch (locale) {
@@ -149,6 +245,7 @@ class S {
         AppLocale.teo => 'teo',
         AppLocale.nyo => 'nyo',
         AppLocale.ach => 'ach',
+        AppLocale.rw => 'kin',
       };
 
   static Map<String, String> _sourceCatalog() {
@@ -171,10 +268,14 @@ class S {
       (key, value) => MapEntry(key, value.toString()),
     );
     final expected = _sourceCatalog().keys.toSet();
-    if (bundle.keys.toSet().difference(expected).isNotEmpty ||
-        expected.difference(bundle.keys.toSet()).isNotEmpty) {
-      throw StateError('Bundled translation catalog is incomplete');
+    if (bundle.keys.toSet().difference(expected).isNotEmpty) {
+      throw StateError('Bundled translation catalog has unrecognised keys');
     }
+    // A bundle may legitimately lag behind `_uiLiterals`/`_strings` while a
+    // language's translation work is still in progress — `tr()`/`literal()`
+    // fall back to English per-key, so a partial bundle must not block
+    // startup (`loadBundledTranslations()` awaits every locale) or block
+    // switching to that language.
     _downloaded[locale] = bundle;
   }
 

@@ -330,6 +330,11 @@ const _languageVisuals = <AppLocale, _LanguageVisual>{
     iconColor: Color(0xFFB4436C),
     tileColor: Color(0xFFF4E0E8),
   ),
+  AppLocale.rw: _LanguageVisual(
+    icon: Icons.landscape_rounded,
+    iconColor: Color(0xFF3E7C6A),
+    tileColor: Color(0xFFDFEDE8),
+  ),
 };
 
 class _LanguagePage extends StatelessWidget {
