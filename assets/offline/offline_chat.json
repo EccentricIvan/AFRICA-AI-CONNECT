@@ -10,9 +10,19 @@
     "nyo": "native-review-required",
     "ach": "native-review-required",
     "teo": "native-review-required",
+    "rw": "native-review-required",
     "_translation_notice": "Local-language content requires native-speaker review"
   },
-  "supported_languages": ["en", "lg", "sw", "nyn", "nyo", "ach", "teo"],
+  "supported_languages": [
+    "en",
+    "lg",
+    "sw",
+    "nyn",
+    "nyo",
+    "ach",
+    "teo",
+    "rw"
+  ],
   "fallbacks": {
     "en": "I do not have a reliable offline answer for that yet. Try asking about business, saving, farming, health, digital safety, jobs, or wellbeing. If this is an emergency, contact local emergency services or a trusted professional now.",
     "lg": "Sinnaba na kyakuddamu kya kwesigika nga tolina yintaneeti. Buuza ku busubuzi, okutereka ensimbi, obulimi, obulamu, obukuumi ku yintaneeti, emirimu oba emirembe gy'omutima. Bwe kiba kya mangu, tuukirira ab'obuyambi oba omukugu gwe weesiga.",
@@ -21,21 +31,58 @@
     "nyo": "Tinyina eky'okugarukamu eky'okwesigwa hatali ha mutimbagano hati. Kaguza ha busuubuzi, kutereka sente, bulimi, bwomeezi, obulinzi ha mutimbagano, mirimo rundi obusinge bw'omutima. Obukiraaba kiri ky'amangu, ragira ab'obuyambi rundi omukugu ow'orukwesiga.",
     "ach": "Pe an atye ki lagam me ada ma pe mito intanet pi lapeny man. Peny ikom cato wil, gwoko lim, pur, yotkom, ber bedo i intanet, tic onyo kuc me cwiny. Ka obedo peko me oyot, lwong jo me kony onyo ladit ma igeno.",
     "teo": "Mam ijai eong aijen na ejok na mam erai ka internet kotoma aswam na. Ingisit akiro nu aduka, akoru esirigin, akoru, ajar, aijar ejok toma internet, aswam arai ayalama. Karai erai na apedor, ingarakina ijo lukaingaren arai ekapolon lo ijenara.",
+    "rw": "Nta gisubizo cyizewe mfite kuri ibyo mu gihe nta interineti ihari. Gerageza kubaza ku bucuruzi, kubika amafaranga, ubuhinzi, ubuzima, umutekano kuri interineti, akazi, cyangwa imibereho myiza. Niba ari ibyihutirwa, hamagara serivisi z'ubutabazi zo mu karere cyangwa umuhanga wiringira ubu.",
     "_translation_notice": "Native-speaker review required"
   },
   "intents": [
     {
       "id": "business_start",
       "category": "business",
-      "source": {"title": "ILO Start and Improve Your Business", "url": "https://www.ilo.org/start-and-improve-your-business-siyb"},
+      "source": {
+        "title": "ILO Start and Improve Your Business",
+        "url": "https://www.ilo.org/start-and-improve-your-business-siyb"
+      },
       "patterns": {
-        "en": ["how do I start a small business", "help me choose a business idea", "starting a business"],
-        "lg": ["ntandika ntya obusubuzi obutono", "nnonya ndowooza ya busubuzi", "okutandika obusubuzi"],
-        "sw": ["ninaanzaje biashara ndogo", "nisaidie kuchagua wazo la biashara", "kuanzisha biashara"],
-        "nyn": ["nintandika nta obushuubuzi bukye", "nyamba kutoorana ekiteekateeko ky'obushuubuzi", "okutandika obushuubuzi"],
-        "nyo": ["ntandika nta obusuubuzi obutaito", "nkonyera kukomamu ekitekerezo ky'obusuubuzi", "kutandika obusuubuzi"],
-        "ach": ["acako nining cato wil matidi", "konya yero tam me cato wil", "cako cato wil"],
-        "teo": ["acakar biai aduka na edit", "ingarakinai aseun aomisio nu aduka", "acakar aduka"]
+        "en": [
+          "how do I start a small business",
+          "help me choose a business idea",
+          "starting a business"
+        ],
+        "lg": [
+          "ntandika ntya obusubuzi obutono",
+          "nnonya ndowooza ya busubuzi",
+          "okutandika obusubuzi"
+        ],
+        "sw": [
+          "ninaanzaje biashara ndogo",
+          "nisaidie kuchagua wazo la biashara",
+          "kuanzisha biashara"
+        ],
+        "nyn": [
+          "nintandika nta obushuubuzi bukye",
+          "nyamba kutoorana ekiteekateeko ky'obushuubuzi",
+          "okutandika obushuubuzi"
+        ],
+        "nyo": [
+          "ntandika nta obusuubuzi obutaito",
+          "nkonyera kukomamu ekitekerezo ky'obusuubuzi",
+          "kutandika obusuubuzi"
+        ],
+        "ach": [
+          "acako nining cato wil matidi",
+          "konya yero tam me cato wil",
+          "cako cato wil"
+        ],
+        "teo": [
+          "acakar biai aduka na edit",
+          "ingarakinai aseun aomisio nu aduka",
+          "acakar aduka"
+        ],
+        "rw": [
+          "nagira nte ngo ntangire ubucuruzi buto",
+          "mfasha guhitamo igitekerezo cy'ubucuruzi",
+          "gutangira ubucuruzi"
+        ]
       },
       "responses": {
         "en": "Start with a problem people nearby will pay to solve. Speak to at least five possible customers, estimate your costs and selling price, then test with a small quantity before borrowing or investing heavily. Keep business money separate from household money and write down every sale and expense.",
@@ -45,21 +92,58 @@
         "nyo": "Tandika n'ekizibu abantu abakuli haihi eki barukugonza kusasurra. Baza n'abaguzi abarukusobora kubaho nibura bataano, bara ensaasaanya n'omuhendo gw'okutunda, hanyuma lengeka n'ebintu bike otakakope rundi kutamu sente nyingi. Yawula sente z'obusuubuzi hali ez'eka kandi handika buli ky'otunda n'eky'osasura.",
         "ach": "Cak ki peko ma dano macok kodi mito culo pire. Lok ki jo ma romo wilo romo abic, kwan wel me yub ki wel me cato, ka item ki jami manok mapwod pe ikwano lim onyo keto lim madwong. Pok lim me cato wil ki lim me gang, ki icoyo jami ducu ma icato ki ma iwilo.",
         "teo": "Cakau ka apedor na itunga lukaipie ikotos asulakin. Aingit itunga luka alosit luka aduka iboro ikany, ipima isirigin luka aswam ka omusolo, epol egeutu ka iboro lu idis sek mam ipedo akop arai aidok isirigin luipu. Kanyutu isirigin luka aduka ka luka akai, ido icamuni ngesi kere lu imus.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Tangira n'ikibazo abantu bo hafi bazishyura kugira ngo gikemuke. Vugana n'abakiriya nibura batanu bashoboka, ugereranye ibyo bitwara n'igiciro ugurisha, hanyuma ugerageze n'ingano nto mbere yo kuguza cyangwa gushora amafaranga menshi. Tandukanya amafaranga y'ubucuruzi n'ay'urugo kandi wandike buri kintu wagurishije n'icyo wasohoye."
       }
     },
     {
       "id": "business_records",
       "category": "business",
-      "source": {"title": "ILO Start and Improve Your Business", "url": "https://www.ilo.org/start-and-improve-your-business-siyb"},
+      "source": {
+        "title": "ILO Start and Improve Your Business",
+        "url": "https://www.ilo.org/start-and-improve-your-business-siyb"
+      },
       "patterns": {
-        "en": ["how do I keep business records", "is my business making profit", "record sales and expenses"],
-        "lg": ["nkuuma ntya ebiwandiiko by'obusubuzi", "obusubuzi bwange bukola amagoba", "wandiika ebyatundibwa n'ensaasaanya"],
-        "sw": ["ninawekaje kumbukumbu za biashara", "biashara yangu ina faida", "andika mauzo na matumizi"],
-        "nyn": ["nimpandiika nta eby'obushuubuzi", "obushuubuzi bwangye nibukora amagoba", "handika eby'okuguza n'ensaasaanya"],
-        "nyo": ["nkuuma nta ebihandiiko by'obusuubuzi", "obusuubuzi bwange buli n'amagoba", "handika ebyatundwa n'ensaasaanya"],
-        "ach": ["agwoko nining coc me cato wil", "cato wil na tye ki magoba", "co jami ma icato ki ma iwilo"],
-        "teo": ["ajokar biai ikisila luka aduka", "aduka kang ejai ka agogong", "icamun akiro nu amusan ka agwelan"]
+        "en": [
+          "how do I keep business records",
+          "is my business making profit",
+          "record sales and expenses"
+        ],
+        "lg": [
+          "nkuuma ntya ebiwandiiko by'obusubuzi",
+          "obusubuzi bwange bukola amagoba",
+          "wandiika ebyatundibwa n'ensaasaanya"
+        ],
+        "sw": [
+          "ninawekaje kumbukumbu za biashara",
+          "biashara yangu ina faida",
+          "andika mauzo na matumizi"
+        ],
+        "nyn": [
+          "nimpandiika nta eby'obushuubuzi",
+          "obushuubuzi bwangye nibukora amagoba",
+          "handika eby'okuguza n'ensaasaanya"
+        ],
+        "nyo": [
+          "nkuuma nta ebihandiiko by'obusuubuzi",
+          "obusuubuzi bwange buli n'amagoba",
+          "handika ebyatundwa n'ensaasaanya"
+        ],
+        "ach": [
+          "agwoko nining coc me cato wil",
+          "cato wil na tye ki magoba",
+          "co jami ma icato ki ma iwilo"
+        ],
+        "teo": [
+          "ajokar biai ikisila luka aduka",
+          "aduka kang ejai ka agogong",
+          "icamun akiro nu amusan ka agwelan"
+        ],
+        "rw": [
+          "nabika nte inyandiko z'ubucuruzi",
+          "ubucuruzi bwanjye burimo inyungu",
+          "kwandika ibyaguzwe n'amafaranga yasohotse"
+        ]
       },
       "responses": {
         "en": "Use one notebook with a page for sales and another for expenses. Record the date, item, quantity and amount immediately. At the end of each week, add sales and subtract stock costs and other expenses. The remainder is profit, not the total cash received.",
@@ -69,21 +153,58 @@
         "nyo": "Kozesa akatabo kamu, orupapura rw'eby'otunda n'orundi rw'ensaasaanya. Handika aho n'aho ekiro, ekintu, obwingi n'omuhendo. Buli wiiki obw'erahwa, gaita eby'otundire oihyemu omuhendo gw'ebintu n'ensaasaanya ezindi. Ekisigalire nigo magoba, hatali sente zoona ezi watungire.",
         "ach": "Tii ki buk acel: pot karatac acel pi jami ma icato ki mukene pi jami ma iwilo. Co nino, jami, wel gi ki lim oyot. I agiki me cabit, med lim me jami ma icato ka ikwany wel me jami ki jami mukene ma iwilo. Lim ma odong en aye magoba, pe lim ducu ma inongo.",
         "teo": "Kojau ibuku yen ka akaratac na amusan ka ace na agwelan. Camun epone, ekakas, adio ka isirigin kapakio. Ka awasia na wiki, iboro kere lu imus ido ikunyak isirigin luka iboro ka agwelan ace. Lu ideleikin kes agogong, mam isirigin kere lu ijoikin.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Koresha ikayi imwe: urupapuro rw'ibyaguzwe n'urundi rw'amafaranga yasohotse. Andika ako kanya itariki, igicuruzwa, ingano n'amafaranga. Buri cyumweru kirangiye, ongeraho ibyaguzwe hanyuma ukure amafaranga y'ibicuruzwa n'ayandi yasohotse. Ibisigaye ni inyungu, atari amafaranga yose wabonye."
       }
     },
     {
       "id": "budget_and_save",
       "category": "finance",
-      "source": {"title": "CFPB Emergency Fund Guide", "url": "https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/"},
+      "source": {
+        "title": "CFPB Emergency Fund Guide",
+        "url": "https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/"
+      },
       "patterns": {
-        "en": ["how can I make a budget", "tips for saving money", "emergency savings"],
-        "lg": ["nkola ntya embalirira", "amagezi g'okutereka ensimbi", "ensimbi ez'amangu"],
-        "sw": ["ninatengenezaje bajeti", "vidokezo vya kuweka akiba", "akiba ya dharura"],
-        "nyn": ["ninkora nta embalirira", "amagezi g'okutereka esente", "esente z'obwire bw'amangu"],
-        "nyo": ["nkora nta embalirira", "amagezi g'okutereka sente", "sente ez'obwire bw'amangu"],
-        "ach": ["ayubo nining kwan me lim", "tam me gwoko lim", "lim me cawa me peko"],
-        "teo": ["akotu biai alosio na isirigin", "aomisio nu akoru isirigin", "isirigin luka apedor"]
+        "en": [
+          "how can I make a budget",
+          "tips for saving money",
+          "emergency savings"
+        ],
+        "lg": [
+          "nkola ntya embalirira",
+          "amagezi g'okutereka ensimbi",
+          "ensimbi ez'amangu"
+        ],
+        "sw": [
+          "ninatengenezaje bajeti",
+          "vidokezo vya kuweka akiba",
+          "akiba ya dharura"
+        ],
+        "nyn": [
+          "ninkora nta embalirira",
+          "amagezi g'okutereka esente",
+          "esente z'obwire bw'amangu"
+        ],
+        "nyo": [
+          "nkora nta embalirira",
+          "amagezi g'okutereka sente",
+          "sente ez'obwire bw'amangu"
+        ],
+        "ach": [
+          "ayubo nining kwan me lim",
+          "tam me gwoko lim",
+          "lim me cawa me peko"
+        ],
+        "teo": [
+          "akotu biai alosio na isirigin",
+          "aomisio nu akoru isirigin",
+          "isirigin luka apedor"
+        ],
+        "rw": [
+          "nakora nte ingengo y'amafaranga",
+          "inama zo kubika amafaranga",
+          "ubwizigame bw'ibyihutirwa"
+        ]
       },
       "responses": {
         "en": "For one month, write down all income and spending. First cover food, housing, health, transport and debt payments. Choose a small realistic saving amount and move it aside whenever income arrives. Keep emergency savings somewhere safe but accessible, and use it only for unexpected essential costs.",
@@ -93,21 +214,58 @@
         "nyo": "Kumara kwezi kumu, handika sente zoona ezi orukutunga n'ezi orukusasura. Banza ebyokulya, enju, bwomeezi, engendo n'amabanja. Komamu omuhendo mutaito ogu osobora kutereka kandi ogute ha rubaju buli sente obuziraija. Linda sente ez'amangu omu kiikaro ekirinzire baitu eky'osobora kuhikaho.",
         "ach": "Pi dwe acel, co lim ducu ma bino ki ma iwoto. Cak ki cam, gang, yotkom, wot ki culo bany. Yer lim manok ma iromo gwoko ka iketo tenge ka lim obino. Gwok lim me cawa me peko i kabedo ma ber ento iromo nongo, ki itii kwede pi jami mapire tek ma pe oneno anyim keken.",
         "teo": "Kotoma elap yen, camun isirigin kere lu ibuni ka lu iponi. Ageun ka akimuj, akai, ajar, ainapakin ka akop. Seun isirigin lu idis lu ipedori akoru ido itek kes ace sek isirigin ibunete. Korau isirigin luka apedor toma apedor na ejok konye na ipedori ainakin.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Mu kwezi kumwe, andika amafaranga yose winjiza n'ayo usohora. Banza witabe ibiribwa, aho utuye, ubuzima, ubwikorezi n'ubwishyu bw'imyenda. Hitamo umubare muto w'ubwizigame ushobora kubika kandi ubushyireho buri gihe winjiza amafaranga. Bika ubwizigame bw'ibyihutirwa ahantu hizewe ariko ushobora kubona vuba, kandi ubukoreshe gusa ku byakenewe bitateganyijwe."
       }
     },
     {
       "id": "mobile_money_safety",
       "category": "finance",
-      "source": {"title": "GSMA Mobile Internet Skills Training Toolkit", "url": "https://www.gsma.com/mobilefordevelopment/resources/mobile-internet-skills-training-toolkit-"},
+      "source": {
+        "title": "GSMA Mobile Internet Skills Training Toolkit",
+        "url": "https://www.gsma.com/mobilefordevelopment/resources/mobile-internet-skills-training-toolkit-"
+      },
       "patterns": {
-        "en": ["how do I avoid mobile money fraud", "someone asked for my pin", "mobile money safety"],
-        "lg": ["nneewala ntya obubbi bwa mobile money", "waliwo ansabye pin", "obukuumi bwa mobile money"],
-        "sw": ["ninaepukaje utapeli wa pesa kwa simu", "mtu ameomba namba yangu ya siri", "usalama wa pesa kwa simu"],
-        "nyn": ["ninyetantara nta obushuma bwa mobile money", "omuntu yanshaba pin", "oburinzi bwa mobile money"],
-        "nyo": ["nyetantara nta obunyagi bwa mobile money", "omuntu ansabire pin", "obulinzi bwa mobile money"],
-        "ach": ["ageng nining kuro lim me cim", "ngat mo openya pin na", "gwoko lim me cim"],
-        "teo": ["ajenu biai akonye na mobile money", "itunganan kingisit pin kang", "ajokisio na mobile money"]
+        "en": [
+          "how do I avoid mobile money fraud",
+          "someone asked for my pin",
+          "mobile money safety"
+        ],
+        "lg": [
+          "nneewala ntya obubbi bwa mobile money",
+          "waliwo ansabye pin",
+          "obukuumi bwa mobile money"
+        ],
+        "sw": [
+          "ninaepukaje utapeli wa pesa kwa simu",
+          "mtu ameomba namba yangu ya siri",
+          "usalama wa pesa kwa simu"
+        ],
+        "nyn": [
+          "ninyetantara nta obushuma bwa mobile money",
+          "omuntu yanshaba pin",
+          "oburinzi bwa mobile money"
+        ],
+        "nyo": [
+          "nyetantara nta obunyagi bwa mobile money",
+          "omuntu ansabire pin",
+          "obulinzi bwa mobile money"
+        ],
+        "ach": [
+          "ageng nining kuro lim me cim",
+          "ngat mo openya pin na",
+          "gwoko lim me cim"
+        ],
+        "teo": [
+          "ajenu biai akonye na mobile money",
+          "itunganan kingisit pin kang",
+          "ajokisio na mobile money"
+        ],
+        "rw": [
+          "nirinda nte uburiganya bwa mobile money",
+          "hari umuntu wansabye pin yanjye",
+          "umutekano wa mobile money"
+        ]
       },
       "responses": {
         "en": "Never share your PIN, including with an agent or customer-care caller. Before confirming, read the recipient name and amount yourself. Ignore messages claiming you won a prize or must reverse money by sending it elsewhere. If you suspect fraud, stop the transaction, change your PIN and call the provider using its official number.",
@@ -117,21 +275,58 @@
         "nyo": "Otagambira muntu wena PIN yaawe, n'obwakuba agenti rundi arukukweta naagira ngu ali customer care. Otakagumya, soma ibara ly'arukutunga n'omuhendo iwe wenka. Otaikiriza obutumwa oburukugamba ngu osingwire ekisembo rundi ngu garura sente n'ozituma handi. Obw'otekereza obunyagi, yemerra, hindura PIN kandi okwate kampuni ha namba yaayo entongole.",
         "ach": "Pe imi PIN ni bot ngat mo, kadi latin tic me lim onyo ngat ma lwongi ni en customer care. Mapwod pe imoko, kwan nying ngat ma bino nongo ki wel lim keni. Kwer kwena ma waco ni iloyo mot onyo myero idwok lim kun icwalo i kabedo mukene. Ka itamo ni kuro tye, juk tic, lok PIN ki ilwong kampuni ki namba gi matir.",
         "teo": "Mam ilosi PIN kon angolol, aitu epese lo mobile money arai yen iluongit bala customer care. Sek mam ikitam, isomai ekiror loka yen ijaanakin ka isirigin. Mam iriamun abarit na ebala ijo alosit apolou arai ibongori isirigin aibwo ace. Karai iomit akonye, kowor aswam, iyongotu PIN ido iluongit kampuni ka enamba keng lo ajenara.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Ntukigere ugasangira PIN yawe, harimo n'umukozi wa ajenda cyangwa uwahamagara avuga ko ari serivisi z'abakiriya. Mbere yo kwemeza, soma wowe ubwawe amazina y'uwakira n'amafaranga. Wirinde ubutumwa buvuga ko watsindiye igihembo cyangwa ko ugomba gusubiza amafaranga uyohereza ahandi. Niba ukeka uburiganya, hagarika igikorwa, uhindure PIN kandi uhamagare uwatanga serivisi ukoresheje nomero ye yemewe."
       }
     },
     {
       "id": "soil_and_crop_planning",
       "category": "agriculture",
-      "source": {"title": "FAO Good Agricultural Practices for Family Agriculture", "url": "https://www.fao.org/family-farming/detail/en/c/273587/"},
+      "source": {
+        "title": "FAO Good Agricultural Practices for Family Agriculture",
+        "url": "https://www.fao.org/family-farming/detail/en/c/273587/"
+      },
       "patterns": {
-        "en": ["what crop should I grow", "how do I prepare my soil", "planning a farm"],
-        "lg": ["nnimbe kirime ki", "nteekateeka ntya ettaka", "okuteekateeka ennimiro"],
-        "sw": ["nilime zao gani", "ninaandaaje udongo", "kupanga shamba"],
-        "nyn": ["mpinge kihingwa ki", "nintebeekanisa nta eitaka", "okuteekateeka omusiri"],
-        "nyo": ["nhinge kihingwa ki", "ntekaniza nta itaka", "kutekaniza omusiri"],
-        "ach": ["apit gin apita mene", "ayubo nining ngom", "yubo poto"],
-        "teo": ["ekito ngin lo akor", "alosia biai akoru", "alosia na amana"]
+        "en": [
+          "what crop should I grow",
+          "how do I prepare my soil",
+          "planning a farm"
+        ],
+        "lg": [
+          "nnimbe kirime ki",
+          "nteekateeka ntya ettaka",
+          "okuteekateeka ennimiro"
+        ],
+        "sw": [
+          "nilime zao gani",
+          "ninaandaaje udongo",
+          "kupanga shamba"
+        ],
+        "nyn": [
+          "mpinge kihingwa ki",
+          "nintebeekanisa nta eitaka",
+          "okuteekateeka omusiri"
+        ],
+        "nyo": [
+          "nhinge kihingwa ki",
+          "ntekaniza nta itaka",
+          "kutekaniza omusiri"
+        ],
+        "ach": [
+          "apit gin apita mene",
+          "ayubo nining ngom",
+          "yubo poto"
+        ],
+        "teo": [
+          "ekito ngin lo akor",
+          "alosia biai akoru",
+          "alosia na amana"
+        ],
+        "rw": [
+          "ni igihe ki nagomba guhinga",
+          "nategura nte ubutaka bwanjye",
+          "gutegura umurima"
+        ]
       },
       "responses": {
         "en": "Choose a crop suited to your rainfall, soil, season and a market you can reach; ask the local agricultural extension worker before buying seed. Rotate crop families, add well-rotted compost and protect bare soil with mulch. Use clean, recommended seed and keep records so you can compare yield, costs and selling price.",
@@ -141,21 +336,58 @@
         "nyo": "Komamu ekihingwa ekirukuhika ha njura, itaka, kasumi n'akatale aku osobora kuhikaho; kaguza omuhabuzi w'ebyobulimi otakagura mbibo. Hindurana ebika by'ebihingwa, tamu orusa oruhumbire kurungi kandi swera itaka. Kozesa embibo nungi erukuhaburwa kandi handika omwimbu, ensaasaanya n'omuhendo.",
         "ach": "Yer gin apita ma rwate ki kot, ngom, kare ki cuk ma iromo oo iye; peny latin tic me pur me kabedo ni mapwod pe iwilo kodi. Lok kit gin apita, ket yugi ma obale maber ki ium ngom ki lum. Tii ki kodi maber ma gicimo ki ico kacoke me nyak, wel jami ki wel me cato.",
         "teo": "Seun ekito lo ejok ka akiru, akoru, apak ka aduka na ipedori angaren; ingisit ekapolon loka akoru sek mam igwelata ikito. Kitoro ikito, ikodi akimesek na abu ka idik akoru ka amana. Kojau ikito lu ejok lu ajenara ido icamun akis lu akoru, agwelan ka amusan.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Hitamo igihingwa gihuye n'imvura, ubutaka, igihe n'isoko ushobora kugeraho; baza umujyanama w'ubuhinzi wo mu karere mbere yo kugura imbuto. Hindagurira ubwoko bw'ibihingwa, ongeraho ifumbire yabaye neza kandi urinde ubutaka bwambaye n'ibisigazwa by'ibimera. Koresha imbuto zisukuye kandi zisabwe, wandike inyandiko kugira ngo ugereranye umusaruro, ibyakoreshejwe n'igiciro cyo kugurisha."
       }
     },
     {
       "id": "post_harvest",
       "category": "agriculture",
-      "source": {"title": "FAO Good Agricultural Practices for Family Agriculture", "url": "https://www.fao.org/family-farming/detail/en/c/273587/"},
+      "source": {
+        "title": "FAO Good Agricultural Practices for Family Agriculture",
+        "url": "https://www.fao.org/family-farming/detail/en/c/273587/"
+      },
       "patterns": {
-        "en": ["how do I reduce post harvest loss", "how should I store crops", "protect grain after harvest"],
-        "lg": ["nzikiza ntya okufiirwa oluvannyuma lw'amakungula", "ntereka ntya ebirime", "okukuuma empeke"],
-        "sw": ["ninapunguzaje hasara baada ya mavuno", "nahifadhije mazao", "kulinda nafaka baada ya mavuno"],
-        "nyn": ["ninkendeeza nta okufiirwa bwanyima y'okwimbura", "nimbika nta ebihingwa", "okurinda embibo"],
-        "nyo": ["nkendeeza nta kufeerwa hanyuma y'amagesa", "mbika nta ebihingwa", "kulinda empeke"],
-        "ach": ["ajuko nining rweny inge kac", "agwoko nining nyig cam", "gwoko kal inge kac"],
-        "teo": ["ajunia biai agwelan kede ka akoru", "ajokar biai akoru", "ajokar akinyomit kede ka akoru"]
+        "en": [
+          "how do I reduce post harvest loss",
+          "how should I store crops",
+          "protect grain after harvest"
+        ],
+        "lg": [
+          "nzikiza ntya okufiirwa oluvannyuma lw'amakungula",
+          "ntereka ntya ebirime",
+          "okukuuma empeke"
+        ],
+        "sw": [
+          "ninapunguzaje hasara baada ya mavuno",
+          "nahifadhije mazao",
+          "kulinda nafaka baada ya mavuno"
+        ],
+        "nyn": [
+          "ninkendeeza nta okufiirwa bwanyima y'okwimbura",
+          "nimbika nta ebihingwa",
+          "okurinda embibo"
+        ],
+        "nyo": [
+          "nkendeeza nta kufeerwa hanyuma y'amagesa",
+          "mbika nta ebihingwa",
+          "kulinda empeke"
+        ],
+        "ach": [
+          "ajuko nining rweny inge kac",
+          "agwoko nining nyig cam",
+          "gwoko kal inge kac"
+        ],
+        "teo": [
+          "ajunia biai agwelan kede ka akoru",
+          "ajokar biai akoru",
+          "ajokar akinyomit kede ka akoru"
+        ],
+        "rw": [
+          "ngabanya nte igihombo nyuma yo gusarura",
+          "nabika nte ibihingwa",
+          "kurinda ibinyampeke nyuma yo gusarura"
+        ]
       },
       "responses": {
         "en": "Harvest at the correct maturity and avoid bruising or mixing produce with soil. Dry grain thoroughly on a clean raised sheet, not bare ground. Sort out damaged or mouldy produce, clean the store, and use dry sealed containers or recommended hermetic bags. Check regularly for moisture, insects and rodents.",
@@ -165,21 +397,58 @@
         "nyo": "Gesa ebihingwa byahika kandi wetantale kubihutaaza rundi kubitaburamu itaka. Omya empeke kurungi ha suuka enyonjo ehimbire, hatali ha itaka. Ihyamu ebihutaire rundi ebirukwata ekikuku, yonja ekiikaro kandi kozesa ebintu ebikalu ebisibirwe. Kebera amaizi, obukooko n'embeba buli kaire.",
         "ach": "Kac gin apita ka oceke maber ki igeng noto onyo ruro ki ngom. Ot kal maber i karatac maleng ma gi malo, pe i ngom. Yer woko jami ma obale onyo ma tye ki two, ywe ot me gwoko ki itii ki jami ma otwo ma giloro maber. Rot pii, kwidi ki oywe kare ki kare.",
         "teo": "Korau akoru ka ateran ido mam ibila arai itubur ka akoru. Tiecai akinyomit toma atapar na ejok na ejarit, mam toma akoru. Seun lu abu arai lu ejai ka akiro, ilot akai na akoru ido ikojau iboro lu etiete lu emonyakinit. Jenutu akipi, apis ka imisin sek kere.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Sarura igihe cyageze neza kandi wirinde kononekaza cyangwa kuvanga umusaruro n'ubutaka. Umutse ibinyampeke neza ku gitambaro gisukuye giri hejuru, atari hasi ku butaka. Kuraho ibyangiritse cyangwa bifite ubwoya, sukura ubuki, kandi ukoreshe ibikoresho byumye bifunze neza cyangwa amasachi yihariye. Suzuma buri gihe ubuhehere, udukoko n'imbeba."
       }
     },
     {
       "id": "healthy_diet",
       "category": "health",
-      "source": {"title": "WHO Healthy Diet", "url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"},
+      "source": {
+        "title": "WHO Healthy Diet",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+      },
       "patterns": {
-        "en": ["what is a healthy diet", "how should my family eat", "healthy affordable food"],
-        "lg": ["emmere ennungi eringa etya", "amaka gange galye gatya", "emmere ennungi etali ya bbeeyi"],
-        "sw": ["lishe bora ni nini", "familia yangu ileje", "chakula bora cha bei nafuu"],
-        "nyn": ["eby'okurya birungi ni biiha", "eka yangye erye eta", "eby'okurya birungi ebya muhendo mukye"],
-        "nyo": ["ebyokulya ebirungi nibyo biha", "eka yange erye eta", "ebyokulya ebirungi bya muhendo mutaito"],
-        "ach": ["cam maber obedo ngo", "jo me gang na gicam nining", "cam maber ma wel ne piny"],
-        "teo": ["akimuj na ejok erai nyo", "itunga luka akai akimuj biai", "akimuj na ejok na mam epol isirigin"]
+        "en": [
+          "what is a healthy diet",
+          "how should my family eat",
+          "healthy affordable food"
+        ],
+        "lg": [
+          "emmere ennungi eringa etya",
+          "amaka gange galye gatya",
+          "emmere ennungi etali ya bbeeyi"
+        ],
+        "sw": [
+          "lishe bora ni nini",
+          "familia yangu ileje",
+          "chakula bora cha bei nafuu"
+        ],
+        "nyn": [
+          "eby'okurya birungi ni biiha",
+          "eka yangye erye eta",
+          "eby'okurya birungi ebya muhendo mukye"
+        ],
+        "nyo": [
+          "ebyokulya ebirungi nibyo biha",
+          "eka yange erye eta",
+          "ebyokulya ebirungi bya muhendo mutaito"
+        ],
+        "ach": [
+          "cam maber obedo ngo",
+          "jo me gang na gicam nining",
+          "cam maber ma wel ne piny"
+        ],
+        "teo": [
+          "akimuj na ejok erai nyo",
+          "itunga luka akai akimuj biai",
+          "akimuj na ejok na mam epol isirigin"
+        ],
+        "rw": [
+          "indyo yuzuye ni iki",
+          "umuryango wanjye ugomba kurya ute",
+          "ibiribwa byuzuye bidahenze"
+        ]
       },
       "responses": {
         "en": "Build meals from varied local foods: vegetables and fruit, beans or peas, whole grains or staples, and a protein source such as eggs, fish, milk or lean meat when available. Use clean water, wash hands and cook food thoroughly. Limit heavily processed foods, sugary drinks and excess salt. Needs differ for children, pregnancy and illness, so consult a health worker when unsure.",
@@ -189,21 +458,58 @@
         "nyo": "Tekaniza ebyokulya by'emiringo nyingi eby'omu kiikaro: emboga n'ebijuma, ebihimba rundi obushaza, empeke rundi ekyokulya ekikuru, n'ebyombeka omubiri nk'amagi, encwamba, amata rundi enyama ntaito. Kozesa amaizi amarungi, naaba emikono kandi fumba kurungi. Kendeeza ebyokulya ebikozerwe muno, ebyokunywa bya sukali n'omunyu mwingi. Kaguza omujanjabi ha baana, enda rundi oburwaire.",
         "ach": "Yub cam ki jami mapatpat me kabedo ni: pot yat ki nyig yen, muranga onyo kal, ki gin ma gero kom calo tong, rec, cak onyo ringo manok ka tye. Tii ki pii maleng, lwok cingi ki ited cam maber. Juk cam ma giyubo matek, mat madik ki kado madwong. Peny latin tic me yotkom pi litino, ic ki two.",
         "teo": "Los meal ka akimuj na epone ipu na ejai toma akwap: alele ka araun, akonye arai akobok, akinyomit ka na idukorit akuan bala akok, ikian, akile arai akuan na mam ejaasi aboten. Kojau akipi na ejok, ilot akanin ido iboil akimuj ejok. Ducu akimuj na ebilakina, akipi nu sukari ka akape na epol. Ingisit ekapolon loka ajar pi iduwe, akuj arai adeka.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Tegura ifunguro ry'ibiribwa bitandukanye byo mu karere: imboga n'imbuto, ibishyimbo cyangwa amashaza, ibinyampeke cyangwa ibiribwa fatizo, n'ibitanga proteine nk'amagi, amafi, amata cyangwa inyama zidafite ibinure iyo bihari. Koresha amazi asukuye, karaba intoki kandi utegure ibiryo neza. Gabanya ibiribwa byatunganyijwe cyane, ibinyobwa birimo isukari nyinshi n'umunyu mwinshi. Ibikenewe biratandukana ku bana, abatwite n'abarwaye, bityo baza umukozi w'ubuzima igihe utabizi neza."
       }
     },
     {
       "id": "pregnancy_danger_signs",
       "category": "health",
-      "source": {"title": "WHO Maternal Health", "url": "https://www.who.int/health-topics/maternal-health"},
+      "source": {
+        "title": "WHO Maternal Health",
+        "url": "https://www.who.int/health-topics/maternal-health"
+      },
       "patterns": {
-        "en": ["danger signs during pregnancy", "bleeding while pregnant", "when should a pregnant woman seek help"],
-        "lg": ["obubonero obw'akabi mu lubuto", "okuvaamu omusaayi ng'oli lubuto", "omukyala ow'olubuto afune ddi obuyambi"],
-        "sw": ["dalili hatari wakati wa ujauzito", "kutokwa damu nikiwa mjamzito", "mjamzito atafute msaada lini"],
-        "nyn": ["obumanyiso bw'akabi omu nda", "okuvaamu eshagama ori enda", "omukazi w'enda ashibe ryari obuyambi"],
-        "nyo": ["obumanyiso bw'akabi omu nda", "kurugamu esagama oli nda", "omukazi w'enda asabe di obukonyezi"],
-        "ach": ["lanyut me peko i kare me ic", "remo kato ka atye ki ic", "dako ma tye ki ic omyero onong kony awene"],
-        "teo": ["akiro nu apedor toma akuj", "awudor ka ajai ka akuj", "apak ngin na aberu na ajai ka akuj ikotos ngarak"]
+        "en": [
+          "danger signs during pregnancy",
+          "bleeding while pregnant",
+          "when should a pregnant woman seek help"
+        ],
+        "lg": [
+          "obubonero obw'akabi mu lubuto",
+          "okuvaamu omusaayi ng'oli lubuto",
+          "omukyala ow'olubuto afune ddi obuyambi"
+        ],
+        "sw": [
+          "dalili hatari wakati wa ujauzito",
+          "kutokwa damu nikiwa mjamzito",
+          "mjamzito atafute msaada lini"
+        ],
+        "nyn": [
+          "obumanyiso bw'akabi omu nda",
+          "okuvaamu eshagama ori enda",
+          "omukazi w'enda ashibe ryari obuyambi"
+        ],
+        "nyo": [
+          "obumanyiso bw'akabi omu nda",
+          "kurugamu esagama oli nda",
+          "omukazi w'enda asabe di obukonyezi"
+        ],
+        "ach": [
+          "lanyut me peko i kare me ic",
+          "remo kato ka atye ki ic",
+          "dako ma tye ki ic omyero onong kony awene"
+        ],
+        "teo": [
+          "akiro nu apedor toma akuj",
+          "awudor ka ajai ka akuj",
+          "apak ngin na aberu na ajai ka akuj ikotos ngarak"
+        ],
+        "rw": [
+          "ibimenyetso by'akaga mu gihe cy'ubutwite",
+          "kuva amaraso uri mu gitwite",
+          "ni ryari umugore utwite agomba gushaka ubufasha"
+        ]
       },
       "responses": {
         "en": "Seek urgent care now for heavy bleeding, severe abdominal pain, convulsions, fainting, severe headache with blurred vision, difficulty breathing, high fever, labour that is not progressing, or greatly reduced baby movement. Do not wait for the chat. Arrange transport to the nearest health facility and ask a trusted person to accompany you.",
@@ -213,21 +519,58 @@
         "nyo": "Saba obujanjabi bw'amangu hati obworaaba norugamu esagama nyingi, nooshasha muno omunda, nootengyera, noogwa hansi, noorwara omutwe muno n'okurora kubi, nooremwa kwikya, oine omuswija mwingi, kuzaara kutarukugenda omumaiso, rundi omwana alekere kuhindahinda. Otarindira ha chat. Genda ha irwaliro eriri haihi n'omuntu ow'orukwesiga.",
         "ach": "Cit oyot i gang yat kombedi ka remo kato madwong, ic rem matek, kom tuku, ipoto piny, wi rem matek ki wang ma neno piny, yweyo tek, lyeto madwong, nywal pe mede, onyo latin i ic pe dong tye ka nyute. Pe ikur lok man. Yub gin me wot i gang yat macok ki icit ki ngat ma igeno.",
         "teo": "Kori ajar na apedor kwape karai iwudori noi, idou noi, ikurere, ijaruni, iwelet noi ka akonye, iswama noi, ijai ka alibun na epol, adoun mam elosete, arai idwe mam emukunit. Mam igwel toma aimori na. Konyutu ainapakin alosit toma ajar na apiana ka itunganan lo ijenara.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Shakisha ubuvuzi bwihuse ubu niba uva amaraso menshi, ufite ububabare bukabije mu nda, ugicika, kuzimira, umutwe ukomeye n'amaso adasobanuka, kunanirwa guhumeka, umuriro mwinshi, kubyara kutagenda imbere, cyangwa umwana ugenda make cyane. Ntutegereze iki kiganiro. Tegura ubwikorezi ujya ku ivuriro riri hafi kandi usabe umuntu wiringira akuherekeze."
       }
     },
     {
       "id": "online_safety",
       "category": "digital_skills",
-      "source": {"title": "UN Women Online Safety 101", "url": "https://www.unwomen.org/en/articles/explainer/online-safety-101-what-every-woman-and-girl-should-know"},
+      "source": {
+        "title": "UN Women Online Safety 101",
+        "url": "https://www.unwomen.org/en/articles/explainer/online-safety-101-what-every-woman-and-girl-should-know"
+      },
       "patterns": {
-        "en": ["how do I stay safe online", "someone is harassing me online", "protect my account"],
-        "lg": ["nneekuuma ntya ku yintaneeti", "waliwo ambonyaabonya ku yintaneeti", "kuuma akawunti yange"],
-        "sw": ["ninakuwaje salama mtandaoni", "mtu ananisumbua mtandaoni", "linda akaunti yangu"],
-        "nyn": ["ninyerinda nta aha mutimbagano", "omuntu naampiganisa aha mutimbagano", "rinda akawunti yangye"],
-        "nyo": ["nyelinda nta ha mutimbagano", "omuntu nampiganiza ha mutimbagano", "linda akawunti yange"],
-        "ach": ["agwoke nining i intanet", "ngat mo tye ka yela i intanet", "gwok akaunt na"],
-        "teo": ["ajokar biai toma internet", "itunganan ejai ka alaran toma internet", "jok akawunti kang"]
+        "en": [
+          "how do I stay safe online",
+          "someone is harassing me online",
+          "protect my account"
+        ],
+        "lg": [
+          "nneekuuma ntya ku yintaneeti",
+          "waliwo ambonyaabonya ku yintaneeti",
+          "kuuma akawunti yange"
+        ],
+        "sw": [
+          "ninakuwaje salama mtandaoni",
+          "mtu ananisumbua mtandaoni",
+          "linda akaunti yangu"
+        ],
+        "nyn": [
+          "ninyerinda nta aha mutimbagano",
+          "omuntu naampiganisa aha mutimbagano",
+          "rinda akawunti yangye"
+        ],
+        "nyo": [
+          "nyelinda nta ha mutimbagano",
+          "omuntu nampiganiza ha mutimbagano",
+          "linda akawunti yange"
+        ],
+        "ach": [
+          "agwoke nining i intanet",
+          "ngat mo tye ka yela i intanet",
+          "gwok akaunt na"
+        ],
+        "teo": [
+          "ajokar biai toma internet",
+          "itunganan ejai ka alaran toma internet",
+          "jok akawunti kang"
+        ],
+        "rw": [
+          "nagira nte umutekano kuri interineti",
+          "hari umuntu ungirira nabi kuri interineti",
+          "kurinda konti yanjye"
+        ]
       },
       "responses": {
         "en": "Use a long unique password and two-step verification. Never share passwords or one-time codes. If someone harasses or threatens you, do not engage: save screenshots, links and dates, then block and report the account. Tell someone you trust. If you fear physical harm, move to a safe place and contact local support or police.",
@@ -237,21 +580,58 @@
         "nyo": "Kozesa ekigambo ky'ekihama ekiwanvu kandi eky'embaganiza, hamu n'okukigumya kw'emitendera ebiri. Otagabana bigambo by'ekihama rundi koodi z'omurundi gumu. Omuntu obw'akupiganiza rundi akutiinisa, otamugarukamu: biika ebisisani bya screen, link n'ebiro, hanyuma omuzibire kandi omurege. Gambira omuntu ow'orukwesiga. Obw'otiina kuhutazibwa, genda omu kiikaro ekirinzire kandi ragira obukonyezi rundi poliisi.",
         "ach": "Tii ki mung me donyo mabor ma pat ki moko tic ki yore aryo. Pe imi mung onyo namba me cawa acel bot ngat mo. Ka ngat mo yeli onyo lwongi ki lworo, pe ilare: gwok cal me screen, link ki nino, ka igeng ki imiyo ngec pire. Wac bot ngat ma igeno. Ka ilworo bal me kom, cit i kabedo ma ber ki ilwong jo me kony onyo polisi.",
         "teo": "Kojau ekisil lo alalau lo edidi ka aijen na akiro aarei. Mam ilosi ikisil arai enamba lo iponi kapakio. Karai itunganan elarito arai itionarito, mam ingarakinos: korau isirin luka screen, link ka akwarin, ido ikatakin ka ibala. Losi itunganan lo ijenara. Karai ijo akuri adoun na akuan, alosit toma apedor na ejok ido iluongit lukaingaren arai polisi.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Koresha ijambobanga rirerire kandi ridasa n'andi hamwe no kwemeza mu ntambwe ebyiri. Ntukigere usangira amagambo banga cyangwa kode zikoreshwa rimwe. Niba umuntu akugirira nabi cyangwa akugutera ubwoba, ntuvuge naho: bika amafoto y'ecran, imiyoboro n'amatariki, hanyuma umuhagarike unamutangeho raporo. Bwira umuntu wiringira. Niba utinya akaga ku mubiri wawe, jya ahantu hizewe kandi uvugane n'ubufasha bwo mu karere cyangwa polisi."
       }
     },
     {
       "id": "job_application",
       "category": "jobs",
-      "source": {"title": "ILO Employment Services", "url": "https://www.ilo.org/topics-and-sectors/employment-promotion/employment-services"},
+      "source": {
+        "title": "ILO Employment Services",
+        "url": "https://www.ilo.org/topics-and-sectors/employment-promotion/employment-services"
+      },
       "patterns": {
-        "en": ["how do I apply for a job", "help me prepare for an interview", "write a cv"],
-        "lg": ["nsaba ntya omulimu", "nneetegekere ntya okukubaganyizibwa ebibuuzo", "okuwandiika cv"],
-        "sw": ["ninaombaje kazi", "nijiandaeje kwa usaili", "kuandika wasifu wa kazi"],
-        "nyn": ["ninshaba nta omurimo", "ninyeteekateeka nta ebibuuzo by'omurimo", "okuhandiika cv"],
-        "nyo": ["nsaba nta omulimo", "nyetekaniza nta ebikaguzo by'omulimo", "kuhandika cv"],
-        "ach": ["akwa nining tic", "ayubere nining pi peny me tic", "coyo cv"],
-        "teo": ["aswam biai aswam", "alosia biai pi aingiseta na aswam", "acamun cv"]
+        "en": [
+          "how do I apply for a job",
+          "help me prepare for an interview",
+          "write a cv"
+        ],
+        "lg": [
+          "nsaba ntya omulimu",
+          "nneetegekere ntya okukubaganyizibwa ebibuuzo",
+          "okuwandiika cv"
+        ],
+        "sw": [
+          "ninaombaje kazi",
+          "nijiandaeje kwa usaili",
+          "kuandika wasifu wa kazi"
+        ],
+        "nyn": [
+          "ninshaba nta omurimo",
+          "ninyeteekateeka nta ebibuuzo by'omurimo",
+          "okuhandiika cv"
+        ],
+        "nyo": [
+          "nsaba nta omulimo",
+          "nyetekaniza nta ebikaguzo by'omulimo",
+          "kuhandika cv"
+        ],
+        "ach": [
+          "akwa nining tic",
+          "ayubere nining pi peny me tic",
+          "coyo cv"
+        ],
+        "teo": [
+          "aswam biai aswam",
+          "alosia biai pi aingiseta na aswam",
+          "acamun cv"
+        ],
+        "rw": [
+          "nasaba nte akazi",
+          "mfasha kwitegura ikiganiro cy'akazi",
+          "kwandika CV"
+        ]
       },
       "responses": {
         "en": "Read the vacancy carefully and apply only through a verified contact. Your CV should list your phone number, relevant skills, education and recent experience clearly; do not include PINs, passwords or unnecessary private details. Before an interview, practise explaining one example of a problem you solved. A genuine employer should not demand payment to give you a job.",
@@ -261,21 +641,58 @@
         "nyo": "Soma kurungi orurango rw'omulimo kandi saba norabira hali abantu abakakasibwe bonka. CV yaawe eyoleke namba ya simu, obukugu oburukwetaagwa, amasomo n'obumanyirivu; otatamu PIN, bigambo by'ekihama rundi amakuru agatarukwetaagwa. Otakaire omu kukaguzibwa, yega kubaza ha kizibu eki wamalireho. Omukozesa w'amazima takusaba sente kukuha omulimo.",
         "ach": "Kwan ngec me tic maber ki ikwa kun itiyo ki jo ma gimoko keken. CV ni omyero onyut namba me cim, ngec me tic, pwony ki tic ma itiyo; pe iket PIN, mung onyo ngec me keni ma pe mitte. Mapwod pe icito i peny, pwony lok i kom peko acel ma iyubo. Rwot tic matir pe okwanyo lim me mini tic.",
         "teo": "Somai aisisianakin na aswam ejok ido iswama kotoma aiboisit na ajenara bon. CV kon konyutu enamba loka esimu, aijen na aswam, aisisia ka aswam na iswama; mam itau PIN, ikisila arai akiro kon nu mam ekot. Sek mam ilosi toma aingiseta, ijaasi alosikin apedor na ijo iswama. Ekapolon loka aswam lo ajenara mam ingisit isirigin pi ainakin aswam.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Soma neza itangazo ry'akazi kandi usabe gusa ukoresheje aho hemejwe. CV yawe igomba kwerekana neza nomero ya telefoni, ubuhanga bufitanye isano, uburezi n'ubunararibonye bwa vuba; ntushyiremo PIN, amagambo banga cyangwa amakuru bwite adakenewe. Mbere y'ikiganiro, wimenyereze gusobanura urugero rumwe rw'ikibazo wakemuye. Umukoresha nyawe ntagomba gusaba amafaranga kugira ngo aguhe akazi."
       }
     },
     {
       "id": "stress_support",
       "category": "wellbeing",
-      "source": {"title": "WHO Doing What Matters in Times of Stress", "url": "https://www.who.int/publications/i/item/9789240003927"},
+      "source": {
+        "title": "WHO Doing What Matters in Times of Stress",
+        "url": "https://www.who.int/publications/i/item/9789240003927"
+      },
       "patterns": {
-        "en": ["I feel stressed and overwhelmed", "how can I calm down", "I feel hopeless"],
-        "lg": ["nnumwa era nneeraliikirira nnyo", "nsobola ntya okukkakkana", "sirina ssuubi"],
-        "sw": ["nina msongo na nimelemewa", "nitatuliaje", "sina matumaini"],
-        "nyn": ["nyine amaganya kandi naremwa", "nimbasa nta kutuura gye", "tinyeine matsiko"],
-        "nyo": ["nyine amaganya kandi naremwa", "nsobora nta kutekangana", "tinyine matsiko"],
-        "ach": ["tam na opong ki peko", "akuc nining", "pe atye ki gen"],
-        "teo": ["ajai ka aomisio nu epol", "ayalama biai", "mam ajai ka ayongit"]
+        "en": [
+          "I feel stressed and overwhelmed",
+          "how can I calm down",
+          "I feel hopeless"
+        ],
+        "lg": [
+          "nnumwa era nneeraliikirira nnyo",
+          "nsobola ntya okukkakkana",
+          "sirina ssuubi"
+        ],
+        "sw": [
+          "nina msongo na nimelemewa",
+          "nitatuliaje",
+          "sina matumaini"
+        ],
+        "nyn": [
+          "nyine amaganya kandi naremwa",
+          "nimbasa nta kutuura gye",
+          "tinyeine matsiko"
+        ],
+        "nyo": [
+          "nyine amaganya kandi naremwa",
+          "nsobora nta kutekangana",
+          "tinyine matsiko"
+        ],
+        "ach": [
+          "tam na opong ki peko",
+          "akuc nining",
+          "pe atye ki gen"
+        ],
+        "teo": [
+          "ajai ka aomisio nu epol",
+          "ayalama biai",
+          "mam ajai ka ayongit"
+        ],
+        "rw": [
+          "numva mfite umuhangayiko n'uburemere",
+          "nakonje nte umutima",
+          "numva mfite ikibazo cy'ibyiringiro"
+        ]
       },
       "responses": {
         "en": "Pause and take several slow breaths, noticing your feet on the ground and what you can see and hear. Choose one small useful action for today, and speak with someone you trust instead of carrying everything alone. If you may harm yourself or someone else, move away from dangerous items and seek urgent help from local emergency services, a health facility or a trusted person now.",
@@ -285,7 +702,8 @@
         "nyo": "Yemerra kake kandi oikye mpora emirundi nyingi, noohurra ebigere byawe ha itaka n'ebi orukurora kandi orukuhurra. Komamu ekikorwa kimu kitaito eky'omugaso eki osobora kukora hati, kandi baza n'omuntu ow'orukwesiga. Obworaaba nosobora kwehutaaza rundi kuhutaaza ondi, ruga ha bintu by'akabi kandi saba obukonyezi bw'amangu ha irwaliro rundi hali omuntu ow'orukwesiga.",
         "ach": "Juk manok ki iywe mot tyen mapol, kun inge tyeni i ngom ki jami ma ineno ki ma iwinyo. Yer tic acel matidi ma konyo ma iromo tiyo tin, ki ilok ki ngat ma igeno. Ka iromo balo komi onyo ngat mukene, aa woko ki i kin jami me bal ki inong kony oyot ki jo me kony, gang yat onyo ngat ma igeno kombedi.",
         "teo": "Kowor idis ido iswama noi kapakio, ijen akonye kon toma akoru ka iboro lu iyongarit. Seun aswam yen na edit na ejok na ipedori aswam lolo, ido ilosi itunganan lo ijenara. Karai ipedori abila ijo arai ace, aiwun ka iboro luka apedor ido ijeni ngarak na apedor toma ajar arai itunganan lo ijenara kotoma apak na.",
-        "_translation_notice": "Native-speaker review required"
+        "_translation_notice": "Native-speaker review required",
+        "rw": "Ruhuka gato uhumeke mpola inshuro nyinshi, wumve ibirenge byawe ku butaka n'ibyo ubona n'ibyo wumva. Hitamo igikorwa kimwe gito cy'akamaro wakora uyu munsi, kandi uvugane n'umuntu wiringira aho kwikorera byose wenyine. Niba ushobora kwikorera nabi cyangwa gukorera nabi undi muntu, va ku bintu by'akaga kandi ushakishe ubufasha bwihuse mu serivisi z'ubutabazi zo mu karere, ivuriro cyangwa umuntu wiringira ubu."
       }
     }
   ]
