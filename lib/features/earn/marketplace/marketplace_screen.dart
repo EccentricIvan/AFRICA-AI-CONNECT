@@ -230,7 +230,7 @@ class _FeaturedListings extends ConsumerWidget {
         ),
       ),
       error: (e, _) => Text(
-        'Could not load listings',
+        S.literal('Could not load listings'),
         style: TextStyle(fontSize: 13, color: MarketUi.of(context).textSecondary),
       ),
       data: (listings) {
@@ -241,7 +241,7 @@ class _FeaturedListings extends ConsumerWidget {
                 : t('no_listings_yet'),
             subtitle: hasFilter
                 ? t('browse_products')
-                : 'Be the first to list a product!',
+                : S.literal('Be the first to list a product!'),
             ctaLabel: t('list_product_btn'),
             onCta: onAdd,
             showClearFilter: hasFilter,

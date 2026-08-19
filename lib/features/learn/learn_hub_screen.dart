@@ -122,12 +122,12 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
     final journey = _journeyFrom(categories);
 
     final tools = <(String, IconData)>[
-      ('Downloads', Icons.download_outlined),
-      ('Certificates', Icons.workspace_premium_outlined),
-      ('Bookmarks', Icons.bookmark_border_rounded),
+      (S.literal('Downloads'), Icons.download_outlined),
+      (S.literal('Certificates'), Icons.workspace_premium_outlined),
+      (S.literal('Bookmarks'), Icons.bookmark_border_rounded),
       (t('offline'), Icons.offline_bolt_outlined),
-      ('Notes', Icons.sticky_note_2_outlined),
-      ('History', Icons.history_rounded),
+      (S.literal('Notes'), Icons.sticky_note_2_outlined),
+      (S.literal('History'), Icons.history_rounded),
     ];
 
     return Scaffold(
@@ -148,8 +148,8 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     LearnHeroCard(
-                      titleLine1: 'Keep learning.',
-                      titleLine2: 'Keep growing.',
+                      titleLine1: S.literal('Keep learning.'),
+                      titleLine2: S.literal('Keep growing.'),
                       body: t('knowledge_is_power_desc'),
                       primaryLabel: t('continue_learning'),
                       secondaryLabel: t('browse_topics'),
@@ -158,16 +158,16 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
                     ),
                     const SizedBox(height: 20),
                     LearnProgressCard(
-                      title: 'Your Learning Progress',
-                      coursesLabel: 'Courses Completed',
+                      title: S.literal('Your Learning Progress'),
+                      coursesLabel: S.literal('Courses Completed'),
                       coursesValue: '6',
-                      streakLabel: 'Days Streak',
+                      streakLabel: S.literal('Days Streak'),
                       streakValue: '7',
-                      pointsLabel: 'Points Earned',
+                      pointsLabel: S.literal('Points Earned'),
                       pointsValue: '450',
                       milestoneLabel: t('next_milestone'),
-                      milestoneHint:
-                          'Complete 2 more lessons to reach your next milestone',
+                      milestoneHint: S.literal(
+                          'Complete 2 more lessons to reach your next milestone'),
                       milestoneValue: '450 / 500',
                       progress: 0.9,
                     ),
@@ -235,7 +235,7 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
                     ),
                     const SizedBox(height: 28),
                     LearnSectionHeader(
-                      title: 'Recommended',
+                      title: S.literal('Recommended'),
                       trailing: t('see_all'),
                       onTrailingTap: () {},
                     ),
@@ -261,20 +261,20 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    const LearnSectionHeader(title: 'Learning Journey'),
+                    LearnSectionHeader(title: S.literal('Learning Journey')),
                     const SizedBox(height: 14),
                     LearnJourneyTimeline(items: journey),
                     const SizedBox(height: 28),
-                    const LearnSectionHeader(title: 'Daily Insight'),
+                    LearnSectionHeader(title: S.literal('Daily Insight')),
                     const SizedBox(height: 14),
                     LearnInsightCard(
                       title: t('ask_ai_assistant'),
                       body: t('ask_ai_assistant_desc'),
-                      ctaLabel: 'Read more',
+                      ctaLabel: S.literal('Read more'),
                       onTap: () => context.go('/ai-chat'),
                     ),
                     const SizedBox(height: 28),
-                    const LearnSectionHeader(title: 'Quick Tools'),
+                    LearnSectionHeader(title: S.literal('Quick Tools')),
                     const SizedBox(height: 14),
                     GridView.builder(
                       shrinkWrap: true,

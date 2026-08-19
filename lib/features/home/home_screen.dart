@@ -53,7 +53,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
     final userName =
-        ref.watch(currentUserProvider).valueOrNull?.name ?? 'Friend';
+        ref.watch(currentUserProvider).valueOrNull?.name ?? S.literal('Friend');
 
     final ac = AppColors.of(context);
     return Scaffold(

@@ -611,7 +611,7 @@ class _FilterSheetState extends State<_FilterSheet> {
           children: options.map((c) {
             final isSelected = selected.contains(c);
             return ChoiceChip(
-              label: Text(c),
+              label: Text(S.literal(c)),
               selected: isSelected,
               onSelected: (_) => setState(
                   () => isSelected ? selected.remove(c) : selected.add(c)),
@@ -1089,7 +1089,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                   children: _categories.map((c) {
                     final isSelected = _selectedCategory == c;
                     return ChoiceChip(
-                      label: Text(c),
+                      label: Text(S.literal(c)),
                       selected: isSelected,
                       onSelected: (_) => setState(() => _selectedCategory = c),
                       selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
@@ -1653,7 +1653,7 @@ class _ConversationRow extends StatelessWidget {
       leading: CommunityAvatar(color: c.senderColor, initial: c.lastSender[0]),
       title: S.literal(c.group.name),
       subtitle: Text(
-        '${c.lastSender}: ${c.lastMessage}',
+        '${c.lastSender}: ${S.literal(c.lastMessage)}',
         style: TextStyle(
           fontSize: 12,
           color: c.unread > 0 ? ui.textPrimary : ui.textSecondary,
@@ -1667,7 +1667,7 @@ class _ConversationRow extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            c.time,
+            S.literal(c.time),
             style: TextStyle(fontSize: 11, color: ui.textSecondary),
           ),
           const SizedBox(height: 6),
@@ -1725,10 +1725,10 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
     super.initState();
     final c = widget.conversation;
     _messages = [
-      (c.lastSender, 'Hey everyone, hope you\'re all doing well this week!',
+      (c.lastSender, S.literal("Hey everyone, hope you're all doing well this week!"),
           c.lastSender == 'You'),
-      ('You', 'Doing great, thanks for asking!', true),
-      (c.lastSender, c.lastMessage, c.lastSender == 'You'),
+      ('You', S.literal('Doing great, thanks for asking!'), true),
+      (c.lastSender, S.literal(c.lastMessage), c.lastSender == 'You'),
     ];
   }
 

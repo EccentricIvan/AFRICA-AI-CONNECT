@@ -37,7 +37,7 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Dismiss',
+      barrierLabel: S.literal('Dismiss'),
       barrierColor: Colors.black.withValues(alpha: 0.15),
       transitionDuration: const Duration(milliseconds: 180),
       pageBuilder: (ctx, anim, anim2) => const SafeArea(
@@ -65,7 +65,7 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
     final user = ref.watch(currentUserProvider).valueOrNull;
-    final userName = user?.name ?? 'Friend';
+    final userName = user?.name ?? S.literal('Friend');
     final themeMode = ref.watch(themeModeProvider);
     final isDarkMode = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
