@@ -181,7 +181,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                       size: 18,
                                     ),
                                     const SizedBox(width: 6),
-                                    Text(_t('back')),
+                                    Flexible(
+                                      child: Text(
+                                        _t('back'),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -214,13 +219,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          _page < 2
-                                              ? _t('continue_btn')
-                                              : _t('start_journey'),
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                        Flexible(
+                                          child: Text(
+                                            _page < 2
+                                                ? _t('continue_btn')
+                                                : _t('start_journey'),
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(width: 8),
@@ -245,13 +254,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               color: AppColors.primary,
                             ),
                             const SizedBox(width: 6),
-                            Text(
-                              'Secure. Private. Built for you.',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: ac.textHint,
-                                height: 1.3,
+                            Flexible(
+                              child: Text(
+                                'Secure. Private. Built for you.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: ac.textHint,
+                                  height: 1.3,
+                                ),
                               ),
                             ),
                           ],
@@ -919,7 +931,12 @@ class _WelcomePage extends ConsumerWidget {
                           children: [
                             const Icon(Icons.arrow_back_rounded, size: 18),
                             const SizedBox(width: 6),
-                            Text(t('back')),
+                            Flexible(
+                              child: Text(
+                                t('back'),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -951,11 +968,15 @@ class _WelcomePage extends ConsumerWidget {
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    t('continue_btn'),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
+                                  Flexible(
+                                    child: Text(
+                                      t('continue_btn'),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -979,13 +1000,16 @@ class _WelcomePage extends ConsumerWidget {
                       color: ac.textHint,
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      S.literal('Your data is secure with us.'),
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: ac.textHint,
-                        height: 1.3,
+                    Flexible(
+                      child: Text(
+                        S.literal('Your data is secure with us.'),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: ac.textHint,
+                          height: 1.3,
+                        ),
                       ),
                     ),
                   ],
