@@ -24,6 +24,7 @@ class MarketListingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = MarketUi.of(context);
     return TapScale(
       borderRadius: MarketUi.radiusCard,
       onTap: onTap ?? () {},
@@ -31,9 +32,9 @@ class MarketListingCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: MarketUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(MarketUi.radiusCard),
-          boxShadow: MarketUi.softShadow,
+          boxShadow: ui.softShadow,
         ),
         child: Row(
           children: [
@@ -58,10 +59,10 @@ class MarketListingCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: MarketUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -69,9 +70,9 @@ class MarketListingCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     sellerLine,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: MarketUi.textSecondary,
+                      color: ui.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -103,7 +104,7 @@ class _Fallback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: MarketUi.iconWell,
+      color: MarketUi.of(context).iconWell,
       child: Icon(icon, color: MarketUi.accent, size: 28),
     );
   }

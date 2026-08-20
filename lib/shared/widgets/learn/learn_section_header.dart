@@ -20,10 +20,10 @@ class LearnSectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: LearnUi.textPrimary,
+              color: LearnUi.of(context).textPrimary,
               height: 1.2,
             ),
           ),

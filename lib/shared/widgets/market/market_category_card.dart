@@ -20,6 +20,7 @@ class MarketCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = MarketUi.of(context);
     return TapScale(
       borderRadius: MarketUi.radiusCard,
       onTap: onTap,
@@ -28,9 +29,9 @@ class MarketCategoryCard extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.fromLTRB(10, 14, 10, 12),
         decoration: BoxDecoration(
-          color: MarketUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(MarketUi.radiusCard),
-          boxShadow: MarketUi.softShadow,
+          boxShadow: ui.softShadow,
           border: Border.all(
             color: selected ? accent.withValues(alpha: 0.55) : Colors.transparent,
             width: selected ? 1.5 : 0,
@@ -43,7 +44,7 @@ class MarketCategoryCard extends StatelessWidget {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: MarketUi.iconWell,
+                color: ui.iconWell,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(icon, size: 22, color: accent),
@@ -51,10 +52,10 @@ class MarketCategoryCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: MarketUi.textPrimary,
+                color: ui.textPrimary,
                 height: 1.2,
               ),
               textAlign: TextAlign.center,

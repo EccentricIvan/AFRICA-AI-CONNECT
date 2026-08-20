@@ -18,6 +18,7 @@ class LearnInsightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = LearnUi.of(context);
     return TapScale(
       borderRadius: LearnUi.radiusCard,
       onTap: onTap,
@@ -25,10 +26,10 @@ class LearnInsightCard extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: LearnUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(LearnUi.radiusCard),
-          border: Border.all(color: LearnUi.border),
-          boxShadow: LearnUi.softShadow,
+          border: Border.all(color: ui.border),
+          boxShadow: ui.softShadow,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +40,7 @@ class LearnInsightCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: LearnUi.accent.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
-                border: Border.all(color: LearnUi.border),
+                border: Border.all(color: ui.border),
               ),
               child: const Icon(
                 Icons.lightbulb_outline_rounded,
@@ -54,18 +55,18 @@ class LearnInsightCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: LearnUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     body,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: LearnUi.textSecondary,
+                      color: ui.textSecondary,
                       height: 1.4,
                     ),
                   ),

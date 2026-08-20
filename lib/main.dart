@@ -25,31 +25,15 @@ void main() async {
       overrides: [
         isAuthenticatedProvider.overrideWith((ref) => firebaseUser != null),
         hasProfileProvider.overrideWith((ref) => hasProfile),
+        // Applied as a container override (evaluated once, before the first
+        // build) rather than a state write in initState — writing to a
+        // provider while the tree is still mid-build re-enters Riverpod's
+        // ProviderScope element and trips Flutter's `!_dirty` assertion.
+        localeProvider.overrideWith(
+          (ref) => LocaleNotifier(LocaleNotifier.fromSaved(savedLocale)),
+        ),
       ],
-      child: _LocaleLoader(savedLocale: savedLocale),
+      child: const AfricaAiConnectApp(),
     ),
   );
-}
-
-class _LocaleLoader extends ConsumerStatefulWidget {
-  const _LocaleLoader({this.savedLocale});
-  final String? savedLocale;
-
-  @override
-  ConsumerState<_LocaleLoader> createState() => _LocaleLoaderState();
-}
-
-class _LocaleLoaderState extends ConsumerState<_LocaleLoader> {
-  @override
-  void initState() {
-    super.initState();
-    if (widget.savedLocale != null) {
-      ref.read(localeProvider.notifier).loadFromPrefs(widget.savedLocale);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const AfricaAiConnectApp();
-  }
 }

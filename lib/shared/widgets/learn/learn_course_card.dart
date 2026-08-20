@@ -24,6 +24,7 @@ class LearnCourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pct = (progress.clamp(0.0, 1.0) * 100).round();
+    final ui = LearnUi.of(context);
 
     return TapScale(
       borderRadius: LearnUi.radiusCard,
@@ -32,9 +33,9 @@ class LearnCourseCard extends StatelessWidget {
         width: 210,
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
         decoration: BoxDecoration(
-          color: LearnUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(LearnUi.radiusCard),
-          boxShadow: LearnUi.softShadow,
+          boxShadow: ui.softShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,10 +47,10 @@ class LearnCourseCard extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF4F0EC),
+                    color: ui.isDark ? const Color(0xFF2A2622) : const Color(0xFFF4F0EC),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Icon(icon, color: LearnUi.textPrimary, size: 22),
+                  child: Icon(icon, color: ui.textPrimary, size: 22),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -58,10 +59,10 @@ class LearnCourseCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
-                          color: LearnUi.textPrimary,
+                          color: ui.textPrimary,
                           height: 1.25,
                         ),
                         maxLines: 2,
@@ -70,10 +71,10 @@ class LearnCourseCard extends StatelessWidget {
                       const SizedBox(height: 3),
                       Text(
                         lessonsLabel,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: LearnUi.textSecondary,
+                          color: ui.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -100,14 +101,14 @@ class LearnCourseCard extends StatelessWidget {
                     width: 30,
                     height: 30,
                     decoration: BoxDecoration(
-                      color: LearnUi.card,
+                      color: ui.card,
                       shape: BoxShape.circle,
-                      boxShadow: LearnUi.pillShadow,
+                      boxShadow: ui.pillShadow,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_forward_rounded,
                       size: 16,
-                      color: LearnUi.textPrimary,
+                      color: ui.textPrimary,
                     ),
                   ),
                 ],
@@ -130,14 +131,14 @@ class LearnCourseCard extends StatelessWidget {
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: LearnUi.card,
+                    color: ui.card,
                     shape: BoxShape.circle,
-                    boxShadow: LearnUi.pillShadow,
+                    boxShadow: ui.pillShadow,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_forward_rounded,
                     size: 16,
-                    color: LearnUi.textPrimary,
+                    color: ui.textPrimary,
                   ),
                 ),
               ),

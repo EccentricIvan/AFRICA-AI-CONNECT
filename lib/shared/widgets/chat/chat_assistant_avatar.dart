@@ -16,6 +16,7 @@ class ChatAssistantAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = size * 0.28;
     final iconSize = size * 0.46;
+    final ui = ChatUi.of(context);
 
     return SizedBox(
       width: size,
@@ -47,7 +48,7 @@ class ChatAssistantAvatar extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: ChatUi.online,
                   shape: BoxShape.circle,
-                  border: Border.all(color: ChatUi.pageBg, width: 2),
+                  border: Border.all(color: ui.pageBg, width: 2),
                 ),
               ),
             ),

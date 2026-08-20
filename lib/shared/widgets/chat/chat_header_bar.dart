@@ -18,6 +18,7 @@ class ChatHeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = ChatUi.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 16, 8),
       child: Row(
@@ -30,20 +31,20 @@ class ChatHeaderBar extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Saira',
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: ChatUi.textPrimary,
+                    color: ui.textPrimary,
                     height: 1.15,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text.rich(
                   TextSpan(
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11.5,
-                      color: ChatUi.textSecondary,
+                      color: ui.textSecondary,
                       height: 1.25,
                     ),
                     children: _subtitleSpans(subtitle),
@@ -64,10 +65,10 @@ class ChatHeaderBar extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: ChatUi.card,
+                  color: ui.card,
                   borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: ChatUi.border),
-                  boxShadow: ChatUi.softShadow,
+                  border: Border.all(color: ui.border),
+                  boxShadow: ui.softShadow,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -80,10 +81,10 @@ class ChatHeaderBar extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       newChatLabel,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
-                        color: ChatUi.textPrimary,
+                        color: ui.textPrimary,
                       ),
                     ),
                   ],

@@ -34,13 +34,13 @@ class GlassCard extends StatelessWidget {
                     AppColors.surfaceDark.withValues(alpha: 0.6),
                   ]
                 : [
-                    AppColors.surface.withValues(alpha: 0.95),
-                    AppColors.surface.withValues(alpha: 0.8),
+                    AppColors.light.surface.withValues(alpha: 0.95),
+                    AppColors.light.surface.withValues(alpha: 0.8),
                   ],
           ),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: borderColor ?? AppColors.border,
+        color: borderColor ?? AppColors.of(context).border,
         width: 1,
       ),
       boxShadow: isDark

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'home_ui.dart';
 
@@ -7,25 +9,30 @@ class HomeHeaderBar extends StatelessWidget {
     required this.userName,
     required this.greeting,
     required this.onAvatarTap,
-    required this.onSearchTap,
+    required this.isDarkMode,
+    required this.onThemeToggle,
     required this.onNotificationsTap,
+    this.avatarPath,
   });
 
   final String userName;
   final String greeting;
   final VoidCallback onAvatarTap;
-  final VoidCallback onSearchTap;
+  final bool isDarkMode;
+  final VoidCallback onThemeToggle;
   final VoidCallback onNotificationsTap;
+  final String? avatarPath;
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
       child: Row(
         children: [
           GestureDetector(
             onTap: onAvatarTap,
-            child: const _ProfileAvatar(),
+            child: _ProfileAvatar(avatarPath: avatarPath),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -34,21 +41,21 @@ class HomeHeaderBar extends StatelessWidget {
               children: [
                 Text(
                   '$greeting,',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
-                    color: HomeUi.textSecondary,
+                    color: ui.textSecondary,
                     height: 1.2,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   userName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Saira',
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
-                    color: HomeUi.textPrimary,
+                    color: ui.textPrimary,
                     height: 1.1,
                     letterSpacing: -0.3,
                   ),
@@ -58,7 +65,10 @@ class HomeHeaderBar extends StatelessWidget {
               ],
             ),
           ),
-          _CircleIconBtn(Icons.search_rounded, onSearchTap),
+          _CircleIconBtn(
+            isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+            onThemeToggle,
+          ),
           const SizedBox(width: 10),
           Stack(
             clipBehavior: Clip.none,
@@ -73,7 +83,7 @@ class HomeHeaderBar extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: HomeUi.accent,
                     shape: BoxShape.circle,
-                    border: Border.all(color: HomeUi.card, width: 1.5),
+                    border: Border.all(color: ui.card, width: 1.5),
                   ),
                 ),
               ),
@@ -85,12 +95,15 @@ class HomeHeaderBar extends StatelessWidget {
   }
 }
 
-/// White circular avatar with minimal outline person (head + shoulders).
+/// White circular avatar with minimal outline person (head + shoulders),
+/// or the user's own saved photo when one has been set.
 class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar();
+  const _ProfileAvatar({this.avatarPath});
+  final String? avatarPath;
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return SizedBox(
       width: 52,
       height: 52,
@@ -102,23 +115,26 @@ class _ProfileAvatar extends StatelessWidget {
             height: 52,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF1A1A1A).withValues(alpha: 0.06),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-              border: Border.all(
-                color: const Color(0xFFE8E8E8),
-                width: 1,
-              ),
+              color: ui.card,
+              boxShadow: ui.isDark
+                  ? null
+                  : [
+                      BoxShadow(
+                        color: const Color(0xFF1A1A1A).withValues(alpha: 0.06),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+              border: Border.all(color: ui.border, width: 1),
             ),
-            child: const Padding(
-              padding: EdgeInsets.all(12),
-              child: CustomPaint(painter: _PersonOutlinePainter()),
-            ),
+            clipBehavior: Clip.antiAlias,
+            child: avatarPath != null
+                ? Image.file(File(avatarPath!), fit: BoxFit.cover)
+                : Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: CustomPaint(
+                        painter: _PersonOutlinePainter(color: ui.textPrimary)),
+                  ),
           ),
           Positioned(
             right: 0,
@@ -129,7 +145,7 @@ class _ProfileAvatar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: HomeUi.success,
                 shape: BoxShape.circle,
-                border: Border.all(color: HomeUi.pageBg, width: 2.5),
+                border: Border.all(color: ui.pageBg, width: 2.5),
               ),
             ),
           ),
@@ -141,12 +157,13 @@ class _ProfileAvatar extends StatelessWidget {
 
 /// Minimal line person: circle head + shoulder arc (matches screenshot style).
 class _PersonOutlinePainter extends CustomPainter {
-  const _PersonOutlinePainter();
+  const _PersonOutlinePainter({required this.color});
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF1A1A1A)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.7
       ..strokeCap = StrokeCap.round
@@ -172,7 +189,8 @@ class _PersonOutlinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _PersonOutlinePainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 class _CircleIconBtn extends StatelessWidget {
@@ -182,8 +200,9 @@ class _CircleIconBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return Material(
-      color: HomeUi.card,
+      color: ui.card,
       shape: const CircleBorder(),
       elevation: 0,
       child: InkWell(
@@ -193,11 +212,12 @@ class _CircleIconBtn extends StatelessWidget {
           width: 46,
           height: 46,
           decoration: BoxDecoration(
-            color: HomeUi.card,
+            color: ui.card,
             shape: BoxShape.circle,
-            boxShadow: HomeUi.softShadow,
+            boxShadow: ui.softShadow,
+            border: ui.isDark ? Border.all(color: ui.border) : null,
           ),
-          child: Icon(icon, size: 22, color: HomeUi.textPrimary),
+          child: Icon(icon, size: 22, color: ui.textPrimary),
         ),
       ),
     );

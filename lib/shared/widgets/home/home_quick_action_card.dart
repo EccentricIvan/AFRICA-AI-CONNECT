@@ -18,6 +18,7 @@ class HomeQuickActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return TapScale(
       onTap: onTap,
       borderRadius: 99,
@@ -28,10 +29,10 @@ class HomeQuickActionCard extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: HomeUi.card,
+              color: ui.card,
               shape: BoxShape.circle,
-              boxShadow: HomeUi.softShadow,
-              border: Border.all(color: HomeUi.border),
+              boxShadow: ui.softShadow,
+              border: Border.all(color: ui.border),
             ),
             child: Icon(icon, size: 26, color: iconColor),
           ),
@@ -41,10 +42,10 @@ class HomeQuickActionCard extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: HomeUi.textPrimary,
+              color: ui.textPrimary,
             ),
           ),
         ],

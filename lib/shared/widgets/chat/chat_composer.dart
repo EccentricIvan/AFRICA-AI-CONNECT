@@ -20,23 +20,24 @@ class ChatComposer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = ChatUi.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Container(
         padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
         decoration: BoxDecoration(
-          color: ChatUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(ChatUi.radiusPill),
-          boxShadow: ChatUi.softShadow,
-          border: Border.all(color: ChatUi.border),
+          boxShadow: ui.softShadow,
+          border: Border.all(color: ui.border),
         ),
         child: Row(
           children: [
             IconButton(
               onPressed: onAttach,
-              icon: const Icon(
+              icon: Icon(
                 Icons.attach_file_rounded,
-                color: ChatUi.textSecondary,
+                color: ui.textSecondary,
                 size: 22,
               ),
               visualDensity: VisualDensity.compact,
@@ -44,13 +45,13 @@ class ChatComposer extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: controller,
-                style: const TextStyle(
-                  color: ChatUi.textPrimary,
+                style: TextStyle(
+                  color: ui.textPrimary,
                   fontSize: 14.5,
                 ),
                 decoration: InputDecoration(
                   hintText: hint,
-                  hintStyle: const TextStyle(color: ChatUi.textSecondary),
+                  hintStyle: TextStyle(color: ui.textSecondary),
                   border: InputBorder.none,
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(vertical: 10),
@@ -76,13 +77,13 @@ class ChatComposer extends StatelessWidget {
                           end: Alignment.bottomRight,
                           colors: [ChatUi.accent, ChatUi.accentDeep],
                         ),
-                  color: isLoading ? ChatUi.border : null,
-                  boxShadow: isLoading ? null : ChatUi.glowShadow,
+                  color: isLoading ? ui.border : null,
+                  boxShadow: isLoading ? null : ui.glowShadow,
                 ),
                 child: Icon(
                   Icons.send_rounded,
                   color: isLoading
-                      ? ChatUi.textSecondary.withValues(alpha: 0.5)
+                      ? ui.textSecondary.withValues(alpha: 0.5)
                       : Colors.white,
                   size: 20,
                 ),

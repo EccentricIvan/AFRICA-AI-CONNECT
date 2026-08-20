@@ -20,10 +20,10 @@ class MarketSectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: MarketUi.textPrimary,
+              color: MarketUi.of(context).textPrimary,
               height: 1.2,
             ),
           ),

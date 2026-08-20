@@ -17,8 +17,9 @@ class HomeCommunityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return Material(
-      color: HomeUi.card,
+      color: ui.card,
       borderRadius: BorderRadius.circular(HomeUi.radiusCard),
       child: InkWell(
         onTap: onTap,
@@ -26,10 +27,10 @@ class HomeCommunityCard extends StatelessWidget {
         child: Ink(
           padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
           decoration: BoxDecoration(
-            color: HomeUi.card,
+            color: ui.card,
             borderRadius: BorderRadius.circular(HomeUi.radiusCard),
-            border: Border.all(color: HomeUi.border),
-            boxShadow: HomeUi.softShadow,
+            border: Border.all(color: ui.border),
+            boxShadow: ui.softShadow,
           ),
           child: Row(
             children: [
@@ -49,19 +50,19 @@ class HomeCommunityCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: HomeUi.textPrimary,
+                        color: ui.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       description,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         height: 1.35,
-                        color: HomeUi.textSecondary,
+                        color: ui.textSecondary,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -69,9 +70,9 @@ class HomeCommunityCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
-                color: HomeUi.textSecondary,
+                color: ui.textSecondary,
                 size: 22,
               ),
             ],

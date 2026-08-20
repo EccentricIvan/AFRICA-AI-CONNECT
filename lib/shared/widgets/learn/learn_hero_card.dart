@@ -36,12 +36,13 @@ class LearnHeroCard extends StatelessWidget {
           final titleSize = compact ? 24.0 : 28.0;
           final btnH = compact ? 46.0 : 50.0;
 
+          final ui = LearnUi.of(context);
           return Container(
             width: outer.maxWidth,
             decoration: BoxDecoration(
-              color: LearnUi.card,
+              color: ui.card,
               borderRadius: BorderRadius.circular(LearnUi.radiusHero),
-              boxShadow: LearnUi.softShadow,
+              boxShadow: ui.softShadow,
               image: const DecorationImage(
                 image: AssetImage(LearnUi.heroBackgroundAsset),
                 fit: BoxFit.cover,
@@ -83,7 +84,7 @@ class LearnHeroCard extends StatelessWidget {
                                 fontFamily: 'Saira',
                                 fontSize: titleSize,
                                 fontWeight: FontWeight.w700,
-                                color: LearnUi.textPrimary,
+                                color: LearnUi.light.textPrimary,
                                 height: 1.12,
                                 letterSpacing: -0.5,
                               ),
@@ -108,7 +109,7 @@ class LearnHeroCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: compact ? 12.5 : 13.5,
                           fontWeight: FontWeight.w400,
-                          color: LearnUi.textSecondary,
+                          color: LearnUi.light.textSecondary,
                           height: 1.45,
                         ),
                         maxLines: 3,
@@ -183,27 +184,27 @@ class LearnHeroCard extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
-                                  color: LearnUi.card,
+                                  color: LearnUi.light.card,
                                   borderRadius:
                                       BorderRadius.circular(LearnUi.radiusBtn),
-                                  boxShadow: LearnUi.pillShadow,
+                                  boxShadow: LearnUi.light.pillShadow,
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.grid_view_rounded,
                                       size: 16,
-                                      color: LearnUi.textPrimary,
+                                      color: LearnUi.light.textPrimary,
                                     ),
                                     const SizedBox(width: 6),
                                     Flexible(
                                       child: Text(
                                         secondaryLabel,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 12.5,
                                           fontWeight: FontWeight.w700,
-                                          color: LearnUi.textPrimary,
+                                          color: LearnUi.light.textPrimary,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,

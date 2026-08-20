@@ -32,13 +32,14 @@ class LearnProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = LearnUi.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
       decoration: BoxDecoration(
-        color: LearnUi.card,
+        color: ui.card,
         borderRadius: BorderRadius.circular(LearnUi.radiusCard),
-        boxShadow: LearnUi.softShadow,
+        boxShadow: ui.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,11 +48,11 @@ class LearnProgressCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Saira',
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
-                  color: LearnUi.textPrimary,
+                  color: ui.textPrimary,
                   height: 1.2,
                 ),
               ),
@@ -108,19 +109,19 @@ class LearnProgressCard extends StatelessWidget {
                   children: [
                     Text(
                       milestoneLabel,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: LearnUi.textPrimary,
+                        color: ui.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       milestoneHint,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w400,
-                        color: LearnUi.textSecondary,
+                        color: ui.textSecondary,
                         height: 1.35,
                       ),
                     ),
@@ -159,17 +160,18 @@ class _StatBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = LearnUi.of(context);
     return Column(
       children: [
         Icon(icon, size: 18, color: LearnUi.accent),
         const SizedBox(height: 6),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Saira',
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: LearnUi.textPrimary,
+            color: ui.textPrimary,
             height: 1.05,
           ),
         ),
@@ -177,10 +179,10 @@ class _StatBlock extends StatelessWidget {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w500,
-            color: LearnUi.textSecondary,
+            color: ui.textSecondary,
             height: 1.2,
           ),
           maxLines: 2,
@@ -233,7 +235,7 @@ class _MilestoneBar extends StatelessWidget {
                   width: thumb,
                   height: thumb,
                   decoration: BoxDecoration(
-                    color: LearnUi.card,
+                    color: LearnUi.of(context).card,
                     shape: BoxShape.circle,
                     border: Border.all(color: LearnUi.accent, width: 2),
                     boxShadow: [

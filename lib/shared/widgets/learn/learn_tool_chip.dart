@@ -16,28 +16,29 @@ class LearnToolChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = LearnUi.of(context);
     return TapScale(
       borderRadius: LearnUi.radiusChip,
       onTap: onTap ?? () {},
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         decoration: BoxDecoration(
-          color: LearnUi.card,
+          color: ui.card,
           borderRadius: BorderRadius.circular(LearnUi.radiusChip),
-          border: Border.all(color: LearnUi.border),
-          boxShadow: LearnUi.softShadow,
+          border: Border.all(color: ui.border),
+          boxShadow: ui.softShadow,
         ),
         child: Row(
           children: [
-            Icon(icon, size: 18, color: LearnUi.textPrimary),
+            Icon(icon, size: 18, color: ui.textPrimary),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: LearnUi.textPrimary,
+                  color: ui.textPrimary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

@@ -15,15 +15,16 @@ class HomeSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = HomeUi.of(context);
     return Row(
       children: [
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: HomeUi.textPrimary,
+              color: ui.textPrimary,
               height: 1.2,
             ),
           ),

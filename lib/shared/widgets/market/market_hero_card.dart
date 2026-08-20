@@ -18,6 +18,7 @@ class MarketHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ui = MarketUi.of(context);
     final scaler = MediaQuery.textScalerOf(context);
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
@@ -35,9 +36,9 @@ class MarketHeroCard extends StatelessWidget {
               minHeight: compact ? 220 : 248,
             ),
             decoration: BoxDecoration(
-              color: MarketUi.card,
+              color: ui.card,
               borderRadius: BorderRadius.circular(MarketUi.radiusHero),
-              boxShadow: MarketUi.softShadow,
+              boxShadow: ui.softShadow,
               image: const DecorationImage(
                 image: AssetImage(MarketUi.heroBackgroundAsset),
                 fit: BoxFit.cover,
@@ -76,7 +77,10 @@ class MarketHeroCard extends StatelessWidget {
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: MarketUi.iconWell,
+                              // Fixed light tone, not theme-reactive — this
+                              // badge sits on the hero's own bright photo
+                              // wash, which doesn't change with app theme.
+                              color: MarketUi.light.iconWell,
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: const Icon(
@@ -112,7 +116,8 @@ class MarketHeroCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: compact ? 12.5 : 13.5,
                             fontWeight: FontWeight.w400,
-                            color: MarketUi.textSecondary,
+                            // Fixed — same reasoning as the icon badge above.
+                            color: MarketUi.light.textSecondary,
                             height: 1.45,
                           ),
                           maxLines: 4,

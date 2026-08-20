@@ -38,7 +38,7 @@ const _helplines = [
 Future<void> showHelplineSheet(BuildContext context) {
   return showModalBottomSheet(
     context: context,
-    backgroundColor: AppColors.surface,
+    backgroundColor: AppColors.of(context).surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
@@ -55,7 +55,7 @@ Future<void> showHelplineSheet(BuildContext context) {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: AppColors.of(context).border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -93,7 +93,7 @@ class _HelplineTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardOverlay.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.of(context).border),
       ),
       child: Row(
         children: [

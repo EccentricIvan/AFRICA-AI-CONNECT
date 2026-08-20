@@ -43,6 +43,7 @@ class CommunityHeroCard extends StatelessWidget {
           // subject far enough left that fixed padding stops covering it.
           final photoReserve = (outer.maxWidth * 0.44).clamp(100.0, 230.0);
 
+          final ui = CommunityUi.of(context);
           return Container(
             width: outer.maxWidth,
             // Trimmed to match the content's real height (title+body+
@@ -50,9 +51,9 @@ class CommunityHeroCard extends StatelessWidget {
             // the button — it was previously taller than its own content.
             constraints: BoxConstraints(minHeight: compact ? 244 : 262),
             decoration: BoxDecoration(
-              color: CommunityUi.card,
+              color: ui.card,
               borderRadius: BorderRadius.circular(CommunityUi.radiusHero),
-              boxShadow: CommunityUi.softShadow,
+              boxShadow: ui.softShadow,
               image: const DecorationImage(
                 image: AssetImage(CommunityUi.heroBackgroundAsset),
                 fit: BoxFit.cover,
@@ -92,7 +93,7 @@ class CommunityHeroCard extends StatelessWidget {
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: CommunityUi.iconWell,
+                              color: CommunityUi.light.iconWell,
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: const Icon(
@@ -127,7 +128,7 @@ class CommunityHeroCard extends StatelessWidget {
                           body,
                           style: TextStyle(
                             fontSize: compact ? 12.5 : 13.5,
-                            color: CommunityUi.textSecondary,
+                            color: CommunityUi.light.textSecondary,
                             height: 1.4,
                           ),
                           maxLines: 2,
@@ -149,10 +150,10 @@ class CommunityHeroCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 membershipLine,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12.5,
                                   fontWeight: FontWeight.w600,
-                                  color: CommunityUi.textPrimary,
+                                  color: CommunityUi.light.textPrimary,
                                   height: 1.3,
                                 ),
                                 maxLines: 2,

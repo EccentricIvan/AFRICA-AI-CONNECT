@@ -42,7 +42,7 @@ class HealthScreen extends ConsumerWidget {
                     const SizedBox(height: 24),
                     _SectionLabel(t('health_resources')),
                     const SizedBox(height: 4),
-                    Text(t('trusted_health_desc'), style: const TextStyle(fontSize: 13, color: AppColors.textHint)),
+                    Text(t('trusted_health_desc'), style: TextStyle(fontSize: 13, color: AppColors.of(context).textHint)),
                     const SizedBox(height: 14),
                     ...resources.map((r) => Padding(
                       padding: const EdgeInsets.only(bottom: 10),
@@ -51,7 +51,7 @@ class HealthScreen extends ConsumerWidget {
                     const SizedBox(height: 16),
                     _SectionLabel(t('nearby_services_title')),
                     const SizedBox(height: 4),
-                    Text(t('nearby_services_sub'), style: const TextStyle(fontSize: 13, color: AppColors.textHint)),
+                    Text(t('nearby_services_sub'), style: TextStyle(fontSize: 13, color: AppColors.of(context).textHint)),
                     const SizedBox(height: 14),
                     ...nearby.map((f) => Padding(
                       padding: const EdgeInsets.only(bottom: 10),
@@ -75,6 +75,7 @@ class _HealthAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
       child: Row(
@@ -88,7 +89,7 @@ class _HealthAppBar extends StatelessWidget {
             ),
             child: IconButton(
               padding: EdgeInsets.zero,
-              icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary, size: 20),
+              icon: Icon(Icons.arrow_back_rounded, color: ac.textPrimary, size: 20),
               onPressed: () => context.go('/'),
             ),
           ),
@@ -99,11 +100,11 @@ class _HealthAppBar extends StatelessWidget {
               children: [
                 Text(
                   t('health'),
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ac.textPrimary),
                 ),
                 Text(
                   t('thrive_desc'),
-                  style: const TextStyle(fontSize: 12, color: AppColors.textHint),
+                  style: TextStyle(fontSize: 12, color: ac.textHint),
                 ),
               ],
             ),
@@ -128,6 +129,7 @@ class _HealthHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -150,15 +152,15 @@ class _HealthHero extends StatelessWidget {
               children: [
                 Text(
                   t('your_health_matters'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20, fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary, height: 1.2,
+                    color: ac.textPrimary, height: 1.2,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   t('your_health_matters_desc'),
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.5),
+                  style: TextStyle(fontSize: 13, color: ac.textSecondary, height: 1.5),
                 ),
                 const SizedBox(height: 14),
                 Row(
@@ -219,6 +221,7 @@ class _ResourceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -245,12 +248,12 @@ class _ResourceCard extends StatelessWidget {
                 children: [
                   Text(
                     resource.title,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ac.textPrimary),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     resource.subtitle,
-                    style: const TextStyle(fontSize: 12, color: AppColors.textHint),
+                    style: TextStyle(fontSize: 12, color: ac.textHint),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -272,6 +275,7 @@ class _FacilityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -296,14 +300,14 @@ class _FacilityCard extends StatelessWidget {
               children: [
                 Text(
                   facility.name,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: ac.textPrimary),
                 ),
                 const SizedBox(height: 3),
                 Row(
                   children: [
                     Text(
                       facility.type,
-                      style: const TextStyle(fontSize: 12, color: AppColors.textHint),
+                      style: TextStyle(fontSize: 12, color: ac.textHint),
                     ),
                     const Text('  ·  ', style: TextStyle(fontSize: 12, color: Color(0x443A2E29))),
                     Icon(Icons.location_on_rounded, size: 11, color: facility.color.withValues(alpha: 0.7)),
@@ -342,9 +346,9 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1.2,
-        color: AppColors.textHint,
+        color: AppColors.of(context).textHint,
       ),
     );
   }

@@ -53,16 +53,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
     final userName =
-        ref.watch(currentUserProvider).valueOrNull?.name ?? 'Friend';
+        ref.watch(currentUserProvider).valueOrNull?.name ?? S.literal('Friend');
 
+    final ac = AppColors.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.bgTop, AppColors.bgBottom],
+            colors: [ac.bgTop, ac.bgBottom],
           ),
         ),
         child: SafeArea(

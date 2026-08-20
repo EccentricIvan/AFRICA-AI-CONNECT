@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../core/theme/theme_provider.dart';
 import '../../db/providers/database_provider.dart';
 import '../../shared/widgets/home/home_community_card.dart';
 import '../../shared/widgets/home/home_header_bar.dart';
 import '../../shared/widgets/home/home_hero_card.dart';
+import '../../shared/widgets/home/home_notifications_panel.dart';
 import '../../shared/widgets/home/home_pillar_card.dart';
 import '../../shared/widgets/home/home_progress_card.dart';
 import '../../shared/widgets/home/home_quick_action_card.dart';
@@ -31,16 +33,48 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
     return _t('good_evening');
   }
 
+  void _openNotifications(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: S.literal('Dismiss'),
+      barrierColor: Colors.black.withValues(alpha: 0.15),
+      transitionDuration: const Duration(milliseconds: 180),
+      pageBuilder: (ctx, anim, anim2) => const SafeArea(
+        child: Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: EdgeInsets.only(top: 78, right: 24, left: 24),
+            child: HomeNotificationsPanel(),
+          ),
+        ),
+      ),
+      transitionBuilder: (ctx, animation, __, child) => FadeTransition(
+        opacity: animation,
+        child: ScaleTransition(
+          alignment: Alignment.topRight,
+          scale: Tween<double>(begin: 0.92, end: 1).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
-    final userName =
-        ref.watch(currentUserProvider).valueOrNull?.name ?? 'Friend';
+    final user = ref.watch(currentUserProvider).valueOrNull;
+    final userName = user?.name ?? S.literal('Friend');
+    final themeMode = ref.watch(themeModeProvider);
+    final isDarkMode = themeMode == ThemeMode.dark ||
+        (themeMode == ThemeMode.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        color: HomeUi.pageBg,
+        color: HomeUi.of(context).pageBg,
         child: SafeArea(
           bottom: false,
           child: Column(
@@ -48,9 +82,13 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
               HomeHeaderBar(
                 userName: userName,
                 greeting: _greeting,
+                avatarPath: user?.avatarPath,
                 onAvatarTap: () => context.go('/profile'),
-                onSearchTap: () {},
-                onNotificationsTap: () {},
+                isDarkMode: isDarkMode,
+                onThemeToggle: () => ref
+                    .read(themeModeProvider.notifier)
+                    .set(isDarkMode ? ThemeMode.light : ThemeMode.dark),
+                onNotificationsTap: () => _openNotifications(context),
               ),
               Expanded(
                 child: SingleChildScrollView(

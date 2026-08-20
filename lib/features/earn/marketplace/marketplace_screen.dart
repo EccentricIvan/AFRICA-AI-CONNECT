@@ -100,13 +100,14 @@ class MarketplaceScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(localeProvider);
+    final ui = MarketUi.of(context);
     String t(String key) => S.tr(context, ref, key);
 
     void openListingSheet() {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        backgroundColor: MarketUi.card,
+        backgroundColor: ui.card,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
@@ -119,7 +120,7 @@ class MarketplaceScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: MarketUi.pageBg,
+      backgroundColor: ui.pageBg,
       body: SafeArea(
         child: Column(
           children: [
@@ -159,9 +160,9 @@ class MarketplaceScreen extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Text(
                       t('popular_products_desc'),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: MarketUi.textSecondary,
+                        color: ui.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -228,9 +229,9 @@ class _FeaturedListings extends ConsumerWidget {
           ),
         ),
       ),
-      error: (e, _) => const Text(
-        'Could not load listings',
-        style: TextStyle(fontSize: 13, color: MarketUi.textSecondary),
+      error: (e, _) => Text(
+        S.literal('Could not load listings'),
+        style: TextStyle(fontSize: 13, color: MarketUi.of(context).textSecondary),
       ),
       data: (listings) {
         if (listings.isEmpty) {
@@ -240,7 +241,7 @@ class _FeaturedListings extends ConsumerWidget {
                 : t('no_listings_yet'),
             subtitle: hasFilter
                 ? t('browse_products')
-                : 'Be the first to list a product!',
+                : S.literal('Be the first to list a product!'),
             ctaLabel: t('list_product_btn'),
             onCta: onAdd,
             showClearFilter: hasFilter,
@@ -335,6 +336,7 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
   @override
   Widget build(BuildContext context) {
     final sellerName = ref.watch(currentUserProvider).valueOrNull?.name ?? '…';
+    final ui = MarketUi.of(context);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -355,26 +357,26 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                     height: 4,
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                      color: MarketUi.border,
+                      color: ui.border,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
                 Text(
                   _t('list_product_btn'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Saira',
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
-                    color: MarketUi.textPrimary,
+                    color: ui.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${_t('listing_as')} $sellerName',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: MarketUi.textSecondary,
+                    color: ui.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -385,9 +387,9 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                       width: 96,
                       height: 96,
                       decoration: BoxDecoration(
-                        color: MarketUi.iconWell,
+                        color: ui.iconWell,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: MarketUi.border),
+                        border: Border.all(color: ui.border),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: _pickingImage
@@ -427,9 +429,9 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                                     ),
                                   ],
                                 )
-                              : const Icon(
+                              : Icon(
                                   Icons.add_a_photo_outlined,
-                                  color: MarketUi.textSecondary,
+                                  color: ui.textSecondary,
                                   size: 28,
                                 ),
                     ),
@@ -465,10 +467,10 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                 const SizedBox(height: 12),
                 Text(
                   _t('select_category_label'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: MarketUi.textPrimary,
+                    color: ui.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -485,11 +487,11 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                       selectedColor: c.color.withValues(alpha: 0.2),
                       labelStyle: TextStyle(
                         color:
-                            isSelected ? c.color : MarketUi.textSecondary,
+                            isSelected ? c.color : ui.textSecondary,
                         fontWeight: FontWeight.w600,
                       ),
                       side: BorderSide(
-                        color: isSelected ? c.color : MarketUi.border,
+                        color: isSelected ? c.color : ui.border,
                       ),
                     );
                   }).toList(),

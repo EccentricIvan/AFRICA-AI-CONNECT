@@ -22,6 +22,8 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     required String name,
     String? role,
     String? location,
+    String? about,
+    String? avatarPath,
     String? firebaseUid,
   }) {
     return into(users).insertOnConflictUpdate(
@@ -30,6 +32,9 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
         name: Value(name),
         role: Value(role),
         location: Value(location),
+        about: about != null ? Value(about) : const Value.absent(),
+        avatarPath:
+            avatarPath != null ? Value(avatarPath) : const Value.absent(),
         firebaseUid:
             firebaseUid != null ? Value(firebaseUid) : const Value.absent(),
         updatedAt: Value(DateTime.now()),

@@ -32,6 +32,7 @@ class _ChatTypingIndicatorState extends State<ChatTypingIndicator>
 
   @override
   Widget build(BuildContext context) {
+    final ui = ChatUi.of(context);
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -44,19 +45,19 @@ class _ChatTypingIndicatorState extends State<ChatTypingIndicator>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               decoration: BoxDecoration(
-                color: ChatUi.card,
+                color: ui.card,
                 borderRadius: BorderRadius.circular(18),
-                boxShadow: ChatUi.softShadow,
-                border: Border.all(color: ChatUi.border),
+                boxShadow: ui.softShadow,
+                border: Border.all(color: ui.border),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     widget.label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: ChatUi.textSecondary,
+                      color: ui.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
