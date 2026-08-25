@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Connect Africa — Download</title>
+<meta name="description" content="An offline-first, AI-powered app for women in Sub-Saharan Africa. Learn, earn, grow, and thrive — in eight languages, with or without internet.">
+<meta property="og:title" content="AI Connect Africa">
+<meta property="og:description" content="Offline-first digital empowerment for women in Sub-Saharan Africa. Download the Android app.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-top:#FAF1EC; --bg-bottom:#F6E9E2; --surface:#FFFFFF; --border:#F0E2DA;
+  --primary:#C96F4A; --primary-dark:#B25E3C; --gold:#D4A24E;
+  --text-primary:#3A2E29; --text-secondary:#4A403B; --text-hint:#6E5F57;
+  --skills:#7C5CBF; --finance:#2F8F83; --market:#C96F4A; --thrive:#C4577C;
+  --shadow:0 1px 2px rgba(58,46,41,.06), 0 8px 24px rgba(58,46,41,.06);
+  --radius:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg-top:#1E1815; --bg-bottom:#171210; --surface:#272019; --border:#3A2E27;
+    --primary:#E08A62; --primary-dark:#C96F4A;
+    --text-primary:#F5EAE3; --text-secondary:#DCCCC2; --text-hint:#A89286;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+  }
+}
+:root[data-theme="dark"]{
+  --bg-top:#1E1815; --bg-bottom:#171210; --surface:#272019; --border:#3A2E27;
+  --primary:#E08A62; --primary-dark:#C96F4A;
+  --text-primary:#F5EAE3; --text-secondary:#DCCCC2; --text-hint:#A89286;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg-top);
+  background-image:linear-gradient(180deg,var(--bg-top) 0%,var(--bg-bottom) 100%);
+  background-attachment:fixed;
+  color:var(--text-secondary);
+  font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.brandname{font-family:Saira,"Plus Jakarta Sans",sans-serif;color:var(--text-primary);line-height:1.2;margin:0}
+a{color:var(--primary)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+  background:rgba(110,95,87,.12);padding:1px 5px;border-radius:5px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);
+  background:var(--bg-top);border-bottom:1px solid var(--border)}
+.hrow{display:flex;align-items:center;gap:12px;padding:14px 0}
+.hrow img{width:36px;height:36px;border-radius:9px}
+.brandname{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.hrow .spacer{flex:1}
+.ghlink{font-size:14px;font-weight:600;color:var(--text-hint);text-decoration:none}
+.ghlink:hover{color:var(--primary)}
+
+.hero{padding:72px 0 56px;text-align:center}
+.hero .icon{width:112px;height:112px;border-radius:26px;box-shadow:var(--shadow);margin-bottom:28px}
+.hero h1{font-size:clamp(34px,6vw,54px);font-weight:800;letter-spacing:-.025em;margin-bottom:16px}
+.tagline{font-size:clamp(17px,2.4vw,20px);color:var(--text-secondary);max-width:620px;margin:0 auto 12px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);
+  color:var(--text-hint);font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;margin-bottom:32px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--finance)}
+
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:14px;
+  font-family:Saira,sans-serif;font-size:16px;font-weight:600;text-decoration:none;border:1px solid transparent;
+  transition:transform .12s ease, box-shadow .12s ease, background .12s ease}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(201,111,74,.34)}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-ghost{background:var(--surface);color:var(--text-primary);border-color:var(--border);box-shadow:var(--shadow)}
+.meta{font-size:13.5px;color:var(--text-hint)}
+
+section{padding:56px 0}
+.sec-head{text-align:center;max-width:620px;margin:0 auto 40px}
+.sec-head h2{font-size:clamp(25px,4vw,34px);font-weight:700;letter-spacing:-.02em;margin-bottom:12px}
+.sec-head p{margin:0;color:var(--text-hint)}
+
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:26px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.grid .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--primary))}
+.card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.card p{margin:0;font-size:14.5px;color:var(--text-hint)}
+.card .ic{font-size:24px;line-height:1;margin-bottom:14px;display:block}
+
+.feat{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.feat .card{padding:24px}
+.feat h3{font-size:16px}
+
+.dl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:34px;box-shadow:var(--shadow);max-width:760px;margin:0 auto}
+.dl-row{display:flex;align-items:center;gap:14px;padding:18px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.dl-row:last-of-type{border-bottom:none}
+.dl-info{flex:1;min-width:190px}
+.dl-info strong{display:block;font-family:Saira,sans-serif;font-size:16px;color:var(--text-primary);font-weight:600}
+.dl-info span{font-size:13.5px;color:var(--text-hint)}
+.badge{display:inline-block;background:rgba(201,111,74,.14);color:var(--primary);font-size:11px;
+  font-weight:700;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:middle;letter-spacing:.03em}
+.btn-sm{padding:11px 20px;font-size:14.5px;border-radius:11px}
+
+.note{background:rgba(212,162,78,.11);border:1px solid rgba(212,162,78,.32);border-radius:13px;
+  padding:16px 18px;font-size:14px;color:var(--text-secondary);margin-top:26px}
+.note strong{color:var(--text-primary);font-family:Saira,sans-serif}
+
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:26px 0 0}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;margin-bottom:15px;font-size:15px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:-1px;width:27px;height:27px;
+  background:var(--primary);color:#fff;border-radius:50%;display:grid;place-items:center;
+  font-family:Saira,sans-serif;font-size:13.5px;font-weight:700}
+
+.langs{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:26px}
+.lang{background:var(--surface);border:1px solid var(--border);border-radius:999px;
+  padding:7px 15px;font-size:13.5px;font-weight:500;color:var(--text-secondary)}
+
+footer{border-top:1px solid var(--border);padding:34px 0 46px;text-align:center;
+  font-size:13.5px;color:var(--text-hint)}
+footer a{text-decoration:none;font-weight:600}
+
+@media (max-width:600px){
+  .hero{padding:48px 0 40px}
+  .dl-wrap{padding:24px 20px}
+  section{padding:42px 0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hrow">
+    <img src="app-icon.png" alt="">
+    <span class="brandname">AI Connect Africa</span>
+    <span class="spacer"></span>
+    <a class="ghlink" href="https://github.com/EccentricIvan/AFRICA-AI-CONNECT">GitHub</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <img class="icon" src="app-icon.png" alt="AI Connect Africa app icon">
+    <h1>AI Connect Africa</h1>
+    <p class="tagline">Learn, earn, grow, and thrive — an AI companion built for women in Sub-Saharan Africa that keeps working when the network doesn't.</p>
+    <div class="pill"><span class="dot"></span> Works offline · 8 languages · Android</div>
+    <div class="cta">
+      <a class="btn btn-primary" href="#download">Download for Android</a>
+      <a class="btn btn-ghost" href="#what">See what's inside</a>
+    </div>
+    <p class="meta">Free · Android 5.0+ · about 23 MB</p>
+  </div>
+
+  <section id="what">
+    <div class="sec-head">
+      <h2>Four pillars, one app</h2>
+      <p>Everything is organised around what actually moves a life forward.</p>
+    </div>
+    <div class="grid">
+      <div class="card" style="--accent:var(--skills)">
+        <span class="ic">📚</span>
+        <h3>Learn</h3>
+        <p>Courses in digital skills and financial literacy, with progress you keep even offline.</p>
+      </div>
+      <div class="card" style="--accent:var(--market)">
+        <span class="ic">🛍️</span>
+        <h3>Earn</h3>
+        <p>A local marketplace to list what you sell, plus tools for saving and budgeting.</p>
+      </div>
+      <div class="card" style="--accent:var(--finance)">
+        <span class="ic">🌱</span>
+        <h3>Grow</h3>
+        <p>Mentorship, job listings, and skills training to take the next step.</p>
+      </div>
+      <div class="card" style="--accent:var(--thrive)">
+        <span class="ic">💗</span>
+        <h3>Thrive</h3>
+        <p>Health information, community groups, and wellbeing support when you need it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Built for real conditions</h2>
+      <p>Patchy data, shared phones, cheap screens — designed for all of it.</p>
+    </div>
+    <div class="feat">
+      <div class="card">
+        <span class="ic">📴</span>
+        <h3>Offline first</h3>
+        <p>The assistant answers from knowledge stored on the phone. No signal needed, no data spent.</p>
+      </div>
+      <div class="card">
+        <span class="ic">🗣️</span>
+        <h3>Your language</h3>
+        <p>The whole interface speaks eight languages — not English with a translate button bolted on.</p>
+      </div>
+      <div class="card">
+        <span class="ic">🔋</span>
+        <h3>Light on your phone</h3>
+        <p>Tuned for low-spec, low-brightness devices. High-contrast text and a small download.</p>
+      </div>
+    </div>
+    <div class="langs">
+      <span class="lang">English</span><span class="lang">Luganda</span><span class="lang">Kiswahili</span>
+      <span class="lang">Runyankore</span><span class="lang">Ateso</span><span class="lang">Runyoro</span>
+      <span class="lang">Acholi</span><span class="lang">Kinyarwanda</span>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="sec-head">
+      <h2>Download</h2>
+      <p>Pick the build that matches your phone. Most phones made after 2016 need the 64-bit one.</p>
+    </div>
+    <div class="dl-wrap">
+
+      <div class="dl-row">
+        <div class="dl-info">
+          <strong>64-bit (arm64) <span class="badge">MOST PHONES</span></strong>
+          <span>Recommended. Zipped so your browser won't block it.</span>
+        </div>
+        <a class="btn btn-primary btn-sm" id="dl-arm64-zip" href="#">Download .zip</a>
+        <a class="btn btn-ghost btn-sm" id="dl-arm64-apk" href="#">.apk</a>
+      </div>
+
+      <div class="dl-row">
+        <div class="dl-info">
+          <strong>32-bit (arm32)</strong>
+          <span>For older phones, if the 64-bit build won't install.</span>
+        </div>
+        <a class="btn btn-ghost btn-sm" id="dl-arm32-zip" href="#">Download .zip</a>
+        <a class="btn btn-ghost btn-sm" id="dl-arm32-apk" href="#">.apk</a>
+      </div>
+
+      <div class="note">
+        <strong>Why a .zip?</strong> Android Chrome silently blocks <code>.apk</code> downloads as a risky
+        file type. The <code>.zip</code> always downloads — open it with your file manager and tap the
+        <code>.apk</code> inside.
+      </div>
+
+      <ol class="steps">
+        <li>Download the <strong>.zip</strong> above and open it in your Files app.</li>
+        <li>Tap the <code>.apk</code> inside to extract and install it.</li>
+        <li>Android will warn about an unknown source — this app isn't on the Play Store yet, so allow it for your browser or Files app.</li>
+        <li>Open <strong>AI Connect Africa</strong> and choose your language.</li>
+      </ol>
+
+      <div class="note" style="background:rgba(201,111,74,.09);border-color:rgba(201,111,74,.3)">
+        <strong>Preview build.</strong> This is an early release for testing and feedback, not a Play Store
+        listing. It is signed with a development key, so Android will flag it as coming from an unknown
+        developer. Install it only if you trust the person who sent you this link.
+      </div>
+
+      <p style="text-align:center;margin:26px 0 0;font-size:14px">
+        <a id="all-releases" href="#">All builds and release notes →</a>
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 6px">AI Connect Africa — empowering women through digital inclusion.</p>
+    <p style="margin:0"><a href="https://github.com/EccentricIvan/AFRICA-AI-CONNECT">Source on GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+// One place to update when a new build is published.
+var RELEASE = {
+  repo:  "esianaemmah-dev/OTIC-CONNECT",
+  tag:   "ai-connect-africa-v1",
+  build: "v30"
+};
+(function () {
+  var base = "https://github.com/" + RELEASE.repo + "/releases/download/" + RELEASE.tag + "/";
+  var files = {
+    "dl-arm64-zip": "AIConnectAfrica-arm64-" + RELEASE.build + ".zip",
+    "dl-arm64-apk": "AIConnectAfrica-arm64-" + RELEASE.build + ".apk",
+    "dl-arm32-zip": "AIConnectAfrica-arm32-" + RELEASE.build + ".zip",
+    "dl-arm32-apk": "AIConnectAfrica-arm32-" + RELEASE.build + ".apk"
+  };
+  for (var id in files) {
+    var el = document.getElementById(id);
+    if (el) { el.href = base + files[id]; }
+  }
+  var all = document.getElementById("all-releases");
+  if (all) { all.href = "https://github.com/" + RELEASE.repo + "/releases/tag/" + RELEASE.tag; }
+})();
+</script>
+
+</body>
+</html>
