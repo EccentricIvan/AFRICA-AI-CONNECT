@@ -250,10 +250,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 46px;text-align:center;
         listing. It is signed with a development key, so Android will flag it as coming from an unknown
         developer. Install it only if you trust the person who sent you this link.
       </div>
-
-      <p style="text-align:center;margin:26px 0 0;font-size:14px">
-        <a id="all-releases" href="#">All builds and release notes →</a>
-      </p>
     </div>
   </section>
 
@@ -284,8 +280,6 @@ var RELEASE = {
     var el = document.getElementById(id);
     if (el) { el.href = base + files[id]; }
   }
-  var all = document.getElementById("all-releases");
-  if (all) { all.href = "https://github.com/" + RELEASE.repo + "/releases/tag/" + RELEASE.tag; }
 })();
 </script>
 
