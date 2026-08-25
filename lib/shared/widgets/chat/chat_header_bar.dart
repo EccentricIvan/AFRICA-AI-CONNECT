@@ -98,7 +98,7 @@ class ChatHeaderBar extends StatelessWidget {
   }
 
   List<InlineSpan> _subtitleSpans(String raw) {
-    const brand = 'Africa AI Connect';
+    const brand = 'AI Connect Africa';
     final idx = raw.indexOf(brand);
     if (idx < 0) {
       return [TextSpan(text: raw)];

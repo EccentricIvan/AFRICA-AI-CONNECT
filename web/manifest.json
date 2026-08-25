@@ -1,11 +1,11 @@
 {
-    "name": "Africa AI Connect",
-    "short_name": "Africa AI Connect",
+    "name": "AI Connect Africa",
+    "short_name": "AI Connect Africa",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FAF1EC",
     "theme_color": "#C96F4A",
-    "description": "Africa AI Connect - Empowering Women Through Digital Inclusion",
+    "description": "AI Connect Africa - Empowering Women Through Digital Inclusion",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

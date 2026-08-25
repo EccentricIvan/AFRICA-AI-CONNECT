@@ -12,7 +12,7 @@ class AfricaAiConnectApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp.router(
-      title: 'Africa AI Connect',
+      title: 'AI Connect Africa',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
