@@ -217,19 +217,17 @@ footer{border-top:1px solid var(--border);padding:34px 0 46px;text-align:center;
       <div class="dl-row">
         <div class="dl-info">
           <strong>64-bit (arm64) <span class="badge">MOST PHONES</span></strong>
-          <span>Recommended. Zipped so your browser won't block it.</span>
+          <span>Recommended · 24 MB</span>
         </div>
-        <a class="btn btn-primary btn-sm" id="dl-arm64-zip" href="#">Download .zip</a>
-        <a class="btn btn-ghost btn-sm" id="dl-arm64-apk" href="#">.apk</a>
+        <a class="btn btn-primary btn-sm" href="AIConnectAfrica-arm64-v30.zip" download>Download</a>
       </div>
 
       <div class="dl-row">
         <div class="dl-info">
           <strong>32-bit (arm32)</strong>
-          <span>For older phones, if the 64-bit build won't install.</span>
+          <span>For older phones, if the 64-bit build won't install · 23 MB</span>
         </div>
-        <a class="btn btn-ghost btn-sm" id="dl-arm32-zip" href="#">Download .zip</a>
-        <a class="btn btn-ghost btn-sm" id="dl-arm32-apk" href="#">.apk</a>
+        <a class="btn btn-primary btn-sm" href="AIConnectAfrica-arm32-v30.zip" download>Download</a>
       </div>
 
       <div class="note">
@@ -260,28 +258,6 @@ footer{border-top:1px solid var(--border);padding:34px 0 46px;text-align:center;
     <p style="margin:0 0 6px">AI Connect Africa — empowering women through digital inclusion.</p>
   </div>
 </footer>
-
-<script>
-// One place to update when a new build is published.
-var RELEASE = {
-  repo:  "esianaemmah-dev/OTIC-CONNECT",
-  tag:   "ai-connect-africa-v1",
-  build: "v30"
-};
-(function () {
-  var base = "https://github.com/" + RELEASE.repo + "/releases/download/" + RELEASE.tag + "/";
-  var files = {
-    "dl-arm64-zip": "AIConnectAfrica-arm64-" + RELEASE.build + ".zip",
-    "dl-arm64-apk": "AIConnectAfrica-arm64-" + RELEASE.build + ".apk",
-    "dl-arm32-zip": "AIConnectAfrica-arm32-" + RELEASE.build + ".zip",
-    "dl-arm32-apk": "AIConnectAfrica-arm32-" + RELEASE.build + ".apk"
-  };
-  for (var id in files) {
-    var el = document.getElementById(id);
-    if (el) { el.href = base + files[id]; }
-  }
-})();
-</script>
 
 </body>
 </html>

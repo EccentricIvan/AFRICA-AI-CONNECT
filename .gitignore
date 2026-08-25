@@ -86,3 +86,7 @@ AI_BACKEND/otic_nllb_swahili_lora_full_final/
 *.zip
 luganda_adapter_temp/
 swahili_adapter_temp/
+
+# Landing page download assets are served by GitHub Pages and must be tracked,
+# despite the blanket *.zip rule above.
+!docs/*.zip
