@@ -136,7 +136,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.info_outline),
-                      title: Text(S.literal('Africa AI Connect')),
+                      title: Text(S.literal('AI Connect Africa')),
                       subtitle: Text(S.literal('Version 1.0.0')),
                     ),
                     Material(
