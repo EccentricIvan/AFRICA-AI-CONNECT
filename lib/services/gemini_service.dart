@@ -3,6 +3,10 @@ import 'package:http/http.dart' as http;
 import '../core/l10n/app_strings.dart';
 import 'api_config.dart';
 
+class OnlineChatUnavailable implements Exception {
+  const OnlineChatUnavailable();
+}
+
 String getAiLanguageInstruction(AppLocale locale) {
   switch (locale) {
     case AppLocale.lg:
@@ -101,15 +105,18 @@ Guidelines:
     }
 
     if (ApiConfig.groqKey.isEmpty) {
-      return 'API key not configured. Please contact support.';
+      throw const OnlineChatUnavailable();
     }
 
-    _history.add({'role': 'user', 'content': message});
+    final pendingHistory = [
+      ..._history,
+      {'role': 'user', 'content': message},
+    ];
 
     final messages = [
       {'role': 'system', 'content': getAiLanguageInstruction(selectedLocale)},
       {'role': 'system', 'content': _systemPrompt},
-      ..._history,
+      ...pendingHistory,
     ];
 
     try {
@@ -129,21 +136,24 @@ Guidelines:
           )
           .timeout(const Duration(seconds: 30));
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final text =
-            data['choices']?[0]?['message']?['content'] ??
-            'I could not generate a response. Please try again.';
-
-        _history.add({'role': 'assistant', 'content': text});
-        return text;
-      } else {
-        final error = jsonDecode(response.body);
-        final msg = error['error']?['message'] ?? 'Unknown error';
-        return 'Sorry, I encountered an error: $msg';
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw const OnlineChatUnavailable();
       }
-    } catch (e) {
-      return 'I\'m having trouble connecting. Please check your internet connection and try again.';
+
+      final data = jsonDecode(response.body);
+      final text =
+          data['choices']?[0]?['message']?['content']?.toString().trim();
+      if (text == null || text.isEmpty) {
+        throw const OnlineChatUnavailable();
+      }
+
+      _history.add({'role': 'user', 'content': message});
+      _history.add({'role': 'assistant', 'content': text});
+      return text;
+    } on OnlineChatUnavailable {
+      rethrow;
+    } catch (_) {
+      throw const OnlineChatUnavailable();
     }
   }
 
@@ -171,7 +181,7 @@ Guidelines:
             headers: {'Content-Type': 'application/json'},
             body: payload,
           )
-          .timeout(const Duration(seconds: 55));
+          .timeout(const Duration(seconds: 25));
       if (response.statusCode != 404) break;
     }
 

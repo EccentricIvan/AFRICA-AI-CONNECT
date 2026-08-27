@@ -78,10 +78,16 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
-    final connectivity = await Connectivity().checkConnectivity();
-    final hasNetwork = connectivity.any(
-      (result) => result != ConnectivityResult.none,
-    );
+    var hasNetwork = false;
+    try {
+      final connectivity = await Connectivity().checkConnectivity();
+      hasNetwork = connectivity.any(
+        (result) => result != ConnectivityResult.none,
+      );
+    } catch (_) {
+      // If the platform cannot report connectivity, use the bundled knowledge
+      // base instead of leaving the chat request in a loading state.
+    }
 
     String response;
     var isOffline = false;
@@ -105,6 +111,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
           'No offline answer is available for that question.';
       isOffline = true;
     }
+    if (!mounted) return;
     setState(() {
       _messages.add(
         _ChatMessage(
