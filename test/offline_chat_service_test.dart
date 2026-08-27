@@ -17,6 +17,7 @@ void main() {
         AppLocale.nyo: 'Ntandika nta obusuubuzi obutaito?',
         AppLocale.ach: 'Acako nining cato wil matidi?',
         AppLocale.teo: 'Acakar biai aduka na edit?',
+        AppLocale.rw: 'Nagira nte ngo ntangire ubucuruzi buto?',
       };
 
       for (final entry in questions.entries) {

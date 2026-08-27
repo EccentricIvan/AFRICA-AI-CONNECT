@@ -5,9 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../db/providers/database_provider.dart';
+import '../../../shared/widgets/market/market_category_card.dart';
+import '../../../shared/widgets/market/market_empty_listings.dart';
+import '../../../shared/widgets/market/market_header_bar.dart';
+import '../../../shared/widgets/market/market_hero_card.dart';
+import '../../../shared/widgets/market/market_listing_card.dart';
+import '../../../shared/widgets/market/market_section_header.dart';
+import '../../../shared/widgets/market/market_ui.dart';
 
 /// Copies a user-picked image into the app's own persistent documents
 /// directory (not the OS picker's temp/cache path, which isn't guaranteed
@@ -35,38 +41,38 @@ const _categoryMeta = [
   (
     key: 'agriculture',
     labelKey: 'cat_agri',
-    icon: Icons.grass,
-    color: AppColors.healthColor,
+    icon: Icons.grass_outlined,
+    color: Color(0xFFD65C6A),
   ),
   (
     key: 'crafts',
     labelKey: 'cat_crafts',
-    icon: Icons.palette,
-    color: AppColors.mentorshipColor,
+    icon: Icons.palette_outlined,
+    color: Color(0xFF7C5CBF),
   ),
   (
     key: 'food_drink',
     labelKey: 'cat_food_drink',
-    icon: Icons.restaurant,
-    color: AppColors.marketplaceColor,
+    icon: Icons.restaurant_outlined,
+    color: MarketUi.accent,
   ),
   (
     key: 'fashion',
     labelKey: 'cat_fashion',
-    icon: Icons.checkroom,
-    color: AppColors.thriveColor,
+    icon: Icons.checkroom_outlined,
+    color: Color(0xFF4A6FA5),
   ),
   (
     key: 'beauty',
     labelKey: 'cat_beauty',
-    icon: Icons.spa,
-    color: AppColors.wellbeingColor,
+    icon: Icons.spa_outlined,
+    color: Color(0xFFC4783A),
   ),
   (
     key: 'services',
     labelKey: 'cat_services',
-    icon: Icons.handyman,
-    color: AppColors.financeColor,
+    icon: Icons.handyman_outlined,
+    color: Color(0xFF4D8B55),
   ),
 ];
 
@@ -94,290 +100,79 @@ class MarketplaceScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(localeProvider);
+    final ui = MarketUi.of(context);
     String t(String key) => S.tr(context, ref, key);
 
     void openListingSheet() {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        backgroundColor: AppColors.surface,
+        backgroundColor: ui.card,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
         builder: (_) => const _ListProductSheet(),
       );
     }
 
+    void clearCategoryFilter() {
+      ref.read(selectedMarketplaceCategoryProvider.notifier).state = null;
+    }
+
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: ui.pageBg,
       body: SafeArea(
         child: Column(
           children: [
-            _MarketAppBar(t: t, onAdd: openListingSheet),
+            MarketHeaderBar(
+              title: t('marketplace'),
+              subtitle: t('earn_desc'),
+              onBack: () => context.go('/'),
+              onSearch: () {},
+              onAdd: openListingSheet,
+            ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
-                    _MarketHero(t: t, onAdd: openListingSheet),
-                    const SizedBox(height: 24),
-                    _SectionLabel(t('categories')),
-                    const SizedBox(height: 4),
-                    Text(
-                      t('browse_products'),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.textHint,
-                      ),
+                    MarketHeroCard(
+                      title: t('sell_products'),
+                      body: t('sell_products_desc'),
+                      ctaLabel: t('list_product_btn'),
+                      onCta: openListingSheet,
+                    ),
+                    const SizedBox(height: 28),
+                    MarketSectionHeader(
+                      title: t('categories'),
+                      trailing: t('see_all'),
+                      onTrailingTap: clearCategoryFilter,
                     ),
                     const SizedBox(height: 14),
                     _CategoriesGrid(t: t),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _SectionLabel(t('featured_listings')),
-                              const SizedBox(height: 2),
-                              Text(
-                                t('popular_products_desc'),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textHint,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap:
-                              () =>
-                                  ref
-                                      .read(
-                                        selectedMarketplaceCategoryProvider
-                                            .notifier,
-                                      )
-                                      .state = null,
-                          child: Text(
-                            t('see_all'),
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.accent,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 28),
+                    MarketSectionHeader(
+                      title: t('featured_listings'),
+                      trailing: t('see_all'),
+                      onTrailingTap: clearCategoryFilter,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      t('popular_products_desc'),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: ui.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 14),
-                    _FeaturedListings(t: t),
-                    const SizedBox(height: 32),
+                    _FeaturedListings(t: t, onAdd: openListingSheet),
                   ],
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _MarketAppBar extends StatelessWidget {
-  const _MarketAppBar({required this.t, required this.onAdd});
-  final String Function(String) t;
-  final VoidCallback onAdd;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0x183A2E29),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0x123A2E29)),
-            ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: AppColors.textPrimary,
-                size: 20,
-              ),
-              onPressed: () => context.go('/'),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  t('marketplace'),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                Text(
-                  t('earn_desc'),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textHint,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Search/browse is a deliberate deferral, not an oversight — see
-          // CLAUDE.md's Roadmap. This slice covers listing + filtering only.
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: AppColors.marketplaceColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.search_rounded,
-                color: AppColors.marketplaceColor,
-                size: 22,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onTap: onAdd,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: AppColors.accent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.add_business_rounded,
-                color: AppColors.accent,
-                size: 22,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MarketHero extends StatelessWidget {
-  const _MarketHero({required this.t, required this.onAdd});
-  final String Function(String) t;
-  final VoidCallback onAdd;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.marketplaceColor.withValues(alpha: 0.22),
-            AppColors.earnColor.withValues(alpha: 0.1),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: AppColors.marketplaceColor.withValues(alpha: 0.25),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: AppColors.marketplaceColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(
-                  Icons.storefront_rounded,
-                  color: AppColors.marketplaceColor,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  t('sell_products'),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                    height: 1.2,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            t('sell_products_desc'),
-            style: const TextStyle(
-              fontSize: 13,
-              color: AppColors.textSecondary,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: onAdd,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
-              decoration: BoxDecoration(
-                color: AppColors.accent,
-                borderRadius: BorderRadius.circular(13),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.35),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.add_rounded, size: 18, color: Colors.white),
-                  const SizedBox(width: 6),
-                  Text(
-                    t('list_product_btn'),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -395,63 +190,29 @@ class _CategoriesGrid extends ConsumerWidget {
       crossAxisCount: 3,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 10,
-      childAspectRatio: 1.15,
-      children:
-          _categoryMeta.map((c) {
-            final isSelected = selected == c.key;
-            return GestureDetector(
-              onTap:
-                  () =>
-                      ref
-                          .read(selectedMarketplaceCategoryProvider.notifier)
-                          .state = isSelected ? null : c.key,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: c.color.withValues(alpha: isSelected ? 0.22 : 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: c.color.withValues(alpha: isSelected ? 0.6 : 0.2),
-                    width: isSelected ? 2 : 1,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        color: c.color.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(c.icon, color: c.color, size: 22),
-                    ),
-                    const SizedBox(height: 7),
-                    Text(
-                      t(c.labelKey),
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      childAspectRatio: 0.88,
+      children: _categoryMeta.map((c) {
+        final isSelected = selected == c.key;
+        return MarketCategoryCard(
+          label: t(c.labelKey),
+          icon: c.icon,
+          accent: c.color,
+          selected: isSelected,
+          onTap: () =>
+              ref.read(selectedMarketplaceCategoryProvider.notifier).state =
+                  isSelected ? null : c.key,
+        );
+      }).toList(),
     );
   }
 }
 
 class _FeaturedListings extends ConsumerWidget {
-  const _FeaturedListings({required this.t});
+  const _FeaturedListings({required this.t, required this.onAdd});
   final String Function(String) t;
+  final VoidCallback onAdd;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -459,189 +220,53 @@ class _FeaturedListings extends ConsumerWidget {
     final hasFilter = ref.watch(selectedMarketplaceCategoryProvider) != null;
 
     return listingsAsync.when(
-      loading: () => const SizedBox.shrink(),
-      error:
-          (e, _) => Text(
-            t('listings_load_error'),
-            style: const TextStyle(fontSize: 13, color: AppColors.textHint),
+      loading: () => const SizedBox(
+        height: 80,
+        child: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: MarketUi.accent,
           ),
+        ),
+      ),
+      error: (e, _) => Text(
+        S.literal('Could not load listings'),
+        style: TextStyle(fontSize: 13, color: MarketUi.of(context).textSecondary),
+      ),
       data: (listings) {
         if (listings.isEmpty) {
-          return _EmptyListings(
-            message:
-                hasFilter ? t('no_listings_in_category') : t('no_listings_yet'),
+          return MarketEmptyListings(
+            title: hasFilter
+                ? t('no_listings_in_category')
+                : t('no_listings_yet'),
+            subtitle: hasFilter
+                ? t('browse_products')
+                : S.literal('Be the first to list a product!'),
+            ctaLabel: t('list_product_btn'),
+            onCta: onAdd,
             showClearFilter: hasFilter,
             clearLabel: t('clear_filter'),
-            onClear:
-                () =>
-                    ref
-                        .read(selectedMarketplaceCategoryProvider.notifier)
-                        .state = null,
+            onClear: () =>
+                ref.read(selectedMarketplaceCategoryProvider.notifier).state =
+                    null,
           );
         }
         return Column(
-          children:
-              listings.map((l) {
-                final meta = _metaFor(l.category);
-                final sellerLine =
-                    l.location != null
-                        ? '${l.sellerName} · ${l.location}'
-                        : l.sellerName;
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: const Color(0x123A2E29),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: const Color(0x153A2E29)),
-                  ),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(14),
-                        child:
-                            l.imagePath != null
-                                ? Image.file(
-                                  File(l.imagePath!),
-                                  width: 52,
-                                  height: 52,
-                                  fit: BoxFit.cover,
-                                  errorBuilder:
-                                      (_, __, ___) =>
-                                          _ListingIconFallback(meta: meta),
-                                )
-                                : _ListingIconFallback(meta: meta),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l.title,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              sellerLine,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: AppColors.textHint,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.earnColor.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          _formatUgx(l.price),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.earnColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
+          children: listings.map((l) {
+            final meta = _metaFor(l.category);
+            final sellerLine = l.location != null
+                ? '${l.sellerName} · ${l.location}'
+                : l.sellerName;
+            return MarketListingCard(
+              title: l.title,
+              sellerLine: sellerLine,
+              priceLabel: _formatUgx(l.price),
+              fallbackIcon: meta.icon,
+              imagePath: l.imagePath,
+            );
+          }).toList(),
         );
       },
-    );
-  }
-}
-
-class _ListingIconFallback extends StatelessWidget {
-  const _ListingIconFallback({required this.meta});
-  final _CategoryMeta meta;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 52,
-      height: 52,
-      color: meta.color.withValues(alpha: 0.15),
-      child: Icon(meta.icon, color: meta.color, size: 26),
-    );
-  }
-}
-
-class _EmptyListings extends StatelessWidget {
-  const _EmptyListings({
-    required this.message,
-    required this.showClearFilter,
-    required this.clearLabel,
-    required this.onClear,
-  });
-  final String message;
-  final bool showClearFilter;
-  final String clearLabel;
-  final VoidCallback onClear;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 28),
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          const Icon(
-            Icons.storefront_outlined,
-            size: 32,
-            color: AppColors.textHint,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 13, color: AppColors.textHint),
-          ),
-          if (showClearFilter) ...[
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: onClear,
-              child: Text(
-                clearLabel,
-                style: const TextStyle(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.text);
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text.toUpperCase(),
-      style: const TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1.2,
-        color: AppColors.textHint,
-      ),
     );
   }
 }
@@ -686,26 +311,23 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCategory == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(_t('select_category_error'))));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_t('select_category_error'))),
+      );
       return;
     }
     final seller = ref.read(currentUserProvider).valueOrNull?.name;
     if (seller == null) return;
 
     setState(() => _saving = true);
-    await ref
-        .read(marketplaceDaoProvider)
-        .addListing(
+    await ref.read(marketplaceDaoProvider).addListing(
           title: _titleController.text.trim(),
           price: double.parse(_priceController.text.trim()),
           category: _selectedCategory!,
           sellerName: seller,
-          location:
-              _locationController.text.trim().isEmpty
-                  ? null
-                  : _locationController.text.trim(),
+          location: _locationController.text.trim().isEmpty
+              ? null
+              : _locationController.text.trim(),
           imagePath: _imagePath,
         );
     if (mounted) Navigator.of(context).pop();
@@ -714,6 +336,7 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
   @override
   Widget build(BuildContext context) {
     final sellerName = ref.watch(currentUserProvider).valueOrNull?.name ?? '…';
+    final ui = MarketUi.of(context);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -734,21 +357,26 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                     height: 4,
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                      color: AppColors.border,
+                      color: ui.border,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
                 Text(
                   _t('list_product_btn'),
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: TextStyle(
+                    fontFamily: 'Saira',
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: ui.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${_t('listing_as')} $sellerName',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.textHint,
+                    color: ui.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -759,54 +387,53 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                       width: 96,
                       height: 96,
                       decoration: BoxDecoration(
-                        color: AppColors.cardOverlay.withValues(alpha: 0.15),
+                        color: ui.iconWell,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: ui.border),
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child:
-                          _pickingImage
-                              ? const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : _imagePath != null
+                      child: _pickingImage
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: MarketUi.accent,
+                              ),
+                            )
+                          : _imagePath != null
                               ? Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.file(
-                                    File(_imagePath!),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: GestureDetector(
-                                      onTap:
-                                          () =>
-                                              setState(() => _imagePath = null),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(3),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black54,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close,
-                                          size: 14,
-                                          color: Colors.white,
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.file(
+                                      File(_imagePath!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            setState(() => _imagePath = null),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(3),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black54,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              )
-                              : const Icon(
-                                Icons.add_a_photo_outlined,
-                                color: AppColors.textHint,
-                                size: 28,
-                              ),
+                                  ],
+                                )
+                              : Icon(
+                                  Icons.add_a_photo_outlined,
+                                  color: ui.textSecondary,
+                                  size: 28,
+                                ),
                     ),
                   ),
                 ),
@@ -817,11 +444,9 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                   decoration: InputDecoration(
                     hintText: _t('listing_title_hint'),
                   ),
-                  validator:
-                      (v) =>
-                          (v == null || v.trim().isEmpty)
-                              ? _t('listing_title_error')
-                              : null,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? _t('listing_title_error')
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -842,35 +467,34 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                 const SizedBox(height: 12),
                 Text(
                   _t('select_category_label'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: ui.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children:
-                      _categoryMeta.map((c) {
-                        final isSelected = _selectedCategory == c.key;
-                        return ChoiceChip(
-                          label: Text(_t(c.labelKey)),
-                          selected: isSelected,
-                          onSelected:
-                              (_) => setState(() => _selectedCategory = c.key),
-                          selectedColor: c.color.withValues(alpha: 0.2),
-                          labelStyle: TextStyle(
-                            color:
-                                isSelected ? c.color : AppColors.textSecondary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          side: BorderSide(
-                            color: isSelected ? c.color : AppColors.border,
-                          ),
-                        );
-                      }).toList(),
+                  children: _categoryMeta.map((c) {
+                    final isSelected = _selectedCategory == c.key;
+                    return ChoiceChip(
+                      label: Text(_t(c.labelKey)),
+                      selected: isSelected,
+                      onSelected: (_) =>
+                          setState(() => _selectedCategory = c.key),
+                      selectedColor: c.color.withValues(alpha: 0.2),
+                      labelStyle: TextStyle(
+                        color:
+                            isSelected ? c.color : ui.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      side: BorderSide(
+                        color: isSelected ? c.color : ui.border,
+                      ),
+                    );
+                  }).toList(),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -882,17 +506,26 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _saving ? null : _submit,
-                    child:
-                        _saving
-                            ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                            : Text(_t('list_product_btn')),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: MarketUi.accent,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(MarketUi.radiusBtn),
+                      ),
+                    ),
+                    child: _saving
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(_t('list_product_btn')),
                   ),
                 ),
               ],

@@ -47,6 +47,15 @@ Always reply in clear, natural Acholi. Do not switch to English unless the user 
 The user selected Ateso.
 Always reply in clear, natural Ateso. Do not switch to English unless the user asks. Keep technical terms in English only when necessary and explain them simply in Ateso.
 ''';
+    case AppLocale.rw:
+      return '''
+The user selected Kinyarwanda.
+You must always reply in clear, natural Kinyarwanda.
+Do not switch to English unless the user explicitly asks.
+If a technical word has no natural Kinyarwanda translation, keep the technical word in English and explain it simply in Kinyarwanda.
+Keep the tone warm, practical, and helpful.
+Every answer in this conversation must continue in Kinyarwanda.
+''';
     case AppLocale.en:
       return '''
 The user selected English.
@@ -60,7 +69,7 @@ class GeminiService {
   static const _baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
   static const _systemPrompt =
-      '''You are Africa AI Connect AI Assistant — a warm, supportive, and knowledgeable companion for women in Sub-Saharan Africa.
+      '''You are AI Connect Africa AI Assistant — a warm, supportive, and knowledgeable companion for women in Sub-Saharan Africa.
 
 Your role is to help women with:
 - Business and entrepreneurship advice

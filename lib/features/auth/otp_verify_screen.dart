@@ -136,14 +136,15 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.bgTop, AppColors.bgBottom],
+            colors: [ac.bgTop, ac.bgBottom],
           ),
         ),
         child: SafeArea(
@@ -162,17 +163,17 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
                 const SizedBox(height: 20),
                 Text(
                   _t('enter_otp_code'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ac.textPrimary,
                     height: 1.2,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   _t('windows_recaptcha_note'),
-                  style: const TextStyle(fontSize: 12, color: AppColors.textHint, height: 1.4),
+                  style: TextStyle(fontSize: 12, color: ac.textHint, height: 1.4),
                 ),
                 const SizedBox(height: 24),
                 TextField(

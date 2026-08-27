@@ -64,14 +64,15 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.bgTop, AppColors.bgBottom],
+            colors: [ac.bgTop, ac.bgBottom],
           ),
         ),
         child: SafeArea(
@@ -90,10 +91,10 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                 const SizedBox(height: 20),
                 Text(
                   _t('enter_phone_number'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ac.textPrimary,
                     height: 1.2,
                   ),
                 ),
@@ -105,15 +106,15 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                   onSubmitted: (_) => _sendCode(),
                   decoration: InputDecoration(
                     hintText: _t('phone_number_hint'),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(left: 16, right: 8),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 8),
                       child: Center(
                         widthFactor: 1,
                         child: Text(
                           '+256',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: ac.textPrimary,
                           ),
                         ),
                       ),
