@@ -1,0 +1,60 @@
+{
+  "greetings": [
+    "Habari. Niko hapa kukusaidia. Ungependa msaada gani leo?",
+    "Karibu. Niambie unachohitaji, nami nitajibu kwa hatua rahisi."
+  ],
+  "study_advice": [
+    "Chagua mada moja, soma kwa dakika 20, kisha pumzika. Hatua ndogo za mara kwa mara husaidia.",
+    "Andika usichoelewa, kisha uliza msaada au jaribu mfano mmoja baada ya mwingine."
+  ],
+  "skills_advice": [
+    "Chagua ujuzi mmoja wa vitendo, ufanye mazoezi kila siku, na uandike unachoweza kufanya sasa.",
+    "Anza na misingi ya simu, intaneti, na mawasiliano. Ujuzi huu husaidia katika masomo, kazi, na biashara."
+  ],
+  "business_advice": [
+    "Anza na hitaji halisi karibu nawe, bidhaa au huduma ndogo, bei iliyo wazi, na rekodi rahisi za kila mauzo.",
+    "Kabla ya kutumia pesa nyingi, jaribu kwa wateja wachache, sikiliza maoni, kisha boresha huduma au bidhaa."
+  ],
+  "savings_advice": [
+    "Tenga kiasi kidogo kila unapopata pesa. Hata akiba ndogo huwa na maana ikifanywa mara kwa mara.",
+    "Tenganisha pesa ya biashara na pesa ya nyumbani, andika matumizi, na jiunge na kikundi cha akiba kinachoaminika kama kipo."
+  ],
+  "farming_advice": [
+    "Chagua mazao yanayofaa msimu, udongo, upatikanaji wa maji, na mahitaji ya soko lako.",
+    "Weka rekodi za mbegu, kazi, mavuno, na mauzo ili ujue zao lenye faida zaidi."
+  ],
+  "online_selling": [
+    "Tumia picha zilizo wazi, bei rahisi kuelewa, eneo lako, na maelezo mafupi. Jibu wanunuzi haraka.",
+    "Anza kwenye jukwaa ambalo wateja wako tayari wanalitumia, kisha fuatilia machapisho yanayoleta oda."
+  ],
+  "marketplace_advice": [
+    "Eleza bidhaa vizuri: jina, bei, kiasi, eneo, na faida yake kwa mnunuzi.",
+    "Mnunuzi akiuliza, thibitisha bei, mahali pa kuchukua, na njia ya malipo kabla ya kupeleka bidhaa."
+  ],
+  "health_advice": [
+    "Kwa dalili kali, masuala ya ujauzito, au mtoto aliye mgonjwa sana, wasiliana na mhudumu wa afya haraka.",
+    "Kwa afya ya kila siku, zingatia maji safi, chakula bora, kupumzika, na kutafuta huduma mapema dalili zikizidi."
+  ],
+  "jobs_advice": [
+    "Andaa CV fupi yenye jina, mawasiliano, ujuzi, historia ya kazi, na watu wa kukutambulisha.",
+    "Omba kazi zinazolingana na ujuzi wako, fuatilia kwa heshima, na endelea kujifunza unaposubiri."
+  ],
+  "wellbeing_advice": [
+    "Simama kidogo, pumua polepole, na zungumza na mtu unayemwamini. Si lazima ubebe msongo peke yako.",
+    "Ukihisi hauko salama, nenda sehemu salama kama unaweza na wasiliana na msaada unaoaminika au huduma za dharura."
+  ],
+  "community_advice": [
+    "Kikundi imara kinahitaji lengo wazi, sheria zilizokubaliwa, rekodi za kweli, na mawasiliano ya mara kwa mara.",
+    "Anza kidogo: waalike watu wenye hitaji moja, chagueni muda wa kukutana, na kubalianeni jinsi ya kufanya maamuzi."
+  ],
+  "store_help": [
+    "Niambie unachotaka kununua au kuuza, kiasi, na bei. Ninaweza kukusaidia kufikiria hatua inayofuata.",
+    "Kagua ubora, gharama yote, usafiri, na njia ya malipo kabla ya kukubaliana na mauzo."
+  ],
+  "general_help": [
+    "Ninaweza kusaidia kuhusu biashara, kilimo, pesa, afya, kazi, ujuzi wa kidijitali, kuuza mtandaoni, na maswali ya jamii. Uliza swali moja kwa maneno rahisi, nami nitajibu kwa hatua za vitendo."
+  ],
+  "fallback": [
+    "Sijaelewa vizuri. Tafadhali rudia kwa maneno rahisi, nami nitakusaidia hatua kwa hatua."
+  ]
+}

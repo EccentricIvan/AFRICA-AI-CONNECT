@@ -1,0 +1,19 @@
+﻿{
+  "greetings": [
+    "Agandi. Ninyobora kukuhwera nta?",
+    "Tukwakira. Gambaho eki orikwenda kuhwera."
+  ],
+  "study_advice": [
+    "Shoma okumara obwire bukye, bwanyima ohumureho.",
+    "Shomera omu mwanya ogucureire kandi ogwine omushana ogumara.",
+    "Gabanyamu eby'okushoma byawe omu bicweka bikye.",
+    "Buuza omushomesa ninga munywani waawe waaba otakyetegyereza."
+  ],
+  "store_help": [
+    "Gamba eki orikwenda kugura.",
+    "Ninyobora kukuhwera kwetegyereza obuguzi, obwingi, ninga amakuru g'ekintu."
+  ],
+  "fallback": [
+    "Tinkyetegyeire gye. Garuka okigambe omu bigambo byangu."
+  ]
+}

@@ -41,38 +41,38 @@ const _categoryMeta = [
   (
     key: 'agriculture',
     labelKey: 'cat_agri',
-    icon: Icons.grass_outlined,
-    color: Color(0xFFD65C6A),
+    icon: Icons.grass,
+    color: AppColors.healthColor,
   ),
   (
     key: 'crafts',
     labelKey: 'cat_crafts',
-    icon: Icons.palette_outlined,
-    color: Color(0xFF7C5CBF),
+    icon: Icons.palette,
+    color: AppColors.mentorshipColor,
   ),
   (
     key: 'food_drink',
     labelKey: 'cat_food_drink',
-    icon: Icons.restaurant_outlined,
-    color: MarketUi.accent,
+    icon: Icons.restaurant,
+    color: AppColors.marketplaceColor,
   ),
   (
     key: 'fashion',
     labelKey: 'cat_fashion',
-    icon: Icons.checkroom_outlined,
-    color: Color(0xFF4A6FA5),
+    icon: Icons.checkroom,
+    color: AppColors.thriveColor,
   ),
   (
     key: 'beauty',
     labelKey: 'cat_beauty',
-    icon: Icons.spa_outlined,
-    color: Color(0xFFC4783A),
+    icon: Icons.spa,
+    color: AppColors.wellbeingColor,
   ),
   (
     key: 'services',
     labelKey: 'cat_services',
-    icon: Icons.handyman_outlined,
-    color: Color(0xFF4D8B55),
+    icon: Icons.handyman,
+    color: AppColors.financeColor,
   ),
 ];
 
@@ -99,9 +99,8 @@ class MarketplaceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(localeProvider);
-    final ui = MarketUi.of(context);
-    String t(String key) => S.tr(context, ref, key);
+    final languageService = ref.watch(offlineLanguageServiceProvider);
+    String t(String key) => languageService.t(key);
 
     void openListingSheet() {
       showModalBottomSheet(
@@ -137,17 +136,58 @@ class MarketplaceScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MarketHeroCard(
-                      title: t('sell_products'),
-                      body: t('sell_products_desc'),
-                      ctaLabel: t('list_product_btn'),
-                      onCta: openListingSheet,
+                    const SizedBox(height: 16),
+                    _MarketHero(t: t, onAdd: openListingSheet),
+                    const SizedBox(height: 24),
+                    _SectionLabel(t('categories')),
+                    const SizedBox(height: 4),
+                    Text(
+                      t('browse_products'),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.textHint,
+                      ),
                     ),
-                    const SizedBox(height: 28),
-                    MarketSectionHeader(
-                      title: t('categories'),
-                      trailing: t('see_all'),
-                      onTrailingTap: clearCategoryFilter,
+                    const SizedBox(height: 14),
+                    _CategoriesGrid(t: t),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _SectionLabel(t('featured_listings')),
+                              const SizedBox(height: 2),
+                              Text(
+                                t('popular_products_desc'),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.textHint,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap:
+                              () =>
+                                  ref
+                                      .read(
+                                        selectedMarketplaceCategoryProvider
+                                            .notifier,
+                                      )
+                                      .state = null,
+                          child: Text(
+                            t('see_all'),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.accent,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 14),
                     _CategoriesGrid(t: t),
@@ -178,6 +218,202 @@ class MarketplaceScreen extends ConsumerWidget {
   }
 }
 
+class _MarketAppBar extends StatelessWidget {
+  const _MarketAppBar({required this.t, required this.onAdd});
+  final String Function(String) t;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: const Color(0x183A2E29),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0x123A2E29)),
+            ),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: AppColors.textPrimary,
+                size: 20,
+              ),
+              onPressed: () => context.go('/'),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  t('marketplace'),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                Text(
+                  t('earn_desc'),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textHint,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Search/browse is a deliberate deferral, not an oversight — see
+          // CLAUDE.md's Roadmap. This slice covers listing + filtering only.
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.marketplaceColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.search_rounded,
+                color: AppColors.marketplaceColor,
+                size: 22,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: onAdd,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.add_business_rounded,
+                color: AppColors.accent,
+                size: 22,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MarketHero extends StatelessWidget {
+  const _MarketHero({required this.t, required this.onAdd});
+  final String Function(String) t;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.marketplaceColor.withValues(alpha: 0.22),
+            AppColors.earnColor.withValues(alpha: 0.1),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: AppColors.marketplaceColor.withValues(alpha: 0.25),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: AppColors.marketplaceColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.storefront_rounded,
+                  color: AppColors.marketplaceColor,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  t('sell_products'),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                    height: 1.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            t('sell_products_desc'),
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: onAdd,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
+              decoration: BoxDecoration(
+                color: AppColors.accent,
+                borderRadius: BorderRadius.circular(13),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: 0.35),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.add_rounded, size: 18, color: Colors.white),
+                  const SizedBox(width: 6),
+                  Text(
+                    t('list_product_btn'),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _CategoriesGrid extends ConsumerWidget {
   const _CategoriesGrid({required this.t});
   final String Function(String) t;
@@ -190,22 +426,54 @@ class _CategoriesGrid extends ConsumerWidget {
       crossAxisCount: 3,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      childAspectRatio: 0.88,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      childAspectRatio: 1.15,
       children:
           _categoryMeta.map((c) {
             final isSelected = selected == c.key;
-            return MarketCategoryCard(
-              label: t(c.labelKey),
-              icon: c.icon,
-              accent: c.color,
-              selected: isSelected,
+            return GestureDetector(
               onTap:
                   () =>
                       ref
                           .read(selectedMarketplaceCategoryProvider.notifier)
                           .state = isSelected ? null : c.key,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: c.color.withValues(alpha: isSelected ? 0.22 : 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: c.color.withValues(alpha: isSelected ? 0.6 : 0.2),
+                    width: isSelected ? 2 : 1,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: c.color.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(c.icon, color: c.color, size: 22),
+                    ),
+                    const SizedBox(height: 7),
+                    Text(
+                      t(c.labelKey),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
             );
           }).toList(),
     );
@@ -223,32 +491,17 @@ class _FeaturedListings extends ConsumerWidget {
     final hasFilter = ref.watch(selectedMarketplaceCategoryProvider) != null;
 
     return listingsAsync.when(
-      loading:
-          () => const SizedBox(
-            height: 80,
-            child: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: MarketUi.accent,
-              ),
-            ),
-          ),
+      loading: () => const SizedBox.shrink(),
       error:
-          (e, _) => const Text(
-            'Could not load listings',
-            style: TextStyle(fontSize: 13, color: MarketUi.textSecondary),
+          (e, _) => Text(
+            t('could_not_load_listings'),
+            style: const TextStyle(fontSize: 13, color: AppColors.textHint),
           ),
       data: (listings) {
         if (listings.isEmpty) {
-          return MarketEmptyListings(
-            title:
+          return _EmptyListings(
+            message:
                 hasFilter ? t('no_listings_in_category') : t('no_listings_yet'),
-            subtitle:
-                hasFilter
-                    ? t('browse_products')
-                    : 'Be the first to list a product!',
-            ctaLabel: t('list_product_btn'),
-            onCta: onAdd,
             showClearFilter: hasFilter,
             clearLabel: t('clear_filter'),
             onClear:
@@ -266,16 +519,161 @@ class _FeaturedListings extends ConsumerWidget {
                     l.location != null
                         ? '${l.sellerName} · ${l.location}'
                         : l.sellerName;
-                return MarketListingCard(
-                  title: l.title,
-                  sellerLine: sellerLine,
-                  priceLabel: _formatUgx(l.price),
-                  fallbackIcon: meta.icon,
-                  imagePath: l.imagePath,
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0x123A2E29),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: const Color(0x153A2E29)),
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child:
+                            l.imagePath != null
+                                ? Image.file(
+                                  File(l.imagePath!),
+                                  width: 52,
+                                  height: 52,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (_, __, ___) =>
+                                          _ListingIconFallback(meta: meta),
+                                )
+                                : _ListingIconFallback(meta: meta),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l.title,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              sellerLine,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textHint,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.earnColor.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          _formatUgx(l.price),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.earnColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
         );
       },
+    );
+  }
+}
+
+class _ListingIconFallback extends StatelessWidget {
+  const _ListingIconFallback({required this.meta});
+  final _CategoryMeta meta;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 52,
+      height: 52,
+      color: meta.color.withValues(alpha: 0.15),
+      child: Icon(meta.icon, color: meta.color, size: 26),
+    );
+  }
+}
+
+class _EmptyListings extends StatelessWidget {
+  const _EmptyListings({
+    required this.message,
+    required this.showClearFilter,
+    required this.clearLabel,
+    required this.onClear,
+  });
+  final String message;
+  final bool showClearFilter;
+  final String clearLabel;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 28),
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          const Icon(
+            Icons.storefront_outlined,
+            size: 32,
+            color: AppColors.textHint,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 13, color: AppColors.textHint),
+          ),
+          if (showClearFilter) ...[
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: onClear,
+              child: Text(
+                clearLabel,
+                style: const TextStyle(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text.toUpperCase(),
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 1.2,
+        color: AppColors.textHint,
+      ),
     );
   }
 }
@@ -305,7 +703,7 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
     super.dispose();
   }
 
-  String _t(String key) => S.tr(context, ref, key);
+  String _t(String key) => ref.read(offlineLanguageServiceProvider).t(key);
 
   Future<void> _pickImage() async {
     setState(() => _pickingImage = true);
@@ -376,19 +774,14 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                 ),
                 Text(
                   _t('list_product_btn'),
-                  style: TextStyle(
-                    fontFamily: 'Saira',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: ui.textPrimary,
-                  ),
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${_t('listing_as')} $sellerName',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
-                    color: ui.textSecondary,
+                    color: AppColors.textHint,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -409,7 +802,6 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                               ? const Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: MarketUi.accent,
                                 ),
                               )
                               : _imagePath != null
@@ -445,7 +837,7 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                               )
                               : const Icon(
                                 Icons.add_a_photo_outlined,
-                                color: MarketUi.textSecondary,
+                                color: AppColors.textHint,
                                 size: 28,
                               ),
                     ),
@@ -483,10 +875,10 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                 const SizedBox(height: 12),
                 Text(
                   _t('select_category_label'),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: ui.textPrimary,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -504,11 +896,11 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                           selectedColor: c.color.withValues(alpha: 0.2),
                           labelStyle: TextStyle(
                             color:
-                                isSelected ? c.color : MarketUi.textSecondary,
+                                isSelected ? c.color : AppColors.textSecondary,
                             fontWeight: FontWeight.w600,
                           ),
                           side: BorderSide(
-                            color: isSelected ? c.color : MarketUi.border,
+                            color: isSelected ? c.color : AppColors.border,
                           ),
                         );
                       }).toList(),
@@ -523,15 +915,6 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _saving ? null : _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MarketUi.accent,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(MarketUi.radiusBtn),
-                      ),
-                    ),
                     child:
                         _saving
                             ? const SizedBox(

@@ -1,0 +1,60 @@
+{
+  "greetings": [
+    "Gyebale ko. Ndi wano okukuyamba. Oyagala kuyambibwa mu ki leero?",
+    "Tukwaniriza. Nnyonnyola ky'oyagala, nja kuddamu mu mitendera egyangu."
+  ],
+  "study_advice": [
+    "Londa omutwe gumu, soma eddakiika 20, oluvannyuma owummuleko. Emitendera emitono egya bulijjo gikola bulungi.",
+    "Wandiika by'otategeera, obuuze omuntu oba ogezeeko ekyokulabirako kimu ku kimu."
+  ],
+  "skills_advice": [
+    "Londa obukugu obumu obukozesebwa, obwegezeemu buli lunaku, era wandiika by'osobola okukola.",
+    "Tandika n'ebisookerwako ku ssimu, yintaneeti, n'okwogera obulungi. Biyamba mu kusoma, emirimu, n'obusubuzi."
+  ],
+  "business_advice": [
+    "Tandika n'ekyetaago ekiri okumpi naawe, ekintu oba empeereza entono, bbeeyi entegeerekeka, n'okuwandiika buli kutunda.",
+    "Nga tonnasaasaanya nnyo, gezaako ku bakasitoma abatono, wuliriza bye boogera, olongoose ky'owaayo."
+  ],
+  "savings_advice": [
+    "Buli lw'ofuna ensimbi, terekako akatono. N'akatono kakula bwe kakolebwa enfunda zonna.",
+    "Yawula ensimbi z'obusubuzi ku za waka, wandiika ensaasaanya, era yingira mu kibiina ky'okutereka ekesigika bwe kibaawo."
+  ],
+  "farming_advice": [
+    "Londa ebirime ebigendera ku sizoni, ettaka, amazzi g'olina, n'ekyetaagibwa ku katale.",
+    "Wandiika ensigo, abakozi, amakungula, n'okutunda olyoke omanye ekirime ekisinga amagoba."
+  ],
+  "online_selling": [
+    "Kozesa ebifaananyi ebirungi, bbeeyi entegeerekeka, ekifo kyo, n'okunnyonnyola okutono. Ddamu abaguzi mangu.",
+    "Tandika ku mukutu bakasitoma bo gwe bakozesa, olondoolere ebiwandiiko ebireeta oda."
+  ],
+  "marketplace_advice": [
+    "Nnyonnyola ekintu bulungi: erinnya, bbeeyi, obungi, ekifo, n'ekigasa omuguzi.",
+    "Omuguzi bw'abuuza, kakasa bbeeyi, ekifo ky'okukimuweerera, n'engeri y'okusasula nga tonnatwala kintu."
+  ],
+  "health_advice": [
+    "Bw'oba n'obubonero obw'amaanyi, ensonga z'olubuto, oba omwana omulwadde ennyo, tuukirira omusawo mangu.",
+    "Mu bulamu bwa buli lunaku, fa ku mazzi amayonjo, emmere ey'enjawulo, okuwummula, n'okufuna obujjanjabi nga obubonero bweyongera."
+  ],
+  "jobs_advice": [
+    "Tegeka CV ennyimpi erimu erinnya, ennamba, obukugu, emirimu gy'okoze, n'abayinza okukukakasa.",
+    "Saba emirimu egigya mu bukugu bwo, oddemu okwebuuza n'obuntubulamu, era weeyongere okuyiga nga olindirira."
+  ],
+  "wellbeing_advice": [
+    "Yimiriramu, ssa omukka mpola, era yogera n'omuntu gwe weesiga. Tosaanidde kwetikka situleesi wekka.",
+    "Bw'owulira nga toli mukuumi, genda mu kifo ekisinga obukuumi bwe kisoboka era tuukirira obuyambi obwesigika oba obw'obudduukirize."
+  ],
+  "community_advice": [
+    "Ekibiina ekinywevu kyetaaga ekigendererwa ekitegeerekeka, amateeka agakkiriziddwa, ebiwandiiko eby'amazima, n'okwogera buli kiseera.",
+    "Tandika n'abantu abatono abalina ekyetaago kye kimu, mulonde ebiseera by'okusisinkana, era mukkiriziganye ku ngeri y'okusalawo."
+  ],
+  "store_help": [
+    "Nnyonnyola ky'oyagala okugula oba okutunda, obungi, n'omuwendo. Nsobola okukuyamba okukilowoozaako.",
+    "Kebera omutindo, omuwendo gwonna, entambula, n'engeri y'okusasula nga tonnakkiriza kutunda oba kugula."
+  ],
+  "general_help": [
+    "Nsobola okukuyamba ku busubuzi, bulimi, nsimbi, bulamu, mirimu, bukugu bwa ssimu, okutunda ku mutimbagano, n'ekibiina. Buuza ekibuuzo kimu mu bigambo ebyangu, nja kuddamu mu mitendera egy'omugaso."
+  ],
+  "fallback": [
+    "Sinnategeera bulungi. Ddamu okigambe mu bigambo ebyangu, nja kukuyamba mutendera ku mutendera."
+  ]
+}

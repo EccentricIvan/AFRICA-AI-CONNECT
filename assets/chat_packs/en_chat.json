@@ -1,0 +1,60 @@
+{
+  "greetings": [
+    "Hello. I am here with you. What would you like help with today?",
+    "Welcome. Tell me what you need, and I will answer in simple steps."
+  ],
+  "study_advice": [
+    "Choose one topic, study for 20 minutes, then rest. Small steady steps work well.",
+    "Write down what you do not understand, then ask for help or try one example at a time."
+  ],
+  "skills_advice": [
+    "Pick one practical skill, practise it daily, and keep a small record of what you can now do.",
+    "Start with phone, internet, and communication basics. These skills help in learning, work, and business."
+  ],
+  "business_advice": [
+    "Start with a real need around you, a small product or service, clear pricing, and simple records of every sale.",
+    "Before spending much money, test with a few customers, listen to feedback, and improve the offer."
+  ],
+  "savings_advice": [
+    "Set aside a small amount every time money comes in. Even a little saving becomes useful when done often.",
+    "Separate business money from home money, write expenses down, and join a trusted savings group if one is available."
+  ],
+  "farming_advice": [
+    "Choose crops that match your season, soil, water access, and local market demand.",
+    "Keep records of seed, labour, harvest, and sales so you can see which crop gives the best return."
+  ],
+  "online_selling": [
+    "Use clear photos, a simple price, your location, and a short description. Reply quickly to buyers.",
+    "Start with one platform your customers already use, then track which posts bring real orders."
+  ],
+  "marketplace_advice": [
+    "Describe the product clearly: name, price, quantity, location, and what makes it useful.",
+    "If a buyer asks questions, confirm the price, pickup point, and payment method before delivery."
+  ],
+  "health_advice": [
+    "For serious symptoms, pregnancy concerns, or a child who is very unwell, contact a health worker quickly.",
+    "For everyday health, focus on clean water, balanced meals, rest, and seeking care early when symptoms worsen."
+  ],
+  "jobs_advice": [
+    "Prepare a short CV with your name, contacts, skills, work history, and references.",
+    "Apply for roles that match your skills, then follow up politely and keep learning while you wait."
+  ],
+  "wellbeing_advice": [
+    "Pause, breathe slowly, and speak to someone you trust. You do not have to carry stress alone.",
+    "If you feel unsafe, move to a safer place if you can and contact trusted support or emergency services."
+  ],
+  "community_advice": [
+    "A strong group needs clear purpose, agreed rules, honest records, and regular communication.",
+    "Start small: invite people with the same need, choose a meeting rhythm, and agree how decisions are made."
+  ],
+  "store_help": [
+    "Tell me what you want to buy or sell, the quantity, and the price. I can help you think it through.",
+    "Check quality, total cost, transport, and payment method before agreeing to a sale."
+  ],
+  "general_help": [
+    "I can help with business, farming, money, health, jobs, digital skills, online selling, and community questions. Ask one question in simple words, and I will answer with practical steps."
+  ],
+  "fallback": [
+    "I have not understood clearly. Please say it again using simple words, and I will help step by step."
+  ]
+}

@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/router/app_router.dart';
-import 'core/l10n/app_strings.dart';
 import 'features/auth/providers/auth_providers.dart';
 import 'firebase_options.dart';
+import 'services/offline_language_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +17,10 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final hasProfile = prefs.getBool('has_profile') ?? false;
-  final savedLocale = prefs.getString('app_locale');
-  await S.loadBundledTranslations();
+  await OfflineLanguageService.instance.loadLanguage(
+    prefs.getString(OfflineLanguageService.prefsKey) ??
+        OfflineLanguageService.defaultLanguageCode,
+  );
 
   runApp(
     ProviderScope(

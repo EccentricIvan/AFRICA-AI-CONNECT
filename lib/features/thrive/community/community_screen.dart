@@ -1,334 +1,22 @@
-import 'dart:io';
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import '../../../core/l10n/app_strings.dart';
-import '../../../db/providers/database_provider.dart';
-import '../../../shared/widgets/tap_scale.dart';
-import '../../../shared/widgets/community/community_group_card.dart';
-import '../../../shared/widgets/community/community_header_bar.dart';
-import '../../../shared/widgets/community/community_hero_card.dart';
-import '../../../shared/widgets/community/community_ui.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/section_header.dart';
 
-/// Copies a user-picked image into the app's own persistent documents
-/// directory, mirroring Marketplace's `_pickAndSaveImage` — the OS
-/// picker's temp/cache path isn't guaranteed to survive.
-Future<String?> _pickAndSaveGroupImage() async {
-  final result = await FilePicker.platform.pickFiles(type: FileType.image);
-  final pickedPath = result?.files.single.path;
-  if (pickedPath == null) return null;
-
-  final docsDir = await getApplicationDocumentsDirectory();
-  final photosDir = Directory(p.join(docsDir.path, 'community_group_photos'));
-  if (!await photosDir.exists()) await photosDir.create(recursive: true);
-
-  final destPath = p.join(
-    photosDir.path,
-    '${DateTime.now().millisecondsSinceEpoch}${p.extension(pickedPath)}',
-  );
-  await File(pickedPath).copy(destPath);
-  return destPath;
-}
-
-/// The mock data every tab and the search overlay reads from — pulled
-/// out of any one screen/page class now that Discover/My Community/
-/// Feed are tabs on one screen rather than separate pushed pages.
-class _CommunityData {
-  _CommunityData._();
-
-  static const groups = [
-    _Group(
-      'Kampala Women Entrepreneurs',
-      124,
-      Icons.trending_up,
-      Color(0xFF2E8B8B),
-      'Business',
-      'Kampala',
-    ),
-    _Group(
-      'Digital Skills Network',
-      89,
-      Icons.computer,
-      Color(0xFF7C5CBF),
-      'Digital Skills',
-      'Kampala',
-    ),
-    _Group(
-      'Farmers United',
-      256,
-      Icons.agriculture,
-      Color(0xFF5E8C4A),
-      'Agriculture',
-      'Gulu',
-    ),
-    _Group(
-      'Young Mothers Support',
-      67,
-      Icons.child_care,
-      Color(0xFFB4436C),
-      'Family & Support',
-      'Mbale',
-    ),
-    _Group(
-      'Tailors & Textile Circle',
-      52,
-      Icons.checkroom,
-      Color(0xFFD4A24E),
-      'Fashion & Crafts',
-      'Jinja',
-    ),
-    _Group(
-      'Savings Circle Kampala',
-      143,
-      Icons.savings,
-      Color(0xFF5B8AA8),
-      'Finance',
-      'Kampala',
-    ),
-  ];
-
-  static const conversations = [
-    _Conversation(
-      _Group(
-        'Kampala Women Entrepreneurs',
-        124,
-        Icons.trending_up,
-        Color(0xFF2E8B8B),
-        'Business',
-        'Kampala',
-      ),
-      'Grace',
-      'Anyone free for the Saturday market meet-up?',
-      '12m',
-      unread: 3,
-      senderColor: Color(0xFFD4A24E),
-    ),
-    _Conversation(
-      _Group(
-        'Digital Skills Network',
-        89,
-        Icons.computer,
-        Color(0xFF7C5CBF),
-        'Digital Skills',
-        'Kampala',
-      ),
-      'Amina',
-      'Just shared the new tutorial link!',
-      '2h',
-      unread: 2,
-      senderColor: Color(0xFFB4436C),
-    ),
-    _Conversation(
-      _Group(
-        'Farmers United',
-        256,
-        Icons.agriculture,
-        Color(0xFF5E8C4A),
-        'Agriculture',
-        'Gulu',
-      ),
-      'You',
-      'Thanks everyone, see you at the training.',
-      '1d',
-      unread: 0,
-      senderColor: CommunityUi.accent,
-    ),
-  ];
-
-  static const posts = [
-    _Post(
-      'Sarah M.',
-      'Just completed the Digital Skills course! So proud of this journey.',
-      '2 hours ago',
-      Color(0xFF7C5CBF),
-      imageCount: 5,
-    ),
-    _Post(
-      'Grace K.',
-      'My basket-weaving business got its first wholesale order today!',
-      '5 hours ago',
-      Color(0xFFD4A24E),
-      imageCount: 1,
-    ),
-    _Post(
-      'Peace N.',
-      'Looking for women interested in forming a SACCO in Gulu district.',
-      '1 day ago',
-      Color(0xFF2E8B8B),
-    ),
-  ];
-
-  static int get totalUnread =>
-      conversations.fold(0, (sum, c) => sum + c.unread);
-}
-
-class CommunityScreen extends StatefulWidget {
+class CommunityScreen extends ConsumerWidget {
   const CommunityScreen({super.key});
 
   @override
-  State<CommunityScreen> createState() => _CommunityScreenState();
-}
-
-class _CommunityScreenState extends State<CommunityScreen> {
-  int _tab = 0;
-  final _pageController = PageController();
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _selectTab(int i) {
-    setState(() => _tab = i);
-    _pageController.animateToPage(
-      i,
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeInOutCubic,
-    );
-  }
-
-  void _openCreateGroup() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: CommunityUi.of(context).card,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (_) => const _CreateGroupSheet(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final totalMembers = _CommunityData.groups.fold<int>(
-      0,
-      (sum, g) => sum + g.members,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final languageService = ref.watch(offlineLanguageServiceProvider);
+    String t(String key) => languageService.t(key);
 
     return Scaffold(
-      backgroundColor: ui.pageBg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            CommunityHeaderBar(
-              title: S.literal('Community'),
-              onBack: () => context.go('/'),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
-              child: _FadeSlideIn(
-                child: CommunityHeroCard(
-                  title: S.literal('Stronger together'),
-                  body: S.literal('Connect. Learn. Grow.'),
-                  membershipLine:
-                      '${S.literal('Join')} $totalMembers ${S.literal('women across')} ${_CommunityData.groups.length} ${S.literal('communities')}',
-                  avatarColors: const [
-                    CommunityUi.accent,
-                    CommunityUi.accentDeep,
-                    Color(0xFFD65C6A),
-                  ],
-                  ctaLabel: S.literal('Create a Community'),
-                  onCta: _openCreateGroup,
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: _CommunityTabBar(
-                selected: _tab,
-                unreadBadge: _CommunityData.totalUnread,
-                onChanged: _selectTab,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              // A real sliding transition between tabs — tapping a segment
-              // animates the page; swiping works too, for free.
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (i) => setState(() => _tab = i),
-                children: const [_ChatsTab(), _FeedTab(), _DiscoverTab()],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FadeSlideIn extends StatelessWidget {
-  const _FadeSlideIn({required this.child});
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 420),
-      curve: Curves.easeOutCubic,
-      builder:
-          (context, t, c) => Opacity(
-            opacity: t,
-            child: Transform.translate(
-              offset: Offset(0, (1 - t) * 14),
-              child: c,
-            ),
-          ),
-      child: child,
-    );
-  }
-}
-
-// ──────────────────────────────── Tabs ────────────────────────────────
-
-/// Chats (default) / Feed / Discover — a pill segmented control
-/// switching between three full-height tabs instead of three stacked
-/// preview sections.
-class _CommunityTabBar extends StatelessWidget {
-  const _CommunityTabBar({
-    required this.selected,
-    required this.onChanged,
-    required this.unreadBadge,
-  });
-
-  final int selected;
-  final ValueChanged<int> onChanged;
-  final int unreadBadge;
-
-  @override
-  Widget build(BuildContext context) {
-    final ui = CommunityUi.of(context);
-    final labels = [
-      S.literal('Chats'),
-      S.literal('Feed'),
-      S.literal('Discover'),
-    ];
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: ui.iconWell,
-        borderRadius: BorderRadius.circular(CommunityUi.radiusChip + 4),
-      ),
-      child: Row(
-        children: [
-          for (var i = 0; i < labels.length; i++)
-            Expanded(
-              child: _TabSegment(
-                label: labels[i],
-                active: selected == i,
-                badge: i == 0 && unreadBadge > 0 ? unreadBadge : null,
-                onTap: () => onChanged(i),
-              ),
-            ),
+      appBar: AppBar(
+        title: Text(t('community')),
+        actions: [
+          IconButton(icon: const Icon(Icons.group_add), onPressed: () {}),
         ],
       ),
     );
@@ -1117,181 +805,29 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: ui.border,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
+                _CommunityHero(t: t),
+                const SizedBox(height: 24),
+                SectionHeader(
+                  title: t('your_groups'),
+                  subtitle: t('your_groups_desc'),
                 ),
-                Text(
-                  S.literal('Create a Community'),
-                  style: const TextStyle(
-                    fontFamily: 'Saira',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: CommunityUi.textPrimary,
-                  ),
+                const SizedBox(height: 12),
+                _EmptyGroupsState(t: t),
+                const SizedBox(height: 24),
+                SectionHeader(
+                  title: t('discover_groups'),
+                  subtitle: t('discover_groups_desc'),
                 ),
-                const SizedBox(height: 18),
-                Center(
-                  child: GestureDetector(
-                    onTap: _pickingImage ? null : _pickImage,
-                    child: Container(
-                      width: 84,
-                      height: 84,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _imagePath == null ? ui.iconWell : null,
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child:
-                          _pickingImage
-                              ? const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : _imagePath != null
-                              ? Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.file(
-                                    File(_imagePath!),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: GestureDetector(
-                                      onTap:
-                                          () =>
-                                              setState(() => _imagePath = null),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(3),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black54,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close,
-                                          size: 14,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                              : const Icon(
-                                Icons.add_a_photo_outlined,
-                                color: CommunityUi.accent,
-                                size: 26,
-                              ),
-                    ),
-                  ),
+                const SizedBox(height: 12),
+                _DiscoverGroups(t: t),
+                const SizedBox(height: 24),
+                SectionHeader(
+                  title: t('community_feed'),
+                  subtitle: t('community_feed_desc'),
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _nameController,
-                  textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(
-                    hintText: S.literal('Group name'),
-                  ),
-                  validator:
-                      (v) =>
-                          (v == null || v.trim().isEmpty)
-                              ? S.literal('Enter a group name')
-                              : null,
-                ),
-                const SizedBox(height: 14),
-                Text(
-                  S.literal('Category'),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: CommunityUi.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children:
-                      _categories.map((c) {
-                        final isSelected = _selectedCategory == c;
-                        return ChoiceChip(
-                          label: Text(c),
-                          selected: isSelected,
-                          onSelected:
-                              (_) => setState(() => _selectedCategory = c),
-                          selectedColor: CommunityUi.accent.withValues(
-                            alpha: 0.16,
-                          ),
-                          labelStyle: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                isSelected
-                                    ? CommunityUi.accent
-                                    : CommunityUi.textSecondary,
-                          ),
-                          side: BorderSide(
-                            color:
-                                isSelected
-                                    ? CommunityUi.accent
-                                    : CommunityUi.border,
-                          ),
-                        );
-                      }).toList(),
-                ),
-                const SizedBox(height: 14),
-                TextFormField(
-                  controller: _descController,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    hintText: S.literal('What is this group about?'),
-                  ),
-                ),
-                const SizedBox(height: 22),
-                SizedBox(
-                  width: double.infinity,
-                  child: TapScale(
-                    borderRadius: CommunityUi.radiusBtn,
-                    onTap: _submit,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [CommunityUi.accent, CommunityUi.accentDeep],
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          CommunityUi.radiusBtn,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: CommunityUi.accent.withValues(alpha: 0.35),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        S.literal('Create Community'),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 12),
+                _CommunityFeed(t: t),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -1301,44 +837,9 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
   }
 }
 
-// ─────────────────────────── Group preview popup ───────────────────────
-
-Future<void> _showGroupPreview(BuildContext context, _Group group) {
-  return showGeneralDialog(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: S.literal('Dismiss'),
-    barrierColor: Colors.black.withValues(alpha: 0.25),
-    transitionDuration: const Duration(milliseconds: 220),
-    pageBuilder:
-        (ctx, anim, anim2) => Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: _GroupPreviewCard(group: group),
-          ),
-        ),
-    transitionBuilder:
-        (ctx, animation, __, child) => BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 6 * animation.value,
-            sigmaY: 6 * animation.value,
-          ),
-          child: FadeTransition(
-            opacity: animation,
-            child: ScaleTransition(
-              scale: Tween<double>(begin: 0.9, end: 1).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
-              ),
-              child: child,
-            ),
-          ),
-        ),
-  );
-}
-
-class _GroupPreviewCard extends StatelessWidget {
-  const _GroupPreviewCard({required this.group});
-  final _Group group;
+class _CommunityHero extends StatelessWidget {
+  const _CommunityHero({required this.t});
+  final String Function(String) t;
 
   @override
   Widget build(BuildContext context) {
@@ -1461,6 +962,10 @@ class _GroupPreviewCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.communityColor.withValues(alpha: 0.15),
         ),
       ),
     );
@@ -1718,29 +1223,30 @@ class _MemberListRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      m.name,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: CommunityUi.textPrimary,
-                      ),
-                    ),
-                    if (m.isAdmin) ...[
-                      const SizedBox(width: 6),
-                      const _AdminBadge(),
-                    ],
-                  ],
+                Text(
+                  t('community_hero_title'),
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                const SizedBox(height: 5),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: m.roles.map((r) => _RoleChip(label: r)).toList(),
+                const SizedBox(height: 6),
+                Text(
+                  t('community_hero_desc'),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: AppColors.communityColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(
+              Icons.people,
+              color: AppColors.communityColor,
+              size: 28,
             ),
           ),
         ],
@@ -1749,12 +1255,9 @@ class _MemberListRow extends StatelessWidget {
   }
 }
 
-/// The community's category (Business, Agriculture, ...) shown as a tag
-/// wherever a group's details are shown.
-class _CategoryTag extends StatelessWidget {
-  const _CategoryTag({required this.color, required this.label});
-  final Color color;
-  final String label;
+class _EmptyGroupsState extends StatelessWidget {
+  const _EmptyGroupsState({required this.t});
+  final String Function(String) t;
 
   @override
   Widget build(BuildContext context) {
@@ -2243,7 +1746,7 @@ class _FeedPostCard extends StatelessWidget {
           Icon(Icons.groups, size: 48, color: Theme.of(context).hintColor),
           const SizedBox(height: 12),
           Text(
-            S.literal('No groups yet'),
+            t('no_groups_yet'),
             style: Theme.of(context).textTheme.titleMedium,
           Row(
             children: [
@@ -2275,30 +1778,15 @@ class _FeedPostCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            S.literal(p.content),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13,
-              color: CommunityUi.textPrimary,
-              height: 1.4,
-            ),
+            t('join_or_create_group'),
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
           ),
-          if (p.imageCount > 0) ...[
-            const SizedBox(height: 10),
-            _FeedImages(post: p),
-          ],
-          const SizedBox(height: 8),
-          Divider(height: 1, color: ui.border),
-          const SizedBox(height: 4),
-          const Row(
-            children: [
-              _FeedAction(Icons.favorite_border_rounded, 'Like'),
-              SizedBox(width: 4),
-              _FeedAction(Icons.chat_bubble_outline_rounded, 'Comment'),
-              SizedBox(width: 4),
-              _FeedAction(Icons.share_outlined, 'Share'),
-            ],
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.add, size: 18),
+            label: Text(t('create_group')),
           ),
         ],
       ),
@@ -2307,28 +1795,31 @@ class _FeedPostCard extends StatelessWidget {
 }
 
 class _DiscoverGroups extends StatelessWidget {
+  const _DiscoverGroups({required this.t});
+  final String Function(String) t;
+
   static const _groups = [
     _Group(
-      'Kampala Women Entrepreneurs',
-      '124 members',
+      'group_kampala_women_entrepreneurs',
+      124,
       Icons.trending_up,
       AppColors.earnColor,
     ),
     _Group(
-      'Digital Skills Network',
-      '89 members',
+      'group_digital_skills_network',
+      89,
       Icons.computer,
       AppColors.skillsColor,
     ),
     _Group(
-      'Farmers United',
-      '256 members',
+      'group_farmers_united',
+      256,
       Icons.agriculture,
       AppColors.healthColor,
     ),
     _Group(
-      'Young Mothers Support',
-      '67 members',
+      'group_young_mothers_support',
+      67,
       Icons.child_care,
       AppColors.thriveColor,
     ),
@@ -2351,12 +1842,10 @@ class _DiscoverGroups extends StatelessWidget {
                   child: Icon(g.icon, color: g.color, size: 22),
                 ),
                 title: Text(
-                  S.literal(g.name),
+                  t(g.nameKey),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                subtitle: Text(
-                  g.members.replaceAll('members', S.literal('members')),
-                ),
+                subtitle: Text('${g.memberCount} ${t('members')}'),
                 trailing: OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
@@ -2364,199 +1853,53 @@ class _DiscoverGroups extends StatelessWidget {
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: Text(
-                    S.literal('Join'),
-                    style: const TextStyle(fontSize: 12),
-                  ),
+                  child: Text(t('join'), style: const TextStyle(fontSize: 12)),
                 ),
               ),
             );
           }).toList(),
-/// LinkedIn-style multi-image layout: 1 image is a single full-width tile,
-/// 2 are side by side, 3 is one large + two stacked, 4+ is a 2x2 grid with
-/// a "+N" overlay on the last tile for any images beyond the 4 shown.
-/// Tapping any tile opens the full swipeable viewer at that tile's index.
-class _FeedImages extends StatelessWidget {
-  const _FeedImages({required this.post});
-  final _Post post;
-
-  String get _postId => '${post.author}-${post.time}';
-
-  void _open(BuildContext context, int index) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        barrierColor: Colors.black87,
-        pageBuilder:
-            (_, __, ___) => _ImageViewerPage(post: post, initialIndex: index),
-      ),
-    );
-  }
-
-  Widget _tile(BuildContext context, int index, {int? overlayCount}) {
-    return TapScale(
-      borderRadius: 0,
-      onTap: () => _open(context, index),
-      child: Hero(
-        tag: '$_postId-img-$index',
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            _PhotoPlaceholder(
-              color: Color.lerp(post.color, Colors.white, (index % 3) * 0.14)!,
-              radius: 0,
-            ),
-            if (overlayCount != null)
-              Container(
-                color: Colors.black.withValues(alpha: 0.55),
-                alignment: Alignment.center,
-                child: Text(
-                  '+$overlayCount',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final count = post.imageCount;
-    const gap = 2.0;
-    Widget grid;
-
-    if (count == 1) {
-      grid = AspectRatio(aspectRatio: 4 / 3, child: _tile(context, 0));
-    } else if (count == 2) {
-      grid = AspectRatio(
-        aspectRatio: 16 / 9,
-        child: Row(
-          children: [
-            Expanded(child: _tile(context, 0)),
-            const SizedBox(width: gap),
-            Expanded(child: _tile(context, 1)),
-          ],
-        ),
-      );
-    } else if (count == 3) {
-      grid = AspectRatio(
-        aspectRatio: 16 / 9,
-        child: Row(
-          children: [
-            Expanded(child: _tile(context, 0)),
-            const SizedBox(width: gap),
-            Expanded(
-              child: Column(
-                children: [
-                  Expanded(child: _tile(context, 1)),
-                  const SizedBox(height: gap),
-                  Expanded(child: _tile(context, 2)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      final extra = count - 4;
-      grid = AspectRatio(
-        aspectRatio: 1,
-        child: Column(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(child: _tile(context, 0)),
-                  const SizedBox(width: gap),
-                  Expanded(child: _tile(context, 1)),
-                ],
-              ),
-            ),
-            const SizedBox(height: gap),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(child: _tile(context, 2)),
-                  const SizedBox(width: gap),
-                  Expanded(
-                    child: _tile(
-                      context,
-                      3,
-                      overlayCount: extra > 0 ? extra : null,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(CommunityUi.radiusChip),
-      child: grid,
     );
   }
 }
 
-class _ImageViewerPage extends StatefulWidget {
-  const _ImageViewerPage({required this.post, required this.initialIndex});
-  final _Post post;
-  final int initialIndex;
-
-  @override
-  State<_ImageViewerPage> createState() => _ImageViewerPageState();
+class _Group {
+  const _Group(this.nameKey, this.memberCount, this.icon, this.color);
+  final String nameKey;
+  final int memberCount;
+  final IconData icon;
+  final Color color;
 }
 
-class _ImageViewerPageState extends State<_ImageViewerPage> {
-  late final PageController _page = PageController(
-    initialPage: widget.initialIndex,
-  );
-  late int _index = widget.initialIndex;
+class _CommunityFeed extends StatelessWidget {
+  const _CommunityFeed({required this.t});
+  final String Function(String) t;
 
-  String get _postId => '${widget.post.author}-${widget.post.time}';
-
-  void _go(int delta) {
-    _page.animateToPage(
-      _index + delta,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOut,
-    );
-  }
+  static const _posts = [
+    _Post(
+      'Sarah M.',
+      'post_digital_skills_done',
+      'time_2_hours_ago',
+      AppColors.skillsColor,
+    ),
+    _Post(
+      'Grace K.',
+      'post_wholesale_order',
+      'time_5_hours_ago',
+      AppColors.earnColor,
+    ),
+    _Post(
+      'Peace N.',
+      'post_sacco_gulu',
+      'time_1_day_ago',
+      AppColors.financeColor,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    const posts = [
-      _Post(
-        'Sarah M.',
-        'Just completed the Digital Skills course! So proud of this journey.',
-        '2 hours ago',
-        AppColors.skillsColor,
-      ),
-      _Post(
-        'Grace K.',
-        'My basket-weaving business got its first wholesale order today!',
-        '5 hours ago',
-        AppColors.earnColor,
-      ),
-      _Post(
-        'Peace N.',
-        'Looking for women interested in forming a SACCO in Gulu district.',
-        '1 day ago',
-        AppColors.financeColor,
-      ),
-    ];
-
     return Column(
       children:
-          posts.map((p) {
+          _posts.map((p) {
             return Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -2590,7 +1933,7 @@ class _ImageViewerPageState extends State<_ImageViewerPage> {
                                 ),
                               ),
                               Text(
-                                S.literal(p.time),
+                                t(p.timeKey),
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: Theme.of(context).hintColor,
@@ -2603,17 +1946,17 @@ class _ImageViewerPageState extends State<_ImageViewerPage> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      S.literal(p.content),
+                      t(p.contentKey),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 10),
-                    const Row(
+                    Row(
                       children: [
-                        _FeedAction(Icons.favorite_border, 'Like'),
-                        SizedBox(width: 16),
-                        _FeedAction(Icons.chat_bubble_outline, 'Comment'),
-                        SizedBox(width: 16),
-                        _FeedAction(Icons.share_outlined, 'Share'),
+                        _FeedAction(Icons.favorite_border, t('like')),
+                        const SizedBox(width: 16),
+                        _FeedAction(Icons.chat_bubble_outline, t('comment')),
+                        const SizedBox(width: 16),
+                        _FeedAction(Icons.share_outlined, t('share')),
                       ],
                     ),
                   ],
@@ -2621,169 +1964,6 @@ class _ImageViewerPageState extends State<_ImageViewerPage> {
               ),
             );
           }).toList(),
-    final p = widget.post;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            PageView.builder(
-              controller: _page,
-              itemCount: p.imageCount,
-              onPageChanged: (i) => setState(() => _index = i),
-              itemBuilder:
-                  (context, i) => Center(
-                    child: Hero(
-                      tag: '$_postId-img-$i',
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 210),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: _PhotoPlaceholder(
-                            color:
-                                Color.lerp(
-                                  p.color,
-                                  Colors.white,
-                                  (i % 3) * 0.14,
-                                )!,
-                            radius: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-            ),
-            Positioned(
-              top: 8,
-              left: 8,
-              child: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(
-                  Icons.close_rounded,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-            ),
-            if (p.imageCount > 1 && _index > 0)
-              Positioned(
-                left: 6,
-                top: 0,
-                bottom: 210,
-                child: Center(
-                  child: _ArrowButton(
-                    icon: Icons.chevron_left_rounded,
-                    onTap: () => _go(-1),
-                  ),
-                ),
-              ),
-            if (p.imageCount > 1 && _index < p.imageCount - 1)
-              Positioned(
-                right: 6,
-                top: 0,
-                bottom: 210,
-                child: Center(
-                  child: _ArrowButton(
-                    icon: Icons.chevron_right_rounded,
-                    onTap: () => _go(1),
-                  ),
-                ),
-              ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(18, 20, 18, 22),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withValues(alpha: 0),
-                      Colors.black.withValues(alpha: 0.85),
-                    ],
-                  ),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (p.imageCount > 1) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          for (var i = 0; i < p.imageCount; i++)
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              width: i == _index ? 18 : 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(
-                                  alpha: i == _index ? 0.95 : 0.4,
-                                ),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                    ],
-                    Row(
-                      children: [
-                        CommunityAvatar(
-                          color: p.color,
-                          initial: p.author[0],
-                          size: 32,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            p.author,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      S.literal(p.content),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        fontSize: 13,
-                        height: 1.4,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Row(
-                      children: [
-                        _FeedAction(
-                          Icons.favorite_border_rounded,
-                          'Like',
-                          light: true,
-                        ),
-                        SizedBox(width: 10),
-                        _FeedAction(
-                          Icons.chat_bubble_outline_rounded,
-                          'Comment',
-                          light: true,
-                        ),
-                        SizedBox(width: 10),
-                        _FeedAction(Icons.share_outlined, 'Share', light: true),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -2812,16 +1992,10 @@ class _ArrowButton extends StatelessWidget {
 }
 
 class _Post {
-  const _Post(
-    this.author,
-    this.content,
-    this.time,
-    this.color, {
-    this.imageCount = 0,
-  });
+  const _Post(this.author, this.contentKey, this.timeKey, this.color);
   final String author;
-  final String content;
-  final String time;
+  final String contentKey;
+  final String timeKey;
   final Color color;
   final int imageCount;
 }
@@ -2852,8 +2026,6 @@ class _FeedAction extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 color: Theme.of(context).hintColor,
-                fontWeight: FontWeight.w600,
-                color: color,
               ),
             ),
           ],
