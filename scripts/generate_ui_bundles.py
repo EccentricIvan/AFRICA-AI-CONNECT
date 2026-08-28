@@ -159,7 +159,7 @@ def repair_unchanged(
     language: str, source: dict[str, str], translated: dict[str, str]
 ) -> dict[str, str]:
     protected_values = {
-        "AI Connect Africa", "Kampala Women Entrepreneurs", "Digital Skills Network",
+        "Africa AI Connect", "Kampala Women Entrepreneurs", "Digital Skills Network",
         "Farmers United", "Young Mothers Support", "NGO Partner · Kampala",
         "Tech Hub · Remote", "District Gov · Mbale", "Women's Centre · Jinja",
         "Uganda Police Emergency", "Uganda Emergency Services (alt.)",

@@ -1,4 +1,4 @@
-name: Build AI Connect Africa APK
+name: Build Africa AI Connect APK
 
 on:
   push:

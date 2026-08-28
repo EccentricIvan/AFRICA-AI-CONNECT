@@ -1,4 +1,4 @@
-# AI Connect Africa
+# Africa AI Connect
 
 An offline-first, AI-powered digital empowerment app for women in
 Sub-Saharan Africa, built with Flutter. Runs on Android, Windows, and Web.
