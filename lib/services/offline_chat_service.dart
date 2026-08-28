@@ -26,6 +26,17 @@ class OfflineChatMatch {
 class OfflineChatService {
   Map<String, dynamic>? _knowledgeBase;
 
+  // SALT (github.com/SunbirdAI/salt-data-archive, CC-BY-SA-4.0) is a general
+  // parallel-sentence corpus, not curated Q&A like offline_chat.json — it is
+  // only consulted when nothing in the curated knowledge base matched, and
+  // only covers en/lg/ach/teo/nyn (Sunbird's text-all corpus has no
+  // Swahili, Runyoro or Kinyarwanda). Loaded once and pre-normalized so a
+  // ~25k-row scan stays cheap on low-spec devices at query time.
+  List<List<String>>? _saltSentences;
+  Map<String, int>? _saltColumns;
+  List<String>? _saltNormalizedEnglish;
+  List<Set<String>>? _saltEnglishTokens;
+
   // This final safety net is compiled into the application. It deliberately
   // contains no network, provider, or configuration language: even if the
   // downloadable/bundled knowledge file is damaged, the user still receives
@@ -59,6 +70,108 @@ class OfflineChatService {
     } catch (_) {
       _knowledgeBase = <String, dynamic>{};
     }
+  }
+
+  Future<void> _loadSaltCorpus() async {
+    if (_saltSentences != null) return;
+
+    try {
+      final decoded = jsonDecode(
+        await rootBundle.loadString('assets/offline/salt_corpus.json'),
+      );
+      final columns = decoded is Map ? decoded['columns'] : null;
+      final sentences = decoded is Map ? decoded['sentences'] : null;
+      if (columns is List && sentences is List) {
+        _saltColumns = {
+          for (var i = 0; i < columns.length; i++) columns[i].toString(): i,
+        };
+        _saltSentences = [
+          for (final row in sentences)
+            if (row is List) [for (final cell in row) cell.toString()],
+        ];
+      }
+    } catch (_) {
+      // SALT is an enrichment layer — its absence must never break offline
+      // chat, which still has the curated knowledge base and safe fallbacks.
+    }
+
+    _saltSentences ??= const [];
+    _saltColumns ??= const {};
+    _saltNormalizedEnglish = [
+      for (final row in _saltSentences!) _normalize(row.isEmpty ? '' : row[0]),
+    ];
+    _saltEnglishTokens = [
+      for (final normalized in _saltNormalizedEnglish!) _tokens(normalized),
+    ];
+  }
+
+  // Curated intents score above 220 on a decent multi-word match. SALT rows
+  // are generic sentences, not authored answers, so a much higher bar is
+  // used: this only fires on a near-exact or strong phrase match, i.e. the
+  // user's wording is genuinely close to a known sentence worth translating.
+  static const _saltMinScore = 500;
+
+  Future<OfflineChatMatch?> _findSaltMatch(
+    String normalizedMessage,
+    AppLocale locale,
+  ) async {
+    // Matching is always scored against the English column, so an English
+    // locale would just echo back an unrelated English sentence — no
+    // translation is happening, so there is nothing useful to return.
+    if (locale == AppLocale.en) return null;
+
+    await _loadSaltCorpus();
+    final columnIndex = _saltColumns?[locale.name];
+    final sentences = _saltSentences;
+    final normalizedEnglish = _saltNormalizedEnglish;
+    final englishTokens = _saltEnglishTokens;
+    if (columnIndex == null ||
+        sentences == null ||
+        normalizedEnglish == null ||
+        englishTokens == null ||
+        sentences.isEmpty) {
+      return null;
+    }
+
+    final queryTokens = _tokens(normalizedMessage);
+    var bestScore = 0;
+    List<String>? bestRow;
+    for (var i = 0; i < sentences.length; i++) {
+      final row = sentences[i];
+      if (row.length <= columnIndex) continue;
+
+      final candidate = normalizedEnglish[i];
+      if (candidate.isEmpty) continue;
+
+      int score;
+      if (normalizedMessage == candidate) {
+        score = 1200 + candidate.length;
+      } else if (normalizedMessage.contains(candidate) ||
+          candidate.contains(normalizedMessage)) {
+        score = 500 + math.min(normalizedMessage.length, candidate.length);
+      } else {
+        final common = queryTokens.intersection(englishTokens[i]).length;
+        if (common == 0) continue;
+        final coverage = common / queryTokens.length;
+        final precision = common / englishTokens[i].length;
+        score = (coverage * 240 + precision * 100 + common * 25).round();
+      }
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestRow = row;
+      }
+    }
+
+    if (bestRow == null || bestScore < _saltMinScore) return null;
+    return OfflineChatMatch(
+      reply: bestRow[columnIndex],
+      intentId: 'salt',
+      category: 'translation',
+      score: bestScore,
+      sourceTitle: 'Sunbird AI SALT dataset',
+      sourceUrl: 'https://github.com/SunbirdAI/salt-data-archive',
+    );
   }
 
   String _normalize(String text) =>
@@ -96,11 +209,9 @@ class OfflineChatService {
     final normalizedMessage = _normalize(message);
     if (normalizedMessage.isEmpty) return null;
 
-    final rawIntents = _knowledgeBase?['intents'];
-    if (rawIntents is! List) return null;
-
     OfflineChatMatch? best;
-    for (final rawIntent in rawIntents) {
+    final rawIntents = _knowledgeBase?['intents'];
+    for (final rawIntent in rawIntents is List ? rawIntents : const []) {
       if (rawIntent is! Map) continue;
       final intent = Map<String, dynamic>.from(rawIntent);
       final patterns = intent['patterns'];
@@ -135,7 +246,8 @@ class OfflineChatService {
         sourceUrl: source is Map ? source['url']?.toString() : null,
       );
     }
-    return best;
+
+    return best ?? await _findSaltMatch(normalizedMessage, locale);
   }
 
   Future<String?> findReply(String message, AppLocale locale) async =>

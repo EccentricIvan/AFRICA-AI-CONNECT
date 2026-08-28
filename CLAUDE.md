@@ -217,18 +217,47 @@ it ships prebuilt binaries rather than compiling from source.)
 - Localised: support for Luganda, Swahili, and local context
 
 ## Localization status
-`lib/core/l10n/app_strings.dart` defines `AppLocale` and the `_strings`
-lookup table (`S.tr`, with safe fallback: `locale → English → raw key`).
-- **Supported**: English (`en`), Luganda (`lg`), Kiswahili (`sw`) — the only
-  three with real translations and Groq AI-chat language instructions
-  (`lib/services/gemini_service.dart`'s `getAiLanguageInstruction`)
+`lib/core/l10n/app_strings.dart` defines `AppLocale` (`en`, `lg`, `sw`,
+`nyn`, `nyo`, `ach`, `teo`, `rw`) and two layers of translated copy:
+- **`_strings`** — a static catalog baked into the binary. `S.tr(context,
+  ref, key)` looks up `locale → English → raw key`.
+- **Downloadable/bundled overlay** — `assets/localization/{apiCode}.json`
+  per non-English locale (`ach`, `lug`, `nyn`, `nyo`, `swa`, `teo`, plus
+  `kin` for `rw`), loaded via `S.ensureBundle(locale)`/
+  `loadBundledTranslations()`. A bundle may legitimately lag behind
+  `_strings` for a locale still being translated — `tr()`/`literal()` fall
+  back to English per-key rather than blocking startup or the language
+  switch on a partial bundle.
 - An earlier PR briefly added 17 more Ugandan-language enum entries with no
   translations behind them; a follow-up PR deliberately reverted that back
-  to these 3, since untranslated entries just silently rendered English —
-  confusing, not actually multilingual. If more languages come back, add
-  real `_strings` entries in the same PR, not just the enum case.
+  to just `en`/`lg`/`sw`. The 5 languages since re-added (`nyn`, `nyo`,
+  `ach`, `teo`, `rw`) have real bundle translations behind them via the
+  mechanism above — if adding another, ship real bundle content in the same
+  PR, not just the enum case.
 - No flag emojis in the language picker (removed deliberately) — just
   language name + code.
+- Groq AI-chat language instructions
+  (`lib/services/gemini_service.dart`'s `getAiLanguageInstruction`) exist
+  for all 8 `AppLocale` values.
+
+## Offline chat knowledge base (`lib/services/offline_chat_service.dart`)
+Two-tier, non-LLM matching — token-overlap scoring (`_score`/`_normalize`),
+no model/network call anywhere in this file. Tier 1: `assets/offline/offline_chat.json`,
+a small hand-authored set of intents (curated question patterns → curated
+answers) per locale, cited to a real source per intent. Tier 2, tried only
+when tier 1 finds nothing: `assets/offline/salt_corpus.json` — ~25k English
+sentences from Sunbird AI's SALT dataset (see
+`assets/offline/SALT_ATTRIBUTION.md`; CC BY-SA 4.0), each paired with its
+human translation into `lg`/`ach`/`teo`/`nyn` (SALT's text corpus has no
+`sw`/`nyo`/`rw`, so those three locales stay on tier 1 + the fallback
+strings only). Because SALT rows are generic declarative sentences rather
+than authored Q&A, tier 2 requires a much higher match score (500 vs tier
+1's 220) and is skipped entirely for `en` (matching English against English
+would just echo an unrelated sentence back, not translate anything). Both
+tiers back onto the same three-level fallback chain: KB match → per-locale
+`fallbacks` in `offline_chat.json` → hardcoded `_safeFallbacks` compiled
+into the binary — deliberately free of network/provider language so it
+reads sensibly even if the JSON assets are corrupt.
 
 ## APK distribution (manual release flow)
 CI (`.github/workflows/build.yml`) builds split-per-abi release APKs on

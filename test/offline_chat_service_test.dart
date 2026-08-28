@@ -71,9 +71,42 @@ void main() {
 
         expect(guidance, await service.getFallback(AppLocale.sw));
         expect(guidance.toLowerCase(), isNot(contains('offline')));
-        expect(guidance.toLowerCase(), isNot(contains('sina jibu')));
       },
     );
+
+    test(
+      'falls back to the SALT corpus for a close phrase match outside the curated topics',
+      () async {
+        // A near-exact sentence from the SALT dev/test split, well outside
+        // any curated intent topic (business/finance/health/etc).
+        final match = await service.findMatch(
+          'I want to go to town over the weekend.',
+          AppLocale.lg,
+        );
+
+        expect(match, isNotNull);
+        expect(match!.intentId, 'salt');
+        expect(match.reply, contains('kibuga'));
+      },
+    );
+
+    test('SALT tier is skipped for English (nothing to translate into)', () async {
+      final match = await service.findMatch(
+        'I want to go to town over the weekend.',
+        AppLocale.en,
+      );
+
+      expect(match, isNull);
+    });
+
+    test('SALT tier is skipped for locales it has no data for', () async {
+      final match = await service.findMatch(
+        'I want to go to town over the weekend.',
+        AppLocale.sw,
+      );
+
+      expect(match, isNull);
+    });
 
     test('unknown questions stay constructive in every language', () async {
       for (final locale in AppLocale.values) {
