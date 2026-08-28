@@ -5,8 +5,7 @@ import '../tables/marketplace_listings_table.dart';
 part 'marketplace_dao.g.dart';
 
 @DriftAccessor(tables: [MarketplaceListings])
-class MarketplaceDao extends DatabaseAccessor<AppDatabase>
-    with _$MarketplaceDaoMixin {
+class MarketplaceDao extends DatabaseAccessor<AppDatabase> with _$MarketplaceDaoMixin {
   MarketplaceDao(super.db);
 
   /// Reactive listing stream, newest first, optionally filtered to one

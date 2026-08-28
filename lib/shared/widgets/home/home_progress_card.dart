@@ -25,23 +25,23 @@ class HomeProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = switch (kind) {
       HomeProgressKind.courses => (
-        const Color(0xFF7BA8E0),
-        Icons.menu_book_rounded,
-        '↑ 20%',
-        'Keep learning',
-      ),
+          const Color(0xFF7BA8E0),
+          Icons.menu_book_rounded,
+          '↑ 20%',
+          S.literal('Keep learning'),
+        ),
       HomeProgressKind.points => (
-        const Color(0xFFF0A878),
-        Icons.star_rounded,
-        '↑ 12%',
-        'Awesome progress!',
-      ),
+          const Color(0xFFF0A878),
+          Icons.star_rounded,
+          '↑ 12%',
+          S.literal('Awesome progress!'),
+        ),
       HomeProgressKind.streak => (
-        const Color(0xFFE89A9A),
-        Icons.local_fire_department_rounded,
-        '↑ 1d',
-        "You're on fire!",
-      ),
+          const Color(0xFFE89A9A),
+          Icons.local_fire_department_rounded,
+          '↑ 1d',
+          S.literal("You're on fire!"),
+        ),
     };
 
     final ui = HomeUi.of(context);
@@ -64,7 +64,10 @@ class HomeProgressCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [HomeUi.card, theme.$1.withValues(alpha: 0.05)],
+          colors: [
+            ui.card,
+            theme.$1.withValues(alpha: ui.isDark ? 0.16 : 0.05),
+          ],
         ),
       ),
       child: Column(
@@ -111,14 +114,14 @@ class HomeProgressCard extends StatelessWidget {
             width: double.infinity,
             child: switch (kind) {
               HomeProgressKind.courses => _CoursesFooter(
-                progress: progress,
-                color: theme.$1,
-                value: value,
-              ),
+                  progress: progress,
+                  color: theme.$1,
+                  value: value,
+                ),
               HomeProgressKind.points => _PointsFooter(
-                progress: progress,
-                color: theme.$1,
-              ),
+                  progress: progress,
+                  color: theme.$1,
+                ),
               HomeProgressKind.streak => _StreakFooter(color: theme.$1),
             },
           ),
@@ -293,26 +296,24 @@ class _StreakFooter extends StatelessWidget {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color:
-                            done[i]
-                                ? color.withValues(alpha: 0.85)
-                                : color.withValues(alpha: 0.12),
+                        color: done[i]
+                            ? color.withValues(alpha: 0.85)
+                            : color.withValues(alpha: 0.12),
                       ),
-                      child:
-                          done[i]
-                              ? Icon(
-                                Icons.check,
-                                size: size * 0.55,
-                                color: Colors.white,
-                              )
-                              : Text(
-                                days[i],
-                                style: TextStyle(
-                                  fontSize: size * 0.45,
-                                  fontWeight: FontWeight.w700,
-                                  color: color.withValues(alpha: 0.55),
-                                ),
+                      child: done[i]
+                          ? Icon(
+                              Icons.check,
+                              size: size * 0.55,
+                              color: Colors.white,
+                            )
+                          : Text(
+                              days[i],
+                              style: TextStyle(
+                                fontSize: size * 0.45,
+                                fontWeight: FontWeight.w700,
+                                color: color.withValues(alpha: 0.55),
                               ),
+                            ),
                     ),
                 ],
               );

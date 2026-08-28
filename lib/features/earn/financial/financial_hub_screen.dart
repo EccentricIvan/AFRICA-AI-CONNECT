@@ -29,9 +29,7 @@ class FinancialHubScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 FeatureCard(
                   title: S.literal('Savings Tracker'),
-                  subtitle: S.literal(
-                    'Set goals and track your savings progress',
-                  ),
+                  subtitle: S.literal('Set goals and track your savings progress'),
                   icon: Icons.savings,
                   color: AppColors.financeColor,
                   onTap: () {},
@@ -47,9 +45,7 @@ class FinancialHubScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 FeatureCard(
                   title: S.literal('SACCO Directory'),
-                  subtitle: S.literal(
-                    'Find savings groups and cooperatives near you',
-                  ),
+                  subtitle: S.literal('Find savings groups and cooperatives near you'),
                   icon: Icons.groups,
                   color: AppColors.communityColor,
                   onTap: () {},
@@ -57,9 +53,7 @@ class FinancialHubScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 FeatureCard(
                   title: S.literal('Mobile Money Guide'),
-                  subtitle: S.literal(
-                    'Learn to send, receive, and save with mobile money',
-                  ),
+                  subtitle: S.literal('Learn to send, receive, and save with mobile money'),
                   icon: Icons.phone_android,
                   color: AppColors.primary,
                   onTap: () {},
@@ -97,8 +91,7 @@ class _FinanceHero extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.financeColor.withValues(alpha: 0.15),
-        ),
+            color: AppColors.financeColor.withValues(alpha: 0.15)),
       ),
       child: Row(
         children: [
@@ -112,9 +105,7 @@ class _FinanceHero extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  S.literal(
-                    'Tools and resources to help you save, budget, and grow your money.',
-                  ),
+                  S.literal('Tools and resources to help you save, budget, and grow your money.'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -128,11 +119,8 @@ class _FinanceHero extends StatelessWidget {
               color: AppColors.financeColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(
-              Icons.account_balance_wallet,
-              color: AppColors.financeColor,
-              size: 28,
-            ),
+            child: const Icon(Icons.account_balance_wallet,
+                color: AppColors.financeColor, size: 28),
           ),
         ],
       ),
@@ -150,31 +138,25 @@ class _FinancialTips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children:
-          _tips.map((t) {
-            return Card(
-              child: ListTile(
-                leading: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColors.earnColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.lightbulb,
-                    color: AppColors.earnColor,
-                    size: 18,
-                  ),
-                ),
-                title: Text(
-                  S.literal(t.$1),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                subtitle: Text(S.literal(t.$2)),
+      children: _tips.map((t) {
+        return Card(
+          child: ListTile(
+            leading: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: AppColors.earnColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
               ),
-            );
-          }).toList(),
+              child: const Icon(Icons.lightbulb,
+                  color: AppColors.earnColor, size: 18),
+            ),
+            title: Text(S.literal(t.$1),
+                style: Theme.of(context).textTheme.titleMedium),
+            subtitle: Text(S.literal(t.$2)),
+          ),
+        );
+      }).toList(),
     );
   }
 }

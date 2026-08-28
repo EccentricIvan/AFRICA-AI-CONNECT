@@ -122,10 +122,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       width: active ? 26 : 7,
                       height: 7,
                       decoration: BoxDecoration(
-                        color:
-                            active
-                                ? AppColors.primary
-                                : const Color(0xFFE5D8CF),
+                        color: active
+                            ? AppColors.primary
+                            : const Color(0xFFE5D8CF),
                         borderRadius: BorderRadius.circular(99),
                       ),
                     );
@@ -200,43 +199,46 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size.fromHeight(52),
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
+                                  horizontal: 24,
                                   vertical: 16,
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(18),
                                 ),
                               ),
-                              child:
-                                  _saving
-                                      ? const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                      : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
+                              child: _saving
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
                                             _page < 2
                                                 ? _t('continue_btn')
                                                 : _t('start_journey'),
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w700,
                                             ),
                                           ),
-                                          const SizedBox(width: 8),
-                                          const Icon(
-                                            Icons.arrow_forward_rounded,
-                                            size: 20,
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Icon(
+                                          Icons.arrow_forward_rounded,
+                                          size: 20,
+                                        ),
+                                      ],
+                                    ),
                             ),
                           ),
                         ],
@@ -278,7 +280,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 }
 
-/// Presentational only â€” maps each locale to a Material icon + tint for the
+/// Presentational only — maps each locale to a Material icon + tint for the
 /// language card tile. Does not affect selection, persistence, or localization.
 class _LanguageVisual {
   const _LanguageVisual({
@@ -402,7 +404,7 @@ class _LanguagePage extends StatelessWidget {
               children: const [
                 TextSpan(text: 'Londa olulimi lwo '),
                 TextSpan(
-                  text: 'â€¢',
+                  text: '•',
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w700,
@@ -433,14 +435,14 @@ class _LanguagePage extends StatelessWidget {
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color:
-                          isSelected
-                              ? AppColors.primary.withValues(alpha: 0.08)
-                              : AppColors.surface,
+                      color: isSelected
+                          ? AppColors.primary.withValues(alpha: 0.08)
+                          : ac.surface,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color:
-                            isSelected ? AppColors.primary : AppColors.border,
+                        color: isSelected
+                            ? AppColors.primary
+                            : ac.border,
                         width: isSelected ? 1.5 : 1,
                       ),
                       boxShadow: [
@@ -502,27 +504,24 @@ class _LanguagePage extends StatelessWidget {
                           width: 26,
                           height: 26,
                           decoration: BoxDecoration(
-                            color:
-                                isSelected
-                                    ? AppColors.primary
-                                    : Colors.transparent,
+                            color: isSelected
+                                ? AppColors.primary
+                                : Colors.transparent,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color:
-                                  isSelected
-                                      ? AppColors.primary
-                                      : const Color(0xFFD9CFC8),
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : const Color(0xFFD9CFC8),
                               width: 2,
                             ),
                           ),
-                          child:
-                              isSelected
-                                  ? const Icon(
-                                    Icons.check_rounded,
-                                    color: Colors.white,
-                                    size: 15,
-                                  )
-                                  : null,
+                          child: isSelected
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.white,
+                                  size: 15,
+                                )
+                              : null,
                         ),
                       ],
                     ),
@@ -807,30 +806,10 @@ class _WelcomePage extends ConsumerWidget {
     final size = MediaQuery.sizeOf(context);
     final tall = size.height > 800;
     final compact = size.height < 700;
-    final titleSize =
-        compact
-            ? 24.0
-            : tall
-            ? 28.0
-            : 26.0;
-    final gapAfterHeader =
-        compact
-            ? 12.0
-            : tall
-            ? 18.0
-            : 16.0;
-    final gapAfterHero =
-        compact
-            ? 20.0
-            : tall
-            ? 32.0
-            : 28.0;
-    final gapAfterOffline =
-        compact
-            ? 16.0
-            : tall
-            ? 22.0
-            : 20.0;
+    final titleSize = compact ? 24.0 : tall ? 28.0 : 26.0;
+    final gapAfterHeader = compact ? 12.0 : tall ? 18.0 : 16.0;
+    final gapAfterHero = compact ? 20.0 : tall ? 32.0 : 28.0;
+    final gapAfterOffline = compact ? 16.0 : tall ? 22.0 : 20.0;
     final heroFlex = tall ? 11 : 10;
 
     return Stack(
@@ -975,40 +954,43 @@ class _WelcomePage extends ConsumerWidget {
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(52),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
+                            horizontal: 24,
                             vertical: 16,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        child:
-                            saving
-                                ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                                : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
+                        child: saving
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Text(
                                       t('continue_btn'),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    const Icon(
-                                      Icons.arrow_forward_rounded,
-                                      size: 20,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
                       ),
                     ),
                   ],
@@ -1051,9 +1033,14 @@ class _WelcomeFeatureStrip extends StatelessWidget {
   const _WelcomeFeatureStrip({required this.narrow});
   final bool narrow;
 
-  static const _features = <
-    ({IconData icon, String title, String subtitle, Color accent, Color tint})
-  >[
+  static List<
+      ({
+        IconData icon,
+        String title,
+        String subtitle,
+        Color accent,
+        Color tint,
+      })> get _features => [
     (
       icon: Icons.school_rounded,
       title: S.literal('Learn AI'),
@@ -1311,22 +1298,19 @@ class _WelcomeCurvesPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (var i = 0; i < 7; i++) {
       final t = i / 6;
-      final paint =
-          Paint()
-            ..color = const Color(
-              0xFFE5D8CF,
-            ).withValues(alpha: 0.48 * (1 - t * 0.6))
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 1.15;
-      final path =
-          Path()
-            ..moveTo(0, size.height * (0.05 + i * 0.13))
-            ..quadraticBezierTo(
-              size.width * 0.48,
-              size.height * (0.0 + i * 0.12),
-              size.width,
-              size.height * (0.16 + i * 0.13),
-            );
+      final paint = Paint()
+        ..color =
+            const Color(0xFFE5D8CF).withValues(alpha: 0.48 * (1 - t * 0.6))
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.15;
+      final path = Path()
+        ..moveTo(0, size.height * (0.05 + i * 0.13))
+        ..quadraticBezierTo(
+          size.width * 0.48,
+          size.height * (0.0 + i * 0.12),
+          size.width,
+          size.height * (0.16 + i * 0.13),
+        );
       canvas.drawPath(path, paint);
     }
   }

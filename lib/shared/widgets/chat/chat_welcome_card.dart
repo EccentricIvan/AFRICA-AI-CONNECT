@@ -3,7 +3,11 @@ import 'chat_assistant_avatar.dart';
 import 'chat_ui.dart';
 
 class ChatWelcomeCard extends StatelessWidget {
-  const ChatWelcomeCard({super.key, required this.title, required this.body});
+  const ChatWelcomeCard({
+    super.key,
+    required this.title,
+    required this.body,
+  });
 
   final String title;
   final String body;

@@ -32,7 +32,10 @@ class PillarCard extends StatelessWidget {
             ],
           ),
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: color.withValues(alpha: 0.25), width: 1),
+          border: Border.all(
+            color: color.withValues(alpha: 0.25),
+            width: 1,
+          ),
         ),
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -79,7 +82,8 @@ class PillarCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
@@ -90,10 +94,9 @@ class PillarCard extends StatelessWidget {
                   Text(
                     'Explore',
                     style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: color,
-                    ),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: color),
                   ),
                   const SizedBox(width: 4),
                   Icon(Icons.arrow_forward_rounded, size: 14, color: color),

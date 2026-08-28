@@ -120,9 +120,8 @@ class LearnCourseCard extends StatelessWidget {
                   value: progress.clamp(0.0, 1.0),
                   minHeight: 4,
                   backgroundColor: const Color(0xFFF0EBE6),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    LearnUi.accent,
-                  ),
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(LearnUi.accent),
                 ),
               ),
             ] else ...[

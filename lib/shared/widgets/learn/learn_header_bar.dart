@@ -20,7 +20,10 @@ class LearnHeaderBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
       child: Row(
         children: [
-          _GlassCircleBtn(icon: Icons.arrow_back_rounded, onTap: onBack),
+          _GlassCircleBtn(
+            icon: Icons.arrow_back_rounded,
+            onTap: onBack,
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

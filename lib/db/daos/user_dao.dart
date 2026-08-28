@@ -12,8 +12,8 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
 
   /// Reactive — emits null before onboarding, then the row on every write.
   Stream<User?> watchUser() =>
-      (select(users)
-        ..where((u) => u.id.equals(_singletonId))).watchSingleOrNull();
+      (select(users)..where((u) => u.id.equals(_singletonId)))
+          .watchSingleOrNull();
 
   /// Upsert the single local user row. createdAt is intentionally omitted
   /// from the companion so the DB default only applies on first insert and

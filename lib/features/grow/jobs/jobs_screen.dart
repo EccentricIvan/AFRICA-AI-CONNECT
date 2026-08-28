@@ -11,7 +11,9 @@ class JobsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.literal('Job Board')),
-        actions: [IconButton(icon: const Icon(Icons.search), onPressed: () {})],
+        actions: [
+          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -62,7 +64,8 @@ class _JobsHero extends StatelessWidget {
           ],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.jobsColor.withValues(alpha: 0.15)),
+        border: Border.all(
+            color: AppColors.jobsColor.withValues(alpha: 0.15)),
       ),
       child: Row(
         children: [
@@ -76,9 +79,7 @@ class _JobsHero extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  S.literal(
-                    'Browse jobs, freelance gigs, and training programmes from verified employers.',
-                  ),
+                  S.literal('Browse jobs, freelance gigs, and training programmes from verified employers.'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -92,7 +93,8 @@ class _JobsHero extends StatelessWidget {
               color: AppColors.jobsColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.work, color: AppColors.jobsColor, size: 28),
+            child: const Icon(Icons.work,
+                color: AppColors.jobsColor, size: 28),
           ),
         ],
       ),
@@ -102,74 +104,52 @@ class _JobsHero extends StatelessWidget {
 
 class _JobListings extends StatelessWidget {
   static const _jobs = [
-    _Job(
-      'Community Health Worker',
-      'NGO Partner · Kampala',
-      'Full-time',
-      AppColors.healthColor,
-    ),
-    _Job(
-      'Digital Marketing Assistant',
-      'Tech Hub · Remote',
-      'Part-time',
-      AppColors.skillsColor,
-    ),
-    _Job(
-      'Agricultural Extension Officer',
-      'District Gov · Mbale',
-      'Contract',
-      AppColors.healthColor,
-    ),
-    _Job(
-      'Tailoring Trainer',
-      'Women\'s Centre · Jinja',
-      'Part-time',
-      AppColors.mentorshipColor,
-    ),
+    _Job('Community Health Worker', 'NGO Partner · Kampala', 'Full-time',
+        AppColors.healthColor),
+    _Job('Digital Marketing Assistant', 'Tech Hub · Remote', 'Part-time',
+        AppColors.skillsColor),
+    _Job('Agricultural Extension Officer', 'District Gov · Mbale',
+        'Contract', AppColors.healthColor),
+    _Job('Tailoring Trainer', 'Women\'s Centre · Jinja', 'Part-time',
+        AppColors.mentorshipColor),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children:
-          _jobs.map((j) {
-            return Card(
-              child: ListTile(
-                leading: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: j.color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(Icons.work, color: j.color, size: 22),
-                ),
-                title: Text(
-                  S.literal(j.title),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                subtitle: Text(S.literal(j.employer)),
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: j.color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    S.literal(j.type),
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: j.color,
-                    ),
-                  ),
-                ),
+      children: _jobs.map((j) {
+        return Card(
+          child: ListTile(
+            leading: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: j.color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
               ),
-            );
-          }).toList(),
+              child: Icon(Icons.work, color: j.color, size: 22),
+            ),
+            title: Text(S.literal(j.title),
+                style: Theme.of(context).textTheme.titleMedium),
+            subtitle: Text(S.literal(j.employer)),
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: j.color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                S.literal(j.type),
+                style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: j.color),
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -190,32 +170,24 @@ class _CvBuilderCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.skillsColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.skillsColor.withValues(alpha: 0.15),
-        ),
+        border:
+            Border.all(color: AppColors.skillsColor.withValues(alpha: 0.15)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.description,
-                color: AppColors.skillsColor,
-                size: 24,
-              ),
+              const Icon(Icons.description,
+                  color: AppColors.skillsColor, size: 24),
               const SizedBox(width: 10),
-              Text(
-                S.literal('CV Builder'),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text(S.literal('CV Builder'),
+                  style: Theme.of(context).textTheme.titleLarge),
             ],
           ),
           const SizedBox(height: 8),
           Text(
-            S.literal(
-              'Create a professional CV that highlights your skills and experience. AI-assisted — just answer a few questions.',
-            ),
+            S.literal('Create a professional CV that highlights your skills and experience. AI-assisted — just answer a few questions.'),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 14),

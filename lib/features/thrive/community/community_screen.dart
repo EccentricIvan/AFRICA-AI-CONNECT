@@ -1,22 +1,268 @@
+import 'dart:io';
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import '../../../core/l10n/app_strings.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../shared/widgets/section_header.dart';
+import '../../../db/providers/database_provider.dart';
+import '../../../shared/widgets/tap_scale.dart';
+import '../../../shared/widgets/community/community_group_card.dart';
+import '../../../shared/widgets/community/community_header_bar.dart';
+import '../../../shared/widgets/community/community_hero_card.dart';
+import '../../../shared/widgets/community/community_ui.dart';
 
-class CommunityScreen extends ConsumerWidget {
+/// Copies a user-picked image into the app's own persistent documents
+/// directory, mirroring Marketplace's `_pickAndSaveImage` — the OS
+/// picker's temp/cache path isn't guaranteed to survive.
+Future<String?> _pickAndSaveGroupImage() async {
+  final result = await FilePicker.platform.pickFiles(type: FileType.image);
+  final pickedPath = result?.files.single.path;
+  if (pickedPath == null) return null;
+
+  final docsDir = await getApplicationDocumentsDirectory();
+  final photosDir = Directory(p.join(docsDir.path, 'community_group_photos'));
+  if (!await photosDir.exists()) await photosDir.create(recursive: true);
+
+  final destPath = p.join(
+    photosDir.path,
+    '${DateTime.now().millisecondsSinceEpoch}${p.extension(pickedPath)}',
+  );
+  await File(pickedPath).copy(destPath);
+  return destPath;
+}
+
+/// The mock data every tab and the search overlay reads from — pulled
+/// out of any one screen/page class now that Discover/My Community/
+/// Feed are tabs on one screen rather than separate pushed pages.
+class _CommunityData {
+  _CommunityData._();
+
+  static const groups = [
+    _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
+        Color(0xFF2E8B8B), 'Business', 'Kampala'),
+    _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
+        'Digital Skills', 'Kampala'),
+    _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
+        'Agriculture', 'Gulu'),
+    _Group('Young Mothers Support', 67, Icons.child_care, Color(0xFFB4436C),
+        'Family & Support', 'Mbale'),
+    _Group('Tailors & Textile Circle', 52, Icons.checkroom, Color(0xFFD4A24E),
+        'Fashion & Crafts', 'Jinja'),
+    _Group('Savings Circle Kampala', 143, Icons.savings, Color(0xFF5B8AA8),
+        'Finance', 'Kampala'),
+  ];
+
+  static const conversations = [
+    _Conversation(
+      _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
+          Color(0xFF2E8B8B), 'Business', 'Kampala'),
+      'Grace',
+      'Anyone free for the Saturday market meet-up?',
+      '12m',
+      unread: 3,
+      senderColor: Color(0xFFD4A24E),
+    ),
+    _Conversation(
+      _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
+          'Digital Skills', 'Kampala'),
+      'Amina',
+      'Just shared the new tutorial link!',
+      '2h',
+      unread: 2,
+      senderColor: Color(0xFFB4436C),
+    ),
+    _Conversation(
+      _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
+          'Agriculture', 'Gulu'),
+      'You',
+      'Thanks everyone, see you at the training.',
+      '1d',
+      unread: 0,
+      senderColor: CommunityUi.accent,
+    ),
+  ];
+
+  static const posts = [
+    _Post('Sarah M.',
+        'Just completed the Digital Skills course! So proud of this journey.',
+        '2 hours ago', Color(0xFF7C5CBF), imageCount: 5),
+    _Post('Grace K.',
+        'My basket-weaving business got its first wholesale order today!',
+        '5 hours ago', Color(0xFFD4A24E), imageCount: 1),
+    _Post('Peace N.',
+        'Looking for women interested in forming a SACCO in Gulu district.',
+        '1 day ago', Color(0xFF2E8B8B)),
+  ];
+
+  static int get totalUnread =>
+      conversations.fold(0, (sum, c) => sum + c.unread);
+}
+
+class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final languageService = ref.watch(offlineLanguageServiceProvider);
-    String t(String key) => languageService.t(key);
+  State<CommunityScreen> createState() => _CommunityScreenState();
+}
+
+class _CommunityScreenState extends State<CommunityScreen> {
+  int _tab = 0;
+  final _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _selectTab(int i) {
+    setState(() => _tab = i);
+    _pageController.animateToPage(
+      i,
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  void _openCreateGroup() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: CommunityUi.of(context).card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => const _CreateGroupSheet(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
+    final totalMembers =
+        _CommunityData.groups.fold<int>(0, (sum, g) => sum + g.members);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t('community')),
-        actions: [
-          IconButton(icon: const Icon(Icons.group_add), onPressed: () {}),
+      backgroundColor: ui.pageBg,
+      body: SafeArea(
+        child: Column(
+          children: [
+            CommunityHeaderBar(
+              title: S.literal('Community'),
+              onBack: () => context.go('/'),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+              child: _FadeSlideIn(
+                child: CommunityHeroCard(
+                  title: S.literal('Stronger together'),
+                  body: S.literal('Connect. Learn. Grow.'),
+                  membershipLine:
+                      '${S.literal('Join')} $totalMembers ${S.literal('women across')} ${_CommunityData.groups.length} ${S.literal('communities')}',
+                  avatarColors: const [
+                    CommunityUi.accent,
+                    CommunityUi.accentDeep,
+                    Color(0xFFD65C6A),
+                  ],
+                  ctaLabel: S.literal('Create a Community'),
+                  onCta: _openCreateGroup,
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _CommunityTabBar(
+                selected: _tab,
+                unreadBadge: _CommunityData.totalUnread,
+                onChanged: _selectTab,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              // A real sliding transition between tabs — tapping a segment
+              // animates the page; swiping works too, for free.
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (i) => setState(() => _tab = i),
+                children: const [
+                  _ChatsTab(),
+                  _FeedTab(),
+                  _DiscoverTab(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FadeSlideIn extends StatelessWidget {
+  const _FadeSlideIn({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.easeOutCubic,
+      builder: (context, t, c) => Opacity(
+        opacity: t,
+        child: Transform.translate(offset: Offset(0, (1 - t) * 14), child: c),
+      ),
+      child: child,
+    );
+  }
+}
+
+// ──────────────────────────────── Tabs ────────────────────────────────
+
+/// Chats (default) / Feed / Discover — a pill segmented control
+/// switching between three full-height tabs instead of three stacked
+/// preview sections.
+class _CommunityTabBar extends StatelessWidget {
+  const _CommunityTabBar({
+    required this.selected,
+    required this.onChanged,
+    required this.unreadBadge,
+  });
+
+  final int selected;
+  final ValueChanged<int> onChanged;
+  final int unreadBadge;
+
+  @override
+  Widget build(BuildContext context) {
+    final ui = CommunityUi.of(context);
+    final labels = [
+      S.literal('Chats'),
+      S.literal('Feed'),
+      S.literal('Discover'),
+    ];
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: ui.iconWell,
+        borderRadius: BorderRadius.circular(CommunityUi.radiusChip + 4),
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < labels.length; i++)
+            Expanded(
+              child: _TabSegment(
+                label: labels[i],
+                active: selected == i,
+                badge: i == 0 && unreadBadge > 0 ? unreadBadge : null,
+                onTap: () => onChanged(i),
+              ),
+            ),
         ],
       ),
     );
@@ -129,12 +375,12 @@ class _TabScaffold extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: _SearchField(
-                  hint: searchHint,
-                  onChanged: onSearchChanged,
-                ),
+                child: _SearchField(hint: searchHint, onChanged: onSearchChanged),
               ),
-              if (trailing != null) ...[const SizedBox(width: 10), trailing!],
+              if (trailing != null) ...[
+                const SizedBox(width: 10),
+                trailing!,
+              ],
             ],
           ),
         ),
@@ -159,37 +405,28 @@ class _ChatsTabState extends State<_ChatsTab> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
-    final list =
-        q.isEmpty
-            ? _CommunityData.conversations
-            : _CommunityData.conversations
-                .where(
-                  (c) =>
-                      c.group.name.toLowerCase().contains(q) ||
-                      c.lastMessage.toLowerCase().contains(q),
-                )
-                .toList();
+    final list = q.isEmpty
+        ? _CommunityData.conversations
+        : _CommunityData.conversations
+            .where((c) =>
+                c.group.name.toLowerCase().contains(q) ||
+                c.lastMessage.toLowerCase().contains(q))
+            .toList();
 
     return _TabScaffold(
       title: S.literal('Chats'),
       searchHint: S.literal('Search your communities'),
       onSearchChanged: (v) => setState(() => _query = v),
-      child:
-          list.isEmpty
-              ? Center(
-                child: Text(
-                  S.literal('No conversations found'),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: CommunityUi.textSecondary,
-                  ),
-                ),
-              )
-              : ListView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                children:
-                    list.map((c) => _ConversationRow(conversation: c)).toList(),
-              ),
+      child: list.isEmpty
+          ? Center(
+              child: Text(S.literal('No conversations found'),
+                  style: TextStyle(
+                      fontSize: 13, color: ui.textSecondary)))
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              children:
+                  list.map((c) => _ConversationRow(conversation: c)).toList(),
+            ),
     );
   }
 }
@@ -208,37 +445,27 @@ class _FeedTabState extends State<_FeedTab> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
-    final list =
-        q.isEmpty
-            ? _CommunityData.posts
-            : _CommunityData.posts
-                .where(
-                  (post) =>
-                      post.author.toLowerCase().contains(q) ||
-                      post.content.toLowerCase().contains(q),
-                )
-                .toList();
+    final list = q.isEmpty
+        ? _CommunityData.posts
+        : _CommunityData.posts
+            .where((post) =>
+                post.author.toLowerCase().contains(q) ||
+                post.content.toLowerCase().contains(q))
+            .toList();
 
     return _TabScaffold(
       title: S.literal('Feed'),
       searchHint: S.literal('Search posts from your communities'),
       onSearchChanged: (v) => setState(() => _query = v),
-      child:
-          list.isEmpty
-              ? Center(
-                child: Text(
-                  S.literal('No posts found'),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: CommunityUi.textSecondary,
-                  ),
-                ),
-              )
-              : ListView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                children:
-                    list.map((post) => _FeedPostCard(post: post)).toList(),
-              ),
+      child: list.isEmpty
+          ? Center(
+              child: Text(S.literal('No posts found'),
+                  style: TextStyle(
+                      fontSize: 13, color: ui.textSecondary)))
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              children: list.map((post) => _FeedPostCard(post: post)).toList(),
+            ),
     );
   }
 }
@@ -266,11 +493,10 @@ class _DiscoverTabState extends State<_DiscoverTab> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder:
-          (_) => _FilterSheet(
-            initialCategories: _categories,
-            initialLocations: _locations,
-          ),
+      builder: (_) => _FilterSheet(
+        initialCategories: _categories,
+        initialLocations: _locations,
+      ),
     );
     if (result != null && mounted) {
       setState(() {
@@ -288,15 +514,14 @@ class _DiscoverTabState extends State<_DiscoverTab> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
-    final list =
-        _CommunityData.groups.where((g) {
-          final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
-          final matchesCategory =
-              _categories.isEmpty || _categories.contains(g.category);
-          final matchesLocation =
-              _locations.isEmpty || _locations.contains(g.location);
-          return matchesQuery && matchesCategory && matchesLocation;
-        }).toList();
+    final list = _CommunityData.groups.where((g) {
+      final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
+      final matchesCategory =
+          _categories.isEmpty || _categories.contains(g.category);
+      final matchesLocation =
+          _locations.isEmpty || _locations.contains(g.location);
+      return matchesQuery && matchesCategory && matchesLocation;
+    }).toList();
 
     return _TabScaffold(
       title: S.literal('Communities'),
@@ -309,46 +534,33 @@ class _DiscoverTabState extends State<_DiscoverTab> {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color:
-                _hasActiveFilters
-                    ? CommunityUi.accent.withValues(alpha: 0.14)
-                    : CommunityUi.card,
+            color: _hasActiveFilters
+                ? CommunityUi.accent.withValues(alpha: 0.14)
+                : ui.card,
             borderRadius: BorderRadius.circular(25),
           ),
-          child: Icon(
-            Icons.tune_rounded,
-            size: 20,
-            color:
-                _hasActiveFilters
-                    ? CommunityUi.accent
-                    : CommunityUi.textSecondary,
-          ),
+          child: Icon(Icons.tune_rounded,
+              size: 20,
+              color: _hasActiveFilters
+                  ? CommunityUi.accent
+                  : ui.textSecondary),
         ),
       ),
-      child:
-          list.isEmpty
-              ? Center(
-                child: Text(
-                  S.literal('No groups found'),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: CommunityUi.textSecondary,
-                  ),
-                ),
-              )
-              : ListView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                children: list.map((g) => _DiscoverGroupRow(group: g)).toList(),
-              ),
+      child: list.isEmpty
+          ? Center(
+              child: Text(S.literal('No groups found'),
+                  style: TextStyle(
+                      fontSize: 13, color: ui.textSecondary)))
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              children: list.map((g) => _DiscoverGroupRow(group: g)).toList(),
+            ),
     );
   }
 }
 
 class _FilterSheet extends StatefulWidget {
-  const _FilterSheet({
-    required this.initialCategories,
-    required this.initialLocations,
-  });
+  const _FilterSheet({required this.initialCategories, required this.initialLocations});
   final Set<String> initialCategories;
   final Set<String> initialLocations;
 
@@ -369,48 +581,52 @@ class _FilterSheetState extends State<_FilterSheet> {
     'Finance',
   ];
 
-  static const _locationOptions = ['Kampala', 'Gulu', 'Mbale', 'Jinja'];
+  static const _locationOptions = [
+    'Kampala',
+    'Gulu',
+    'Mbale',
+    'Jinja',
+  ];
 
-  Widget _chipRow(String label, List<String> options, Set<String> selected) {
+  Widget _chipRow(
+    String label,
+    List<String> options,
+    Set<String> selected,
+  ) {
+    final ui = CommunityUi.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           S.literal(label),
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: CommunityUi.textPrimary,
-          ),
+          style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: ui.textPrimary),
         ),
         const SizedBox(height: 10),
         Wrap(
           spacing: 8,
           runSpacing: 10,
-          children:
-              options.map((c) {
-                final isSelected = selected.contains(c);
-                return ChoiceChip(
-                  label: Text(c),
-                  selected: isSelected,
-                  onSelected:
-                      (_) => setState(
-                        () => isSelected ? selected.remove(c) : selected.add(c),
-                      ),
-                  selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
-                  labelStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        isSelected
-                            ? CommunityUi.accent
-                            : CommunityUi.textSecondary,
-                  ),
-                  side: BorderSide(
-                    color: isSelected ? CommunityUi.accent : CommunityUi.border,
-                  ),
-                );
-              }).toList(),
+          children: options.map((c) {
+            final isSelected = selected.contains(c);
+            return ChoiceChip(
+              label: Text(S.literal(c)),
+              selected: isSelected,
+              onSelected: (_) => setState(
+                  () => isSelected ? selected.remove(c) : selected.add(c)),
+              selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
+              labelStyle: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color:
+                    isSelected ? CommunityUi.accent : ui.textSecondary,
+              ),
+              side: BorderSide(
+                color: isSelected ? CommunityUi.accent : ui.border,
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
@@ -438,12 +654,11 @@ class _FilterSheetState extends State<_FilterSheet> {
           ),
           Text(
             S.literal('Filter Communities'),
-            style: const TextStyle(
-              fontFamily: 'Saira',
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-              color: CommunityUi.textPrimary,
-            ),
+            style: TextStyle(
+                fontFamily: 'Saira',
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: ui.textPrimary),
           ),
           const SizedBox(height: 18),
           _chipRow('Category', _categoryOptions, _categories),
@@ -454,7 +669,8 @@ class _FilterSheetState extends State<_FilterSheet> {
             width: double.infinity,
             child: TapScale(
               borderRadius: CommunityUi.radiusBtn,
-              onTap: () => Navigator.of(context).pop((_categories, _locations)),
+              onTap: () =>
+                  Navigator.of(context).pop((_categories, _locations)),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 alignment: Alignment.center,
@@ -464,14 +680,11 @@ class _FilterSheetState extends State<_FilterSheet> {
                   ),
                   borderRadius: BorderRadius.circular(CommunityUi.radiusBtn),
                 ),
-                child: Text(
-                  S.literal('Apply'),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
+                child: Text(S.literal('Apply'),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14)),
               ),
             ),
           ),
@@ -504,15 +717,9 @@ class _SearchField extends StatelessWidget {
         decoration: InputDecoration(
           isDense: true,
           hintText: hint,
-          hintStyle: const TextStyle(
-            fontSize: 14,
-            color: CommunityUi.textSecondary,
-          ),
-          prefixIcon: const Icon(
-            Icons.search_rounded,
-            size: 21,
-            color: CommunityUi.textSecondary,
-          ),
+          hintStyle: TextStyle(fontSize: 14, color: ui.textSecondary),
+          prefixIcon: Icon(Icons.search_rounded,
+              size: 21, color: ui.textSecondary),
           prefixIconConstraints: const BoxConstraints(minWidth: 52),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -558,19 +765,13 @@ class _PhotoPlaceholder extends StatelessWidget {
           Positioned(
             right: -14,
             bottom: -20,
-            child: _blob(
-              90,
-              Color.lerp(color, Colors.white, 0.2)!.withValues(alpha: 0.35),
-            ),
+            child: _blob(90, Color.lerp(color, Colors.white, 0.2)!.withValues(alpha: 0.35)),
           ),
           Positioned(
             right: 8,
             bottom: 8,
-            child: Icon(
-              Icons.photo_camera_rounded,
-              size: 16,
-              color: Colors.white.withValues(alpha: 0.55),
-            ),
+            child: Icon(Icons.photo_camera_rounded,
+                size: 16, color: Colors.white.withValues(alpha: 0.55)),
           ),
         ],
       ),
@@ -578,10 +779,10 @@ class _PhotoPlaceholder extends StatelessWidget {
   }
 
   Widget _blob(double size, Color color) => Container(
-    width: size,
-    height: size,
-    decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-  );
+        width: size,
+        height: size,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      );
 }
 
 class _MemberAvatars extends StatelessWidget {
@@ -635,7 +836,10 @@ class _MemberAvatars extends StatelessWidget {
 // ─────────────────────────── Join button ───────────────────────────
 
 class _JoinButton extends StatefulWidget {
-  const _JoinButton({required this.color, required this.groupName});
+  const _JoinButton({
+    required this.color,
+    required this.groupName,
+  });
   final Color color;
   final String groupName;
 
@@ -677,24 +881,22 @@ class _JoinButtonState extends State<_JoinButton> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient:
-              _joined
-                  ? null
-                  : LinearGradient(
-                    colors: [color, Color.lerp(color, Colors.black, 0.15)!],
-                  ),
-          color: _joined ? CommunityUi.iconWell : null,
+          gradient: _joined
+              ? null
+              : LinearGradient(
+                  colors: [color, Color.lerp(color, Colors.black, 0.15)!],
+                ),
+          color: _joined ? ui.iconWell : null,
           borderRadius: BorderRadius.circular(20),
-          boxShadow:
-              _joined
-                  ? []
-                  : [
-                    BoxShadow(
-                      color: color.withValues(alpha: 0.35),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
+          boxShadow: _joined
+              ? []
+              : [
+                  BoxShadow(
+                    color: color.withValues(alpha: 0.35),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
         ),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 180),
@@ -702,11 +904,8 @@ class _JoinButtonState extends State<_JoinButton> {
             key: ValueKey(_joined),
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                _joined ? Icons.check_rounded : Icons.add_rounded,
-                size: 14,
-                color: _joined ? color : Colors.white,
-              ),
+              Icon(_joined ? Icons.check_rounded : Icons.add_rounded,
+                  size: 14, color: _joined ? color : Colors.white),
               const SizedBox(width: 4),
               Text(
                 _joined ? S.literal('Joined') : S.literal('Join'),
@@ -793,9 +992,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -805,29 +1002,150 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _CommunityHero(t: t),
-                const SizedBox(height: 24),
-                SectionHeader(
-                  title: t('your_groups'),
-                  subtitle: t('your_groups_desc'),
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: ui.border,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 12),
-                _EmptyGroupsState(t: t),
-                const SizedBox(height: 24),
-                SectionHeader(
-                  title: t('discover_groups'),
-                  subtitle: t('discover_groups_desc'),
+                Text(
+                  S.literal('Create a Community'),
+                  style: TextStyle(
+                      fontFamily: 'Saira',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: ui.textPrimary),
                 ),
-                const SizedBox(height: 12),
-                _DiscoverGroups(t: t),
-                const SizedBox(height: 24),
-                SectionHeader(
-                  title: t('community_feed'),
-                  subtitle: t('community_feed_desc'),
+                const SizedBox(height: 18),
+                Center(
+                  child: GestureDetector(
+                    onTap: _pickingImage ? null : _pickImage,
+                    child: Container(
+                      width: 84,
+                      height: 84,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _imagePath == null ? ui.iconWell : null,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: _pickingImage
+                          ? const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2))
+                          : _imagePath != null
+                              ? Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.file(File(_imagePath!), fit: BoxFit.cover),
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            setState(() => _imagePath = null),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(3),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black54,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(Icons.close,
+                                              size: 14, color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const Icon(Icons.add_a_photo_outlined,
+                                  color: CommunityUi.accent, size: 26),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 12),
-                _CommunityFeed(t: t),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _nameController,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(hintText: S.literal('Group name')),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? S.literal('Enter a group name')
+                      : null,
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  S.literal('Category'),
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: ui.textPrimary),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _categories.map((c) {
+                    final isSelected = _selectedCategory == c;
+                    return ChoiceChip(
+                      label: Text(S.literal(c)),
+                      selected: isSelected,
+                      onSelected: (_) => setState(() => _selectedCategory = c),
+                      selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
+                      labelStyle: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: isSelected
+                            ? CommunityUi.accent
+                            : ui.textSecondary,
+                      ),
+                      side: BorderSide(
+                        color:
+                            isSelected ? CommunityUi.accent : ui.border,
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 14),
+                TextFormField(
+                  controller: _descController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                      hintText: S.literal('What is this group about?')),
+                ),
+                const SizedBox(height: 22),
+                SizedBox(
+                  width: double.infinity,
+                  child: TapScale(
+                    borderRadius: CommunityUi.radiusBtn,
+                    onTap: _submit,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [CommunityUi.accent, CommunityUi.accentDeep],
+                        ),
+                        borderRadius: BorderRadius.circular(CommunityUi.radiusBtn),
+                        boxShadow: [
+                          BoxShadow(
+                            color: CommunityUi.accent.withValues(alpha: 0.35),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        S.literal('Create Community'),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -837,9 +1155,39 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
   }
 }
 
-class _CommunityHero extends StatelessWidget {
-  const _CommunityHero({required this.t});
-  final String Function(String) t;
+// ─────────────────────────── Group preview popup ───────────────────────
+
+Future<void> _showGroupPreview(BuildContext context, _Group group) {
+  return showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: S.literal('Dismiss'),
+    barrierColor: Colors.black.withValues(alpha: 0.25),
+    transitionDuration: const Duration(milliseconds: 220),
+    pageBuilder: (ctx, anim, anim2) => Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 28),
+        child: _GroupPreviewCard(group: group),
+      ),
+    ),
+    transitionBuilder: (ctx, animation, __, child) => BackdropFilter(
+      filter: ImageFilter.blur(
+          sigmaX: 6 * animation.value, sigmaY: 6 * animation.value),
+      child: FadeTransition(
+        opacity: animation,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.9, end: 1).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeOutBack)),
+          child: child,
+        ),
+      ),
+    ),
+  );
+}
+
+class _GroupPreviewCard extends StatelessWidget {
+  const _GroupPreviewCard({required this.group});
+  final _Group group;
 
   @override
   Widget build(BuildContext context) {
@@ -873,10 +1221,7 @@ class _CommunityHero extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        g.color,
-                        Color.lerp(g.color, Colors.black, 0.15)!,
-                      ],
+                      colors: [g.color, Color.lerp(g.color, Colors.black, 0.15)!],
                     ),
                   ),
                   alignment: Alignment.center,
@@ -896,11 +1241,8 @@ class _CommunityHero extends StatelessWidget {
                   right: 6,
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: Colors.white,
-                      size: 22,
-                    ),
+                    icon: const Icon(Icons.close_rounded,
+                        color: Colors.white, size: 22),
                   ),
                 ),
               ],
@@ -931,18 +1273,14 @@ class _CommunityHero extends StatelessWidget {
                       Text(
                         S.literal(g.location),
                         style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: g.color,
-                        ),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: g.color),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  _MemberAvatars(
-                    color: g.color,
-                    count: '${g.memberCount} members',
-                  ),
+                  _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
                   const SizedBox(height: 12),
                   Text(
                     S.literal(
@@ -962,10 +1300,6 @@ class _CommunityHero extends StatelessWidget {
               ),
             ),
           ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.communityColor.withValues(alpha: 0.15),
         ),
       ),
     );
@@ -1000,14 +1334,8 @@ class _DiscoverGroupRow extends StatelessWidget {
 }
 
 class _Group {
-  const _Group(
-    this.name,
-    this.members,
-    this.icon,
-    this.color,
-    this.category,
-    this.location,
-  );
+  const _Group(this.name, this.members, this.icon, this.color, this.category,
+      this.location);
   final String name;
   final int members;
   final IconData icon;
@@ -1033,11 +1361,8 @@ class _GroupDetailPage extends StatelessWidget {
   final _Group group;
 
   static const _mockMembers = [
-    _Member('Sarah M.', [
-      'Entrepreneur',
-      'Mentor',
-      'Community Leader',
-    ], isAdmin: true),
+    _Member('Sarah M.', ['Entrepreneur', 'Mentor', 'Community Leader'],
+        isAdmin: true),
     _Member('Grace K.', ['Trader', 'Entrepreneur']),
     _Member('Amina', ['Student', 'Volunteer']),
     _Member('Peace N.', ['Mentor', 'Entrepreneur', 'Trader']),
@@ -1065,9 +1390,7 @@ class _GroupDetailPage extends StatelessWidget {
                   Container(
                     height: 120,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        CommunityUi.radiusHero,
-                      ),
+                      borderRadius: BorderRadius.circular(CommunityUi.radiusHero),
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -1110,32 +1433,23 @@ class _GroupDetailPage extends StatelessWidget {
                       Text(
                         S.literal(g.location),
                         style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: g.color,
-                        ),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: g.color),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  _MemberAvatars(
-                    color: g.color,
-                    count: '${g.memberCount} members',
-                  ),
+                  _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
                   const SizedBox(height: 4),
                   Text(
                     '${S.literal('Created by')} ${creator.name}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: CommunityUi.textSecondary,
-                    ),
+                    style: TextStyle(
+                        fontSize: 12, color: ui.textSecondary),
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: g.color.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(20),
@@ -1143,11 +1457,7 @@ class _GroupDetailPage extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.check_circle_rounded,
-                          color: g.color,
-                          size: 16,
-                        ),
+                        Icon(Icons.check_circle_rounded, color: g.color, size: 16),
                         const SizedBox(width: 6),
                         Text(
                           S.literal("You're a member"),
@@ -1190,9 +1500,7 @@ class _GroupDetailPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  ..._mockMembers.map(
-                    (m) => _MemberListRow(color: g.color, member: m),
-                  ),
+                  ..._mockMembers.map((m) => _MemberListRow(color: g.color, member: m)),
                 ],
               ),
             ),
@@ -1223,30 +1531,26 @@ class _MemberListRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  t('community_hero_title'),
-                  style: Theme.of(context).textTheme.headlineSmall,
+                Row(
+                  children: [
+                    Text(m.name,
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: ui.textPrimary)),
+                    if (m.isAdmin) ...[
+                      const SizedBox(width: 6),
+                      const _AdminBadge(),
+                    ],
+                  ],
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  t('community_hero_desc'),
-                  style: Theme.of(context).textTheme.bodyMedium,
+                const SizedBox(height: 5),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: m.roles.map((r) => _RoleChip(label: r)).toList(),
                 ),
               ],
-            ),
-          ),
-          const SizedBox(width: 16),
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: AppColors.communityColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(
-              Icons.people,
-              color: AppColors.communityColor,
-              size: 28,
             ),
           ),
         ],
@@ -1255,9 +1559,12 @@ class _MemberListRow extends StatelessWidget {
   }
 }
 
-class _EmptyGroupsState extends StatelessWidget {
-  const _EmptyGroupsState({required this.t});
-  final String Function(String) t;
+/// The community's category (Business, Agriculture, ...) shown as a tag
+/// wherever a group's details are shown.
+class _CategoryTag extends StatelessWidget {
+  const _CategoryTag({required this.color, required this.label});
+  final Color color;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -1338,10 +1645,9 @@ class _ConversationRow extends StatelessWidget {
     final ui = CommunityUi.of(context);
     final c = conversation;
     return CommunityGroupCard(
-      onTap:
-          () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => _ChatRoomPage(conversation: c)),
-          ),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => _ChatRoomPage(conversation: c)),
+      ),
       // The last sender's own avatar, not the group's — matches how a
       // real chat list shows who most recently spoke.
       leading: CommunityAvatar(color: c.senderColor, initial: c.lastSender[0]),
@@ -1350,10 +1656,7 @@ class _ConversationRow extends StatelessWidget {
         '${c.lastSender}: ${c.lastMessage}',
         style: TextStyle(
           fontSize: 12,
-          color:
-              c.unread > 0
-                  ? CommunityUi.textPrimary
-                  : CommunityUi.textSecondary,
+          color: c.unread > 0 ? ui.textPrimary : ui.textSecondary,
           fontWeight: c.unread > 0 ? FontWeight.w600 : FontWeight.w400,
         ),
         maxLines: 1,
@@ -1364,11 +1667,8 @@ class _ConversationRow extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            c.time,
-            style: const TextStyle(
-              fontSize: 11,
-              color: CommunityUi.textSecondary,
-            ),
+            S.literal(c.time),
+            style: TextStyle(fontSize: 11, color: ui.textSecondary),
           ),
           const SizedBox(height: 6),
           if (c.unread > 0)
@@ -1387,12 +1687,6 @@ class _ConversationRow extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  S.literal(
-                    "Connect with women's groups, share experiences, support each other, and grow together.",
-                  ),
-                  style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
         ],
@@ -1403,13 +1697,8 @@ class _ConversationRow extends StatelessWidget {
 
 class _Conversation {
   const _Conversation(
-    this.group,
-    this.lastSender,
-    this.lastMessage,
-    this.time, {
-    this.unread = 0,
-    required this.senderColor,
-  });
+      this.group, this.lastSender, this.lastMessage, this.time,
+      {this.unread = 0, required this.senderColor});
   final _Group group;
   final String lastSender;
   final String lastMessage;
@@ -1436,11 +1725,8 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
     super.initState();
     final c = widget.conversation;
     _messages = [
-      (
-        c.lastSender,
-        'Hey everyone, hope you\'re all doing well this week!',
-        c.lastSender == 'You',
-      ),
+      (c.lastSender, "Hey everyone, hope you're all doing well this week!",
+          c.lastSender == 'You'),
       ('You', 'Doing great, thanks for asking!', true),
       (c.lastSender, c.lastMessage, c.lastSender == 'You'),
     ];
@@ -1460,11 +1746,8 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
     _controller.clear();
     Future.delayed(const Duration(milliseconds: 50), () {
       if (_scroll.hasClients) {
-        _scroll.animateTo(
-          _scroll.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
+        _scroll.animateTo(_scroll.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
       }
     });
   }
@@ -1491,19 +1774,13 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                   Expanded(
                     child: TapScale(
                       borderRadius: 12,
-                      onTap:
-                          () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => _GroupDetailPage(group: g),
-                            ),
-                          ),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => _GroupDetailPage(group: g)),
+                      ),
                       child: Row(
                         children: [
-                          CommunityAvatar(
-                            color: g.color,
-                            initial: g.name[0],
-                            size: 40,
-                          ),
+                          CommunityAvatar(color: g.color, initial: g.name[0], size: 40),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Column(
@@ -1511,20 +1788,17 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                               children: [
                                 Text(
                                   S.literal(g.name),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: CommunityUi.textPrimary,
-                                  ),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: ui.textPrimary),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   '${g.memberCount} ${S.literal('members')} · ${S.literal('tap for details')}',
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: CommunityUi.textSecondary,
-                                  ),
+                                  style: TextStyle(
+                                      fontSize: 11, color: ui.textSecondary),
                                 ),
                               ],
                             ),
@@ -1548,20 +1822,15 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                     final bubble = Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
+                          horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
-                        gradient:
-                            isMe
-                                ? LinearGradient(
-                                  colors: [
-                                    g.color,
-                                    Color.lerp(g.color, Colors.black, 0.12)!,
-                                  ],
-                                )
-                                : null,
-                        color: isMe ? null : CommunityUi.card,
+                        gradient: isMe
+                            ? LinearGradient(colors: [
+                                g.color,
+                                Color.lerp(g.color, Colors.black, 0.12)!,
+                              ])
+                            : null,
+                        color: isMe ? null : ui.card,
                         borderRadius: BorderRadius.only(
                           topLeft: const Radius.circular(16),
                           topRight: const Radius.circular(16),
@@ -1604,14 +1873,26 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                     // ones (using your real saved photo when you've set
                     // one), not just incoming messages.
                     if (isMe) {
-                      return Align(
-                        alignment: Alignment.centerRight,
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.sizeOf(context).width * 0.72,
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.sizeOf(context).width * 0.64),
+                            child: bubble,
                           ),
-                          child: bubble,
-                        ),
+                          const SizedBox(width: 8),
+                          CommunityAvatar(
+                            color: g.color,
+                            initial: (me?.name.isNotEmpty ?? false)
+                                ? me!.name[0]
+                                : 'Y',
+                            imagePath: me?.avatarPath,
+                            size: 30,
+                          ),
+                        ],
                       );
                     }
                     return Row(
@@ -1625,8 +1906,7 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                         const SizedBox(width: 8),
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: MediaQuery.sizeOf(context).width * 0.64,
-                          ),
+                              maxWidth: MediaQuery.sizeOf(context).width * 0.64),
                           child: bubble,
                         ),
                       ],
@@ -1661,15 +1941,11 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                         decoration: InputDecoration(
                           isDense: true,
                           hintText: S.literal('Message'),
-                          hintStyle: const TextStyle(
-                            fontSize: 13,
-                            color: CommunityUi.textSecondary,
-                          ),
+                          hintStyle: TextStyle(
+                              fontSize: 13, color: ui.textSecondary),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 12,
-                          ),
+                              horizontal: 18, vertical: 12),
                         ),
                         onSubmitted: (_) => _send(),
                         textInputAction: TextInputAction.send,
@@ -1684,38 +1960,25 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            g.color,
-                            Color.lerp(g.color, Colors.black, 0.12)!,
-                          ],
-                        ),
+                        gradient: LinearGradient(colors: [
+                          g.color,
+                          Color.lerp(g.color, Colors.black, 0.12)!,
+                        ]),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: g.color.withValues(alpha: 0.4),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          ),
+                              color: g.color.withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3)),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.send_rounded,
-                        color: Colors.white,
-                        size: 18,
-                      ),
+                      child: const Icon(Icons.send_rounded,
+                          color: Colors.white, size: 18),
                     ),
                   ),
                 ],
               ),
             ),
-            child: const Icon(
-              Icons.people,
-              color: AppColors.communityColor,
-              size: 28,
-            ),
-          ),
-        ],
           ],
         ),
       ),
@@ -1743,11 +2006,6 @@ class _FeedPostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.groups, size: 48, color: Theme.of(context).hintColor),
-          const SizedBox(height: 12),
-          Text(
-            t('no_groups_yet'),
-            style: Theme.of(context).textTheme.titleMedium,
           Row(
             children: [
               CommunityAvatar(color: p.color, initial: p.author[0], size: 36),
@@ -1756,37 +2014,43 @@ class _FeedPostCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      p.author,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                        color: CommunityUi.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      S.literal(p.time),
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: CommunityUi.textSecondary,
-                      ),
-                    ),
+                    Text(p.author,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                            color: ui.textPrimary)),
+                    Text(S.literal(p.time),
+                        style: TextStyle(
+                            fontSize: 11, color: ui.textSecondary)),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          Text(
-            t('join_or_create_group'),
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.add, size: 18),
-            label: Text(t('create_group')),
+          Text(S.literal(p.content),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 13,
+                color: ui.textPrimary,
+                height: 1.4,
+              )),
+          if (p.imageCount > 0) ...[
+            const SizedBox(height: 10),
+            _FeedImages(post: p),
+          ],
+          const SizedBox(height: 8),
+          Divider(height: 1, color: ui.border),
+          const SizedBox(height: 4),
+          const Row(
+            children: [
+              _FeedAction(Icons.favorite_border_rounded, 'Like'),
+              SizedBox(width: 4),
+              _FeedAction(Icons.chat_bubble_outline_rounded, 'Comment'),
+              SizedBox(width: 4),
+              _FeedAction(Icons.share_outlined, 'Share'),
+            ],
           ),
         ],
       ),
@@ -1794,176 +2058,297 @@ class _FeedPostCard extends StatelessWidget {
   }
 }
 
-class _DiscoverGroups extends StatelessWidget {
-  const _DiscoverGroups({required this.t});
-  final String Function(String) t;
+/// LinkedIn-style multi-image layout: 1 image is a single full-width tile,
+/// 2 are side by side, 3 is one large + two stacked, 4+ is a 2x2 grid with
+/// a "+N" overlay on the last tile for any images beyond the 4 shown.
+/// Tapping any tile opens the full swipeable viewer at that tile's index.
+class _FeedImages extends StatelessWidget {
+  const _FeedImages({required this.post});
+  final _Post post;
 
-  static const _groups = [
-    _Group(
-      'group_kampala_women_entrepreneurs',
-      124,
-      Icons.trending_up,
-      AppColors.earnColor,
-    ),
-    _Group(
-      'group_digital_skills_network',
-      89,
-      Icons.computer,
-      AppColors.skillsColor,
-    ),
-    _Group(
-      'group_farmers_united',
-      256,
-      Icons.agriculture,
-      AppColors.healthColor,
-    ),
-    _Group(
-      'group_young_mothers_support',
-      67,
-      Icons.child_care,
-      AppColors.thriveColor,
-    ),
-  ];
+  String get _postId => '${post.author}-${post.time}';
+
+  void _open(BuildContext context, int index) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.black87,
+        pageBuilder: (_, __, ___) =>
+            _ImageViewerPage(post: post, initialIndex: index),
+      ),
+    );
+  }
+
+  Widget _tile(BuildContext context, int index, {int? overlayCount}) {
+    return TapScale(
+      borderRadius: 0,
+      onTap: () => _open(context, index),
+      child: Hero(
+        tag: '$_postId-img-$index',
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            _PhotoPlaceholder(
+              color: Color.lerp(post.color, Colors.white, (index % 3) * 0.14)!,
+              radius: 0,
+            ),
+            if (overlayCount != null)
+              Container(
+                color: Colors.black.withValues(alpha: 0.55),
+                alignment: Alignment.center,
+                child: Text(
+                  '+$overlayCount',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children:
-          _groups.map((g) {
-            return Card(
-              child: ListTile(
-                leading: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: g.color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(g.icon, color: g.color, size: 22),
-                ),
-                title: Text(
-                  t(g.nameKey),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                subtitle: Text('${g.memberCount} ${t('members')}'),
-                trailing: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(t('join'), style: const TextStyle(fontSize: 12)),
-                ),
+    final count = post.imageCount;
+    const gap = 2.0;
+    Widget grid;
+
+    if (count == 1) {
+      grid = AspectRatio(aspectRatio: 4 / 3, child: _tile(context, 0));
+    } else if (count == 2) {
+      grid = AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Row(
+          children: [
+            Expanded(child: _tile(context, 0)),
+            const SizedBox(width: gap),
+            Expanded(child: _tile(context, 1)),
+          ],
+        ),
+      );
+    } else if (count == 3) {
+      grid = AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Row(
+          children: [
+            Expanded(child: _tile(context, 0)),
+            const SizedBox(width: gap),
+            Expanded(
+              child: Column(
+                children: [
+                  Expanded(child: _tile(context, 1)),
+                  const SizedBox(height: gap),
+                  Expanded(child: _tile(context, 2)),
+                ],
               ),
-            );
-          }).toList(),
+            ),
+          ],
+        ),
+      );
+    } else {
+      final extra = count - 4;
+      grid = AspectRatio(
+        aspectRatio: 1,
+        child: Column(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(child: _tile(context, 0)),
+                  const SizedBox(width: gap),
+                  Expanded(child: _tile(context, 1)),
+                ],
+              ),
+            ),
+            const SizedBox(height: gap),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(child: _tile(context, 2)),
+                  const SizedBox(width: gap),
+                  Expanded(
+                    child: _tile(context, 3,
+                        overlayCount: extra > 0 ? extra : null),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(CommunityUi.radiusChip),
+      child: grid,
     );
   }
 }
 
-class _Group {
-  const _Group(this.nameKey, this.memberCount, this.icon, this.color);
-  final String nameKey;
-  final int memberCount;
-  final IconData icon;
-  final Color color;
+class _ImageViewerPage extends StatefulWidget {
+  const _ImageViewerPage({required this.post, required this.initialIndex});
+  final _Post post;
+  final int initialIndex;
+
+  @override
+  State<_ImageViewerPage> createState() => _ImageViewerPageState();
 }
 
-class _CommunityFeed extends StatelessWidget {
-  const _CommunityFeed({required this.t});
-  final String Function(String) t;
+class _ImageViewerPageState extends State<_ImageViewerPage> {
+  late final PageController _page =
+      PageController(initialPage: widget.initialIndex);
+  late int _index = widget.initialIndex;
 
-  static const _posts = [
-    _Post(
-      'Sarah M.',
-      'post_digital_skills_done',
-      'time_2_hours_ago',
-      AppColors.skillsColor,
-    ),
-    _Post(
-      'Grace K.',
-      'post_wholesale_order',
-      'time_5_hours_ago',
-      AppColors.earnColor,
-    ),
-    _Post(
-      'Peace N.',
-      'post_sacco_gulu',
-      'time_1_day_ago',
-      AppColors.financeColor,
-    ),
-  ];
+  String get _postId => '${widget.post.author}-${widget.post.time}';
+
+  void _go(int delta) {
+    _page.animateToPage(_index + delta,
+        duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children:
-          _posts.map((p) {
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+    final p = widget.post;
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageView.builder(
+              controller: _page,
+              itemCount: p.imageCount,
+              onPageChanged: (i) => setState(() => _index = i),
+              itemBuilder: (context, i) => Center(
+                child: Hero(
+                  tag: '$_postId-img-$i',
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 210),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: _PhotoPlaceholder(
+                        color: Color.lerp(p.color, Colors.white, (i % 3) * 0.14)!,
+                        radius: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 8,
+              left: 8,
+              child: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.close_rounded, color: Colors.white, size: 28),
+              ),
+            ),
+            if (p.imageCount > 1 && _index > 0)
+              Positioned(
+                left: 6,
+                top: 0,
+                bottom: 210,
+                child: Center(
+                  child: _ArrowButton(
+                    icon: Icons.chevron_left_rounded,
+                    onTap: () => _go(-1),
+                  ),
+                ),
+              ),
+            if (p.imageCount > 1 && _index < p.imageCount - 1)
+              Positioned(
+                right: 6,
+                top: 0,
+                bottom: 210,
+                child: Center(
+                  child: _ArrowButton(
+                    icon: Icons.chevron_right_rounded,
+                    onTap: () => _go(1),
+                  ),
+                ),
+              ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(18, 20, 18, 22),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0),
+                      Colors.black.withValues(alpha: 0.85),
+                    ],
+                  ),
+                ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (p.imageCount > 1) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (var i = 0; i < p.imageCount; i++)
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              width: i == _index ? 18 : 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: Colors.white
+                                    .withValues(alpha: i == _index ? 0.95 : 0.4),
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                    ],
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 18,
-                          backgroundColor: p.color.withValues(alpha: 0.12),
-                          child: Text(
-                            p.author[0],
-                            style: TextStyle(
-                              color: p.color,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
+                        CommunityAvatar(color: p.color, initial: p.author[0], size: 32),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                p.author,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                t(p.timeKey),
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Theme.of(context).hintColor,
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: Text(p.author,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14)),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Text(
-                      t(p.contentKey),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      S.literal(p.content),
+                      style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: 13,
+                          height: 1.4),
                     ),
-                    const SizedBox(height: 10),
-                    Row(
+                    const SizedBox(height: 12),
+                    const Row(
                       children: [
-                        _FeedAction(Icons.favorite_border, t('like')),
-                        const SizedBox(width: 16),
-                        _FeedAction(Icons.chat_bubble_outline, t('comment')),
-                        const SizedBox(width: 16),
-                        _FeedAction(Icons.share_outlined, t('share')),
+                        _FeedAction(Icons.favorite_border_rounded, 'Like', light: true),
+                        SizedBox(width: 10),
+                        _FeedAction(Icons.chat_bubble_outline_rounded, 'Comment',
+                            light: true),
+                        SizedBox(width: 10),
+                        _FeedAction(Icons.share_outlined, 'Share', light: true),
                       ],
                     ),
                   ],
                 ),
               ),
-            );
-          }).toList(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -1992,10 +2377,11 @@ class _ArrowButton extends StatelessWidget {
 }
 
 class _Post {
-  const _Post(this.author, this.contentKey, this.timeKey, this.color);
+  const _Post(this.author, this.content, this.time, this.color,
+      {this.imageCount = 0});
   final String author;
-  final String contentKey;
-  final String timeKey;
+  final String content;
+  final String time;
   final Color color;
   final int imageCount;
 }
@@ -2025,7 +2411,8 @@ class _FeedAction extends StatelessWidget {
               S.literal(label),
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).hintColor,
+                fontWeight: FontWeight.w600,
+                color: color,
               ),
             ),
           ],

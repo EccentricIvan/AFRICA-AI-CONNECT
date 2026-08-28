@@ -33,7 +33,10 @@ class HomePillarCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [HomeUi.card, accent.withValues(alpha: 0.06)],
+            colors: [
+              ui.card,
+              accent.withValues(alpha: ui.isDark ? 0.14 : 0.06),
+            ],
           ),
         ),
         child: Column(

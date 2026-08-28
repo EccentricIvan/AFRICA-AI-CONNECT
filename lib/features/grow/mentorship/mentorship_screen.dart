@@ -13,34 +13,10 @@ class MentorshipScreen extends ConsumerWidget {
     String t(String key) => S.tr(context, ref, key);
 
     const mentors = [
-      _Mentor(
-        'Amina B.',
-        'Agriculture & Agribusiness',
-        'Kampala',
-        12,
-        AppColors.healthColor,
-      ),
-      _Mentor(
-        'Florence N.',
-        'Financial Management',
-        'Jinja',
-        8,
-        AppColors.financeColor,
-      ),
-      _Mentor(
-        'Esther K.',
-        'Digital Marketing',
-        'Mbale',
-        5,
-        AppColors.chatColor,
-      ),
-      _Mentor(
-        'Harriet O.',
-        'Entrepreneurship',
-        'Kampala',
-        15,
-        AppColors.earnColor,
-      ),
+      _Mentor('Amina B.', 'Agriculture & Agribusiness', 'Kampala', 12, AppColors.healthColor),
+      _Mentor('Florence N.', 'Financial Management', 'Jinja', 8, AppColors.financeColor),
+      _Mentor('Esther K.', 'Digital Marketing', 'Mbale', 5, AppColors.chatColor),
+      _Mentor('Harriet O.', 'Entrepreneurship', 'Kampala', 15, AppColors.earnColor),
     ];
 
     return Scaffold(
@@ -60,20 +36,12 @@ class MentorshipScreen extends ConsumerWidget {
                     const SizedBox(height: 24),
                     _SectionLabel(t('find_mentor_title')),
                     const SizedBox(height: 4),
-                    Text(
-                      t('find_mentor_desc'),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.textHint,
-                      ),
-                    ),
+                    Text(t('find_mentor_desc'), style: TextStyle(fontSize: 13, color: AppColors.of(context).textHint)),
                     const SizedBox(height: 14),
-                    ...mentors.map(
-                      (m) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _MentorCard(mentor: m, t: t),
-                      ),
-                    ),
+                    ...mentors.map((m) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _MentorCard(mentor: m, t: t),
+                    )),
                     const SizedBox(height: 16),
                     _BecomeMentorCard(t: t),
                     const SizedBox(height: 32),
@@ -100,8 +68,7 @@ class _GrowAppBar extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: 40, height: 40,
             decoration: BoxDecoration(
               color: const Color(0x183A2E29),
               borderRadius: BorderRadius.circular(12),
@@ -109,11 +76,7 @@ class _GrowAppBar extends StatelessWidget {
             ),
             child: IconButton(
               padding: EdgeInsets.zero,
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: AppColors.textPrimary,
-                size: 20,
-              ),
+              icon: Icon(Icons.arrow_back_rounded, color: ac.textPrimary, size: 20),
               onPressed: () => context.go('/'),
             ),
           ),
@@ -124,34 +87,22 @@ class _GrowAppBar extends StatelessWidget {
               children: [
                 Text(
                   t('mentors'),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ac.textPrimary),
                 ),
                 Text(
                   t('grow_desc'),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textHint,
-                  ),
+                  style: TextStyle(fontSize: 12, color: ac.textHint),
                 ),
               ],
             ),
           ),
           Container(
-            width: 40,
-            height: 40,
+            width: 40, height: 40,
             decoration: BoxDecoration(
               color: AppColors.mentorshipColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
-              Icons.diversity_1_rounded,
-              color: AppColors.mentorshipColor,
-              size: 22,
-            ),
+            child: const Icon(Icons.diversity_1_rounded, color: AppColors.mentorshipColor, size: 22),
           ),
         ],
       ),
@@ -178,9 +129,7 @@ class _GrowHero extends StatelessWidget {
           ],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: AppColors.mentorshipColor.withValues(alpha: 0.25),
-        ),
+        border: Border.all(color: AppColors.mentorshipColor.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
@@ -190,41 +139,28 @@ class _GrowHero extends StatelessWidget {
               children: [
                 Text(
                   t('grow_with_guidance'),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                    height: 1.2,
+                  style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.w700,
+                    color: ac.textPrimary, height: 1.2,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   t('grow_with_guidance_desc'),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.textSecondary,
-                    height: 1.5,
-                  ),
+                  style: TextStyle(fontSize: 13, color: ac.textSecondary, height: 1.5),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 16),
           Container(
-            width: 60,
-            height: 60,
+            width: 60, height: 60,
             decoration: BoxDecoration(
               color: AppColors.mentorshipColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: AppColors.mentorshipColor.withValues(alpha: 0.3),
-              ),
+              border: Border.all(color: AppColors.mentorshipColor.withValues(alpha: 0.3)),
             ),
-            child: const Icon(
-              Icons.diversity_1_rounded,
-              color: AppColors.mentorshipColor,
-              size: 30,
-            ),
+            child: const Icon(Icons.diversity_1_rounded, color: AppColors.mentorshipColor, size: 30),
           ),
         ],
       ),
@@ -250,8 +186,7 @@ class _MentorCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 52,
-            height: 52,
+            width: 52, height: 52,
             decoration: BoxDecoration(
               color: mentor.color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
@@ -261,9 +196,7 @@ class _MentorCard extends StatelessWidget {
               child: Text(
                 mentor.name[0],
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: mentor.color,
+                  fontSize: 20, fontWeight: FontWeight.w700, color: mentor.color,
                 ),
               ),
             ),
@@ -275,35 +208,21 @@ class _MentorCard extends StatelessWidget {
               children: [
                 Text(
                   mentor.name,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ac.textPrimary),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   mentor.expertise,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: TextStyle(fontSize: 12, color: ac.textSecondary),
                 ),
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    const Icon(
-                      Icons.location_on_rounded,
-                      size: 12,
-                      color: AppColors.textHint,
-                    ),
+                    Icon(Icons.location_on_rounded, size: 12, color: ac.textHint),
                     const SizedBox(width: 3),
                     Text(
                       '${mentor.location}  ·  ${mentor.yearsExp} ${t("yrs_experience")}',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: AppColors.textHint,
-                      ),
+                      style: TextStyle(fontSize: 11, color: ac.textHint),
                     ),
                   ],
                 ),
@@ -318,16 +237,12 @@ class _MentorCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.mentorshipColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: AppColors.mentorshipColor.withValues(alpha: 0.3),
-                ),
+                border: Border.all(color: AppColors.mentorshipColor.withValues(alpha: 0.3)),
               ),
               child: Text(
                 t('connect_btn'),
                 style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.mentorshipColor,
+                  fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.mentorshipColor,
                 ),
               ),
             ),
@@ -364,27 +279,20 @@ class _BecomeMentorCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 46,
-                height: 46,
+                width: 46, height: 46,
                 decoration: BoxDecoration(
                   color: AppColors.growColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(
-                  Icons.volunteer_activism_rounded,
-                  color: AppColors.growColor,
-                  size: 24,
-                ),
+                child: const Icon(Icons.volunteer_activism_rounded, color: AppColors.growColor, size: 24),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Text(
                   t('become_mentor_title').toUpperCase(),
                   style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.growColor,
-                    letterSpacing: 1.0,
+                    fontSize: 12, fontWeight: FontWeight.w700,
+                    color: AppColors.growColor, letterSpacing: 1.0,
                   ),
                 ),
               ),
@@ -393,20 +301,12 @@ class _BecomeMentorCard extends StatelessWidget {
           const SizedBox(height: 14),
           Text(
             t('share_knowledge'),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.of(context).textPrimary),
           ),
           const SizedBox(height: 8),
           Text(
             t('share_knowledge_desc'),
-            style: const TextStyle(
-              fontSize: 13,
-              color: AppColors.textSecondary,
-              height: 1.5,
-            ),
+            style: TextStyle(fontSize: 13, color: AppColors.of(context).textSecondary, height: 1.5),
           ),
           const SizedBox(height: 16),
           GestureDetector(
@@ -419,18 +319,13 @@ class _BecomeMentorCard extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.growColor.withValues(alpha: 0.35),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    blurRadius: 10, offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Text(
                 t('apply_to_mentor'),
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
               ),
             ),
           ),
@@ -448,24 +343,16 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text.toUpperCase(),
-      style: const TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1.2,
-        color: AppColors.textHint,
+      style: TextStyle(
+        fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1.2,
+        color: AppColors.of(context).textHint,
       ),
     );
   }
 }
 
 class _Mentor {
-  const _Mentor(
-    this.name,
-    this.expertise,
-    this.location,
-    this.yearsExp,
-    this.color,
-  );
+  const _Mentor(this.name, this.expertise, this.location, this.yearsExp, this.color);
   final String name;
   final String expertise;
   final String location;

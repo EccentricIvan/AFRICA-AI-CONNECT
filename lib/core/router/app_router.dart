@@ -42,7 +42,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/auth/phone',
         builder: (_, __) => const PhoneEntryScreen(),
       ),
-      GoRoute(path: '/auth/otp', builder: (_, __) => const OtpVerifyScreen()),
+      GoRoute(
+        path: '/auth/otp',
+        builder: (_, __) => const OtpVerifyScreen(),
+      ),
       GoRoute(
         path: '/onboarding',
         builder: (_, __) => const OnboardingScreen(),
@@ -53,44 +56,44 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         routes: [
           // ── Core tabs ──
           GoRoute(path: '/', builder: (_, __) => const HomeScreenV2()),
-          GoRoute(path: '/learn', builder: (_, __) => const LearnHubScreen()),
           GoRoute(
-            path: '/marketplace',
-            builder: (_, __) => const MarketplaceScreen(),
-          ),
+              path: '/learn', builder: (_, __) => const LearnHubScreen()),
           GoRoute(
-            path: '/community',
-            builder: (_, __) => const CommunityScreen(),
-          ),
+              path: '/marketplace',
+              builder: (_, __) => const MarketplaceScreen()),
+          GoRoute(
+              path: '/community',
+              builder: (_, __) => const CommunityScreen()),
 
           // ── Earn pillar ──
           GoRoute(
-            path: '/financial',
-            builder: (_, __) => const FinancialHubScreen(),
-          ),
+              path: '/financial',
+              builder: (_, __) => const FinancialHubScreen()),
 
           // ── Grow pillar ──
           GoRoute(
-            path: '/mentorship',
-            builder: (_, __) => const MentorshipScreen(),
-          ),
+              path: '/mentorship',
+              builder: (_, __) => const MentorshipScreen()),
           GoRoute(path: '/jobs', builder: (_, __) => const JobsScreen()),
-          GoRoute(path: '/skills', builder: (_, __) => const SkillsScreen()),
+          GoRoute(
+              path: '/skills', builder: (_, __) => const SkillsScreen()),
 
           // ── Thrive pillar ──
-          GoRoute(path: '/health', builder: (_, __) => const HealthScreen()),
           GoRoute(
-            path: '/wellbeing',
-            builder: (_, __) => const WellbeingScreen(),
-          ),
+              path: '/health', builder: (_, __) => const HealthScreen()),
+          GoRoute(
+              path: '/wellbeing',
+              builder: (_, __) => const WellbeingScreen()),
 
           // ── Tools ──
-          GoRoute(path: '/ai-chat', builder: (_, __) => const AiChatScreen()),
-          GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
           GoRoute(
-            path: '/settings',
-            builder: (_, __) => const SettingsScreen(),
-          ),
+              path: '/ai-chat', builder: (_, __) => const AiChatScreen()),
+          GoRoute(
+              path: '/profile',
+              builder: (_, __) => const ProfileScreen()),
+          GoRoute(
+              path: '/settings',
+              builder: (_, __) => const SettingsScreen()),
         ],
       ),
     ],

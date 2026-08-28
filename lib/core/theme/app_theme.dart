@@ -188,54 +188,34 @@ class AppTheme {
     return base.copyWith(
       textTheme: textTheme.copyWith(
         displayLarge: const TextStyle(
-          fontFamily: _headingFont,
-          fontSize: 32,
-          fontWeight: FontWeight.w700,
-          color: AppColors.textPrimary,
-          height: 1.15,
-          letterSpacing: -0.5,
+          fontFamily: _headingFont, fontSize: 32, fontWeight: FontWeight.w700,
+          color: textPrimaryDark, height: 1.15, letterSpacing: -0.5,
         ),
         headlineLarge: const TextStyle(
-          fontFamily: _headingFont,
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: AppColors.textPrimary,
+          fontFamily: _headingFont, fontSize: 24, fontWeight: FontWeight.w700,
+          color: textPrimaryDark,
         ),
         headlineSmall: const TextStyle(
-          fontFamily: _headingFont,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+          fontFamily: _headingFont, fontSize: 18, fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
         ),
         titleLarge: const TextStyle(
-          fontFamily: _headingFont,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+          fontFamily: _headingFont, fontSize: 16, fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
         ),
         titleMedium: const TextStyle(
-          fontFamily: _headingFont,
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
+          fontFamily: _headingFont, fontSize: 15, fontWeight: FontWeight.w500,
+          color: textPrimaryDark,
         ),
         bodyLarge: const TextStyle(
-          fontFamily: _bodyFont,
-          fontSize: 16,
-          color: AppColors.textSecondary,
-          height: 1.6,
+          fontFamily: _bodyFont, fontSize: 16, color: textSecondaryDark, height: 1.6,
         ),
         bodyMedium: const TextStyle(
-          fontFamily: _bodyFont,
-          fontSize: 14,
-          color: AppColors.textSecondary,
-          height: 1.5,
+          fontFamily: _bodyFont, fontSize: 14, color: textSecondaryDark, height: 1.5,
         ),
         labelLarge: const TextStyle(
-          fontFamily: _bodyFont,
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+          fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
         ),
       ),
       appBarTheme: const AppBarTheme(
@@ -244,10 +224,8 @@ class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
-          fontFamily: _headingFont,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: AppColors.textPrimary,
+          fontFamily: _headingFont, fontSize: 18, fontWeight: FontWeight.w700,
+          color: textPrimaryDark,
         ),
         iconTheme: IconThemeData(color: textPrimaryDark),
       ),
@@ -267,13 +245,9 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: const TextStyle(
-            fontFamily: _bodyFont,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -282,13 +256,9 @@ class AppTheme {
           foregroundColor: textPrimaryDark,
           side: const BorderSide(color: borderDark),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: const TextStyle(
-            fontFamily: _bodyFont,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w500,
           ),
         ),
       ),
@@ -307,24 +277,15 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.accent, width: 2),
         ),
-        hintStyle: const TextStyle(
-          fontFamily: _bodyFont,
-          color: AppColors.textHint,
-          fontSize: 15,
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
+        hintStyle: const TextStyle(fontFamily: _bodyFont, color: textHintDark, fontSize: 15),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: cardDark,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        indicatorColor: AppColors.accent.withValues(alpha: 0.16),
-        indicatorShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        indicatorColor: AppColors.accent.withValues(alpha: 0.22),
+        indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: AppColors.accent, size: 24);
@@ -334,23 +295,15 @@ class AppTheme {
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const TextStyle(
-              fontFamily: _bodyFont,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+              fontFamily: _bodyFont, fontSize: 11, fontWeight: FontWeight.w600,
               color: AppColors.accent,
             );
           }
-          return const TextStyle(
-            fontFamily: _bodyFont,
-            fontSize: 11,
-            color: AppColors.textHint,
-          );
+          return const TextStyle(fontFamily: _bodyFont, fontSize: 11, color: textHintDark);
         }),
       ),
       dividerTheme: const DividerThemeData(
-        color: AppColors.border,
-        thickness: 1,
-        space: 1,
+        color: borderDark, thickness: 1, space: 1,
       ),
     );
   }

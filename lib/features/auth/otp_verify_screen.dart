@@ -48,9 +48,11 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
     });
 
     try {
-      final credential = await ref
-          .read(firebaseAuthServiceProvider)
-          .signInWithSmsCode(verificationId: verificationId, smsCode: code);
+      final credential =
+          await ref.read(firebaseAuthServiceProvider).signInWithSmsCode(
+                verificationId: verificationId,
+                smsCode: code,
+              );
       await _reconcileProfile(credential.user!.uid);
     } catch (_) {
       if (!mounted) return;
@@ -62,9 +64,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
   }
 
   Future<void> _reconcileProfile(String uid) async {
-    final firestoreDoc = FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid);
+    final firestoreDoc = FirebaseFirestore.instance.collection('users').doc(uid);
     final doc = await firestoreDoc.get();
     final userDao = ref.read(userDaoProvider);
     final prefs = await SharedPreferences.getInstance();
@@ -113,27 +113,25 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
     final phoneNumber = ref.read(pendingPhoneNumberProvider);
     if (phoneNumber == null || _resending) return;
     setState(() => _resending = true);
-    await ref
-        .read(firebaseAuthServiceProvider)
-        .verifyPhoneNumber(
-          phoneNumber: phoneNumber,
-          onAutoVerified: (credential) {
-            if (!mounted) return;
-            ref.read(isAuthenticatedProvider.notifier).state = true;
-          },
-          onFailed: (e) {
-            if (!mounted) return;
-            setState(() {
-              _resending = false;
-              _error = e.message ?? _t('otp_send_failed');
-            });
-          },
-          onCodeSent: (verificationId) {
-            ref.read(verificationIdProvider.notifier).state = verificationId;
-            if (!mounted) return;
-            setState(() => _resending = false);
-          },
-        );
+    await ref.read(firebaseAuthServiceProvider).verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      onAutoVerified: (credential) {
+        if (!mounted) return;
+        ref.read(isAuthenticatedProvider.notifier).state = true;
+      },
+      onFailed: (e) {
+        if (!mounted) return;
+        setState(() {
+          _resending = false;
+          _error = e.message ?? _t('otp_send_failed');
+        });
+      },
+      onCodeSent: (verificationId) {
+        ref.read(verificationIdProvider.notifier).state = verificationId;
+        if (!mounted) return;
+        setState(() => _resending = false);
+      },
+    );
   }
 
   @override
@@ -175,11 +173,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
                 const SizedBox(height: 6),
                 Text(
                   _t('windows_recaptcha_note'),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textHint,
-                    height: 1.4,
-                  ),
+                  style: TextStyle(fontSize: 12, color: ac.textHint, height: 1.4),
                 ),
                 const SizedBox(height: 24),
                 TextField(
@@ -204,17 +198,16 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _verifying ? null : _verify,
-                    child:
-                        _verifying
-                            ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                            : Text(_t('verify_code')),
+                    child: _verifying
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(_t('verify_code')),
                   ),
                 ),
                 const SizedBox(height: 12),

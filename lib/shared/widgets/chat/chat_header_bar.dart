@@ -62,10 +62,8 @@ class ChatHeaderBar extends StatelessWidget {
               onTap: onNewChat,
               borderRadius: BorderRadius.circular(22),
               child: Ink(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: ui.card,
                   borderRadius: BorderRadius.circular(22),
@@ -109,7 +107,10 @@ class ChatHeaderBar extends StatelessWidget {
       TextSpan(text: raw.substring(0, idx)),
       const TextSpan(
         text: brand,
-        style: TextStyle(color: ChatUi.accent, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          color: ChatUi.accent,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       TextSpan(text: raw.substring(idx + brand.length)),
     ];

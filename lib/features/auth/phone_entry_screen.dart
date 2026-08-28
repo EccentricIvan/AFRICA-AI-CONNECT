@@ -39,29 +39,27 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
       _error = null;
     });
 
-    await ref
-        .read(firebaseAuthServiceProvider)
-        .verifyPhoneNumber(
-          phoneNumber: phoneNumber,
-          onAutoVerified: (credential) {
-            if (!mounted) return;
-            ref.read(isAuthenticatedProvider.notifier).state = true;
-          },
-          onFailed: (e) {
-            if (!mounted) return;
-            setState(() {
-              _sending = false;
-              _error = e.message ?? _t('otp_send_failed');
-            });
-          },
-          onCodeSent: (verificationId) {
-            ref.read(verificationIdProvider.notifier).state = verificationId;
-            ref.read(pendingPhoneNumberProvider.notifier).state = phoneNumber;
-            if (!mounted) return;
-            setState(() => _sending = false);
-            context.push('/auth/otp');
-          },
-        );
+    await ref.read(firebaseAuthServiceProvider).verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      onAutoVerified: (credential) {
+        if (!mounted) return;
+        ref.read(isAuthenticatedProvider.notifier).state = true;
+      },
+      onFailed: (e) {
+        if (!mounted) return;
+        setState(() {
+          _sending = false;
+          _error = e.message ?? _t('otp_send_failed');
+        });
+      },
+      onCodeSent: (verificationId) {
+        ref.read(verificationIdProvider.notifier).state = verificationId;
+        ref.read(pendingPhoneNumberProvider.notifier).state = phoneNumber;
+        if (!mounted) return;
+        setState(() => _sending = false);
+        context.push('/auth/otp');
+      },
+    );
   }
 
   @override
@@ -121,10 +119,8 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                         ),
                       ),
                     ),
-                    prefixIconConstraints: const BoxConstraints(
-                      minWidth: 0,
-                      minHeight: 0,
-                    ),
+                    prefixIconConstraints:
+                        const BoxConstraints(minWidth: 0, minHeight: 0),
                   ),
                 ),
                 if (_error != null) ...[
@@ -139,17 +135,16 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _sending ? null : _sendCode,
-                    child:
-                        _sending
-                            ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                            : Text(_t('send_code')),
+                    child: _sending
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(_t('send_code')),
                   ),
                 ),
               ],

@@ -57,7 +57,11 @@ class LearnProgressCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 6),
-              const Icon(Icons.auto_awesome, size: 14, color: LearnUi.accent),
+              const Icon(
+                Icons.auto_awesome,
+                size: 14,
+                color: LearnUi.accent,
+              ),
             ],
           ),
           const SizedBox(height: 14),
@@ -200,7 +204,8 @@ class _MilestoneBar extends StatelessWidget {
       builder: (context, constraints) {
         const thumb = 22.0;
         final trackW = constraints.maxWidth;
-        final fillW = ((trackW - thumb) * progress).clamp(0.0, trackW - thumb);
+        final fillW =
+            ((trackW - thumb) * progress).clamp(0.0, trackW - thumb);
 
         return SizedBox(
           height: thumb,

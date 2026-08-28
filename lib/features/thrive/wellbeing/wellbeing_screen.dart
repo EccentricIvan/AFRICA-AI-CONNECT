@@ -34,8 +34,8 @@ class WellbeingScreen extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: AppColors.wellbeingColor.withValues(alpha: 0.15),
-                    ),
+                        color:
+                            AppColors.wellbeingColor.withValues(alpha: 0.15)),
                   ),
                   child: Row(
                     children: [
@@ -43,15 +43,13 @@ class WellbeingScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              S.literal('Your wellbeing matters'),
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
+                            Text(S.literal('Your wellbeing matters'),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall),
                             const SizedBox(height: 6),
                             Text(
-                              S.literal(
-                                'Resources for self-care, emotional support, and building resilience.',
-                              ),
+                              S.literal('Resources for self-care, emotional support, and building resilience.'),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -62,16 +60,12 @@ class WellbeingScreen extends StatelessWidget {
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: AppColors.wellbeingColor.withValues(
-                            alpha: 0.15,
-                          ),
+                          color:
+                              AppColors.wellbeingColor.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Icon(
-                          Icons.spa,
-                          color: AppColors.wellbeingColor,
-                          size: 28,
-                        ),
+                        child: const Icon(Icons.spa,
+                            color: AppColors.wellbeingColor, size: 28),
                       ),
                     ],
                   ),
@@ -84,9 +78,7 @@ class WellbeingScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 FeatureCard(
                   title: S.literal('Stress Management'),
-                  subtitle: S.literal(
-                    'Techniques to manage daily stress and anxiety',
-                  ),
+                  subtitle: S.literal('Techniques to manage daily stress and anxiety'),
                   icon: Icons.self_improvement,
                   color: AppColors.wellbeingColor,
                   onTap: () {},
@@ -94,9 +86,7 @@ class WellbeingScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 FeatureCard(
                   title: S.literal('Positive Affirmations'),
-                  subtitle: S.literal(
-                    'Daily encouragement and confidence building',
-                  ),
+                  subtitle: S.literal('Daily encouragement and confidence building'),
                   icon: Icons.auto_awesome,
                   color: AppColors.earnColor,
                   onTap: () {},
@@ -104,9 +94,7 @@ class WellbeingScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 FeatureCard(
                   title: S.literal('Support Resources'),
-                  subtitle: S.literal(
-                    'Helplines, counselling, and safe spaces',
-                  ),
+                  subtitle: S.literal('Helplines, counselling, and safe spaces'),
                   icon: Icons.support_agent,
                   color: AppColors.communityColor,
                   onTap: () => showHelplineSheet(context),
@@ -142,22 +130,19 @@ class _SafetyCard extends StatelessWidget {
               color: AppColors.accent.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(Icons.shield, color: AppColors.accent, size: 24),
+            child: const Icon(Icons.shield,
+                color: AppColors.accent, size: 24),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  S.literal('Safety & Support'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                Text(S.literal('Safety & Support'),
+                    style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 4),
                 Text(
-                  S.literal(
-                    'If you or someone you know needs help, trusted support is available.',
-                  ),
+                  S.literal('If you or someone you know needs help, trusted support is available.'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],

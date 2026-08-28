@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../services/offline_language_service.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppLocale {
   en('English', 'EN'),
@@ -19,23 +19,12 @@ enum AppLocale {
   final String label;
   final String code;
 
-  static const activeLocales = [AppLocale.en, AppLocale.lg, AppLocale.sw];
-
-  static AppLocale fromLanguageCode(String code) {
-    for (final locale in activeLocales) {
-      if (locale.name == code) return locale;
-    }
-    return AppLocale.en;
-  }
+  String get shortCode => code;
+  String get apiCode => name;
 }
 
-final offlineLanguageServiceProvider =
-    ChangeNotifierProvider<OfflineLanguageService>((ref) {
-      return OfflineLanguageService.instance;
-    });
-
 final localeProvider = StateNotifierProvider<LocaleNotifier, AppLocale>((ref) {
-  return LocaleNotifier(ref.read(offlineLanguageServiceProvider));
+  return LocaleNotifier();
 });
 
 final localeLoadingProvider = StateProvider<AppLocale?>((ref) => null);
@@ -56,20 +45,31 @@ Future<bool> selectAppLocale(WidgetRef ref, AppLocale locale) async {
 }
 
 class LocaleNotifier extends StateNotifier<AppLocale> {
-  LocaleNotifier(this._languageService)
-    : super(AppLocale.fromLanguageCode(_languageService.currentLanguageCode));
+  LocaleNotifier([super.state = AppLocale.en]);
 
-  final OfflineLanguageService _languageService;
-
-  Future<void> set(AppLocale locale) async {
-    await _languageService.loadLanguage(locale.name);
-    state = AppLocale.fromLanguageCode(_languageService.currentLanguageCode);
+  static AppLocale fromSaved(String? saved) {
+    return AppLocale.values.firstWhere(
+      (locale) => locale.name == saved,
+      orElse: () => AppLocale.en,
+    );
   }
 
-  Future<void> loadFromPrefs(String? saved) async {
+  void set(AppLocale locale) {
+    S._activeLocale = locale;
+    state = locale;
+    SharedPreferences.getInstance().then(
+      (p) => p.setString('app_locale', locale.name),
+    );
+  }
+
+  void loadFromPrefs(String? saved) {
     if (saved == null) return;
-    await _languageService.loadLanguage(saved);
-    state = AppLocale.fromLanguageCode(_languageService.currentLanguageCode);
+    for (final l in AppLocale.values) {
+      if (l.name == saved) {
+        state = l;
+        return;
+      }
+    }
   }
 }
 
@@ -347,14 +347,15 @@ class S {
   ];
 
   static String _apiCode(AppLocale locale) => switch (locale) {
-    AppLocale.en => 'eng',
-    AppLocale.lg => 'lug',
-    AppLocale.sw => 'swa',
-    AppLocale.nyn => 'nyn',
-    AppLocale.teo => 'teo',
-    AppLocale.nyo => 'nyo',
-    AppLocale.ach => 'ach',
-  };
+        AppLocale.en => 'eng',
+        AppLocale.lg => 'lug',
+        AppLocale.sw => 'swa',
+        AppLocale.nyn => 'nyn',
+        AppLocale.teo => 'teo',
+        AppLocale.nyo => 'nyo',
+        AppLocale.ach => 'ach',
+        AppLocale.rw => 'kin',
+      };
 
   static Map<String, String> _sourceCatalog() {
     final source = <String, String>{
@@ -397,9 +398,6 @@ class S {
   static Set<String> get catalogKeys => _sourceCatalog().keys.toSet();
 
   static String tr(BuildContext context, WidgetRef ref, String key) {
-    final serviceText = ref.watch(offlineLanguageServiceProvider).t(key);
-    if (serviceText != key) return serviceText;
-
     final locale = ref.watch(localeProvider);
     _activeLocale = locale;
     final downloaded = _downloaded[locale]?[key];
@@ -1389,681 +1387,10 @@ class S {
     },
 
     // ── AI Chat screen ──
-    // Financial hub
-    'financial_hub': {
-      AppLocale.en: 'Financial Hub',
-      AppLocale.lg: 'Ekifo ky\'Ensimbi',
-      AppLocale.sw: 'Kituo cha Fedha',
-    },
-    'financial_tools': {
-      AppLocale.en: 'Financial Tools',
-      AppLocale.lg: 'Ebikozesebwa mu nsimbi',
-      AppLocale.sw: 'Zana za Fedha',
-    },
-    'manage_money_wisely': {
-      AppLocale.en: 'Manage your money wisely',
-      AppLocale.lg: 'Labirira ensimbi zo n\'amagezi',
-      AppLocale.sw: 'Simamia pesa zako kwa busara',
-    },
-    'savings_tracker': {
-      AppLocale.en: 'Savings Tracker',
-      AppLocale.lg: 'Okulondoola okweterekera',
-      AppLocale.sw: 'Kifuatilia Akiba',
-    },
-    'savings_tracker_desc': {
-      AppLocale.en: 'Set goals and track your savings progress',
-      AppLocale.lg: 'Teekawo ebiruubirirwa era olondoolere okutereka kwo',
-      AppLocale.sw: 'Weka malengo na fuatilia maendeleo ya akiba',
-    },
-    'budget_planner': {
-      AppLocale.en: 'Budget Planner',
-      AppLocale.lg: 'Enteekateeka y\'embalirira',
-      AppLocale.sw: 'Mpanga Bajeti',
-    },
-    'budget_planner_desc': {
-      AppLocale.en: 'Plan your income and expenses',
-      AppLocale.lg: 'Teekateeka ennyingiza n\'ensaasaanya yo',
-      AppLocale.sw: 'Panga mapato na matumizi yako',
-    },
-    'sacco_directory': {
-      AppLocale.en: 'SACCO Directory',
-      AppLocale.lg: 'Olukalala lwa SACCO',
-      AppLocale.sw: 'Orodha ya SACCO',
-    },
-    'sacco_directory_desc': {
-      AppLocale.en: 'Find savings groups and cooperatives near you',
-      AppLocale.lg: 'Noonya ebibiina by\'okutereka ebiri kumpi naawe',
-      AppLocale.sw: 'Tafuta vikundi vya akiba na vyama karibu nawe',
-    },
-    'mobile_money_guide': {
-      AppLocale.en: 'Mobile Money Guide',
-      AppLocale.lg: 'Ekitabo kya mobile money',
-      AppLocale.sw: 'Mwongozo wa Mobile Money',
-    },
-    'mobile_money_guide_desc': {
-      AppLocale.en: 'Learn to send, receive, and save with mobile money',
-      AppLocale.lg: 'Yiga okusindika, okufuna, n\'okutereka ne mobile money',
-      AppLocale.sw: 'Jifunze kutuma, kupokea, na kuweka akiba kwa mobile money',
-    },
-    'financial_literacy': {
-      AppLocale.en: 'Financial Literacy',
-      AppLocale.lg: 'Okumanya ensimbi',
-      AppLocale.sw: 'Elimu ya Fedha',
-    },
-    'build_money_knowledge': {
-      AppLocale.en: 'Build your money knowledge',
-      AppLocale.lg: 'Yongera okumanya kwo ku nsimbi',
-      AppLocale.sw: 'Jenga maarifa yako ya pesa',
-    },
-    'finance_hero_title': {
-      AppLocale.en: 'Take control of your finances',
-      AppLocale.lg: 'Fuga ensimbi zo',
-      AppLocale.sw: 'Dhibiti fedha zako',
-    },
-    'finance_hero_desc': {
-      AppLocale.en:
-          'Tools and resources to help you save, budget, and grow your money.',
-      AppLocale.lg:
-          'Ebikozesebwa okukuyamba okutereka, okubala, n\'okukuza ensimbi zo.',
-      AppLocale.sw:
-          'Zana na rasilimali za kukusaidia kuweka akiba, kupanga bajeti, na kukuza pesa.',
-    },
-    'tip_start_small_title': {
-      AppLocale.en: 'Start Small',
-      AppLocale.lg: 'Tandikira ku kitono',
-      AppLocale.sw: 'Anza Kidogo',
-    },
-    'tip_start_small_desc': {
-      AppLocale.en: 'Even saving 500 UGX a day adds up over time',
-      AppLocale.lg: 'N\'okutereka UGX 500 buli lunaku kuyinza okukula',
-      AppLocale.sw: 'Hata kuweka 500 UGX kwa siku hukua baada ya muda',
-    },
-    'tip_track_expenses_title': {
-      AppLocale.en: 'Track Expenses',
-      AppLocale.lg: 'Londoola ensaasaanya',
-      AppLocale.sw: 'Fuatilia Matumizi',
-    },
-    'tip_track_expenses_desc': {
-      AppLocale.en: 'Know where your money goes each week',
-      AppLocale.lg: 'Manya ensimbi zo gye zigenda buli wiiki',
-      AppLocale.sw: 'Jua pesa zako zinaenda wapi kila wiki',
-    },
-    'tip_join_sacco_title': {
-      AppLocale.en: 'Join a SACCO',
-      AppLocale.lg: 'Yingira mu SACCO',
-      AppLocale.sw: 'Jiunge na SACCO',
-    },
-    'tip_join_sacco_desc': {
-      AppLocale.en: 'Group savings help you access loans and support',
-      AppLocale.lg: 'Okuterekera awamu kuyamba okufuna ebbanja n\'obuyambi',
-      AppLocale.sw: 'Akiba ya kikundi hukusaidia kupata mikopo na msaada',
-    },
-
-    // Jobs and skills
-    'job_board': {
-      AppLocale.en: 'Job Board',
-      AppLocale.lg: 'Olukalala lw\'emirimu',
-      AppLocale.sw: 'Ubao wa Kazi',
-    },
-    'recent_opportunities': {
-      AppLocale.en: 'Recent Opportunities',
-      AppLocale.lg: 'Emikisa emipya',
-      AppLocale.sw: 'Fursa za Karibuni',
-    },
-    'jobs_near_you': {
-      AppLocale.en: 'Jobs and gigs near you',
-      AppLocale.lg: 'Emirimu n\'obukodyo ebiri kumpi naawe',
-      AppLocale.sw: 'Kazi na ajira ndogo karibu nawe',
-    },
-    'build_your_cv': {
-      AppLocale.en: 'Build Your CV',
-      AppLocale.lg: 'Kola CV yo',
-      AppLocale.sw: 'Tengeneza CV Yako',
-    },
-    'create_professional_profile': {
-      AppLocale.en: 'Create a professional profile',
-      AppLocale.lg: 'Kola ebikukwatako eby\'omulimu',
-      AppLocale.sw: 'Tengeneza wasifu wa kitaaluma',
-    },
-    'jobs_hero_title': {
-      AppLocale.en: 'Find your next opportunity',
-      AppLocale.lg: 'Noonya omukisa gwo oguddako',
-      AppLocale.sw: 'Pata fursa yako inayofuata',
-    },
-    'jobs_hero_desc': {
-      AppLocale.en:
-          'Browse jobs, freelance gigs, and training programmes from verified employers.',
-      AppLocale.lg:
-          'Noonya emirimu, obukodyo, n\'okutendekebwa okuva ku bakama b\'emirimu abakakasiddwa.',
-      AppLocale.sw:
-          'Vinjari kazi, kazi za muda, na mafunzo kutoka kwa waajiri waliothibitishwa.',
-    },
-    'job_community_health_worker': {
-      AppLocale.en: 'Community Health Worker',
-      AppLocale.lg: 'Omukozi w\'obulamu mu kitundu',
-      AppLocale.sw: 'Mhudumu wa Afya Jamii',
-    },
-    'job_ngo_partner_kampala': {
-      AppLocale.en: 'NGO Partner - Kampala',
-      AppLocale.lg: 'Munnaffe wa NGO - Kampala',
-      AppLocale.sw: 'Mshirika wa NGO - Kampala',
-    },
-    'job_type_full_time': {
-      AppLocale.en: 'Full-time',
-      AppLocale.lg: 'Obudde bwonna',
-      AppLocale.sw: 'Muda wote',
-    },
-    'job_digital_marketing_assistant': {
-      AppLocale.en: 'Digital Marketing Assistant',
-      AppLocale.lg: 'Omuyambi w\'okutunda ku mutimbagano',
-      AppLocale.sw: 'Msaidizi wa Masoko ya Kidijitali',
-    },
-    'job_tech_hub_remote': {
-      AppLocale.en: 'Tech Hub - Remote',
-      AppLocale.lg: 'Tech Hub - okukolera ewala',
-      AppLocale.sw: 'Tech Hub - mbali',
-    },
-    'job_type_part_time': {
-      AppLocale.en: 'Part-time',
-      AppLocale.lg: 'Obudde obutono',
-      AppLocale.sw: 'Muda wa sehemu',
-    },
-    'job_agri_extension_officer': {
-      AppLocale.en: 'Agricultural Extension Officer',
-      AppLocale.lg: 'Omukugu w\'okuyamba abalimi',
-      AppLocale.sw: 'Afisa Ugani wa Kilimo',
-    },
-    'job_district_gov_mbale': {
-      AppLocale.en: 'District Gov - Mbale',
-      AppLocale.lg: 'Gavumenti y\'ekitundu - Mbale',
-      AppLocale.sw: 'Serikali ya Wilaya - Mbale',
-    },
-    'job_type_contract': {
-      AppLocale.en: 'Contract',
-      AppLocale.lg: 'Endagaano',
-      AppLocale.sw: 'Mkataba',
-    },
-    'job_tailoring_trainer': {
-      AppLocale.en: 'Tailoring Trainer',
-      AppLocale.lg: 'Omutendesi w\'okutunga engoye',
-      AppLocale.sw: 'Mkufunzi wa Ushonaji',
-    },
-    'job_womens_centre_jinja': {
-      AppLocale.en: 'Women\'s Centre - Jinja',
-      AppLocale.lg: 'Ekifo ky\'abakazi - Jinja',
-      AppLocale.sw: 'Kituo cha Wanawake - Jinja',
-    },
-    'cv_builder': {
-      AppLocale.en: 'CV Builder',
-      AppLocale.lg: 'Omukola CV',
-      AppLocale.sw: 'Mtengenezaji wa CV',
-    },
-    'cv_builder_desc': {
-      AppLocale.en:
-          'Create a professional CV that highlights your skills and experience. AI-assisted - just answer a few questions.',
-      AppLocale.lg:
-          'Kola CV ey\'omulimu eraga obukugu n\'obumanyirivu bwo. AI ekuyamba - ddamu ebibuuzo bitono.',
-      AppLocale.sw:
-          'Tengeneza CV ya kitaaluma inayoonyesha ujuzi na uzoefu wako. AI itakusaidia - jibu maswali machache.',
-    },
-    'create_cv': {
-      AppLocale.en: 'Create CV',
-      AppLocale.lg: 'Kola CV',
-      AppLocale.sw: 'Tengeneza CV',
-    },
-    'skills_training': {
-      AppLocale.en: 'Skills & Training',
-      AppLocale.lg: 'Obukugu n\'okutendekebwa',
-      AppLocale.sw: 'Ujuzi na Mafunzo',
-    },
-    'training_programmes': {
-      AppLocale.en: 'Training Programmes',
-      AppLocale.lg: 'Enteekateeka z\'okutendekebwa',
-      AppLocale.sw: 'Programu za Mafunzo',
-    },
-    'upskill_structured_courses': {
-      AppLocale.en: 'Upskill with structured courses',
-      AppLocale.lg: 'Yongera obukugu n\'amasomo agategekeddwa',
-      AppLocale.sw: 'Ongeza ujuzi kwa kozi zilizopangwa',
-    },
-    'digital_literacy': {
-      AppLocale.en: 'Digital Literacy',
-      AppLocale.lg: 'Okumanya eby\'ekikompyuta',
-      AppLocale.sw: 'Elimu ya Kidijitali',
-    },
-    'digital_literacy_desc': {
-      AppLocale.en: 'Phone, internet, and computer basics',
-      AppLocale.lg: 'Essimu, yintaneeti, n\'ebisookerwako ku kompyuta',
-      AppLocale.sw: 'Misingi ya simu, intaneti, na kompyuta',
-    },
-    'business_management': {
-      AppLocale.en: 'Business Management',
-      AppLocale.lg: 'Okuddukanya obusubuzi',
-      AppLocale.sw: 'Usimamizi wa Biashara',
-    },
-    'business_management_desc': {
-      AppLocale.en: 'Planning, accounting, and operations',
-      AppLocale.lg:
-          'Okuteekateeka, okubala ensimbi, n\'emirimu gya buli lunaku',
-      AppLocale.sw: 'Mipango, uhasibu, na uendeshaji',
-    },
-    'value_addition': {
-      AppLocale.en: 'Value Addition',
-      AppLocale.lg: 'Okwongera omuwendo',
-      AppLocale.sw: 'Kuongeza Thamani',
-    },
-    'value_addition_desc': {
-      AppLocale.en: 'Processing, packaging, and branding products',
-      AppLocale.lg: 'Okukola, okupakinga, n\'okuteeka akabonero ku bintu',
-      AppLocale.sw: 'Usindikaji, ufungaji, na chapa ya bidhaa',
-    },
-    'communication_skills': {
-      AppLocale.en: 'Communication Skills',
-      AppLocale.lg: 'Obukugu bw\'okwogera',
-      AppLocale.sw: 'Ujuzi wa Mawasiliano',
-    },
-    'communication_skills_desc': {
-      AppLocale.en: 'Negotiation, presentation, and networking',
-      AppLocale.lg: 'Okuteesa, okunnyonnyola, n\'okukolagana n\'abalala',
-      AppLocale.sw: 'Majadiliano, uwasilishaji, na kujenga mitandao',
-    },
-    'skills_hero_title': {
-      AppLocale.en: 'Build future-ready skills',
-      AppLocale.lg: 'Zimba obukugu obw\'omu maaso',
-      AppLocale.sw: 'Jenga ujuzi wa maisha ya baadaye',
-    },
-    'skills_hero_desc': {
-      AppLocale.en:
-          'Practical training programmes to boost your career and business.',
-      AppLocale.lg:
-          'Okutendekebwa okukozesebwa okukulaakulanya omulimu n\'obusubuzi bwo.',
-      AppLocale.sw: 'Mafunzo ya vitendo ya kukuza kazi na biashara yako.',
-    },
-
-    // Community, wellbeing, and profile
-    'your_groups': {
-      AppLocale.en: 'Your Groups',
-      AppLocale.lg: 'Ebibiina byo',
-      AppLocale.sw: 'Vikundi Vyako',
-    },
-    'your_groups_desc': {
-      AppLocale.en: 'Communities you belong to',
-      AppLocale.lg: 'Ebibiina by\'olimu',
-      AppLocale.sw: 'Jamii unazoshiriki',
-    },
-    'discover_groups': {
-      AppLocale.en: 'Discover Groups',
-      AppLocale.lg: 'Zuula ebibiina',
-      AppLocale.sw: 'Gundua Vikundi',
-    },
-    'discover_groups_desc': {
-      AppLocale.en: 'Join women\'s groups in your area',
-      AppLocale.lg: 'Yingira mu bibiina by\'abakazi mu kitundu kyo',
-      AppLocale.sw: 'Jiunge na vikundi vya wanawake eneo lako',
-    },
-    'community_feed': {
-      AppLocale.en: 'Community Feed',
-      AppLocale.lg: 'Ebiwandiiko by\'ekibiina',
-      AppLocale.sw: 'Habari za Jamii',
-    },
-    'community_feed_desc': {
-      AppLocale.en: 'Latest from women in your network',
-      AppLocale.lg: 'Ebisinga obupya okuva ku bakazi b\'omanyi',
-      AppLocale.sw: 'Mapya kutoka kwa wanawake kwenye mtandao wako',
-    },
-    'community_hero_title': {
-      AppLocale.en: 'Stronger together',
-      AppLocale.lg: 'Tuba ba maanyi nga tuli wamu',
-      AppLocale.sw: 'Tuna nguvu tukiwa pamoja',
-    },
-    'community_hero_desc': {
-      AppLocale.en:
-          'Connect with women\'s groups, share experiences, support each other, and grow together.',
-      AppLocale.lg:
-          'Kolagana n\'ebibiina by\'abakazi, mugabane obumanyirivu, muyambagane, era mukule wamu.',
-      AppLocale.sw:
-          'Ungana na vikundi vya wanawake, shiriki uzoefu, saidianeni, na kueni pamoja.',
-    },
-    'no_groups_yet': {
-      AppLocale.en: 'No groups yet',
-      AppLocale.lg: 'Tonnaba na bibiina',
-      AppLocale.sw: 'Hakuna vikundi bado',
-    },
-    'join_or_create_group': {
-      AppLocale.en: 'Join a group below or create your own',
-      AppLocale.lg: 'Yingira mu kibiina wansi oba okole ekikyo',
-      AppLocale.sw: 'Jiunge na kikundi hapa chini au tengeneza chako',
-    },
-    'create_group': {
-      AppLocale.en: 'Create a Group',
-      AppLocale.lg: 'Kola ekibiina',
-      AppLocale.sw: 'Tengeneza Kikundi',
-    },
-    'members': {
-      AppLocale.en: 'members',
-      AppLocale.lg: 'abali mu kibiina',
-      AppLocale.sw: 'wanachama',
-    },
-    'join': {
-      AppLocale.en: 'Join',
-      AppLocale.lg: 'Yingira',
-      AppLocale.sw: 'Jiunge',
-    },
-    'group_kampala_women_entrepreneurs': {
-      AppLocale.en: 'Kampala Women Entrepreneurs',
-      AppLocale.lg: 'Abakazi Abasuubuzi ba Kampala',
-      AppLocale.sw: 'Wajasiriamali Wanawake wa Kampala',
-    },
-    'group_digital_skills_network': {
-      AppLocale.en: 'Digital Skills Network',
-      AppLocale.lg: 'Omukutu gw\'Obukugu bw\'Ekikompyuta',
-      AppLocale.sw: 'Mtandao wa Ujuzi wa Kidijitali',
-    },
-    'group_farmers_united': {
-      AppLocale.en: 'Farmers United',
-      AppLocale.lg: 'Abalimi Abegasse',
-      AppLocale.sw: 'Wakulima Pamoja',
-    },
-    'group_young_mothers_support': {
-      AppLocale.en: 'Young Mothers Support',
-      AppLocale.lg: 'Obuyambi eri bamaama abato',
-      AppLocale.sw: 'Msaada kwa Akina Mama Vijana',
-    },
-    'post_digital_skills_done': {
-      AppLocale.en:
-          'Just completed the Digital Skills course! So proud of this journey.',
-      AppLocale.lg:
-          'Mmaze okusoma Digital Skills! Nneesimye nnyo olw\'olugendo luno.',
-      AppLocale.sw:
-          'Nimemaliza kozi ya Ujuzi wa Kidijitali! Najivunia safari hii.',
-    },
-    'post_wholesale_order': {
-      AppLocale.en:
-          'My basket-weaving business got its first wholesale order today!',
-      AppLocale.lg:
-          'Obusubuzi bwange obw\'okusiba ebibbo bufunye oda yaabwo esooka leero!',
-      AppLocale.sw:
-          'Biashara yangu ya kusuka vikapu imepata oda yake ya kwanza ya jumla leo!',
-    },
-    'post_sacco_gulu': {
-      AppLocale.en:
-          'Looking for women interested in forming a SACCO in Gulu district.',
-      AppLocale.lg:
-          'Nnoonya abakazi abaagala okukola SACCO mu disitulikiti y\'e Gulu.',
-      AppLocale.sw:
-          'Natafuta wanawake wanaopenda kuanzisha SACCO katika wilaya ya Gulu.',
-    },
-    'time_2_hours_ago': {
-      AppLocale.en: '2 hours ago',
-      AppLocale.lg: 'essaawa 2 eziyise',
-      AppLocale.sw: 'saa 2 zilizopita',
-    },
-    'time_5_hours_ago': {
-      AppLocale.en: '5 hours ago',
-      AppLocale.lg: 'essaawa 5 eziyise',
-      AppLocale.sw: 'saa 5 zilizopita',
-    },
-    'time_1_day_ago': {
-      AppLocale.en: '1 day ago',
-      AppLocale.lg: 'olunaku 1 oluyise',
-      AppLocale.sw: 'siku 1 iliyopita',
-    },
-    'like': {
-      AppLocale.en: 'Like',
-      AppLocale.lg: 'Njagala',
-      AppLocale.sw: 'Penda',
-    },
-    'comment': {
-      AppLocale.en: 'Comment',
-      AppLocale.lg: 'Wandiika',
-      AppLocale.sw: 'Toa maoni',
-    },
-    'share': {
-      AppLocale.en: 'Share',
-      AppLocale.lg: 'Gabana',
-      AppLocale.sw: 'Shiriki',
-    },
-    'self_care': {
-      AppLocale.en: 'Self-Care',
-      AppLocale.lg: 'Okwefaako',
-      AppLocale.sw: 'Kujitunza',
-    },
-    'self_care_desc': {
-      AppLocale.en: 'Daily practices for a healthier mind',
-      AppLocale.lg: 'Ebikolwa bya buli lunaku olw\'omutima omulamu',
-      AppLocale.sw: 'Mazoea ya kila siku kwa akili yenye afya',
-    },
-    'stress_management': {
-      AppLocale.en: 'Stress Management',
-      AppLocale.lg: 'Okulabirira situleesi',
-      AppLocale.sw: 'Kudhibiti Msongo',
-    },
-    'stress_management_desc': {
-      AppLocale.en: 'Techniques to manage daily stress and anxiety',
-      AppLocale.lg: 'Enkola z\'okukendeeza situleesi n\'okweraliikirira',
-      AppLocale.sw: 'Mbinu za kudhibiti msongo na wasiwasi wa kila siku',
-    },
-    'positive_affirmations': {
-      AppLocale.en: 'Positive Affirmations',
-      AppLocale.lg: 'Ebigambo ebikuzzaamu amaanyi',
-      AppLocale.sw: 'Maneno ya Kutia Moyo',
-    },
-    'positive_affirmations_desc': {
-      AppLocale.en: 'Daily encouragement and confidence building',
-      AppLocale.lg: 'Okuzzamu amaanyi n\'okwezimba buli lunaku',
-      AppLocale.sw: 'Kutiana moyo na kujenga kujiamini kila siku',
-    },
-    'support_resources': {
-      AppLocale.en: 'Support Resources',
-      AppLocale.lg: 'Ebifo by\'obuyambi',
-      AppLocale.sw: 'Rasilimali za Msaada',
-    },
-    'support_resources_desc': {
-      AppLocale.en: 'Helplines, counselling, and safe spaces',
-      AppLocale.lg: 'Ennamba z\'obuyambi, okubuulirirwa, n\'ebifo ebyesigika',
-      AppLocale.sw: 'Namba za msaada, ushauri, na sehemu salama',
-    },
-    'wellbeing_hero_title': {
-      AppLocale.en: 'Your wellbeing matters',
-      AppLocale.lg: 'Embeera yo ennungi nkulu',
-      AppLocale.sw: 'Ustawi wako ni muhimu',
-    },
-    'wellbeing_hero_desc': {
-      AppLocale.en:
-          'Resources for self-care, emotional support, and building resilience.',
-      AppLocale.lg: 'Ebikozesebwa okwefaako, obuyambi bw\'omutima, n\'okuguma.',
-      AppLocale.sw:
-          'Rasilimali za kujitunza, msaada wa kihisia, na kujenga uimara.',
-    },
-    'safety_support': {
-      AppLocale.en: 'Safety & Support',
-      AppLocale.lg: 'Obukuumi n\'Obuyambi',
-      AppLocale.sw: 'Usalama na Msaada',
-    },
-    'safety_support_desc': {
-      AppLocale.en:
-          'If you or someone you know needs help, trusted support is available.',
-      AppLocale.lg:
-          'Bw\'oba ggwe oba gw\'omanyi yeetaaga obuyambi, waliwo obuyambi obwesigika.',
-      AppLocale.sw:
-          'Kama wewe au mtu unayemjua anahitaji msaada, msaada wa kuaminika upo.',
-    },
-    'get_help': {
-      AppLocale.en: 'Get Help',
-      AppLocale.lg: 'Funa Obuyambi',
-      AppLocale.sw: 'Pata Msaada',
-    },
-    'immediate_danger_help': {
-      AppLocale.en:
-          'If you are in immediate danger, contact emergency services now.',
-      AppLocale.lg:
-          'Bw\'oba oli mu kabi akatali ka kulinda, tuukirira empeereza z\'obudduukirize kati.',
-      AppLocale.sw:
-          'Kama uko hatarini sasa, wasiliana na huduma za dharura mara moja.',
-    },
-    'helpline_police': {
-      AppLocale.en: 'Uganda Police Emergency',
-      AppLocale.lg: 'Uganda Police Emergency',
-      AppLocale.sw: 'Dharura ya Polisi Uganda',
-    },
-    'helpline_police_desc': {
-      AppLocale.en: 'For immediate danger or a safety emergency',
-      AppLocale.lg: 'Ku kabi akatali ka kulinda oba ensonga y\'obukuumi',
-      AppLocale.sw: 'Kwa hatari ya haraka au dharura ya usalama',
-    },
-    'helpline_emergency_alt': {
-      AppLocale.en: 'Uganda Emergency Services (alt.)',
-      AppLocale.lg: 'Empeereza z\'obudduukirize eza Uganda (endala)',
-      AppLocale.sw: 'Huduma za Dharura Uganda (nyingine)',
-    },
-    'helpline_emergency_alt_desc': {
-      AppLocale.en: 'Alternate national emergency line',
-      AppLocale.lg: 'Ennamba endala ey\'obudduukirize mu ggwanga',
-      AppLocale.sw: 'Namba nyingine ya dharura ya kitaifa',
-    },
-    'helpline_trusted_person': {
-      AppLocale.en: 'Talk to someone you trust',
-      AppLocale.lg: 'Yogera n\'omuntu gwe weesiga',
-      AppLocale.sw: 'Zungumza na mtu unayemwamini',
-    },
-    'helpline_trusted_person_desc': {
-      AppLocale.en:
-          'A family member, friend, or community leader can help you find local support even when a hotline is not available.',
-      AppLocale.lg:
-          'Ow\'omu maka, mukwano, oba omukulembeze w\'ekitundu ayinza okukuyamba okufuna obuyambi obuli okumpi.',
-      AppLocale.sw:
-          'Mwanafamilia, rafiki, au kiongozi wa jamii anaweza kukusaidia kupata msaada wa karibu.',
-    },
-    'my_profile': {
-      AppLocale.en: 'My Profile',
-      AppLocale.lg: 'Ebikwata ku nze',
-      AppLocale.sw: 'Wasifu Wangu',
-    },
-    'friend': {
-      AppLocale.en: 'Friend',
-      AppLocale.lg: 'Mukwano',
-      AppLocale.sw: 'Rafiki',
-    },
-    'my_progress': {
-      AppLocale.en: 'My Progress',
-      AppLocale.lg: 'Entambula yange',
-      AppLocale.sw: 'Maendeleo Yangu',
-    },
-    'track_learning_growth': {
-      AppLocale.en: 'Track your learning and growth',
-      AppLocale.lg: 'Londoola okusoma kwo n\'okukula kwo',
-      AppLocale.sw: 'Fuatilia kujifunza na ukuaji wako',
-    },
-    'achievements': {
-      AppLocale.en: 'Achievements',
-      AppLocale.lg: 'By\'otuuseeko',
-      AppLocale.sw: 'Mafanikio',
-    },
-    'badges_earned': {
-      AppLocale.en: 'Badges you have earned',
-      AppLocale.lg: 'Obubonero bw\'ofunye',
-      AppLocale.sw: 'Beji ulizopata',
-    },
-    'member': {
-      AppLocale.en: 'Member',
-      AppLocale.lg: 'Omu ku baffe',
-      AppLocale.sw: 'Mwanachama',
-    },
-    'location_not_set': {
-      AppLocale.en: 'Location not set',
-      AppLocale.lg: 'Ekifo tekinnateekebwawo',
-      AppLocale.sw: 'Mahali hapajawekwa',
-    },
-    'days': {
-      AppLocale.en: 'days',
-      AppLocale.lg: 'ennaku',
-      AppLocale.sw: 'siku',
-    },
-    'badges': {
-      AppLocale.en: 'Badges',
-      AppLocale.lg: 'Obubonero',
-      AppLocale.sw: 'Beji',
-    },
-    'badge_first_step': {
-      AppLocale.en: 'First Step',
-      AppLocale.lg: 'Omutendera Ogusooka',
-      AppLocale.sw: 'Hatua ya Kwanza',
-    },
-    'badge_quick_learner': {
-      AppLocale.en: 'Quick Learner',
-      AppLocale.lg: 'Ayiga Mangu',
-      AppLocale.sw: 'Mwanafunzi Mwepesi',
-    },
-    'badge_community_star': {
-      AppLocale.en: 'Community Star',
-      AppLocale.lg: 'Emmunyeenye y\'Ekibiina',
-      AppLocale.sw: 'Nyota wa Jamii',
-    },
-    'badge_entrepreneur': {
-      AppLocale.en: 'Entrepreneur',
-      AppLocale.lg: 'Omusubuzi',
-      AppLocale.sw: 'Mjasiriamali',
-    },
-    'badge_consistent': {
-      AppLocale.en: 'Consistent',
-      AppLocale.lg: 'Atalekera awo',
-      AppLocale.sw: 'Mwenye Uthabiti',
-    },
-    'mentor_agriculture_business': {
-      AppLocale.en: 'Agriculture & Agribusiness',
-      AppLocale.lg: 'Obulimi n\'obusubuzi bw\'ebyobulimi',
-      AppLocale.sw: 'Kilimo na Biashara ya Kilimo',
-    },
-    'mentor_financial_management': {
-      AppLocale.en: 'Financial Management',
-      AppLocale.lg: 'Okuddukanya ensimbi',
-      AppLocale.sw: 'Usimamizi wa Fedha',
-    },
-    'mentor_digital_marketing': {
-      AppLocale.en: 'Digital Marketing',
-      AppLocale.lg: 'Okutunda ku mutimbagano',
-      AppLocale.sw: 'Masoko ya Kidijitali',
-    },
-    'facility_nakasero_hospital': {
-      AppLocale.en: 'Nakasero Hospital',
-      AppLocale.lg: 'Eddwaliro lya Nakasero',
-      AppLocale.sw: 'Hospitali ya Nakasero',
-    },
-    'facility_mulago_womens_clinic': {
-      AppLocale.en: 'Mulago Women\'s Clinic',
-      AppLocale.lg: 'Kiliniiki y\'Abakazi e Mulago',
-      AppLocale.sw: 'Kliniki ya Wanawake Mulago',
-    },
-    'facility_community_health_post': {
-      AppLocale.en: 'Community Health Post',
-      AppLocale.lg: 'Ekifo ky\'obulamu mu kitundu',
-      AppLocale.sw: 'Kituo cha Afya Jamii',
-    },
-    'facility_type_health_centre_iv': {
-      AppLocale.en: 'Health Centre IV',
-      AppLocale.lg: 'Health Centre IV',
-      AppLocale.sw: 'Kituo cha Afya IV',
-    },
-    'facility_type_specialised': {
-      AppLocale.en: 'Specialised',
-      AppLocale.lg: 'Eky\'obukugu',
-      AppLocale.sw: 'Maalum',
-    },
-    'facility_type_health_centre_ii': {
-      AppLocale.en: 'Health Centre II',
-      AppLocale.lg: 'Health Centre II',
-      AppLocale.sw: 'Kituo cha Afya II',
-    },
-    'could_not_load_listings': {
-      AppLocale.en: 'Could not load listings',
-      AppLocale.lg: 'Tetwasobodde okutikka ebintu',
-      AppLocale.sw: 'Imeshindwa kupakia orodha',
-    },
-
-    'powered_by_groq': {
-      AppLocale.en: 'Powered by Groq · Llama 3.3',
-      AppLocale.lg: 'Yakozesebwa Groq · Llama 3.3',
-      AppLocale.sw: 'Inayotumia Groq · Llama 3.3',
+    'chat_assistant_title': {
+      AppLocale.en: 'AI Assistant',
+      AppLocale.lg: 'Omuyambi wa AI',
+      AppLocale.sw: 'Msaidizi wa AI',
     },
     'ai_greeting': {
       AppLocale.en:

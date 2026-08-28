@@ -24,34 +24,34 @@ class GlassCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final decoration = BoxDecoration(
-      gradient:
-          gradient ??
+      gradient: gradient ??
           LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors:
-                isDark
-                    ? [
-                      AppColors.surfaceDark.withValues(alpha: 0.8),
-                      AppColors.surfaceDark.withValues(alpha: 0.6),
-                    ]
-                    : [
-                      AppColors.surface.withValues(alpha: 0.95),
-                      AppColors.surface.withValues(alpha: 0.8),
-                    ],
+            colors: isDark
+                ? [
+                    AppColors.surfaceDark.withValues(alpha: 0.8),
+                    AppColors.surfaceDark.withValues(alpha: 0.6),
+                  ]
+                : [
+                    AppColors.light.surface.withValues(alpha: 0.95),
+                    AppColors.light.surface.withValues(alpha: 0.8),
+                  ],
           ),
       borderRadius: BorderRadius.circular(borderRadius),
-      border: Border.all(color: borderColor ?? AppColors.border, width: 1),
-      boxShadow:
-          isDark
-              ? null
-              : [
-                const BoxShadow(
-                  color: Color(0x143A2E29),
-                  blurRadius: 16,
-                  offset: Offset(0, 6),
-                ),
-              ],
+      border: Border.all(
+        color: borderColor ?? AppColors.of(context).border,
+        width: 1,
+      ),
+      boxShadow: isDark
+          ? null
+          : [
+              const BoxShadow(
+                color: Color(0x143A2E29),
+                blurRadius: 16,
+                offset: Offset(0, 6),
+              ),
+            ],
     );
 
     final container = Container(
