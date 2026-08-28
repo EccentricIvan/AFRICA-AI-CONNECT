@@ -1,14 +1,17 @@
-# Flutter/Dart
+# Flutter and Dart
 .dart_tool/
 .packages
-build/
 .flutter-plugins
 .flutter-plugins-dependencies
-*.iml
+build/
+*.g.dart
+*.freezed.dart
+*.mocks.dart
 
-# IDE
+# IDE and editor files
 .idea/
 .vscode/
+*.iml
 *.swp
 *.swo
 
@@ -18,60 +21,39 @@ android/.kotlin/
 android/app/debug/
 android/app/profile/
 android/app/release/
-**/android/local.properties
-**/android/key.properties
+android/local.properties
+android/key.properties
 
-# iOS
+# Apple platforms
 ios/Pods/
 ios/.symlinks/
-
-# macOS
 macos/Pods/
 
-# Generated
-*.g.dart
-*.freezed.dart
-*.mocks.dart
-.dart_tool/
-
-# AI model files
-assets/models/*.bin
-assets/models/*.gguf
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Coverage
-coverage/
-
-# Environment / secrets
-.env
-*.env
-# Python / AI backend
+# Python
+__pycache__/
+*.py[cod]
 .venv/
 venv/
-AI_BACKEND/venv/
-__pycache__/
-AI_BACKEND/**/__pycache__/
-*.pyc
-*.pyo
-*.pyd
 
-# Node backend
-node_modules/
-BACKEND/node_modules/
-
-# Local AI/backend secrets
+# Local backend configuration and secrets
 AI_BACKEND/.env
 AI_BACKEND/*.env
-# External language datasets
-AI_BACKEND/app/Data/external/
-AI_BACKEND/app/Data/processed/luganda_correction_candidates.csv
 
-# Hugging Face / local tokens
-HF_TOKEN
-HUGGINGFACE_TOKEN
+# AI models and training outputs
+AI_BACKEND/ai_models/
+AI_BACKEND/models/
+AI_BACKEND/**/otic_nllb_*_lora*/
+AI_BACKEND/**/adapter_model.safetensors
+AI_BACKEND/**/adapter_config.json
+AI_BACKEND/**/training_args.bin
+AI_BACKEND/**/pytorch_model.bin
+AI_BACKEND/**/model.safetensors
+
+# Downloaded and generated language datasets
+AI_BACKEND/data/raw/
+AI_BACKEND/data/processed/
+AI_BACKEND/data/external/
+AI_BACKEND/app/Data/external/
 AI_BACKEND/app/Data/raw_luganda/
 AI_BACKEND/app/Data/raw_swahili/
 AI_BACKEND/app/Data/finetune_luganda/
@@ -83,7 +65,7 @@ AI_BACKEND/Swahili_Merged/
 AI_BACKEND/nllb_600m_base/
 AI_BACKEND/otic_nllb_luganda_lora_full_final/
 AI_BACKEND/otic_nllb_swahili_lora_full_final/
-*.zip
 luganda_adapter_temp/
 swahili_adapter_temp/.vercel/
 .env.local
+AI_BACKEND/app/Data/processed/luganda_correction_candidates.csv
