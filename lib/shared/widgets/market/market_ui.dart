@@ -56,23 +56,19 @@ class MarketUi {
   static const String heroBackgroundAsset =
       'assets/branding/market_background.png';
 
-  List<BoxShadow> get softShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF202020).withValues(alpha: 0.06),
-            blurRadius: 22,
-            offset: const Offset(0, 8),
-          ),
-        ];
+  static List<BoxShadow> get softShadow => [
+    BoxShadow(
+      color: const Color(0xFF202020).withValues(alpha: 0.06),
+      blurRadius: 22,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
-  List<BoxShadow> get pillShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF202020).withValues(alpha: 0.07),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
-          ),
-        ];
+  static List<BoxShadow> get pillShadow => [
+    BoxShadow(
+      color: const Color(0xFF202020).withValues(alpha: 0.07),
+      blurRadius: 14,
+      offset: const Offset(0, 6),
+    ),
+  ];
 }

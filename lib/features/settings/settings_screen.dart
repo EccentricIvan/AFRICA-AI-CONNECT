@@ -31,8 +31,9 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     _ThemeTile(
                       currentMode: themeMode,
-                      onChanged: (mode) =>
-                          ref.read(themeModeProvider.notifier).set(mode),
+                      onChanged:
+                          (mode) =>
+                              ref.read(themeModeProvider.notifier).set(mode),
                     ),
                   ],
                 ),
@@ -47,31 +48,45 @@ class SettingsScreen extends ConsumerWidget {
                         child: ListTile(
                           title: Text(l.label),
                           subtitle: Text(l.code),
-                          trailing: isSelected
-                              ? const Icon(Icons.check_circle, color: AppColors.primary, size: 22)
-                              : loadingLocale == l
+                          trailing:
+                              isSelected
+                                  ? const Icon(
+                                    Icons.check_circle,
+                                    color: AppColors.primary,
+                                    size: 22,
+                                  )
+                                  : loadingLocale == l
                                   ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 2),
-                                    )
-                              : null,
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                  : null,
                           selected: isSelected,
-                          selectedTileColor: AppColors.primary.withValues(alpha: 0.08),
-                          onTap: loadingLocale != null
-                              ? null
-                              : () async {
-                                  final ok = await selectAppLocale(ref, l);
-                                  if (!ok && context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          S.literal('Could not download this language. Check your internet and try again.'),
+                          selectedTileColor: AppColors.primary.withValues(
+                            alpha: 0.08,
+                          ),
+                          onTap:
+                              loadingLocale != null
+                                  ? null
+                                  : () async {
+                                    final ok = await selectAppLocale(ref, l);
+                                    if (!ok && context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            S.literal(
+                                              'Could not download this language. Check your internet and try again.',
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }
-                                },
+                                      );
+                                    }
+                                  },
                         ),
                       );
                     }),
@@ -84,7 +99,9 @@ class SettingsScreen extends ConsumerWidget {
                     SwitchListTile(
                       secondary: const Icon(Icons.cloud_sync),
                       title: Text(S.literal('Auto-sync when online')),
-                      subtitle: Text(S.literal('Sync your progress when connected')),
+                      subtitle: Text(
+                        S.literal('Sync your progress when connected'),
+                      ),
                       value: true,
                       onChanged: (v) {},
                     ),
@@ -117,14 +134,18 @@ class SettingsScreen extends ConsumerWidget {
                     SwitchListTile(
                       secondary: const Icon(Icons.notifications),
                       title: Text(S.literal('Push notifications')),
-                      subtitle: Text(S.literal('Get updates on opportunities and community')),
+                      subtitle: Text(
+                        S.literal('Get updates on opportunities and community'),
+                      ),
                       value: true,
                       onChanged: (v) {},
                     ),
                     SwitchListTile(
                       secondary: const Icon(Icons.campaign),
                       title: Text(S.literal('Community updates')),
-                      subtitle: Text(S.literal('Posts and activity from your groups')),
+                      subtitle: Text(
+                        S.literal('Posts and activity from your groups'),
+                      ),
                       value: true,
                       onChanged: (v) {},
                     ),
@@ -136,7 +157,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.info_outline),
-                      title: Text(S.literal('AI Connect Africa')),
+                      title: Text(S.literal(' AI Connect Africa')),
                       subtitle: Text(S.literal('Version 1.0.0')),
                     ),
                     Material(
@@ -170,8 +191,7 @@ class SettingsScreen extends ConsumerWidget {
 }
 
 class _SettingsSection extends StatelessWidget {
-  const _SettingsSection(
-      {required this.title, required this.children});
+  const _SettingsSection({required this.title, required this.children});
   final String title;
   final List<Widget> children;
 
@@ -192,9 +212,7 @@ class _SettingsSection extends StatelessWidget {
             ),
           ),
         ),
-        Card(
-          child: Column(children: children),
-        ),
+        Card(child: Column(children: children)),
       ],
     );
   }
@@ -212,15 +230,17 @@ class _ThemeTile extends StatelessWidget {
         currentMode == ThemeMode.dark
             ? Icons.dark_mode
             : currentMode == ThemeMode.light
-                ? Icons.light_mode
-                : Icons.brightness_auto,
+            ? Icons.light_mode
+            : Icons.brightness_auto,
       ),
       title: Text(S.literal('Theme')),
-      subtitle: Text(currentMode == ThemeMode.dark
-          ? S.literal('Dark')
-          : currentMode == ThemeMode.light
-              ? S.literal('Light')
-              : S.literal('System')),
+      subtitle: Text(
+        currentMode == ThemeMode.dark
+            ? S.literal('Dark')
+            : currentMode == ThemeMode.light
+            ? S.literal('Light')
+            : S.literal('System'),
+      ),
       trailing: SegmentedButton<ThemeMode>(
         selected: {currentMode},
         onSelectionChanged: (s) => onChanged(s.first),

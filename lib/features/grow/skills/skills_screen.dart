@@ -33,7 +33,8 @@ class SkillsScreen extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: AppColors.skillsColor.withValues(alpha: 0.15)),
+                      color: AppColors.skillsColor.withValues(alpha: 0.15),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -41,13 +42,15 @@ class SkillsScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(S.literal('Build future-ready skills'),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall),
+                            Text(
+                              S.literal('Build future-ready skills'),
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
                             const SizedBox(height: 6),
                             Text(
-                              S.literal('Practical training programmes to boost your career and business.'),
+                              S.literal(
+                                'Practical training programmes to boost your career and business.',
+                              ),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -61,8 +64,11 @@ class SkillsScreen extends StatelessWidget {
                           color: AppColors.skillsColor.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Icon(Icons.auto_awesome,
-                            color: AppColors.skillsColor, size: 28),
+                        child: const Icon(
+                          Icons.auto_awesome,
+                          color: AppColors.skillsColor,
+                          size: 28,
+                        ),
                       ),
                     ],
                   ),
@@ -91,7 +97,9 @@ class SkillsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 FeatureCard(
                   title: S.literal('Value Addition'),
-                  subtitle: S.literal('Processing, packaging, and branding products'),
+                  subtitle: S.literal(
+                    'Processing, packaging, and branding products',
+                  ),
                   icon: Icons.inventory,
                   color: AppColors.marketplaceColor,
                   onTap: () {},
@@ -99,7 +107,9 @@ class SkillsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 FeatureCard(
                   title: S.literal('Communication Skills'),
-                  subtitle: S.literal('Negotiation, presentation, and networking'),
+                  subtitle: S.literal(
+                    'Negotiation, presentation, and networking',
+                  ),
                   icon: Icons.record_voice_over,
                   color: AppColors.communityColor,
                   onTap: () {},

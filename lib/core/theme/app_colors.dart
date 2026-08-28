@@ -80,9 +80,15 @@ class AppColors {
 
   // Category / feature icon colors
   static const Color skillsColor = Color(0xFF7C5CBF); // Digital Skills — violet
-  static const Color financeColor = Color(0xFF2E8B8B); // Financial Literacy — teal
-  static const Color marketplaceColor = Color(0xFFC96F4A); // Entrepreneurship — terracotta
-  static const Color agricultureColor = Color(0xFF5E8C4A); // Agriculture — leaf green
+  static const Color financeColor = Color(
+    0xFF2E8B8B,
+  ); // Financial Literacy — teal
+  static const Color marketplaceColor = Color(
+    0xFFC96F4A,
+  ); // Entrepreneurship — terracotta
+  static const Color agricultureColor = Color(
+    0xFF5E8C4A,
+  ); // Agriculture — leaf green
   static const Color healthColor = Color(0xFFB4436C); // Health/Wellbeing — rose
   static const Color wellbeingColor = Color(0xFFB4436C);
   static const Color communityColor = Color(0xFF8B6F9E);

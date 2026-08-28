@@ -42,24 +42,66 @@ class _CommunityData {
   _CommunityData._();
 
   static const groups = [
-    _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
-        Color(0xFF2E8B8B), 'Business', 'Kampala'),
-    _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
-        'Digital Skills', 'Kampala'),
-    _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
-        'Agriculture', 'Gulu'),
-    _Group('Young Mothers Support', 67, Icons.child_care, Color(0xFFB4436C),
-        'Family & Support', 'Mbale'),
-    _Group('Tailors & Textile Circle', 52, Icons.checkroom, Color(0xFFD4A24E),
-        'Fashion & Crafts', 'Jinja'),
-    _Group('Savings Circle Kampala', 143, Icons.savings, Color(0xFF5B8AA8),
-        'Finance', 'Kampala'),
+    _Group(
+      'Kampala Women Entrepreneurs',
+      124,
+      Icons.trending_up,
+      Color(0xFF2E8B8B),
+      'Business',
+      'Kampala',
+    ),
+    _Group(
+      'Digital Skills Network',
+      89,
+      Icons.computer,
+      Color(0xFF7C5CBF),
+      'Digital Skills',
+      'Kampala',
+    ),
+    _Group(
+      'Farmers United',
+      256,
+      Icons.agriculture,
+      Color(0xFF5E8C4A),
+      'Agriculture',
+      'Gulu',
+    ),
+    _Group(
+      'Young Mothers Support',
+      67,
+      Icons.child_care,
+      Color(0xFFB4436C),
+      'Family & Support',
+      'Mbale',
+    ),
+    _Group(
+      'Tailors & Textile Circle',
+      52,
+      Icons.checkroom,
+      Color(0xFFD4A24E),
+      'Fashion & Crafts',
+      'Jinja',
+    ),
+    _Group(
+      'Savings Circle Kampala',
+      143,
+      Icons.savings,
+      Color(0xFF5B8AA8),
+      'Finance',
+      'Kampala',
+    ),
   ];
 
   static const conversations = [
     _Conversation(
-      _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
-          Color(0xFF2E8B8B), 'Business', 'Kampala'),
+      _Group(
+        'Kampala Women Entrepreneurs',
+        124,
+        Icons.trending_up,
+        Color(0xFF2E8B8B),
+        'Business',
+        'Kampala',
+      ),
       'Grace',
       'Anyone free for the Saturday market meet-up?',
       '12m',
@@ -67,8 +109,14 @@ class _CommunityData {
       senderColor: Color(0xFFD4A24E),
     ),
     _Conversation(
-      _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
-          'Digital Skills', 'Kampala'),
+      _Group(
+        'Digital Skills Network',
+        89,
+        Icons.computer,
+        Color(0xFF7C5CBF),
+        'Digital Skills',
+        'Kampala',
+      ),
       'Amina',
       'Just shared the new tutorial link!',
       '2h',
@@ -76,8 +124,14 @@ class _CommunityData {
       senderColor: Color(0xFFB4436C),
     ),
     _Conversation(
-      _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
-          'Agriculture', 'Gulu'),
+      _Group(
+        'Farmers United',
+        256,
+        Icons.agriculture,
+        Color(0xFF5E8C4A),
+        'Agriculture',
+        'Gulu',
+      ),
       'You',
       'Thanks everyone, see you at the training.',
       '1d',
@@ -87,15 +141,26 @@ class _CommunityData {
   ];
 
   static const posts = [
-    _Post('Sarah M.',
-        'Just completed the Digital Skills course! So proud of this journey.',
-        '2 hours ago', Color(0xFF7C5CBF), imageCount: 5),
-    _Post('Grace K.',
-        'My basket-weaving business got its first wholesale order today!',
-        '5 hours ago', Color(0xFFD4A24E), imageCount: 1),
-    _Post('Peace N.',
-        'Looking for women interested in forming a SACCO in Gulu district.',
-        '1 day ago', Color(0xFF2E8B8B)),
+    _Post(
+      'Sarah M.',
+      'Just completed the Digital Skills course! So proud of this journey.',
+      '2 hours ago',
+      Color(0xFF7C5CBF),
+      imageCount: 5,
+    ),
+    _Post(
+      'Grace K.',
+      'My basket-weaving business got its first wholesale order today!',
+      '5 hours ago',
+      Color(0xFFD4A24E),
+      imageCount: 1,
+    ),
+    _Post(
+      'Peace N.',
+      'Looking for women interested in forming a SACCO in Gulu district.',
+      '1 day ago',
+      Color(0xFF2E8B8B),
+    ),
   ];
 
   static int get totalUnread =>
@@ -142,9 +207,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ui = CommunityUi.of(context);
-    final totalMembers =
-        _CommunityData.groups.fold<int>(0, (sum, g) => sum + g.members);
+    final totalMembers = _CommunityData.groups.fold<int>(
+      0,
+      (sum, g) => sum + g.members,
+    );
 
     return Scaffold(
       backgroundColor: ui.pageBg,
@@ -189,11 +255,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
               child: PageView(
                 controller: _pageController,
                 onPageChanged: (i) => setState(() => _tab = i),
-                children: const [
-                  _ChatsTab(),
-                  _FeedTab(),
-                  _DiscoverTab(),
-                ],
+                children: const [_ChatsTab(), _FeedTab(), _DiscoverTab()],
               ),
             ),
           ],
@@ -213,10 +275,14 @@ class _FadeSlideIn extends StatelessWidget {
       tween: Tween(begin: 0, end: 1),
       duration: const Duration(milliseconds: 420),
       curve: Curves.easeOutCubic,
-      builder: (context, t, c) => Opacity(
-        opacity: t,
-        child: Transform.translate(offset: Offset(0, (1 - t) * 14), child: c),
-      ),
+      builder:
+          (context, t, c) => Opacity(
+            opacity: t,
+            child: Transform.translate(
+              offset: Offset(0, (1 - t) * 14),
+              child: c,
+            ),
+          ),
       child: child,
     );
   }
@@ -375,12 +441,12 @@ class _TabScaffold extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: _SearchField(hint: searchHint, onChanged: onSearchChanged),
+                child: _SearchField(
+                  hint: searchHint,
+                  onChanged: onSearchChanged,
+                ),
               ),
-              if (trailing != null) ...[
-                const SizedBox(width: 10),
-                trailing!,
-              ],
+              if (trailing != null) ...[const SizedBox(width: 10), trailing!],
             ],
           ),
         ),
@@ -405,28 +471,37 @@ class _ChatsTabState extends State<_ChatsTab> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
-    final list = q.isEmpty
-        ? _CommunityData.conversations
-        : _CommunityData.conversations
-            .where((c) =>
-                c.group.name.toLowerCase().contains(q) ||
-                c.lastMessage.toLowerCase().contains(q))
-            .toList();
+    final list =
+        q.isEmpty
+            ? _CommunityData.conversations
+            : _CommunityData.conversations
+                .where(
+                  (c) =>
+                      c.group.name.toLowerCase().contains(q) ||
+                      c.lastMessage.toLowerCase().contains(q),
+                )
+                .toList();
 
     return _TabScaffold(
       title: S.literal('Chats'),
       searchHint: S.literal('Search your communities'),
       onSearchChanged: (v) => setState(() => _query = v),
-      child: list.isEmpty
-          ? Center(
-              child: Text(S.literal('No conversations found'),
-                  style: TextStyle(
-                      fontSize: 13, color: ui.textSecondary)))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              children:
-                  list.map((c) => _ConversationRow(conversation: c)).toList(),
-            ),
+      child:
+          list.isEmpty
+              ? Center(
+                child: Text(
+                  S.literal('No conversations found'),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: CommunityUi.textSecondary,
+                  ),
+                ),
+              )
+              : ListView(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                children:
+                    list.map((c) => _ConversationRow(conversation: c)).toList(),
+              ),
     );
   }
 }
@@ -445,27 +520,37 @@ class _FeedTabState extends State<_FeedTab> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
-    final list = q.isEmpty
-        ? _CommunityData.posts
-        : _CommunityData.posts
-            .where((post) =>
-                post.author.toLowerCase().contains(q) ||
-                post.content.toLowerCase().contains(q))
-            .toList();
+    final list =
+        q.isEmpty
+            ? _CommunityData.posts
+            : _CommunityData.posts
+                .where(
+                  (post) =>
+                      post.author.toLowerCase().contains(q) ||
+                      post.content.toLowerCase().contains(q),
+                )
+                .toList();
 
     return _TabScaffold(
       title: S.literal('Feed'),
       searchHint: S.literal('Search posts from your communities'),
       onSearchChanged: (v) => setState(() => _query = v),
-      child: list.isEmpty
-          ? Center(
-              child: Text(S.literal('No posts found'),
-                  style: TextStyle(
-                      fontSize: 13, color: ui.textSecondary)))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              children: list.map((post) => _FeedPostCard(post: post)).toList(),
-            ),
+      child:
+          list.isEmpty
+              ? Center(
+                child: Text(
+                  S.literal('No posts found'),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: CommunityUi.textSecondary,
+                  ),
+                ),
+              )
+              : ListView(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                children:
+                    list.map((post) => _FeedPostCard(post: post)).toList(),
+              ),
     );
   }
 }
@@ -493,10 +578,11 @@ class _DiscoverTabState extends State<_DiscoverTab> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (_) => _FilterSheet(
-        initialCategories: _categories,
-        initialLocations: _locations,
-      ),
+      builder:
+          (_) => _FilterSheet(
+            initialCategories: _categories,
+            initialLocations: _locations,
+          ),
     );
     if (result != null && mounted) {
       setState(() {
@@ -514,14 +600,15 @@ class _DiscoverTabState extends State<_DiscoverTab> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final q = _query.trim().toLowerCase();
-    final list = _CommunityData.groups.where((g) {
-      final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
-      final matchesCategory =
-          _categories.isEmpty || _categories.contains(g.category);
-      final matchesLocation =
-          _locations.isEmpty || _locations.contains(g.location);
-      return matchesQuery && matchesCategory && matchesLocation;
-    }).toList();
+    final list =
+        _CommunityData.groups.where((g) {
+          final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
+          final matchesCategory =
+              _categories.isEmpty || _categories.contains(g.category);
+          final matchesLocation =
+              _locations.isEmpty || _locations.contains(g.location);
+          return matchesQuery && matchesCategory && matchesLocation;
+        }).toList();
 
     return _TabScaffold(
       title: S.literal('Communities'),
@@ -534,33 +621,46 @@ class _DiscoverTabState extends State<_DiscoverTab> {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: _hasActiveFilters
-                ? CommunityUi.accent.withValues(alpha: 0.14)
-                : ui.card,
+            color:
+                _hasActiveFilters
+                    ? CommunityUi.accent.withValues(alpha: 0.14)
+                    : CommunityUi.card,
             borderRadius: BorderRadius.circular(25),
           ),
-          child: Icon(Icons.tune_rounded,
-              size: 20,
-              color: _hasActiveFilters
-                  ? CommunityUi.accent
-                  : ui.textSecondary),
+          child: Icon(
+            Icons.tune_rounded,
+            size: 20,
+            color:
+                _hasActiveFilters
+                    ? CommunityUi.accent
+                    : CommunityUi.textSecondary,
+          ),
         ),
       ),
-      child: list.isEmpty
-          ? Center(
-              child: Text(S.literal('No groups found'),
-                  style: TextStyle(
-                      fontSize: 13, color: ui.textSecondary)))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              children: list.map((g) => _DiscoverGroupRow(group: g)).toList(),
-            ),
+      child:
+          list.isEmpty
+              ? Center(
+                child: Text(
+                  S.literal('No groups found'),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: CommunityUi.textSecondary,
+                  ),
+                ),
+              )
+              : ListView(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                children: list.map((g) => _DiscoverGroupRow(group: g)).toList(),
+              ),
     );
   }
 }
 
 class _FilterSheet extends StatefulWidget {
-  const _FilterSheet({required this.initialCategories, required this.initialLocations});
+  const _FilterSheet({
+    required this.initialCategories,
+    required this.initialLocations,
+  });
   final Set<String> initialCategories;
   final Set<String> initialLocations;
 
@@ -581,52 +681,48 @@ class _FilterSheetState extends State<_FilterSheet> {
     'Finance',
   ];
 
-  static const _locationOptions = [
-    'Kampala',
-    'Gulu',
-    'Mbale',
-    'Jinja',
-  ];
+  static const _locationOptions = ['Kampala', 'Gulu', 'Mbale', 'Jinja'];
 
-  Widget _chipRow(
-    String label,
-    List<String> options,
-    Set<String> selected,
-  ) {
-    final ui = CommunityUi.of(context);
+  Widget _chipRow(String label, List<String> options, Set<String> selected) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           S.literal(label),
-          style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: ui.textPrimary),
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: CommunityUi.textPrimary,
+          ),
         ),
         const SizedBox(height: 10),
         Wrap(
           spacing: 8,
           runSpacing: 10,
-          children: options.map((c) {
-            final isSelected = selected.contains(c);
-            return ChoiceChip(
-              label: Text(S.literal(c)),
-              selected: isSelected,
-              onSelected: (_) => setState(
-                  () => isSelected ? selected.remove(c) : selected.add(c)),
-              selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
-              labelStyle: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color:
-                    isSelected ? CommunityUi.accent : ui.textSecondary,
-              ),
-              side: BorderSide(
-                color: isSelected ? CommunityUi.accent : ui.border,
-              ),
-            );
-          }).toList(),
+          children:
+              options.map((c) {
+                final isSelected = selected.contains(c);
+                return ChoiceChip(
+                  label: Text(c),
+                  selected: isSelected,
+                  onSelected:
+                      (_) => setState(
+                        () => isSelected ? selected.remove(c) : selected.add(c),
+                      ),
+                  selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
+                  labelStyle: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color:
+                        isSelected
+                            ? CommunityUi.accent
+                            : CommunityUi.textSecondary,
+                  ),
+                  side: BorderSide(
+                    color: isSelected ? CommunityUi.accent : CommunityUi.border,
+                  ),
+                );
+              }).toList(),
         ),
       ],
     );
@@ -654,11 +750,12 @@ class _FilterSheetState extends State<_FilterSheet> {
           ),
           Text(
             S.literal('Filter Communities'),
-            style: TextStyle(
-                fontFamily: 'Saira',
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: ui.textPrimary),
+            style: const TextStyle(
+              fontFamily: 'Saira',
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: CommunityUi.textPrimary,
+            ),
           ),
           const SizedBox(height: 18),
           _chipRow('Category', _categoryOptions, _categories),
@@ -669,8 +766,7 @@ class _FilterSheetState extends State<_FilterSheet> {
             width: double.infinity,
             child: TapScale(
               borderRadius: CommunityUi.radiusBtn,
-              onTap: () =>
-                  Navigator.of(context).pop((_categories, _locations)),
+              onTap: () => Navigator.of(context).pop((_categories, _locations)),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 alignment: Alignment.center,
@@ -680,11 +776,14 @@ class _FilterSheetState extends State<_FilterSheet> {
                   ),
                   borderRadius: BorderRadius.circular(CommunityUi.radiusBtn),
                 ),
-                child: Text(S.literal('Apply'),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14)),
+                child: Text(
+                  S.literal('Apply'),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
               ),
             ),
           ),
@@ -717,9 +816,15 @@ class _SearchField extends StatelessWidget {
         decoration: InputDecoration(
           isDense: true,
           hintText: hint,
-          hintStyle: TextStyle(fontSize: 14, color: ui.textSecondary),
-          prefixIcon: Icon(Icons.search_rounded,
-              size: 21, color: ui.textSecondary),
+          hintStyle: const TextStyle(
+            fontSize: 14,
+            color: CommunityUi.textSecondary,
+          ),
+          prefixIcon: const Icon(
+            Icons.search_rounded,
+            size: 21,
+            color: CommunityUi.textSecondary,
+          ),
           prefixIconConstraints: const BoxConstraints(minWidth: 52),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -765,13 +870,19 @@ class _PhotoPlaceholder extends StatelessWidget {
           Positioned(
             right: -14,
             bottom: -20,
-            child: _blob(90, Color.lerp(color, Colors.white, 0.2)!.withValues(alpha: 0.35)),
+            child: _blob(
+              90,
+              Color.lerp(color, Colors.white, 0.2)!.withValues(alpha: 0.35),
+            ),
           ),
           Positioned(
             right: 8,
             bottom: 8,
-            child: Icon(Icons.photo_camera_rounded,
-                size: 16, color: Colors.white.withValues(alpha: 0.55)),
+            child: Icon(
+              Icons.photo_camera_rounded,
+              size: 16,
+              color: Colors.white.withValues(alpha: 0.55),
+            ),
           ),
         ],
       ),
@@ -779,10 +890,10 @@ class _PhotoPlaceholder extends StatelessWidget {
   }
 
   Widget _blob(double size, Color color) => Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-      );
+    width: size,
+    height: size,
+    decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+  );
 }
 
 class _MemberAvatars extends StatelessWidget {
@@ -836,10 +947,7 @@ class _MemberAvatars extends StatelessWidget {
 // ─────────────────────────── Join button ───────────────────────────
 
 class _JoinButton extends StatefulWidget {
-  const _JoinButton({
-    required this.color,
-    required this.groupName,
-  });
+  const _JoinButton({required this.color, required this.groupName});
   final Color color;
   final String groupName;
 
@@ -881,22 +989,24 @@ class _JoinButtonState extends State<_JoinButton> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient: _joined
-              ? null
-              : LinearGradient(
-                  colors: [color, Color.lerp(color, Colors.black, 0.15)!],
-                ),
-          color: _joined ? ui.iconWell : null,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: _joined
-              ? []
-              : [
-                  BoxShadow(
-                    color: color.withValues(alpha: 0.35),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
+          gradient:
+              _joined
+                  ? null
+                  : LinearGradient(
+                    colors: [color, Color.lerp(color, Colors.black, 0.15)!],
                   ),
-                ],
+          color: _joined ? CommunityUi.iconWell : null,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow:
+              _joined
+                  ? []
+                  : [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.35),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
         ),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 180),
@@ -904,8 +1014,11 @@ class _JoinButtonState extends State<_JoinButton> {
             key: ValueKey(_joined),
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(_joined ? Icons.check_rounded : Icons.add_rounded,
-                  size: 14, color: _joined ? color : Colors.white),
+              Icon(
+                _joined ? Icons.check_rounded : Icons.add_rounded,
+                size: 14,
+                color: _joined ? color : Colors.white,
+              ),
               const SizedBox(width: 4),
               Text(
                 _joined ? S.literal('Joined') : S.literal('Join'),
@@ -992,7 +1105,9 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -1015,11 +1130,12 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                 ),
                 Text(
                   S.literal('Create a Community'),
-                  style: TextStyle(
-                      fontFamily: 'Saira',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: ui.textPrimary),
+                  style: const TextStyle(
+                    fontFamily: 'Saira',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: CommunityUi.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 18),
                 Center(
@@ -1033,35 +1149,49 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                         color: _imagePath == null ? ui.iconWell : null,
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child: _pickingImage
-                          ? const Center(
-                              child: CircularProgressIndicator(strokeWidth: 2))
-                          : _imagePath != null
+                      child:
+                          _pickingImage
+                              ? const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                              : _imagePath != null
                               ? Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    Image.file(File(_imagePath!), fit: BoxFit.cover),
-                                    Positioned(
-                                      top: 4,
-                                      right: 4,
-                                      child: GestureDetector(
-                                        onTap: () =>
-                                            setState(() => _imagePath = null),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(3),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black54,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(Icons.close,
-                                              size: 14, color: Colors.white),
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.file(
+                                    File(_imagePath!),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: GestureDetector(
+                                      onTap:
+                                          () =>
+                                              setState(() => _imagePath = null),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black54,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 14,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                )
-                              : const Icon(Icons.add_a_photo_outlined,
-                                  color: CommunityUi.accent, size: 26),
+                                  ),
+                                ],
+                              )
+                              : const Icon(
+                                Icons.add_a_photo_outlined,
+                                color: CommunityUi.accent,
+                                size: 26,
+                              ),
                     ),
                   ),
                 ),
@@ -1069,50 +1199,63 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                 TextFormField(
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(hintText: S.literal('Group name')),
-                  validator: (v) => (v == null || v.trim().isEmpty)
-                      ? S.literal('Enter a group name')
-                      : null,
+                  decoration: InputDecoration(
+                    hintText: S.literal('Group name'),
+                  ),
+                  validator:
+                      (v) =>
+                          (v == null || v.trim().isEmpty)
+                              ? S.literal('Enter a group name')
+                              : null,
                 ),
                 const SizedBox(height: 14),
                 Text(
                   S.literal('Category'),
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: ui.textPrimary),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: CommunityUi.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _categories.map((c) {
-                    final isSelected = _selectedCategory == c;
-                    return ChoiceChip(
-                      label: Text(S.literal(c)),
-                      selected: isSelected,
-                      onSelected: (_) => setState(() => _selectedCategory = c),
-                      selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: isSelected
-                            ? CommunityUi.accent
-                            : ui.textSecondary,
-                      ),
-                      side: BorderSide(
-                        color:
-                            isSelected ? CommunityUi.accent : ui.border,
-                      ),
-                    );
-                  }).toList(),
+                  children:
+                      _categories.map((c) {
+                        final isSelected = _selectedCategory == c;
+                        return ChoiceChip(
+                          label: Text(c),
+                          selected: isSelected,
+                          onSelected:
+                              (_) => setState(() => _selectedCategory = c),
+                          selectedColor: CommunityUi.accent.withValues(
+                            alpha: 0.16,
+                          ),
+                          labelStyle: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color:
+                                isSelected
+                                    ? CommunityUi.accent
+                                    : CommunityUi.textSecondary,
+                          ),
+                          side: BorderSide(
+                            color:
+                                isSelected
+                                    ? CommunityUi.accent
+                                    : CommunityUi.border,
+                          ),
+                        );
+                      }).toList(),
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _descController,
                   maxLines: 3,
                   decoration: InputDecoration(
-                      hintText: S.literal('What is this group about?')),
+                    hintText: S.literal('What is this group about?'),
+                  ),
                 ),
                 const SizedBox(height: 22),
                 SizedBox(
@@ -1127,7 +1270,9 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                         gradient: const LinearGradient(
                           colors: [CommunityUi.accent, CommunityUi.accentDeep],
                         ),
-                        borderRadius: BorderRadius.circular(CommunityUi.radiusBtn),
+                        borderRadius: BorderRadius.circular(
+                          CommunityUi.radiusBtn,
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: CommunityUi.accent.withValues(alpha: 0.35),
@@ -1139,9 +1284,10 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                       child: Text(
                         S.literal('Create Community'),
                         style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14),
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
@@ -1164,24 +1310,29 @@ Future<void> _showGroupPreview(BuildContext context, _Group group) {
     barrierLabel: S.literal('Dismiss'),
     barrierColor: Colors.black.withValues(alpha: 0.25),
     transitionDuration: const Duration(milliseconds: 220),
-    pageBuilder: (ctx, anim, anim2) => Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28),
-        child: _GroupPreviewCard(group: group),
-      ),
-    ),
-    transitionBuilder: (ctx, animation, __, child) => BackdropFilter(
-      filter: ImageFilter.blur(
-          sigmaX: 6 * animation.value, sigmaY: 6 * animation.value),
-      child: FadeTransition(
-        opacity: animation,
-        child: ScaleTransition(
-          scale: Tween<double>(begin: 0.9, end: 1).animate(
-              CurvedAnimation(parent: animation, curve: Curves.easeOutBack)),
-          child: child,
+    pageBuilder:
+        (ctx, anim, anim2) => Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: _GroupPreviewCard(group: group),
+          ),
         ),
-      ),
-    ),
+    transitionBuilder:
+        (ctx, animation, __, child) => BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 6 * animation.value,
+            sigmaY: 6 * animation.value,
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.9, end: 1).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+              ),
+              child: child,
+            ),
+          ),
+        ),
   );
 }
 
@@ -1221,7 +1372,10 @@ class _GroupPreviewCard extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [g.color, Color.lerp(g.color, Colors.black, 0.15)!],
+                      colors: [
+                        g.color,
+                        Color.lerp(g.color, Colors.black, 0.15)!,
+                      ],
                     ),
                   ),
                   alignment: Alignment.center,
@@ -1241,8 +1395,11 @@ class _GroupPreviewCard extends StatelessWidget {
                   right: 6,
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close_rounded,
-                        color: Colors.white, size: 22),
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    ),
                   ),
                 ),
               ],
@@ -1273,14 +1430,18 @@ class _GroupPreviewCard extends StatelessWidget {
                       Text(
                         S.literal(g.location),
                         style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: g.color),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: g.color,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
+                  _MemberAvatars(
+                    color: g.color,
+                    count: '${g.memberCount} members',
+                  ),
                   const SizedBox(height: 12),
                   Text(
                     S.literal(
@@ -1334,8 +1495,14 @@ class _DiscoverGroupRow extends StatelessWidget {
 }
 
 class _Group {
-  const _Group(this.name, this.members, this.icon, this.color, this.category,
-      this.location);
+  const _Group(
+    this.name,
+    this.members,
+    this.icon,
+    this.color,
+    this.category,
+    this.location,
+  );
   final String name;
   final int members;
   final IconData icon;
@@ -1361,8 +1528,11 @@ class _GroupDetailPage extends StatelessWidget {
   final _Group group;
 
   static const _mockMembers = [
-    _Member('Sarah M.', ['Entrepreneur', 'Mentor', 'Community Leader'],
-        isAdmin: true),
+    _Member('Sarah M.', [
+      'Entrepreneur',
+      'Mentor',
+      'Community Leader',
+    ], isAdmin: true),
     _Member('Grace K.', ['Trader', 'Entrepreneur']),
     _Member('Amina', ['Student', 'Volunteer']),
     _Member('Peace N.', ['Mentor', 'Entrepreneur', 'Trader']),
@@ -1390,7 +1560,9 @@ class _GroupDetailPage extends StatelessWidget {
                   Container(
                     height: 120,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(CommunityUi.radiusHero),
+                      borderRadius: BorderRadius.circular(
+                        CommunityUi.radiusHero,
+                      ),
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -1433,23 +1605,32 @@ class _GroupDetailPage extends StatelessWidget {
                       Text(
                         S.literal(g.location),
                         style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: g.color),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: g.color,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
+                  _MemberAvatars(
+                    color: g.color,
+                    count: '${g.memberCount} members',
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     '${S.literal('Created by')} ${creator.name}',
-                    style: TextStyle(
-                        fontSize: 12, color: ui.textSecondary),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: CommunityUi.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: g.color.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(20),
@@ -1457,7 +1638,11 @@ class _GroupDetailPage extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_circle_rounded, color: g.color, size: 16),
+                        Icon(
+                          Icons.check_circle_rounded,
+                          color: g.color,
+                          size: 16,
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           S.literal("You're a member"),
@@ -1500,7 +1685,9 @@ class _GroupDetailPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  ..._mockMembers.map((m) => _MemberListRow(color: g.color, member: m)),
+                  ..._mockMembers.map(
+                    (m) => _MemberListRow(color: g.color, member: m),
+                  ),
                 ],
               ),
             ),
@@ -1533,11 +1720,14 @@ class _MemberListRow extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(m.name,
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: ui.textPrimary)),
+                    Text(
+                      m.name,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: CommunityUi.textPrimary,
+                      ),
+                    ),
                     if (m.isAdmin) ...[
                       const SizedBox(width: 6),
                       const _AdminBadge(),
@@ -1645,9 +1835,10 @@ class _ConversationRow extends StatelessWidget {
     final ui = CommunityUi.of(context);
     final c = conversation;
     return CommunityGroupCard(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => _ChatRoomPage(conversation: c)),
-      ),
+      onTap:
+          () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => _ChatRoomPage(conversation: c)),
+          ),
       // The last sender's own avatar, not the group's — matches how a
       // real chat list shows who most recently spoke.
       leading: CommunityAvatar(color: c.senderColor, initial: c.lastSender[0]),
@@ -1656,7 +1847,10 @@ class _ConversationRow extends StatelessWidget {
         '${c.lastSender}: ${c.lastMessage}',
         style: TextStyle(
           fontSize: 12,
-          color: c.unread > 0 ? ui.textPrimary : ui.textSecondary,
+          color:
+              c.unread > 0
+                  ? CommunityUi.textPrimary
+                  : CommunityUi.textSecondary,
           fontWeight: c.unread > 0 ? FontWeight.w600 : FontWeight.w400,
         ),
         maxLines: 1,
@@ -1667,8 +1861,11 @@ class _ConversationRow extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            S.literal(c.time),
-            style: TextStyle(fontSize: 11, color: ui.textSecondary),
+            c.time,
+            style: const TextStyle(
+              fontSize: 11,
+              color: CommunityUi.textSecondary,
+            ),
           ),
           const SizedBox(height: 6),
           if (c.unread > 0)
@@ -1703,8 +1900,13 @@ class _ConversationRow extends StatelessWidget {
 
 class _Conversation {
   const _Conversation(
-      this.group, this.lastSender, this.lastMessage, this.time,
-      {this.unread = 0, required this.senderColor});
+    this.group,
+    this.lastSender,
+    this.lastMessage,
+    this.time, {
+    this.unread = 0,
+    required this.senderColor,
+  });
   final _Group group;
   final String lastSender;
   final String lastMessage;
@@ -1731,8 +1933,11 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
     super.initState();
     final c = widget.conversation;
     _messages = [
-      (c.lastSender, "Hey everyone, hope you're all doing well this week!",
-          c.lastSender == 'You'),
+      (
+        c.lastSender,
+        'Hey everyone, hope you\'re all doing well this week!',
+        c.lastSender == 'You',
+      ),
       ('You', 'Doing great, thanks for asking!', true),
       (c.lastSender, c.lastMessage, c.lastSender == 'You'),
     ];
@@ -1752,8 +1957,11 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
     _controller.clear();
     Future.delayed(const Duration(milliseconds: 50), () {
       if (_scroll.hasClients) {
-        _scroll.animateTo(_scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+        _scroll.animateTo(
+          _scroll.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
       }
     });
   }
@@ -1780,13 +1988,19 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                   Expanded(
                     child: TapScale(
                       borderRadius: 12,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => _GroupDetailPage(group: g)),
-                      ),
+                      onTap:
+                          () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => _GroupDetailPage(group: g),
+                            ),
+                          ),
                       child: Row(
                         children: [
-                          CommunityAvatar(color: g.color, initial: g.name[0], size: 40),
+                          CommunityAvatar(
+                            color: g.color,
+                            initial: g.name[0],
+                            size: 40,
+                          ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Column(
@@ -1794,17 +2008,20 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                               children: [
                                 Text(
                                   S.literal(g.name),
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: ui.textPrimary),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: CommunityUi.textPrimary,
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   '${g.memberCount} ${S.literal('members')} · ${S.literal('tap for details')}',
-                                  style: TextStyle(
-                                      fontSize: 11, color: ui.textSecondary),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: CommunityUi.textSecondary,
+                                  ),
                                 ),
                               ],
                             ),
@@ -1828,15 +2045,20 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                     final bubble = Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 10),
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
-                        gradient: isMe
-                            ? LinearGradient(colors: [
-                                g.color,
-                                Color.lerp(g.color, Colors.black, 0.12)!,
-                              ])
-                            : null,
-                        color: isMe ? null : ui.card,
+                        gradient:
+                            isMe
+                                ? LinearGradient(
+                                  colors: [
+                                    g.color,
+                                    Color.lerp(g.color, Colors.black, 0.12)!,
+                                  ],
+                                )
+                                : null,
+                        color: isMe ? null : CommunityUi.card,
                         borderRadius: BorderRadius.only(
                           topLeft: const Radius.circular(16),
                           topRight: const Radius.circular(16),
@@ -1879,26 +2101,14 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                     // ones (using your real saved photo when you've set
                     // one), not just incoming messages.
                     if (isMe) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.sizeOf(context).width * 0.64),
-                            child: bubble,
+                      return Align(
+                        alignment: Alignment.centerRight,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.sizeOf(context).width * 0.72,
                           ),
-                          const SizedBox(width: 8),
-                          CommunityAvatar(
-                            color: g.color,
-                            initial: (me?.name.isNotEmpty ?? false)
-                                ? me!.name[0]
-                                : 'Y',
-                            imagePath: me?.avatarPath,
-                            size: 30,
-                          ),
-                        ],
+                          child: bubble,
+                        ),
                       );
                     }
                     return Row(
@@ -1912,7 +2122,8 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                         const SizedBox(width: 8),
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxWidth: MediaQuery.sizeOf(context).width * 0.64),
+                            maxWidth: MediaQuery.sizeOf(context).width * 0.64,
+                          ),
                           child: bubble,
                         ),
                       ],
@@ -1947,11 +2158,15 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                         decoration: InputDecoration(
                           isDense: true,
                           hintText: S.literal('Message'),
-                          hintStyle: TextStyle(
-                              fontSize: 13, color: ui.textSecondary),
+                          hintStyle: const TextStyle(
+                            fontSize: 13,
+                            color: CommunityUi.textSecondary,
+                          ),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 18, vertical: 12),
+                            horizontal: 18,
+                            vertical: 12,
+                          ),
                         ),
                         onSubmitted: (_) => _send(),
                         textInputAction: TextInputAction.send,
@@ -1966,20 +2181,26 @@ class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          g.color,
-                          Color.lerp(g.color, Colors.black, 0.12)!,
-                        ]),
+                        gradient: LinearGradient(
+                          colors: [
+                            g.color,
+                            Color.lerp(g.color, Colors.black, 0.12)!,
+                          ],
+                        ),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                              color: g.color.withValues(alpha: 0.4),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3)),
+                            color: g.color.withValues(alpha: 0.4),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
                         ],
                       ),
-                      child: const Icon(Icons.send_rounded,
-                          color: Colors.white, size: 18),
+                      child: const Icon(
+                        Icons.send_rounded,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ),
                 ],
@@ -2032,28 +2253,37 @@ class _FeedPostCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(p.author,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            color: ui.textPrimary)),
-                    Text(S.literal(p.time),
-                        style: TextStyle(
-                            fontSize: 11, color: ui.textSecondary)),
+                    Text(
+                      p.author,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: CommunityUi.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      S.literal(p.time),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: CommunityUi.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          Text(S.literal(p.content),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 13,
-                color: ui.textPrimary,
-                height: 1.4,
-              )),
+          Text(
+            S.literal(p.content),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 13,
+              color: CommunityUi.textPrimary,
+              height: 1.4,
+            ),
+          ),
           if (p.imageCount > 0) ...[
             const SizedBox(height: 10),
             _FeedImages(post: p),
@@ -2157,8 +2387,8 @@ class _FeedImages extends StatelessWidget {
       PageRouteBuilder(
         opaque: false,
         barrierColor: Colors.black87,
-        pageBuilder: (_, __, ___) =>
-            _ImageViewerPage(post: post, initialIndex: index),
+        pageBuilder:
+            (_, __, ___) => _ImageViewerPage(post: post, initialIndex: index),
       ),
     );
   }
@@ -2255,8 +2485,11 @@ class _FeedImages extends StatelessWidget {
                   Expanded(child: _tile(context, 2)),
                   const SizedBox(width: gap),
                   Expanded(
-                    child: _tile(context, 3,
-                        overlayCount: extra > 0 ? extra : null),
+                    child: _tile(
+                      context,
+                      3,
+                      overlayCount: extra > 0 ? extra : null,
+                    ),
                   ),
                 ],
               ),
@@ -2283,15 +2516,19 @@ class _ImageViewerPage extends StatefulWidget {
 }
 
 class _ImageViewerPageState extends State<_ImageViewerPage> {
-  late final PageController _page =
-      PageController(initialPage: widget.initialIndex);
+  late final PageController _page = PageController(
+    initialPage: widget.initialIndex,
+  );
   late int _index = widget.initialIndex;
 
   String get _postId => '${widget.post.author}-${widget.post.time}';
 
   void _go(int delta) {
-    _page.animateToPage(_index + delta,
-        duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    _page.animateToPage(
+      _index + delta,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -2394,28 +2631,38 @@ class _ImageViewerPageState extends State<_ImageViewerPage> {
               controller: _page,
               itemCount: p.imageCount,
               onPageChanged: (i) => setState(() => _index = i),
-              itemBuilder: (context, i) => Center(
-                child: Hero(
-                  tag: '$_postId-img-$i',
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 210),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: _PhotoPlaceholder(
-                        color: Color.lerp(p.color, Colors.white, (i % 3) * 0.14)!,
-                        radius: 20,
+              itemBuilder:
+                  (context, i) => Center(
+                    child: Hero(
+                      tag: '$_postId-img-$i',
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 210),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: _PhotoPlaceholder(
+                            color:
+                                Color.lerp(
+                                  p.color,
+                                  Colors.white,
+                                  (i % 3) * 0.14,
+                                )!,
+                            radius: 20,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
             ),
             Positioned(
               top: 8,
               left: 8,
               child: IconButton(
                 onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.close_rounded, color: Colors.white, size: 28),
+                icon: const Icon(
+                  Icons.close_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
             if (p.imageCount > 1 && _index > 0)
@@ -2473,8 +2720,9 @@ class _ImageViewerPageState extends State<_ImageViewerPage> {
                               width: i == _index ? 18 : 6,
                               height: 6,
                               decoration: BoxDecoration(
-                                color: Colors.white
-                                    .withValues(alpha: i == _index ? 0.95 : 0.4),
+                                color: Colors.white.withValues(
+                                  alpha: i == _index ? 0.95 : 0.4,
+                                ),
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
@@ -2484,14 +2732,21 @@ class _ImageViewerPageState extends State<_ImageViewerPage> {
                     ],
                     Row(
                       children: [
-                        CommunityAvatar(color: p.color, initial: p.author[0], size: 32),
+                        CommunityAvatar(
+                          color: p.color,
+                          initial: p.author[0],
+                          size: 32,
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(p.author,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14)),
+                          child: Text(
+                            p.author,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -2499,17 +2754,25 @@ class _ImageViewerPageState extends State<_ImageViewerPage> {
                     Text(
                       S.literal(p.content),
                       style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.9),
-                          fontSize: 13,
-                          height: 1.4),
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 13,
+                        height: 1.4,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     const Row(
                       children: [
-                        _FeedAction(Icons.favorite_border_rounded, 'Like', light: true),
+                        _FeedAction(
+                          Icons.favorite_border_rounded,
+                          'Like',
+                          light: true,
+                        ),
                         SizedBox(width: 10),
-                        _FeedAction(Icons.chat_bubble_outline_rounded, 'Comment',
-                            light: true),
+                        _FeedAction(
+                          Icons.chat_bubble_outline_rounded,
+                          'Comment',
+                          light: true,
+                        ),
                         SizedBox(width: 10),
                         _FeedAction(Icons.share_outlined, 'Share', light: true),
                       ],
@@ -2549,8 +2812,13 @@ class _ArrowButton extends StatelessWidget {
 }
 
 class _Post {
-  const _Post(this.author, this.content, this.time, this.color,
-      {this.imageCount = 0});
+  const _Post(
+    this.author,
+    this.content,
+    this.time,
+    this.color, {
+    this.imageCount = 0,
+  });
   final String author;
   final String content;
   final String time;

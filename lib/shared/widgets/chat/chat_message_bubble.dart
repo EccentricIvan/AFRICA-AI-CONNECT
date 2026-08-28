@@ -16,10 +16,17 @@ class ChatMessageBubble extends StatelessWidget {
   final bool isOffline;
   final String? offlineLabel;
 
+  String get _displayText {
+    if (isUser) return text;
+    return text
+        .replaceAll(RegExp(r'\*\*(.*?)\*\*'), r'$1')
+        .replaceAll(RegExp(r'^#{1,6}\s*', multiLine: true), '')
+        .trim();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final maxW = MediaQuery.sizeOf(context).width * 0.82;
-    final ui = ChatUi.of(context);
+    final maxW = MediaQuery.sizeOf(context).width * 0.94;
 
     if (isUser) {
       return Align(
@@ -39,9 +46,9 @@ class ChatMessageBubble extends StatelessWidget {
             border: Border.all(color: ChatUi.accent.withValues(alpha: 0.18)),
           ),
           child: Text(
-            text,
-            style: TextStyle(
-              color: ui.textPrimary,
+            _displayText,
+            style: const TextStyle(
+              color: ChatUi.textPrimary,
               fontSize: 14.5,
               height: 1.5,
               fontWeight: FontWeight.w500,
@@ -66,8 +73,10 @@ class ChatMessageBubble extends StatelessWidget {
             const SizedBox(width: 10),
             Flexible(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: ui.card,
                   borderRadius: const BorderRadius.only(
@@ -105,9 +114,9 @@ class ChatMessageBubble extends StatelessWidget {
                       const SizedBox(height: 6),
                     ],
                     Text(
-                      text,
-                      style: TextStyle(
-                        color: ui.textPrimary,
+                      _displayText,
+                      style: const TextStyle(
+                        color: ChatUi.textPrimary,
                         fontSize: 14.5,
                         height: 1.55,
                       ),

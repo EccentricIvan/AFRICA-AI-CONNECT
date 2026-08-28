@@ -667,66 +667,48 @@ class _MiniStat extends StatelessWidget {
             fontWeight: FontWeight.w700,
             color: color,
           ),
-        ),
-        const SizedBox(height: 1),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 8,
-            fontWeight: FontWeight.w600,
-            color: secondaryColor,
-            height: 1.15,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Exactly 5 badges per row (matching Home's dense icon-grid density),
-/// any beyond 5 wrap to additional rows. Row uses top cross-alignment so
-/// icons always line up regardless of whether a neighboring badge's title
-/// wraps to a second line.
-class _AchievementsGrid extends StatelessWidget {
-  const _AchievementsGrid();
-
-  @override
-  Widget build(BuildContext context) {
-    final badges = [
-      (S.literal('First Step'), Icons.flag_rounded, HomeUi.accent),
-      (S.literal('Quick Learner'), Icons.bolt_rounded, HomeUi.earn),
-      (S.literal('Community Star'), Icons.star_rounded, HomeUi.grow),
-      (S.literal('Entrepreneur'), Icons.rocket_launch_rounded, HomeUi.thrive),
-      (S.literal('Consistent'), Icons.local_fire_department_rounded,
-          HomeUi.learn),
-    ];
-
-    const perRow = 5;
-    final rows = <List<(String, IconData, Color)>>[];
-    for (var i = 0; i < badges.length; i += perRow) {
-      rows.add(badges.sublist(i, (i + perRow).clamp(0, badges.length)));
-    }
-
-    return Column(
-      children: [
-        for (var r = 0; r < rows.length; r++) ...[
-          if (r > 0) const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (var i = 0; i < perRow; i++) ...[
-                if (i > 0) const SizedBox(width: 6),
-                Expanded(
-                  child: i < rows[r].length
-                      ? _BadgeTile(
-                          label: rows[r][i].$1,
-                          icon: rows[r][i].$2,
-                          color: rows[r][i].$3,
-                        )
-                      : const SizedBox.shrink(),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name, style: Theme.of(context).textTheme.headlineSmall),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.earnColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    role ?? S.literal('Member'),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.earnColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 14,
+                      color: Theme.of(context).hintColor,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      location ?? S.literal('Location not set'),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ],
@@ -801,7 +783,51 @@ class _EditProfileSheet extends ConsumerStatefulWidget {
   final String? avatarPath;
 
   @override
-  ConsumerState<_EditProfileSheet> createState() => _EditProfileSheetState();
+  Widget build(BuildContext context) {
+    final stats = [
+      const _Stat('Courses', '3', AppColors.learnColor),
+      const _Stat('Points', '450', AppColors.earnColor),
+      const _Stat('Streak', '7 days', AppColors.healthColor),
+      const _Stat('Badges', '5', AppColors.growColor),
+    ];
+
+    return Row(
+      children:
+          stats.map((s) {
+            return Expanded(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: s.color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: s.color.withValues(alpha: 0.15)),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      s.label == 'Streak' ? '7 ${S.literal('days')}' : s.value,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: s.color,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      S.literal(s.label),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+    );
+  }
 }
 
 class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
@@ -815,249 +841,102 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
   bool _pickingImage = false;
   bool _saving = false;
 
-  static const _roles = [
-    'Entrepreneur',
-    'Farmer',
-    'Student',
-    'Job Seeker',
-    'Community Leader',
-    'Artisan / Creator',
+class _ProgressCards extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      ('Digital Skills', 0.65, AppColors.skillsColor),
+      ('Financial Literacy', 0.40, AppColors.financeColor),
+      ('Entrepreneurship', 0.25, AppColors.earnColor),
+    ];
+
+    return Column(
+      children:
+          items.map((p) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            S.literal(p.$1),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                        Text(
+                          '${(p.$2 * 100).round()}%',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: p.$3,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: p.$2,
+                        minHeight: 6,
+                        backgroundColor: Theme.of(context).dividerColor,
+                        valueColor: AlwaysStoppedAnimation<Color>(p.$3),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+    );
+  }
+}
+
+class _AchievementsGrid extends StatelessWidget {
+  static const _badges = [
+    ('First Step', Icons.flag, AppColors.primary),
+    ('Quick Learner', Icons.bolt, AppColors.earnColor),
+    ('Community Star', Icons.star, AppColors.communityColor),
+    ('Entrepreneur', Icons.rocket_launch, AppColors.marketplaceColor),
+    ('Consistent', Icons.local_fire_department, AppColors.healthColor),
   ];
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _aboutController.dispose();
-    _locationController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickImage() async {
-    setState(() => _pickingImage = true);
-    final path = await _pickAndSaveProfilePhoto();
-    if (!mounted) return;
-    setState(() {
-      _pickingImage = false;
-      if (path != null) _avatarPath = path;
-    });
-  }
-
-  Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _saving = true);
-    await ref.read(userDaoProvider).saveUser(
-          name: _nameController.text.trim(),
-          role: _selectedRole,
-          location: _locationController.text.trim().isEmpty
-              ? null
-              : _locationController.text.trim(),
-          about: _aboutController.text.trim(),
-          avatarPath: _avatarPath,
-        );
-    if (!mounted) return;
-    Navigator.of(context).pop();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final ui = HomeUi.of(context);
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children:
+          _badges.map((b) {
+            return Container(
+              width: 80,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: b.$3.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: b.$3.withValues(alpha: 0.2)),
+              ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: ui.border,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        icon: Icon(Icons.arrow_back_rounded,
-                            color: ui.textPrimary, size: 22),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        S.literal('Edit Profile'),
-                        style: TextStyle(
-                            fontFamily: 'Saira',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: ui.textPrimary),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  Center(
-                    child: GestureDetector(
-                      onTap: _pickingImage ? null : _pickImage,
-                      child: Container(
-                        width: 88,
-                        height: 88,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _avatarPath == null
-                              ? HomeUi.accent.withValues(alpha: 0.12)
-                              : null,
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: _pickingImage
-                            ? const Center(
-                                child: CircularProgressIndicator(strokeWidth: 2))
-                            : _avatarPath != null
-                                ? Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      Image.file(File(_avatarPath!),
-                                          fit: BoxFit.cover),
-                                      Positioned(
-                                        top: 4,
-                                        right: 4,
-                                        child: GestureDetector(
-                                          onTap: () =>
-                                              setState(() => _avatarPath = null),
-                                          child: Container(
-                                            padding: const EdgeInsets.all(3),
-                                            decoration: const BoxDecoration(
-                                              color: Colors.black54,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: const Icon(Icons.close,
-                                                size: 14, color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : const Icon(Icons.add_a_photo_outlined,
-                                    color: HomeUi.accent, size: 26),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _nameController,
-                    textCapitalization: TextCapitalization.words,
-                    decoration:
-                        InputDecoration(hintText: S.literal('Your name')),
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? S.literal('Enter your name')
-                        : null,
-                  ),
-                  const SizedBox(height: 14),
-                  TextFormField(
-                    controller: _aboutController,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                        hintText:
-                            S.literal('Tell others a little about yourself')),
-                  ),
-                  const SizedBox(height: 14),
+                  Icon(b.$2, color: b.$3, size: 28),
+                  const SizedBox(height: 6),
                   Text(
-                    S.literal('I am a'),
+                    S.literal(b.$1),
                     style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: ui.textPrimary),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: _roles.map((r) {
-                      final isSelected = _selectedRole == r;
-                      return ChoiceChip(
-                        label: Text(S.literal(r)),
-                        selected: isSelected,
-                        onSelected: (_) => setState(() => _selectedRole = r),
-                        selectedColor: HomeUi.accent.withValues(alpha: 0.16),
-                        labelStyle: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? HomeUi.accent
-                              : ui.textSecondary,
-                        ),
-                        side: BorderSide(
-                          color: isSelected
-                              ? HomeUi.accent
-                              : ui.border,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 14),
-                  TextFormField(
-                    controller: _locationController,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: InputDecoration(
-                      hintText: S.literal('e.g. Kampala, Mukono, Mbale'),
-                      prefixIcon: const Icon(Icons.location_on_outlined),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
-                  ),
-                  const SizedBox(height: 22),
-                  SizedBox(
-                    width: double.infinity,
-                    child: TapScale(
-                      borderRadius: HomeUi.radiusBtn,
-                      onTap: _saving ? () {} : _save,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [HomeUi.accent, HomeUi.accentDeep],
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(HomeUi.radiusBtn),
-                          boxShadow: [
-                            BoxShadow(
-                              color: HomeUi.accent.withValues(alpha: 0.35),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: _saving
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2, color: Colors.white),
-                              )
-                            : Text(
-                                S.literal('Save Changes'),
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14),
-                              ),
-                      ),
-                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
-      ),
+            );
+          }).toList(),
     );
   }
 }

@@ -158,11 +158,7 @@ class _CommunityTip extends StatelessWidget {
     ];
     final tip = tips[DateTime.now().day % tips.length];
 
-    return HomeCommunityCard(
-      title: tip.$3,
-      description: tip.$1,
-      icon: tip.$2,
-    );
+    return HomeCommunityCard(title: tip.$3, description: tip.$1, icon: tip.$2);
   }
 }
 
@@ -215,7 +211,12 @@ class _QuickActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final actions = [
-      (t('ask_ai'), Icons.chat_bubble_outline_rounded, HomeUi.askAi, '/ai-chat'),
+      (
+        t('ask_ai'),
+        Icons.chat_bubble_outline_rounded,
+        HomeUi.askAi,
+        '/ai-chat',
+      ),
       (t('find_jobs'), Icons.work_outline_rounded, HomeUi.findJobs, '/jobs'),
       (t('learn'), Icons.menu_book_outlined, HomeUi.learnAction, '/learn'),
       (
@@ -288,7 +289,7 @@ class _Pillars extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 0.92,
+        childAspectRatio: 0.84,
       ),
       itemBuilder: (context, index) {
         final p = pillars[index];

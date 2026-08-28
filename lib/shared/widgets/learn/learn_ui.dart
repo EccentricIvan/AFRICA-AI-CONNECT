@@ -56,23 +56,19 @@ class LearnUi {
   static const String progressMascotAsset =
       'assets/branding/learn_progress_mascot.png';
 
-  List<BoxShadow> get softShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1B1B1B).withValues(alpha: 0.07),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ];
+  static List<BoxShadow> get softShadow => [
+    BoxShadow(
+      color: const Color(0xFF1B1B1B).withValues(alpha: 0.07),
+      blurRadius: 20,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
-  List<BoxShadow> get pillShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1B1B1B).withValues(alpha: 0.08),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
-          ),
-        ];
+  static List<BoxShadow> get pillShadow => [
+    BoxShadow(
+      color: const Color(0xFF1B1B1B).withValues(alpha: 0.08),
+      blurRadius: 14,
+      offset: const Offset(0, 6),
+    ),
+  ];
 }

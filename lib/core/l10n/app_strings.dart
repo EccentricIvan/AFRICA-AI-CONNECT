@@ -57,19 +57,20 @@ class LocaleNotifier extends StateNotifier<AppLocale> {
   void set(AppLocale locale) {
     S._activeLocale = locale;
     state = locale;
+
     SharedPreferences.getInstance().then(
-      (p) => p.setString('app_locale', locale.name),
+      (preferences) => preferences.setString('app_locale', locale.name),
     );
   }
 
   void loadFromPrefs(String? saved) {
-    if (saved == null) return;
-    for (final l in AppLocale.values) {
-      if (l.name == saved) {
-        state = l;
-        return;
-      }
-    }
+    final locale = AppLocale.values.firstWhere(
+      (candidate) => candidate.name == saved,
+      orElse: () => AppLocale.en,
+    );
+
+    S._activeLocale = locale;
+    state = locale;
   }
 }
 
@@ -347,15 +348,14 @@ class S {
   ];
 
   static String _apiCode(AppLocale locale) => switch (locale) {
-        AppLocale.en => 'eng',
-        AppLocale.lg => 'lug',
-        AppLocale.sw => 'swa',
-        AppLocale.nyn => 'nyn',
-        AppLocale.teo => 'teo',
-        AppLocale.nyo => 'nyo',
-        AppLocale.ach => 'ach',
-        AppLocale.rw => 'kin',
-      };
+    AppLocale.en => 'eng',
+    AppLocale.lg => 'lug',
+    AppLocale.sw => 'swa',
+    AppLocale.nyn => 'nyn',
+    AppLocale.teo => 'teo',
+    AppLocale.nyo => 'nyo',
+    AppLocale.ach => 'ach',
+  };
 
   static Map<String, String> _sourceCatalog() {
     final source = <String, String>{

@@ -30,10 +30,7 @@ class HomeHeaderBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: onAvatarTap,
-            child: _ProfileAvatar(avatarPath: avatarPath),
-          ),
+          GestureDetector(onTap: onAvatarTap, child: const _ProfileAvatar()),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -115,17 +112,19 @@ class _ProfileAvatar extends StatelessWidget {
             height: 52,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: ui.card,
-              boxShadow: ui.isDark
-                  ? null
-                  : [
-                      BoxShadow(
-                        color: const Color(0xFF1A1A1A).withValues(alpha: 0.06),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-              border: Border.all(color: ui.border, width: 1),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1A1A1A).withValues(alpha: 0.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+              border: Border.all(color: const Color(0xFFE8E8E8), width: 1),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(12),
+              child: CustomPaint(painter: _PersonOutlinePainter()),
             ),
             clipBehavior: Clip.antiAlias,
             child: avatarPath != null
@@ -162,12 +161,13 @@ class _PersonOutlinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.7
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
+    final paint =
+        Paint()
+          ..color = const Color(0xFF1A1A1A)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.7
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round;
 
     final cx = size.width / 2;
     final headR = size.width * 0.22;
@@ -177,14 +177,15 @@ class _PersonOutlinePainter extends CustomPainter {
     final shoulderTop = size.height * 0.58;
     final shoulderBottom = size.height * 0.92;
     final shoulderWidth = size.width * 0.42;
-    final arc = Path()
-      ..moveTo(cx - shoulderWidth, shoulderBottom)
-      ..quadraticBezierTo(
-        cx,
-        shoulderTop,
-        cx + shoulderWidth,
-        shoulderBottom,
-      );
+    final arc =
+        Path()
+          ..moveTo(cx - shoulderWidth, shoulderBottom)
+          ..quadraticBezierTo(
+            cx,
+            shoulderTop,
+            cx + shoulderWidth,
+            shoulderBottom,
+          );
     canvas.drawPath(arc, paint);
   }
 

@@ -75,25 +75,19 @@ class HomeUi {
   static const String heroBackgroundAsset =
       'assets/branding/card_background_light.png';
 
-  // Shadows barely register against a dark surface and just look like a
-  // muddy halo — cards lean on [border] alone for definition in dark mode.
-  List<BoxShadow> get softShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1A1A1A).withValues(alpha: 0.07),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ];
+  static List<BoxShadow> get softShadow => [
+    BoxShadow(
+      color: const Color(0xFF1A1A1A).withValues(alpha: 0.07),
+      blurRadius: 20,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
-  List<BoxShadow> get navShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1A1A1A).withValues(alpha: 0.10),
-            blurRadius: 28,
-            offset: const Offset(0, 10),
-          ),
-        ];
+  static List<BoxShadow> get navShadow => [
+    BoxShadow(
+      color: const Color(0xFF1A1A1A).withValues(alpha: 0.10),
+      blurRadius: 28,
+      offset: const Offset(0, 10),
+    ),
+  ];
 }

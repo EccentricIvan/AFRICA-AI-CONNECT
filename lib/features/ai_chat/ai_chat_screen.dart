@@ -99,14 +99,16 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       );
       if (connectionFailed) {
         final offlineMatch = await _offlineChat.findMatch(text, locale);
-        response = offlineMatch?.reply ??
+        response =
+            offlineMatch?.reply ??
             await _offlineChat.getFallback(locale) ??
             response;
         isOffline = true;
       }
     } else {
       final offlineMatch = await _offlineChat.findMatch(text, locale);
-      response = offlineMatch?.reply ??
+      response =
+          offlineMatch?.reply ??
           await _offlineChat.getFallback(locale) ??
           'No offline answer is available for that question.';
       isOffline = true;
@@ -148,39 +150,40 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     final popularTopics = [
       (
         Icons.work_outline_rounded,
-        S.literal('Business\nAdvice'),
+        _t('marketplace'),
         const Color(0xFFF28C28),
         _t('topic_business_q'),
       ),
       (
         Icons.eco_outlined,
-        S.literal('Farming\nTips'),
+        _t('topic_farming_q'),
         const Color(0xFF4D8B55),
         _t('topic_farming_q'),
       ),
       (
         Icons.favorite_border_rounded,
-        S.literal('Health\nInfo'),
+        _t('health'),
         const Color(0xFF4A6FA5),
-        S.literal('Health tips for my family'),
+        _t('health'),
       ),
       (
         Icons.bar_chart_rounded,
-        S.literal('Finance\nGuidance'),
+        _t('finance'),
         const Color(0xFFE07818),
         _t('topic_savings_q'),
       ),
       (
         Icons.more_horiz_rounded,
-        S.literal('More\nTopics'),
+        _t('community'),
         const Color(0xFF7C5CBF),
         _t('topic_sell_online_q'),
       ),
     ];
 
-    final welcomeBody = _messages.isNotEmpty && !_messages.first.isUser
-        ? _messages.first.text
-        : _t('ai_greeting');
+    final welcomeBody =
+        _messages.isNotEmpty && !_messages.first.isUser
+            ? _messages.first.text
+            : _t('ai_greeting');
 
     final chatUi = ChatUi.of(context);
     return Scaffold(
@@ -235,13 +238,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                         padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
                         children: [
                           ChatWelcomeCard(
-                            title: S.literal("Hello, I'm your AI Assistant"),
+                            title: _t('chat_assistant_title'),
                             body: welcomeBody,
                           ),
                           const SizedBox(height: 28),
                           Text(
-                            S.literal('Explore popular topics'),
-                            style: TextStyle(
+                            _t('explore_pillars'),
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: chatUi.textPrimary,
@@ -253,8 +256,8 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: popularTopics.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 10),
+                              separatorBuilder:
+                                  (_, __) => const SizedBox(width: 10),
                               itemBuilder: (context, i) {
                                 final topic = popularTopics[i];
                                 return ChatTopicChip(

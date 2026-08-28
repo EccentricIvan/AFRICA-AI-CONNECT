@@ -82,7 +82,11 @@ class CommunityHeroCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(
-                      pad, pad, pad, compact ? 10 : 12),
+                    pad,
+                    pad,
+                    pad,
+                    compact ? 10 : 12,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -172,13 +176,19 @@ class CommunityHeroCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 18),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [CommunityUi.accent, CommunityUi.accentDeep],
+                              colors: [
+                                CommunityUi.accent,
+                                CommunityUi.accentDeep,
+                              ],
                             ),
-                            borderRadius:
-                                BorderRadius.circular(CommunityUi.radiusBtn),
+                            borderRadius: BorderRadius.circular(
+                              CommunityUi.radiusBtn,
+                            ),
                             boxShadow: [
                               BoxShadow(
-                                color: CommunityUi.accent.withValues(alpha: 0.35),
+                                color: CommunityUi.accent.withValues(
+                                  alpha: 0.35,
+                                ),
                                 blurRadius: 12,
                                 offset: const Offset(0, 6),
                               ),
@@ -239,8 +249,11 @@ class _AvatarCluster extends StatelessWidget {
                   color: colors[i],
                   border: Border.all(color: Colors.white, width: 2),
                 ),
-                child: const Icon(Icons.person_rounded,
-                    color: Colors.white, size: 16),
+                child: const Icon(
+                  Icons.person_rounded,
+                  color: Colors.white,
+                  size: 16,
+                ),
               ),
             ),
         ],

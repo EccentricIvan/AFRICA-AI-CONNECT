@@ -32,9 +32,7 @@ class MarketHeroCard extends StatelessWidget {
 
           return Container(
             width: outer.maxWidth,
-            constraints: BoxConstraints(
-              minHeight: compact ? 220 : 248,
-            ),
+            constraints: BoxConstraints(minHeight: compact ? 220 : 248),
             decoration: BoxDecoration(
               color: ui.card,
               borderRadius: BorderRadius.circular(MarketUi.radiusHero),
@@ -135,8 +133,9 @@ class MarketHeroCard extends StatelessWidget {
                             gradient: const LinearGradient(
                               colors: [MarketUi.accent, MarketUi.accentDeep],
                             ),
-                            borderRadius:
-                                BorderRadius.circular(MarketUi.radiusBtn),
+                            borderRadius: BorderRadius.circular(
+                              MarketUi.radiusBtn,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: MarketUi.accent.withValues(alpha: 0.35),
