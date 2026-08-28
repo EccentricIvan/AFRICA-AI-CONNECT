@@ -99,7 +99,10 @@ All colors and fonts are tokens in `lib/core/theme/app_colors.dart` and
 - `AI_BACKEND/` — a standalone Python/FastAPI service (chat + translation,
   calls Groq itself) merged from a collaborator PR. **Not wired into the
   Flutter app** — nothing in `lib/` calls it, and it has no deployment
-  config. Treat as an unintegrated prototype, not live infrastructure.
+  config. Treat as an unintegrated prototype, not live infrastructure. The
+  Flutter app itself has no LLM/SLM dependency at all — Groq support
+  (`GeminiService`, `ApiConfig`) was deliberately removed; AI Chat is
+  offline-only, see **Offline chat knowledge base** below.
 
 ## Roadmap — mock data & non-functional buttons to replace
 Full audit as of 2026-07-08. Follow the `users`/`UserDao`/`currentUserProvider`
@@ -236,9 +239,15 @@ it ships prebuilt binaries rather than compiling from source.)
   PR, not just the enum case.
 - No flag emojis in the language picker (removed deliberately) — just
   language name + code.
-- Groq AI-chat language instructions
-  (`lib/services/gemini_service.dart`'s `getAiLanguageInstruction`) exist
-  for all 8 `AppLocale` values.
+
+## AI Chat is fully offline — no LLM/SLM
+`ai_chat_screen.dart` has no online/LLM code path at all — `GeminiService`
+and `ApiConfig` (Groq direct call + the Vercel `AI_BACKEND` proxy attempt)
+were deliberately deleted, along with the `http` and `connectivity_plus`
+dependencies they needed. Every reply comes from
+`lib/services/offline_chat_service.dart`, described below. Do not
+reintroduce a live model call here — if online AI ever comes back, treat it
+as a deliberate new decision, not a revert.
 
 ## Offline chat knowledge base (`lib/services/offline_chat_service.dart`)
 Two-tier, non-LLM matching — token-overlap scoring (`_score`/`_normalize`),
@@ -261,9 +270,10 @@ reads sensibly even if the JSON assets are corrupt.
 
 ## APK distribution (manual release flow)
 CI (`.github/workflows/build.yml`) builds split-per-abi release APKs on
-every push/PR to `main` via `flutter build apk --release --split-per-abi`,
-using the `GROQ_API_KEY` repo secret. Artifacts land as run artifacts
-(`africa-ai-connect-v<run>-arm64` / `-arm32`), not automatically published.
+every push/PR to `main` via `flutter build apk --release --split-per-abi`.
+No secrets are needed for this build — the app has no API keys to inject.
+Artifacts land as run artifacts (`africa-ai-connect-v<run>-arm64` /
+`-arm32`), not automatically published.
 To hand someone a phone-installable build:
 1. `gh run download <run-id> -n africa-ai-connect-v<run>-arm64 -D <dir>`
 2. Zip the APK before distributing — Android Chrome silently kills direct
@@ -277,17 +287,11 @@ To hand someone a phone-installable build:
 
 **Use a unique, version-stamped filename every time** (e.g.
 `AfricaAiConnect-arm64-v23.apk`), not a fixed name overwritten via `--clobber`.
-A collaborator once got a stale build after a key rotation because their
+A collaborator once got a stale build after a rebuild because their
 browser/GitHub's CDN cached the old file at the same unchanging URL — the
 underlying asset had changed but the URL hadn't, so there was no reliable
 way to force a fresh fetch. A new filename sidesteps this entirely since
-it's a genuinely new URL. If you need to confirm a specific value (like an
-API key) actually made it into a given build, don't assume — extract and
-grep the compiled binary directly:
-```
-unzip -q app.apk lib/arm64-v8a/libapp.so
-grep -a -o "gsk_[A-Za-z0-9]\{20,60\}" lib/arm64-v8a/libapp.so
-```
+it's a genuinely new URL.
 
 **Windows local build note**: `E:\dev\flutter\bin` is not on default PATH
 on this machine; prepend it before running `flutter` commands.

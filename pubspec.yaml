@@ -16,9 +16,6 @@ dependencies:
   go_router: ^14.0.0
   flutter_riverpod: ^2.5.1
 
-  # Networking (online layer)
-  http: ^1.2.0
-
   # Local storage
   drift: ^2.20.0
   drift_flutter: ^0.2.1
@@ -31,9 +28,6 @@ dependencies:
 
   # PDF certificate generation
   pdf: ^3.10.8
-
-  # Connectivity detection
-  connectivity_plus: ^6.0.0
 
   # URL launcher (for external links)
   url_launcher: ^6.2.0

@@ -7,14 +7,10 @@ class ChatMessageBubble extends StatelessWidget {
     super.key,
     required this.text,
     required this.isUser,
-    this.isOffline = false,
-    this.offlineLabel,
   });
 
   final String text;
   final bool isUser;
-  final bool isOffline;
-  final String? offlineLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +57,7 @@ class ChatMessageBubble extends StatelessWidget {
           children: [
             const Padding(
               padding: EdgeInsets.only(top: 4),
-              child: ChatAssistantAvatar(size: 32, showOnline: false),
+              child: ChatAssistantAvatar(size: 32),
             ),
             const SizedBox(width: 10),
             Flexible(
@@ -79,40 +75,13 @@ class ChatMessageBubble extends StatelessWidget {
                   boxShadow: ui.softShadow,
                   border: Border.all(color: ui.border),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (isOffline) ...[
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.offline_bolt_outlined,
-                            size: 13,
-                            color: ui.textSecondary,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            offlineLabel ?? 'Offline guidance',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: ui.textSecondary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                    ],
-                    Text(
-                      text,
-                      style: TextStyle(
-                        color: ui.textPrimary,
-                        fontSize: 14.5,
-                        height: 1.55,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: ui.textPrimary,
+                    fontSize: 14.5,
+                    height: 1.55,
+                  ),
                 ),
               ),
             ),

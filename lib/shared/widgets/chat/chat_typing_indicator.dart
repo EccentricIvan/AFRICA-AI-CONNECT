@@ -40,7 +40,7 @@ class _ChatTypingIndicatorState extends State<ChatTypingIndicator>
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ChatAssistantAvatar(size: 32, showOnline: false),
+            const ChatAssistantAvatar(size: 32),
             const SizedBox(width: 10),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../core/l10n/app_strings.dart';
-import '../../services/gemini_service.dart';
 import '../../services/offline_chat_service.dart';
 import '../../shared/widgets/chat/chat_composer.dart';
 import '../../shared/widgets/chat/chat_header_bar.dart';
@@ -23,7 +21,6 @@ class AiChatScreen extends ConsumerStatefulWidget {
 class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
-  final _groq = GeminiService();
   final _offlineChat = OfflineChatService();
   bool _isLoading = false;
   late List<_ChatMessage> _messages;
@@ -78,56 +75,20 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     _scrollToBottom();
 
     final locale = ref.read(localeProvider);
-    var hasNetwork = false;
-    try {
-      final connectivity = await Connectivity().checkConnectivity();
-      hasNetwork = connectivity.any(
-        (result) => result != ConnectivityResult.none,
-      );
-    } catch (_) {
-      // If the platform cannot report connectivity, use the bundled knowledge
-      // base instead of leaving the chat request in a loading state.
-    }
+    final offlineMatch = await _offlineChat.findMatch(text, locale);
+    final response = offlineMatch?.reply ??
+        await _offlineChat.getFallback(locale) ??
+        'No offline answer is available for that question.';
 
-    String response;
-    var isOffline = false;
-
-    if (hasNetwork) {
-      response = await _groq.sendMessage(text, locale);
-      final connectionFailed = response.startsWith(
-        'I\'m having trouble connecting',
-      );
-      if (connectionFailed) {
-        final offlineMatch = await _offlineChat.findMatch(text, locale);
-        response = offlineMatch?.reply ??
-            await _offlineChat.getFallback(locale) ??
-            response;
-        isOffline = true;
-      }
-    } else {
-      final offlineMatch = await _offlineChat.findMatch(text, locale);
-      response = offlineMatch?.reply ??
-          await _offlineChat.getFallback(locale) ??
-          'No offline answer is available for that question.';
-      isOffline = true;
-    }
     if (!mounted) return;
     setState(() {
-      _messages.add(
-        _ChatMessage(
-          response,
-          false,
-          isOffline: isOffline,
-          offlineLabel: isOffline ? S.literal('Offline guidance') : null,
-        ),
-      );
+      _messages.add(_ChatMessage(response, false));
       _isLoading = false;
     });
     _scrollToBottom();
   }
 
   void _clearChat() {
-    _groq.clearHistory();
     setState(() {
       _messages.clear();
       _messages.add(_ChatMessage(_t('chat_cleared'), false));
@@ -284,8 +245,6 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                           return ChatMessageBubble(
                             text: msg.text,
                             isUser: msg.isUser,
-                            isOffline: msg.isOffline,
-                            offlineLabel: msg.offlineLabel,
                           );
                         },
                       ),
@@ -314,14 +273,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
 }
 
 class _ChatMessage {
-  const _ChatMessage(
-    this.text,
-    this.isUser, {
-    this.isOffline = false,
-    this.offlineLabel,
-  });
+  const _ChatMessage(this.text, this.isUser);
   final String text;
   final bool isUser;
-  final bool isOffline;
-  final String? offlineLabel;
 }
