@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../db/database.dart';
 import '../../../db/providers/database_provider.dart';
 import '../../../shared/widgets/market/market_category_card.dart';
 import '../../../shared/widgets/market/market_empty_listings.dart';
@@ -263,6 +266,15 @@ class _FeaturedListings extends ConsumerWidget {
               priceLabel: _formatUgx(l.price),
               fallbackIcon: meta.icon,
               imagePath: l.imagePath,
+              onTap: () => showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: MarketUi.of(context).card,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                ),
+                builder: (_) => _ListingDetailSheet(listing: l),
+              ),
             );
           }).toList(),
         );
@@ -325,6 +337,10 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
           price: double.parse(_priceController.text.trim()),
           category: _selectedCategory!,
           sellerName: seller,
+          // Captured at listing time (E.164) so a buyer can message/call
+          // the seller directly later — WhatsApp Business catalog-style,
+          // not brokered through the app itself.
+          sellerPhone: FirebaseAuth.instance.currentUser?.phoneNumber,
           location: _locationController.text.trim().isEmpty
               ? null
               : _locationController.text.trim(),
@@ -533,6 +549,165 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// WhatsApp Business catalog-style contact step: the app never brokers the
+/// sale itself (no checkout, no payment processing) — it just gets the
+/// buyer and seller talking, exactly how commerce already happens for this
+/// audience via mobile money arranged over a direct chat.
+class _ListingDetailSheet extends ConsumerWidget {
+  const _ListingDetailSheet({required this.listing});
+  final MarketplaceListing listing;
+
+  Future<void> _messageOnWhatsApp(
+    BuildContext context,
+    String Function(String key) t,
+  ) async {
+    final phone = listing.sellerPhone;
+    if (phone == null) return;
+    final digits = phone.replaceAll(RegExp(r'[^0-9]'), '');
+    final message =
+        '${t('whatsapp_interest_message')} ${listing.title} - ${_formatUgx(listing.price)}';
+    await launchUrl(
+      Uri.parse('https://wa.me/$digits?text=${Uri.encodeComponent(message)}'),
+      mode: LaunchMode.externalApplication,
+    );
+  }
+
+  Future<void> _callSeller() async {
+    final phone = listing.sellerPhone;
+    if (phone == null) return;
+    await launchUrl(Uri.parse('tel:$phone'));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(localeProvider);
+    final ui = MarketUi.of(context);
+    String t(String key) => S.tr(context, ref, key);
+    final meta = _metaFor(listing.category);
+    final hasContact = listing.sellerPhone != null;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: ui.border,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 180,
+                  child: listing.imagePath != null
+                      ? Image.file(
+                          File(listing.imagePath!),
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _DetailImageFallback(icon: meta.icon),
+                        )
+                      : _DetailImageFallback(icon: meta.icon),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                listing.title,
+                style: TextStyle(
+                  fontFamily: 'Saira',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: ui.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                _formatUgx(listing.price),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: MarketUi.accent,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                listing.location != null
+                    ? '${t('sold_by')} ${listing.sellerName} · ${listing.location}'
+                    : '${t('sold_by')} ${listing.sellerName}',
+                style: TextStyle(fontSize: 13, color: ui.textSecondary),
+              ),
+              const SizedBox(height: 20),
+              if (hasContact) ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _messageOnWhatsApp(context, t),
+                    icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                    label: Text(t('message_on_whatsapp')),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF25D366),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(MarketUi.radiusBtn),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _callSeller,
+                    icon: const Icon(Icons.call_outlined, size: 18),
+                    label: Text(t('call_seller')),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: ui.textPrimary,
+                      side: BorderSide(color: ui.border),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(MarketUi.radiusBtn),
+                      ),
+                    ),
+                  ),
+                ),
+              ] else
+                Text(
+                  t('no_contact_available'),
+                  style: TextStyle(fontSize: 13, color: ui.textSecondary),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailImageFallback extends StatelessWidget {
+  const _DetailImageFallback({required this.icon});
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: MarketUi.of(context).iconWell,
+      child: Icon(icon, color: MarketUi.accent, size: 40),
     );
   }
 }

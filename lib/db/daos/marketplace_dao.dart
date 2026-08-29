@@ -24,6 +24,7 @@ class MarketplaceDao extends DatabaseAccessor<AppDatabase> with _$MarketplaceDao
     required double price,
     required String category,
     required String sellerName,
+    String? sellerPhone,
     String? location,
     String? imagePath,
   }) {
@@ -33,6 +34,7 @@ class MarketplaceDao extends DatabaseAccessor<AppDatabase> with _$MarketplaceDao
         price: price,
         category: category,
         sellerName: sellerName,
+        sellerPhone: Value(sellerPhone),
         location: Value(location),
         imagePath: Value(imagePath),
       ),
