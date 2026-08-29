@@ -4,5 +4,14 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+
+    // Shared, read-only content pack that grows the offline chat's curated
+    // knowledge base over time — see ChatContentSyncService. Authored
+    // manually (Firebase console / a script) for now; there is no in-app
+    // write path or review UI yet.
+    match /chat_content/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
   }
 }

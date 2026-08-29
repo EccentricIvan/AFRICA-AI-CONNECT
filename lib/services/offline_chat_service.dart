@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/services.dart';
 
 import '../core/l10n/app_strings.dart';
+import '../db/daos/chat_content_dao.dart';
 
 class OfflineChatMatch {
   const OfflineChatMatch({
@@ -24,14 +25,24 @@ class OfflineChatMatch {
 }
 
 class OfflineChatService {
+  OfflineChatService(this._contentDao);
+
+  final ChatContentDao _contentDao;
+
+  // Only the `fallbacks` block still comes from the JSON asset — the
+  // curated intents/patterns/variants themselves live in
+  // ChatIntents/ChatPatterns/ChatResponseVariants (see chat_content_seed.dart
+  // for the one-time migration and ChatContentSyncService for how the DB
+  // grows over time). Fallback text is a fixed safety net, not content
+  // meant to grow, so it stays simple.
   Map<String, dynamic>? _knowledgeBase;
 
   // SALT (github.com/SunbirdAI/salt-data-archive, CC-BY-SA-4.0) is a general
-  // parallel-sentence corpus, not curated Q&A like offline_chat.json — it is
-  // only consulted when nothing in the curated knowledge base matched, and
-  // only covers en/lg/ach/teo/nyn (Sunbird's text-all corpus has no
-  // Swahili, Runyoro or Kinyarwanda). Loaded once and pre-normalized so a
-  // ~25k-row scan stays cheap on low-spec devices at query time.
+  // parallel-sentence corpus, not curated Q&A — it is only consulted when
+  // nothing in the curated database matched, and only covers en/lg/ach/teo/nyn
+  // (Sunbird's text-all corpus has no Swahili, Runyoro or Kinyarwanda).
+  // Loaded once and pre-normalized so a ~25k-row scan stays cheap on
+  // low-spec devices at query time.
   List<List<String>>? _saltSentences;
   Map<String, int>? _saltColumns;
   List<String>? _saltNormalizedEnglish;
@@ -101,7 +112,8 @@ class OfflineChatService {
       for (final row in _saltSentences!) _normalize(row.isEmpty ? '' : row[0]),
     ];
     _saltEnglishTokens = [
-      for (final normalized in _saltNormalizedEnglish!) _tokens(normalized),
+      for (final normalized in _saltNormalizedEnglish!)
+        _tokens(normalized, stemEnglish: true),
     ];
   }
 
@@ -133,7 +145,7 @@ class OfflineChatService {
       return null;
     }
 
-    final queryTokens = _tokens(normalizedMessage);
+    final queryTokens = _tokens(normalizedMessage, stemEnglish: true);
     var bestScore = 0;
     List<String>? bestRow;
     for (var i = 0; i < sentences.length; i++) {
@@ -181,10 +193,39 @@ class OfflineChatService {
           .replaceAll(RegExp(r'\s+'), ' ')
           .trim();
 
-  Set<String> _tokens(String text) =>
-      _normalize(text).split(' ').where((token) => token.length > 1).toSet();
+  // Deliberately English-only and conservative — stripping "-s"/"-ing"/"-ed"
+  // does not correspond to real morphology in Bantu languages like Luganda
+  // or Swahili (which pluralize/inflect via prefixes, not suffixes) or in
+  // Nilotic languages like Acholi/Ateso, so applying this to non-English
+  // tokens would risk coincidental false matches, not just miss real ones.
+  // Only ever called where the text being tokenized is known to be
+  // English: curated patterns/messages when locale is English, and the
+  // SALT tier, which always scores against its English column regardless
+  // of the user's selected locale.
+  String _stemEnglish(String token) {
+    if (token.length <= 3) return token;
+    if (token.endsWith('ing') && token.length > 5) {
+      return token.substring(0, token.length - 3);
+    }
+    if (token.endsWith('ed') && token.length > 4) {
+      return token.substring(0, token.length - 2);
+    }
+    if (token.endsWith('es') && token.length > 4) {
+      return token.substring(0, token.length - 2);
+    }
+    if (token.endsWith('s') && !token.endsWith('ss') && token.length > 3) {
+      return token.substring(0, token.length - 1);
+    }
+    return token;
+  }
 
-  int _score(String message, String candidate) {
+  Set<String> _tokens(String text, {bool stemEnglish = false}) => _normalize(
+    text,
+  ).split(' ').where((token) => token.length > 1).map((token) {
+    return stemEnglish ? _stemEnglish(token) : token;
+  }).toSet();
+
+  int _score(String message, String candidate, {bool stemEnglish = false}) {
     final normalizedCandidate = _normalize(candidate);
     if (normalizedCandidate.isEmpty) return 0;
     if (message == normalizedCandidate) return 1200 + candidate.length;
@@ -193,8 +234,11 @@ class OfflineChatService {
       return 500 + math.min(message.length, normalizedCandidate.length);
     }
 
-    final queryTokens = _tokens(message);
-    final candidateTokens = _tokens(normalizedCandidate);
+    final queryTokens = _tokens(message, stemEnglish: stemEnglish);
+    final candidateTokens = _tokens(
+      normalizedCandidate,
+      stemEnglish: stemEnglish,
+    );
     if (queryTokens.isEmpty || candidateTokens.isEmpty) return 0;
     final common = queryTokens.intersection(candidateTokens).length;
     if (common == 0) return 0;
@@ -204,50 +248,68 @@ class OfflineChatService {
     return (coverage * 240 + precision * 100 + common * 25).round();
   }
 
-  Future<OfflineChatMatch?> findMatch(String message, AppLocale locale) async {
-    await _loadKnowledgeBase();
+  /// Finds the best curated answer for [message], falling back to the SALT
+  /// translation-lookup tier when nothing curated matches.
+  ///
+  /// [priorCategory] — the previous turn's matched intent category, if any
+  /// — nudges an *ambiguous* match (220-350) toward the same topic as the
+  /// conversation was just on. This only changes which existing answer gets
+  /// picked among near-ties; it never generates or alters any text.
+  Future<OfflineChatMatch?> findMatch(
+    String message,
+    AppLocale locale, {
+    String? priorCategory,
+  }) async {
     final normalizedMessage = _normalize(message);
     if (normalizedMessage.isEmpty) return null;
 
-    OfflineChatMatch? best;
-    final rawIntents = _knowledgeBase?['intents'];
-    for (final rawIntent in rawIntents is List ? rawIntents : const []) {
-      if (rawIntent is! Map) continue;
-      final intent = Map<String, dynamic>.from(rawIntent);
-      final patterns = intent['patterns'];
-      final responses = intent['responses'];
-      if (patterns is! Map || responses is! Map) continue;
-
-      final languagePatterns = patterns[locale.name];
-      final reply = responses[locale.name]?.toString().trim();
-      if (languagePatterns is! List || reply == null || reply.isEmpty) continue;
-
-      var intentScore = 0;
-      for (final pattern in languagePatterns) {
-        intentScore = math.max(
-          intentScore,
-          _score(normalizedMessage, pattern.toString()),
-        );
-      }
-
-      // Token matches below this threshold are usually accidental. Exact and
-      // phrase matches score above 500, while good multi-word matches exceed 220.
-      if (intentScore < 220 || (best != null && intentScore <= best.score)) {
-        continue;
-      }
-
-      final source = intent['source'];
-      best = OfflineChatMatch(
-        reply: reply,
-        intentId: intent['id']?.toString() ?? '',
-        category: intent['category']?.toString() ?? 'general',
-        score: intentScore,
-        sourceTitle: source is Map ? source['title']?.toString() : null,
-        sourceUrl: source is Map ? source['url']?.toString() : null,
-      );
+    final patterns = await _contentDao.patternsForLocale(locale.name);
+    final patternsByIntent = <String, List<String>>{};
+    for (final row in patterns) {
+      (patternsByIntent[row.intentKey] ??= []).add(row.pattern);
     }
 
-    return best ?? await _findSaltMatch(normalizedMessage, locale);
+    final stemEnglish = locale == AppLocale.en;
+    String? bestIntentKey;
+    var bestScore = 0;
+    for (final entry in patternsByIntent.entries) {
+      var intentScore = 0;
+      for (final pattern in entry.value) {
+        intentScore = math.max(
+          intentScore,
+          _score(normalizedMessage, pattern, stemEnglish: stemEnglish),
+        );
+      }
+      if (intentScore < 220) continue;
+
+      var adjustedScore = intentScore;
+      if (priorCategory != null && intentScore < 350) {
+        final intent = await _contentDao.intentByKey(entry.key);
+        if (intent?.category == priorCategory) adjustedScore += 50;
+      }
+
+      if (adjustedScore > bestScore) {
+        bestScore = adjustedScore;
+        bestIntentKey = entry.key;
+      }
+    }
+
+    if (bestIntentKey != null) {
+      final intent = await _contentDao.intentByKey(bestIntentKey);
+      final reply = await _contentDao.pickVariant(bestIntentKey, locale.name);
+      if (intent != null && reply != null) {
+        return OfflineChatMatch(
+          reply: reply,
+          intentId: bestIntentKey,
+          category: intent.category,
+          score: bestScore,
+          sourceTitle: intent.sourceTitle,
+          sourceUrl: intent.sourceUrl,
+        );
+      }
+    }
+
+    return _findSaltMatch(normalizedMessage, locale);
   }
 
   Future<String?> findReply(String message, AppLocale locale) async =>

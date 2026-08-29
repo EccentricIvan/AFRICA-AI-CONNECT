@@ -982,6 +982,11 @@ class S {
       AppLocale.lg: 'Nlowooza...',
       AppLocale.sw: 'Nafikiri...',
     },
+    'from_the_web_unverified': {
+      AppLocale.en: 'From the web — unverified',
+      AppLocale.lg: 'Kivudde ku yintaneeti — tekyakakasibwa',
+      AppLocale.sw: 'Kutoka mtandaoni — haijathibitishwa',
+    },
 
     // ── Learn screen ──
     'knowledge_is_power': {
@@ -1235,6 +1240,31 @@ class S {
       AppLocale.en: 'Services',
       AppLocale.lg: 'Empeereza',
       AppLocale.sw: 'Huduma',
+    },
+    'sold_by': {
+      AppLocale.en: 'Sold by',
+      AppLocale.lg: 'Kitundibwa',
+      AppLocale.sw: 'Inauzwa na',
+    },
+    'message_on_whatsapp': {
+      AppLocale.en: 'Message on WhatsApp',
+      AppLocale.lg: 'Weewandiikire ku WhatsApp',
+      AppLocale.sw: 'Tuma ujumbe kwa WhatsApp',
+    },
+    'call_seller': {
+      AppLocale.en: 'Call seller',
+      AppLocale.lg: 'Kuba essimu ku atunda',
+      AppLocale.sw: 'Piga simu kwa muuzaji',
+    },
+    'no_contact_available': {
+      AppLocale.en: 'No contact info available for this listing.',
+      AppLocale.lg: 'Tewali nzikiriza ya kutuukirira atunda kino.',
+      AppLocale.sw: 'Hakuna maelezo ya mawasiliano kwa bidhaa hii.',
+    },
+    'whatsapp_interest_message': {
+      AppLocale.en: 'Hi, I\'m interested in your listing on Africa AI Connect:',
+      AppLocale.lg: 'Nkulamusizza, njagala ekintu kyo kye wateeka ku Africa AI Connect:',
+      AppLocale.sw: 'Habari, ninavutiwa na bidhaa yako kwenye Africa AI Connect:',
     },
 
     // ── Mentorship screen ──

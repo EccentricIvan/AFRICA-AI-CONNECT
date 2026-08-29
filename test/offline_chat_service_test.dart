@@ -1,12 +1,19 @@
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:otic_connect/core/l10n/app_strings.dart';
+import 'package:otic_connect/db/database.dart';
 import 'package:otic_connect/services/offline_chat_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('OfflineChatService', () {
-    final service = OfflineChatService();
+    // In-memory database, migrated (and seeded from offline_chat.json) like
+    // any real install — the curated tier now lives in Drift, not JSON.
+    final db = AppDatabase.forTesting(NativeDatabase.memory());
+    final service = OfflineChatService(db.chatContentDao);
+
+    tearDownAll(() => db.close());
 
     test('finds a localized answer in every supported language', () async {
       final questions = <AppLocale, String>{
@@ -119,5 +126,123 @@ void main() {
         expect(guidance.toLowerCase(), isNot(contains('not configured')));
       }
     });
+
+    test(
+      'a content-pack style upsert adds a new intent findMatch can reach',
+      () async {
+        await db.chatContentDao.upsertIntent(
+          intentKey: 'content_pack_test',
+          category: 'test_category',
+          patternsByLocale: {
+            'en': ['a brand new content pack topic'],
+          },
+          variantsByLocale: {
+            'en': ['A brand new content pack reply.'],
+          },
+        );
+
+        final match = await service.findMatch(
+          'a brand new content pack topic',
+          AppLocale.en,
+        );
+
+        expect(match?.intentId, 'content_pack_test');
+        expect(match?.category, 'test_category');
+        expect(match?.reply, 'A brand new content pack reply.');
+      },
+    );
+
+    test(
+      're-upserting the same intent does not duplicate an existing variant',
+      () async {
+        const variants = {
+          'en': ['Same variant text every time.'],
+        };
+        for (var i = 0; i < 3; i++) {
+          await db.chatContentDao.upsertIntent(
+            intentKey: 'dedup_test',
+            category: 'test_category',
+            patternsByLocale: {
+              'en': ['dedup test pattern'],
+            },
+            variantsByLocale: variants,
+          );
+        }
+
+        final rows = await (db.select(
+          db.chatResponseVariants,
+        )..where((v) => v.intentKey.equals('dedup_test'))).get();
+        expect(rows, hasLength(1));
+      },
+    );
+
+    test(
+      'picks a different variant on successive replies once more than one exists',
+      () async {
+        await db.chatContentDao.upsertIntent(
+          intentKey: 'variant_rotation_test',
+          category: 'test_category',
+          patternsByLocale: {
+            'en': ['rotation test pattern'],
+          },
+          variantsByLocale: {
+            'en': ['Rotation reply A.', 'Rotation reply B.'],
+          },
+        );
+
+        final first = await service.findMatch(
+          'rotation test pattern',
+          AppLocale.en,
+        );
+        final second = await service.findMatch(
+          'rotation test pattern',
+          AppLocale.en,
+        );
+
+        expect({first?.reply, second?.reply}, {
+          'Rotation reply A.',
+          'Rotation reply B.',
+        });
+      },
+    );
+
+    test(
+      'an ambiguous match is nudged toward the prior turn\'s category',
+      () async {
+        const query =
+            'please can someone assist me with this urgent problem';
+
+        await db.chatContentDao.upsertIntent(
+          intentKey: 'context_test_alpha',
+          category: 'category_alpha',
+          patternsByLocale: {
+            'en': ['with this urgent assist me'],
+          },
+          variantsByLocale: {
+            'en': ['Alpha reply text.'],
+          },
+        );
+        await db.chatContentDao.upsertIntent(
+          intentKey: 'context_test_beta',
+          category: 'category_beta',
+          patternsByLocale: {
+            'en': ['today problem this with me assist'],
+          },
+          variantsByLocale: {
+            'en': ['Beta reply text.'],
+          },
+        );
+
+        final withoutContext = await service.findMatch(query, AppLocale.en);
+        expect(withoutContext?.intentId, 'context_test_alpha');
+
+        final withContext = await service.findMatch(
+          query,
+          AppLocale.en,
+          priorCategory: 'category_beta',
+        );
+        expect(withContext?.intentId, 'context_test_beta');
+      },
+    );
   });
 }

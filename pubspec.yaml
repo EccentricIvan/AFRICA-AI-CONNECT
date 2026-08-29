@@ -16,6 +16,17 @@ dependencies:
   go_router: ^14.0.0
   flutter_riverpod: ^2.5.1
 
+  # Networking — used only by WebLookupService's clearly-labeled, verbatim
+  # web-result fallback tier (Wikimedia/DuckDuckGo/SearXNG). No LLM/backend
+  # proxy client depends on this; see CLAUDE.md's "AI Chat is fully offline"
+  # note for why that was deliberately removed.
+  http: ^1.2.0
+
+  # Fast local check of whether a network interface is up at all — gates
+  # WebLookupService so it skips straight to the offline fallback instead
+  # of waiting out several HTTP timeouts when there's clearly no network.
+  connectivity_plus: ^6.0.0
+
   # Local storage
   drift: ^2.20.0
   drift_flutter: ^0.2.1

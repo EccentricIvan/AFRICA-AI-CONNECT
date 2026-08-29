@@ -1,7 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
-import '../../services/offline_chat_service.dart';
+import '../../db/providers/database_provider.dart';
+import '../../services/web_lookup_service.dart';
 import '../../shared/widgets/chat/chat_composer.dart';
 import '../../shared/widgets/chat/chat_header_bar.dart';
 import '../../shared/widgets/chat/chat_message_bubble.dart';
@@ -10,6 +12,7 @@ import '../../shared/widgets/chat/chat_topic_chip.dart';
 import '../../shared/widgets/chat/chat_typing_indicator.dart';
 import '../../shared/widgets/chat/chat_ui.dart';
 import '../../shared/widgets/chat/chat_welcome_card.dart';
+import '../../shared/widgets/chat/chat_web_result_card.dart';
 
 class AiChatScreen extends ConsumerStatefulWidget {
   const AiChatScreen({super.key});
@@ -21,23 +24,9 @@ class AiChatScreen extends ConsumerStatefulWidget {
 class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
-  final _offlineChat = OfflineChatService();
   bool _isLoading = false;
-  late List<_ChatMessage> _messages;
-  bool _initialized = false;
 
   String _t(String key) => S.tr(context, ref, key);
-
-  bool get _isLanding => !_messages.any((m) => m.isUser);
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      _initialized = true;
-      _messages = [_ChatMessage(_t('ai_greeting'), false)];
-    }
-  }
 
   @override
   void dispose() {
@@ -67,37 +56,91 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     final text = _controller.text.trim();
     if (text.isEmpty || _isLoading) return;
 
-    setState(() {
-      _messages.add(_ChatMessage(text, true));
-      _isLoading = true;
-    });
+    final locale = ref.read(localeProvider);
+    final historyDao = ref.read(chatHistoryDaoProvider);
+    final sessionId = await ref.read(activeChatSessionProvider.future);
+    final priorCategory = await historyDao.mostRecentAssistantCategory(
+      sessionId,
+    );
+
+    await historyDao.addMessage(
+      sessionId: sessionId,
+      isUser: true,
+      content: text,
+    );
     _controller.clear();
+    if (!mounted) return;
+    setState(() => _isLoading = true);
     _scrollToBottom();
 
-    final locale = ref.read(localeProvider);
-    final offlineMatch = await _offlineChat.findMatch(text, locale);
-    final response = offlineMatch?.reply ??
-        await _offlineChat.getFallback(locale) ??
-        'No offline answer is available for that question.';
+    final match = await ref
+        .read(offlineChatServiceProvider)
+        .findMatch(text, locale, priorCategory: priorCategory);
+
+    String content;
+    String? matchedIntentKey;
+    String? matchedCategory;
+    String? webSourceName;
+    String? webSourceUrl;
+
+    if (match != null) {
+      content = match.reply;
+      matchedIntentKey = match.intentId;
+      matchedCategory = match.category;
+    } else {
+      final webResult = await _tryWebLookup(text, locale);
+      if (webResult != null) {
+        content = webResult.snippet;
+        webSourceName = webResult.sourceName;
+        webSourceUrl = webResult.sourceUrl;
+      } else {
+        content =
+            await ref.read(offlineChatServiceProvider).getFallback(locale) ??
+            'No offline answer is available for that question.';
+      }
+    }
+
+    await historyDao.addMessage(
+      sessionId: sessionId,
+      isUser: false,
+      content: content,
+      matchedIntentKey: matchedIntentKey,
+      matchedCategory: matchedCategory,
+      webSourceName: webSourceName,
+      webSourceUrl: webSourceUrl,
+    );
 
     if (!mounted) return;
-    setState(() {
-      _messages.add(_ChatMessage(response, false));
-      _isLoading = false;
-    });
+    setState(() => _isLoading = false);
     _scrollToBottom();
   }
 
-  void _clearChat() {
-    setState(() {
-      _messages.clear();
-      _messages.add(_ChatMessage(_t('chat_cleared'), false));
-    });
+  /// A fast local check (no network round-trip) gates the web lookup so it
+  /// skips straight past several HTTP timeouts when there's clearly no
+  /// network, rather than making the user wait it out for nothing.
+  Future<WebLookupResult?> _tryWebLookup(String text, AppLocale locale) async {
+    try {
+      final connectivity = await Connectivity().checkConnectivity();
+      final hasNetwork = connectivity.any(
+        (result) => result != ConnectivityResult.none,
+      );
+      if (!hasNetwork) return null;
+    } catch (_) {
+      return null;
+    }
+    return ref.read(webLookupServiceProvider).lookup(text, locale);
+  }
+
+  Future<void> _clearChat() async {
+    await ref.read(chatHistoryDaoProvider).startNewSession();
+    ref.invalidate(activeChatSessionProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
+    final messages = ref.watch(currentChatMessagesProvider).valueOrNull ?? const [];
+    final isLanding = !messages.any((m) => m.isUser);
 
     final suggestions = [
       (Icons.lightbulb_outline_rounded, _t('topic_business_q')),
@@ -138,10 +181,6 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
         _t('topic_sell_online_q'),
       ),
     ];
-
-    final welcomeBody = _messages.isNotEmpty && !_messages.first.isUser
-        ? _messages.first.text
-        : _t('ai_greeting');
 
     final chatUi = ChatUi.of(context);
     return Scaffold(
@@ -191,13 +230,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
               Expanded(
                 child: Stack(
                   children: [
-                    if (_isLanding)
+                    if (isLanding)
                       ListView(
                         padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
                         children: [
                           ChatWelcomeCard(
                             title: S.literal("Hello, I'm your AI Assistant"),
-                            body: welcomeBody,
+                            body: _t('ai_greeting'),
                           ),
                           const SizedBox(height: 28),
                           Text(
@@ -234,21 +273,28 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                         controller: _scrollController,
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                         reverse: true,
-                        itemCount: _messages.length + (_isLoading ? 1 : 0),
+                        itemCount: messages.length + (_isLoading ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (_isLoading && index == 0) {
                             return ChatTypingIndicator(label: _t('thinking'));
                           }
                           final msgIndex = _isLoading ? index - 1 : index;
-                          final msg =
-                              _messages[_messages.length - 1 - msgIndex];
+                          final msg = messages[messages.length - 1 - msgIndex];
+                          if (!msg.isUser && msg.webSourceUrl != null) {
+                            return ChatWebResultCard(
+                              snippet: msg.content,
+                              sourceName: msg.webSourceName ?? '',
+                              sourceUrl: msg.webSourceUrl!,
+                              label: _t('from_the_web_unverified'),
+                            );
+                          }
                           return ChatMessageBubble(
-                            text: msg.text,
+                            text: msg.content,
                             isUser: msg.isUser,
                           );
                         },
                       ),
-                    if (_isLanding && _isLoading)
+                    if (isLanding && _isLoading)
                       Positioned(
                         left: 16,
                         bottom: 8,
@@ -270,10 +316,4 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       ),
     );
   }
-}
-
-class _ChatMessage {
-  const _ChatMessage(this.text, this.isUser);
-  final String text;
-  final bool isUser;
 }
