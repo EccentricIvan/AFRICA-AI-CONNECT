@@ -10,6 +10,7 @@ import '../daos/jobs_dao.dart';
 import '../daos/courses_dao.dart';
 import '../daos/mentors_dao.dart';
 import '../daos/groups_dao.dart';
+import '../daos/user_stats_dao.dart';
 import '../chat_content_seed.dart';
 import '../../services/offline_chat_service.dart';
 import '../../services/chat_content_sync_service.dart';
@@ -125,6 +126,38 @@ final courseProvider = StreamProvider.family<Course?, int>((ref, id) {
 
 final courseProgressProvider = StreamProvider.family<CourseProgressRow?, int>((ref, courseId) {
   return ref.watch(coursesDaoProvider).watchProgress(courseId);
+});
+
+final allCourseProgressProvider = StreamProvider<List<CourseProgressRow>>((ref) {
+  return ref.watch(coursesDaoProvider).watchAllProgress();
+});
+
+final topicsProvider = StreamProvider.family<List<CourseTopic>, int>((ref, courseId) {
+  return ref.watch(coursesDaoProvider).watchTopics(courseId);
+});
+
+final quizQuestionsProvider = StreamProvider.family<List<QuizQuestionRow>, int>((ref, topicId) {
+  return ref.watch(coursesDaoProvider).watchQuizQuestions(topicId);
+});
+
+final topicCompletedProvider = StreamProvider.family<bool, int>((ref, topicId) {
+  return ref.watch(coursesDaoProvider).watchTopicCompleted(topicId);
+});
+
+// ── Points / streak ──
+
+final userStatsDaoProvider = Provider<UserStatsDao>((ref) {
+  return ref.watch(appDatabaseProvider).userStatsDao;
+});
+
+final userStatsProvider = StreamProvider<UserStat>((ref) {
+  return ref.watch(userStatsDaoProvider).watchStats();
+});
+
+/// Fire-and-forget startup work: makes sure the UserStats singleton row
+/// exists before anything reads it, same pattern as settingsBootstrapProvider.
+final userStatsBootstrapProvider = FutureProvider<void>((ref) async {
+  await ref.read(userStatsDaoProvider).ensureRowExists();
 });
 
 // ── Mentorship ──

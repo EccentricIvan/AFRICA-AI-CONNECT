@@ -10,6 +10,8 @@ import 'tables/jobs_table.dart';
 import 'tables/courses_table.dart';
 import 'tables/mentors_table.dart';
 import 'tables/groups_table.dart';
+import 'tables/skill_topics_table.dart';
+import 'tables/user_stats_table.dart';
 import 'daos/user_dao.dart';
 import 'daos/marketplace_dao.dart';
 import 'daos/chat_content_dao.dart';
@@ -20,6 +22,7 @@ import 'daos/jobs_dao.dart';
 import 'daos/courses_dao.dart';
 import 'daos/mentors_dao.dart';
 import 'daos/groups_dao.dart';
+import 'daos/user_stats_dao.dart';
 import 'chat_content_seed.dart';
 import 'jobs_seed.dart';
 import 'courses_seed.dart';
@@ -48,6 +51,11 @@ part 'database.g.dart';
     MentorApplications,
     Groups,
     GroupMembers,
+    CourseTopics,
+    TopicQuizQuestions,
+    TopicCompletions,
+    UserStats,
+    ActivityDays,
   ],
   daos: [
     UserDao,
@@ -60,6 +68,7 @@ part 'database.g.dart';
     CoursesDao,
     MentorsDao,
     GroupsDao,
+    UserStatsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -70,7 +79,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -81,6 +90,7 @@ class AppDatabase extends _$AppDatabase {
           await seedJobsIfEmpty(jobsDao);
           await seedCoursesIfEmpty(coursesDao);
           await seedMentorsIfEmpty(mentorsDao);
+          await userStatsDao.ensureRowExists();
         },
         onUpgrade: (m, from, to) async {
           if (from < 2) await m.createTable(marketplaceListings);
@@ -126,6 +136,22 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(groupMembers);
             await seedMentorsIfEmpty(mentorsDao);
           }
+          if (from < 12) {
+            await m.createTable(courseTopics);
+            await m.createTable(topicQuizQuestions);
+            await m.createTable(topicCompletions);
+            await m.createTable(userStats);
+            await m.createTable(activityDays);
+            // The Skills catalog gained topics/quizzes in this version —
+            // pre-v12 installs only have the old flat course list with no
+            // topics under it, so replace rather than leave it stranded.
+            // Safe pre-release: no real course-progress data exists yet to
+            // preserve.
+            await delete(courseProgress).go();
+            await delete(courses).go();
+            await seedCoursesIfEmpty(coursesDao);
+            await userStatsDao.ensureRowExists();
+          }
         },
       );
 
@@ -152,10 +178,13 @@ class AppDatabase extends _$AppDatabase {
       await delete(marketplaceListings).go();
       await delete(jobApplications).go();
       await delete(courseProgress).go();
+      await delete(topicCompletions).go();
       await delete(mentorApplications).go();
       await delete(groupMembers).go();
       await delete(groups).go();
       await delete(settings).go();
+      await delete(activityDays).go();
+      await delete(userStats).go();
       await delete(users).go();
     });
   }

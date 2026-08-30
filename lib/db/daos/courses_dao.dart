@@ -1,10 +1,13 @@
 import 'package:drift/drift.dart';
 import '../database.dart';
 import '../tables/courses_table.dart';
+import '../tables/skill_topics_table.dart';
 
 part 'courses_dao.g.dart';
 
-@DriftAccessor(tables: [Courses, CourseProgress])
+@DriftAccessor(
+  tables: [Courses, CourseProgress, CourseTopics, TopicQuizQuestions, TopicCompletions],
+)
 class CoursesDao extends DatabaseAccessor<AppDatabase>
     with _$CoursesDaoMixin {
   CoursesDao(super.db);
@@ -15,6 +18,12 @@ class CoursesDao extends DatabaseAccessor<AppDatabase>
 
   Stream<Course?> watchCourse(int id) =>
       (select(courses)..where((c) => c.id.equals(id))).watchSingleOrNull();
+
+  /// Every course's progress row at once — used to group courses into
+  /// Continue/Recommended/Journey sections without one stream per course.
+  Stream<List<CourseProgressRow>> watchAllProgress() {
+    return select(courseProgress).watch();
+  }
 
   /// Reactive — null means not started.
   Stream<CourseProgressRow?> watchProgress(int courseId) {
@@ -45,35 +54,61 @@ class CoursesDao extends DatabaseAccessor<AppDatabase>
   Future<bool> hasAnyCourses() async =>
       (await (select(courses)..limit(1)).get()).isNotEmpty;
 
-  /// Starts the course at 50% if not already started; advances an
-  /// in-progress course to 100%/completed. There's no lesson-level content
-  /// yet (see CLAUDE.md roadmap), so this two-step progression is the
-  /// honest real signal available rather than simulated lesson checkpoints.
-  Future<void> advanceProgress(int courseId) async {
+  /// Recomputes a course's progress row from its real topic completions —
+  /// called after every completeTopic. progressPercent is the real
+  /// completed/total ratio; status is 'not_started'/'in_progress'/
+  /// 'completed' accordingly.
+  Future<void> recomputeCourseProgress(int courseId) async {
+    final topics = await (select(
+      courseTopics,
+    )..where((t) => t.courseId.equals(courseId))).get();
+    if (topics.isEmpty) return;
+
+    final topicIds = topics.map((t) => t.id).toList();
+    final completions = await (select(
+      topicCompletions,
+    )..where((c) => c.topicId.isIn(topicIds))).get();
+    final completedCount = completions.length;
+    final total = topics.length;
+    final percent = completedCount / total;
+    final status = completedCount == 0
+        ? 'not_started'
+        : completedCount == total
+            ? 'completed'
+            : 'in_progress';
+
     final existing = await (select(courseProgress)
           ..where((p) => p.courseId.equals(courseId))
           ..limit(1))
         .getSingleOrNull();
 
+    if (status == 'not_started') {
+      if (existing != null) {
+        await (delete(
+          courseProgress,
+        )..where((p) => p.id.equals(existing.id))).go();
+      }
+      return;
+    }
+
     if (existing == null) {
       await into(courseProgress).insert(
         CourseProgressCompanion.insert(
           courseId: courseId,
-          progressPercent: const Value(0.5),
-          status: const Value('in_progress'),
+          progressPercent: Value(percent),
+          status: Value(status),
+          completedAt: status == 'completed' ? Value(DateTime.now()) : const Value.absent(),
         ),
       );
       return;
     }
 
-    if (existing.status == 'completed') return;
-
     await (update(courseProgress)..where((p) => p.id.equals(existing.id)))
         .write(
       CourseProgressCompanion(
-        progressPercent: const Value(1.0),
-        status: const Value('completed'),
-        completedAt: Value(DateTime.now()),
+        progressPercent: Value(percent),
+        status: Value(status),
+        completedAt: status == 'completed' ? Value(DateTime.now()) : const Value(null),
       ),
     );
   }
@@ -84,5 +119,81 @@ class CoursesDao extends DatabaseAccessor<AppDatabase>
       courseProgress,
     )..where((p) => p.status.equals('completed'))).get();
     return rows.length;
+  }
+
+  // ── Topics / quizzes ──
+
+  Stream<List<CourseTopic>> watchTopics(int courseId) {
+    return (select(courseTopics)
+          ..where((t) => t.courseId.equals(courseId))
+          ..orderBy([(t) => OrderingTerm.asc(t.orderIndex)]))
+        .watch();
+  }
+
+  Stream<List<QuizQuestionRow>> watchQuizQuestions(int topicId) {
+    return (select(topicQuizQuestions)
+          ..where((q) => q.topicId.equals(topicId))
+          ..orderBy([(q) => OrderingTerm.asc(q.orderIndex)]))
+        .watch();
+  }
+
+  /// Reactive — true once this topic has been completed.
+  Stream<bool> watchTopicCompleted(int topicId) {
+    return (select(topicCompletions)
+          ..where((c) => c.topicId.equals(topicId)))
+        .watch()
+        .map((rows) => rows.isNotEmpty);
+  }
+
+  /// Idempotent — records completion once; a later re-completion attempt
+  /// (e.g. retaking a quiz) is a no-op here, points/streak aren't
+  /// re-awarded for the same topic.
+  Future<bool> completeTopic(int topicId) async {
+    final existing = await (select(
+      topicCompletions,
+    )..where((c) => c.topicId.equals(topicId))).getSingleOrNull();
+    if (existing != null) return false;
+    await into(
+      topicCompletions,
+    ).insert(TopicCompletionsCompanion.insert(topicId: topicId));
+    return true;
+  }
+
+  Future<int> seedTopic({
+    required int courseId,
+    required String title,
+    required int orderIndex,
+    int pointsValue = 10,
+  }) {
+    return into(courseTopics).insert(
+      CourseTopicsCompanion.insert(
+        courseId: courseId,
+        title: title,
+        orderIndex: Value(orderIndex),
+        pointsValue: Value(pointsValue),
+      ),
+    );
+  }
+
+  Future<void> seedQuestion({
+    required int topicId,
+    required String question,
+    required List<String> options,
+    required int correctIndex,
+    required int orderIndex,
+  }) {
+    assert(options.length == 4);
+    return into(topicQuizQuestions).insert(
+      TopicQuizQuestionsCompanion.insert(
+        topicId: topicId,
+        question: question,
+        optionA: options[0],
+        optionB: options[1],
+        optionC: options[2],
+        optionD: options[3],
+        correctIndex: correctIndex,
+        orderIndex: Value(orderIndex),
+      ),
+    );
   }
 }

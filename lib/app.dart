@@ -17,6 +17,7 @@ class AfricaAiConnectApp extends ConsumerWidget {
     // chatBootstrapProvider's doc comment.
     ref.watch(chatBootstrapProvider);
     ref.watch(settingsBootstrapProvider);
+    ref.watch(userStatsBootstrapProvider);
     return MaterialApp.router(
       title: 'AI Connect Africa',
       theme: AppTheme.light,
