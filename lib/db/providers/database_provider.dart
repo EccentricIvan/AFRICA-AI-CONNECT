@@ -111,6 +111,10 @@ final myJobApplicationProvider = StreamProvider.family<JobApplication?, int>((re
   return ref.watch(jobsDaoProvider).watchMyApplication(jobId);
 });
 
+final myApplicationsCountProvider = StreamProvider<int>((ref) {
+  return ref.watch(jobsDaoProvider).watchMyApplicationsCount();
+});
+
 // ── Skills / courses ──
 
 final coursesDaoProvider = Provider<CoursesDao>((ref) {
@@ -151,6 +155,10 @@ final resourceViewedProvider = StreamProvider.family<bool, int>((ref, topicId) {
   return ref.watch(coursesDaoProvider).watchResourceViewed(topicId);
 });
 
+final completedTopicsCountProvider = StreamProvider<int>((ref) {
+  return ref.watch(coursesDaoProvider).watchCompletedTopicsCount();
+});
+
 // ── Points / streak ──
 
 final userStatsDaoProvider = Provider<UserStatsDao>((ref) {
@@ -165,6 +173,14 @@ final userStatsProvider = StreamProvider<UserStat>((ref) {
 /// exists before anything reads it, same pattern as settingsBootstrapProvider.
 final userStatsBootstrapProvider = FutureProvider<void>((ref) async {
   await ref.read(userStatsDaoProvider).ensureRowExists();
+});
+
+final currentWeekActivityProvider = StreamProvider<List<bool>>((ref) {
+  return ref.watch(userStatsDaoProvider).watchCurrentWeekActivity();
+});
+
+final hasAnyActivityProvider = StreamProvider<bool>((ref) {
+  return ref.watch(userStatsDaoProvider).watchHasAnyActivity();
 });
 
 // ── Mentorship ──

@@ -193,8 +193,9 @@ class CoursesDao extends DatabaseAccessor<AppDatabase>
 
   /// Total topics completed across every course — feeds Profile's real
   /// achievements.
-  Future<int> myCompletedTopicsCount() async =>
-      (await select(topicCompletions).get()).length;
+  Stream<int> watchCompletedTopicsCount() {
+    return select(topicCompletions).watch().map((rows) => rows.length);
+  }
 
   Future<int> seedTopic({
     required int courseId,

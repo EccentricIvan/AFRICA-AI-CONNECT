@@ -77,4 +77,29 @@ class UserStatsDao extends DatabaseAccessor<AppDatabase>
       '${d.year.toString().padLeft(4, '0')}-'
       '${d.month.toString().padLeft(2, '0')}-'
       '${d.day.toString().padLeft(2, '0')}';
+
+  /// This calendar week's Monday..Sunday hit/miss, real ActivityDays rows
+  /// — feeds Profile's streak strip. Reactive: recomputed whenever any
+  /// ActivityDays row changes.
+  Stream<List<bool>> watchCurrentWeekActivity() {
+    return select(activityDays).watch().map((rows) {
+      final present = rows.map((r) => r.id).toSet();
+      final now = DateTime.now();
+      final monday = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(Duration(days: now.weekday - 1));
+      return [
+        for (var i = 0; i < 7; i++)
+          present.contains(_dateKey(monday.add(Duration(days: i)))),
+      ];
+    });
+  }
+
+  /// True once any activity has ever been recorded — feeds the "First
+  /// Step" achievement.
+  Stream<bool> watchHasAnyActivity() {
+    return select(activityDays).watch().map((rows) => rows.isNotEmpty);
+  }
 }

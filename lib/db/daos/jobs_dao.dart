@@ -45,8 +45,9 @@ class JobsDao extends DatabaseAccessor<AppDatabase> with _$JobsDaoMixin {
 
   /// Total applications the local user has submitted, across every job —
   /// feeds Profile's real achievements.
-  Future<int> myApplicationsCount() async =>
-      (await select(jobApplications).get()).length;
+  Stream<int> watchMyApplicationsCount() {
+    return select(jobApplications).watch().map((rows) => rows.length);
+  }
 
   /// Reactive — null until the local user has applied to this job.
   Stream<JobApplication?> watchMyApplication(int jobId) {
