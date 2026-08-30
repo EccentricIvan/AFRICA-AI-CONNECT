@@ -1278,28 +1278,28 @@ class _GroupDetailBody extends ConsumerWidget {
   final Group group;
   final VoidCallback onOpenChat;
 
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, Group g) async {
+  Future<void> _confirmClose(BuildContext context, WidgetRef ref, Group g) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(S.literal('Delete this community?')),
-        content: Text(S.literal("It will be removed for everyone on this device, along with its membership. This can't be undone.")),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(S.literal('Close this community?')),
+        content: Text(S.literal(
+          "Members keep their chat history but can no longer post, and it drops out of Discover. This can't be undone.",
+        )),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(dialogContext, false),
             child: Text(S.literal('Cancel')),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(S.literal('Delete'), style: const TextStyle(color: Colors.red)),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(S.literal('Close community'), style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
     if (confirmed != true) return;
-    await ref.read(groupsDaoProvider).deleteGroup(g.id);
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
+    await ref.read(groupsDaoProvider).closeGroup(g.id);
   }
 
   @override
@@ -1309,6 +1309,7 @@ class _GroupDetailBody extends ConsumerWidget {
     final color = colorForGroupKey(g.colorKey);
     final isMember = ref.watch(isGroupMemberProvider(g.id)).valueOrNull ?? false;
     final membersAsync = ref.watch(groupMembersProvider(g.id));
+    final isClosed = g.closedAt != null;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -1320,10 +1321,12 @@ class _GroupDetailBody extends ConsumerWidget {
               CommunitySubPageHeaderBar(
                 onBack: () => Navigator.of(context).pop(),
                 title: S.literal(g.name),
-                trailing: GlassCircleBtn(
-                  icon: Icons.delete_outline_rounded,
-                  onTap: () => _confirmDelete(context, ref, g),
-                ),
+                trailing: isClosed
+                    ? null
+                    : GlassCircleBtn(
+                        icon: Icons.delete_outline_rounded,
+                        onTap: () => _confirmClose(context, ref, g),
+                      ),
               ),
               Expanded(
                 child: ListView(
@@ -1371,8 +1374,35 @@ class _GroupDetailBody extends ConsumerWidget {
                           style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
                         ),
                       ],
+                      if (isClosed) ...[
+                        const SizedBox(width: 6),
+                        _CategoryTag(color: Colors.red, label: S.literal('Closed')),
+                      ],
                     ],
                   ),
+                  if (isClosed) ...[
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.lock_outline_rounded, size: 16, color: Colors.red),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              S.literal('This community was closed by its creator. You can still read past messages, but no one can post new ones.'),
+                              style: const TextStyle(fontSize: 12, color: Colors.red, height: 1.4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   _MemberAvatars(color: color, groupId: g.id),
                   const SizedBox(height: 16),

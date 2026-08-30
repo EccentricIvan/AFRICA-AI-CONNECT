@@ -57,6 +57,18 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
     final conversation = conversationAsync.valueOrNull;
     final title = Text(conversation?.title ?? S.literal('Chat'));
 
+    // A 'group' conversation's subjectId is the group id directly; a
+    // 'mentor' conversation's subjectId is a mentor id, resolved back to
+    // that mentor's circle — same lookup _GroupLinkTitle uses below.
+    int? groupId;
+    if (conversation?.type == 'group') {
+      groupId = conversation!.subjectId;
+    } else if (conversation?.type == 'mentor') {
+      groupId = ref.watch(groupForMentorProvider(conversation!.subjectId)).valueOrNull?.id;
+    }
+    final isClosed = groupId != null &&
+        ref.watch(groupProvider(groupId)).valueOrNull?.closedAt != null;
+
     return Scaffold(
       appBar: AppBar(
         title: conversation == null || conversation.type == 'marketplace'
@@ -128,29 +140,45 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
           ),
           SafeArea(
             top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      onSubmitted: (_) => _send(),
-                      decoration: InputDecoration(
-                        hintText: S.literal('Type a message…'),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                      ),
+            child: isClosed
+                ? Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(Icons.lock_outline_rounded, size: 18, color: AppColors.of(context).textHint),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            S.literal('This community was closed by its creator. You can no longer send messages here.'),
+                            style: TextStyle(fontSize: 13, color: AppColors.of(context).textHint),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            onSubmitted: (_) => _send(),
+                            decoration: InputDecoration(
+                              hintText: S.literal('Type a message…'),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton.filled(
+                          onPressed: _send,
+                          icon: const Icon(Icons.send),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  IconButton.filled(
-                    onPressed: _send,
-                    icon: const Icon(Icons.send),
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
       ),

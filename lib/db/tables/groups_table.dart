@@ -14,6 +14,10 @@ class Groups extends Table {
   TextColumn get description => text().nullable()();
   IntColumn get mentorId => integer().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  /// Set when the creator closes this community — the group and its chat
+  /// history stay so existing members can still see it (and see why they
+  /// can no longer post), instead of vanishing outright. Null = active.
+  DateTimeColumn get closedAt => dateTime().nullable()();
 }
 
 /// One row per member. `isMe` marks the local user's own membership — the

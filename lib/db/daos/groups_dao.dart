@@ -8,14 +8,18 @@ part 'groups_dao.g.dart';
 class GroupsDao extends DatabaseAccessor<AppDatabase> with _$GroupsDaoMixin {
   GroupsDao(super.db);
 
+  /// Browsable/joinable communities — a closed one drops out of Discover,
+  /// though it stays visible to its existing members via watchMyGroups.
   Stream<List<Group>> watchGroups() {
-    return (select(
-      groups,
-    )..orderBy([(g) => OrderingTerm.desc(g.createdAt)])).watch();
+    return (select(groups)
+          ..where((g) => g.closedAt.isNull())
+          ..orderBy([(g) => OrderingTerm.desc(g.createdAt)]))
+        .watch();
   }
 
   /// Groups the local user has joined — a real SQL join against
-  /// GroupMembers rather than filtering in Dart.
+  /// GroupMembers rather than filtering in Dart. Includes closed groups so
+  /// a member can still see one was closed and why they can't post.
   Stream<List<Group>> watchMyGroups() {
     final query = select(groups).join([
       innerJoin(
@@ -159,9 +163,13 @@ class GroupsDao extends DatabaseAccessor<AppDatabase> with _$GroupsDaoMixin {
 
   /// Every group on this device was created by the local user themselves
   /// (directly, or auto-created via "Become a Mentor") — so no ownership
-  /// check is needed (see CLAUDE.md: no cross-device sync yet).
-  Future<void> deleteGroup(int id) async {
-    await (delete(groupMembers)..where((m) => m.groupId.equals(id))).go();
-    await (delete(groups)..where((g) => g.id.equals(id))).go();
+  /// check is needed (see CLAUDE.md: no cross-device sync yet). A soft
+  /// close rather than a hard delete: the group, its membership, and its
+  /// chat history all stay, so members still see it — just marked closed,
+  /// no longer postable (see ChatRoomScreen's closed-state gate) and no
+  /// longer discoverable (see watchGroups).
+  Future<void> closeGroup(int id) {
+    return (update(groups)..where((g) => g.id.equals(id)))
+        .write(GroupsCompanion(closedAt: Value(DateTime.now())));
   }
 }

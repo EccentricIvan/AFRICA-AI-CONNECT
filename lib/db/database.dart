@@ -81,7 +81,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -220,6 +220,12 @@ class AppDatabase extends _$AppDatabase {
             // table without it, preserving name/type/address for any
             // facility already added rather than wiping it.
             await m.alterTable(TableMigration(healthFacilities));
+          }
+          if (from < 15) {
+            // "Delete community" is now a soft close (see GroupsDao.closeGroup)
+            // so existing members keep their history and can see why they
+            // can no longer post, instead of the group just vanishing.
+            await m.addColumn(groups, groups.closedAt);
           }
         },
       );
