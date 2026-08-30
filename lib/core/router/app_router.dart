@@ -6,7 +6,6 @@ import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/auth/phone_entry_screen.dart';
 import '../../features/auth/otp_verify_screen.dart';
 import '../../features/home/home_screen_v2.dart';
-import '../../features/learn/learn_hub_screen.dart';
 import '../../features/earn/marketplace/marketplace_screen.dart';
 import '../../features/grow/mentorship/mentorship_screen.dart';
 import '../../features/grow/jobs/jobs_screen.dart';
@@ -54,8 +53,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         routes: [
           // ── Core tabs ──
           GoRoute(path: '/', builder: (_, __) => const HomeScreenV2()),
-          GoRoute(
-              path: '/learn', builder: (_, __) => const LearnHubScreen()),
           GoRoute(
               path: '/marketplace',
               builder: (_, __) => const MarketplaceScreen()),

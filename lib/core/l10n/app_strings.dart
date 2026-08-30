@@ -514,7 +514,7 @@ class S {
       AppLocale.sw: 'HUDUMA ZOTE',
     },
     'courses': {
-      AppLocale.en: 'Courses',
+      AppLocale.en: 'Materials',
       AppLocale.lg: 'Amasomo',
       AppLocale.sw: 'Kozi',
     },
@@ -543,7 +543,7 @@ class S {
       AppLocale.sw: 'Stawi',
     },
     'learn_desc': {
-      AppLocale.en: 'Courses & digital skills',
+      AppLocale.en: 'Learning materials & digital skills',
       AppLocale.lg: 'Amasomo n\'obukugu bw\'ekikompyuta',
       AppLocale.sw: 'Kozi na ujuzi wa kidijitali',
     },
