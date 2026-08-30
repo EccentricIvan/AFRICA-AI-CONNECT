@@ -201,25 +201,38 @@ class _MentorCard extends ConsumerStatefulWidget {
 class _MentorCardState extends ConsumerState<_MentorCard> {
   bool _connecting = false;
 
-  Future<void> _connect() async {
+  Future<void> _connect({required bool alreadyConnected}) async {
     setState(() => _connecting = true);
     final mentor = widget.mentor;
-    final user = await ref.read(currentUserProvider.future);
-    final myName = user?.name ?? S.literal('Me');
 
-    final groupId = await ref.read(groupsDaoProvider).getOrCreateMentorGroup(
-          mentorId: mentor.id,
-          mentorName: mentor.name,
-          colorKey: mentor.colorKey,
-        );
-    await ref.read(groupsDaoProvider).joinGroup(groupId: groupId, memberName: myName);
+    int conversationId;
+    if (alreadyConnected) {
+      // Already connected — just reopen the existing thread, no need to
+      // redo the group-join step.
+      conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
+            type: 'mentor',
+            subjectId: mentor.id,
+            title: mentor.name,
+            counterpartName: mentor.name,
+          );
+    } else {
+      final user = await ref.read(currentUserProvider.future);
+      final myName = user?.name ?? S.literal('Me');
 
-    final conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
-          type: 'mentor',
-          subjectId: mentor.id,
-          title: mentor.name,
-          counterpartName: mentor.name,
-        );
+      final groupId = await ref.read(groupsDaoProvider).getOrCreateMentorGroup(
+            mentorId: mentor.id,
+            mentorName: mentor.name,
+            colorKey: mentor.colorKey,
+          );
+      await ref.read(groupsDaoProvider).joinGroup(groupId: groupId, memberName: myName);
+
+      conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
+            type: 'mentor',
+            subjectId: mentor.id,
+            title: mentor.name,
+            counterpartName: mentor.name,
+          );
+    }
 
     if (!mounted) return;
     setState(() => _connecting = false);
@@ -234,6 +247,9 @@ class _MentorCardState extends ConsumerState<_MentorCard> {
     final t = widget.t;
     final ac = AppColors.of(context);
     final color = colorForMentorKey(mentor.colorKey);
+    final connected = ref.watch(
+      conversationExistsProvider((type: 'mentor', subjectId: mentor.id)),
+    ).valueOrNull ?? false;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -289,13 +305,19 @@ class _MentorCardState extends ConsumerState<_MentorCard> {
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: _connecting ? null : _connect,
+            onTap: _connecting ? null : () => _connect(alreadyConnected: connected),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
-                color: AppColors.mentorshipColor.withValues(alpha: 0.15),
+                color: connected
+                    ? Colors.green.withValues(alpha: 0.14)
+                    : AppColors.mentorshipColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.mentorshipColor.withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: connected
+                      ? Colors.green.withValues(alpha: 0.35)
+                      : AppColors.mentorshipColor.withValues(alpha: 0.3),
+                ),
               ),
               child: _connecting
                   ? const SizedBox(
@@ -303,11 +325,22 @@ class _MentorCardState extends ConsumerState<_MentorCard> {
                       height: 14,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(
-                      t('connect_btn'),
-                      style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.mentorshipColor,
-                      ),
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (connected) ...[
+                          const Icon(Icons.check_circle, size: 13, color: Colors.green),
+                          const SizedBox(width: 4),
+                        ],
+                        Text(
+                          connected ? S.literal('Connected') : t('connect_btn'),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: connected ? Colors.green : AppColors.mentorshipColor,
+                          ),
+                        ),
+                      ],
                     ),
             ),
           ),

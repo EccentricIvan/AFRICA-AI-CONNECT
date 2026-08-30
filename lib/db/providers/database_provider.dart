@@ -61,6 +61,15 @@ final conversationProvider = StreamProvider.family<Conversation?, int>((ref, id)
   return ref.watch(messagingDaoProvider).watchConversation(id);
 });
 
+/// Whether a conversation already exists for a given (type, subjectId) pair
+/// — e.g. to show "Connected" instead of "Connect" on a mentor card.
+final conversationExistsProvider = StreamProvider.family<bool, ({String type, int subjectId})>((ref, params) {
+  return ref.watch(messagingDaoProvider).watchConversationExists(
+        type: params.type,
+        subjectId: params.subjectId,
+      );
+});
+
 final conversationMessagesProvider = StreamProvider.family<List<Message>, int>((ref, conversationId) {
   return ref.watch(messagingDaoProvider).watchMessages(conversationId);
 });
@@ -152,6 +161,10 @@ final groupMembersProvider = StreamProvider.family<List<GroupMember>, int>((ref,
 
 final isGroupMemberProvider = StreamProvider.family<bool, int>((ref, groupId) {
   return ref.watch(groupsDaoProvider).watchIsMember(groupId);
+});
+
+final groupForMentorProvider = StreamProvider.family<Group?, int>((ref, mentorId) {
+  return ref.watch(groupsDaoProvider).watchGroupForMentor(mentorId);
 });
 
 // ── AI Chat ──

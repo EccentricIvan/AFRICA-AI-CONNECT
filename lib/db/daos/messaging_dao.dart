@@ -20,6 +20,19 @@ class MessagingDao extends DatabaseAccessor<AppDatabase>
       (select(conversations)..where((c) => c.id.equals(id)))
           .watchSingleOrNull();
 
+  /// Reactive — true once a conversation exists for this type+subject, e.g.
+  /// to show "Connected" instead of "Connect" on a mentor card.
+  Stream<bool> watchConversationExists({
+    required String type,
+    required int subjectId,
+  }) {
+    return (select(conversations)
+          ..where((c) => c.type.equals(type) & c.subjectId.equals(subjectId))
+          ..limit(1))
+        .watch()
+        .map((rows) => rows.isNotEmpty);
+  }
+
   /// Reactive message stream for one conversation, oldest first.
   Stream<List<Message>> watchMessages(int conversationId) {
     return (select(messages)
