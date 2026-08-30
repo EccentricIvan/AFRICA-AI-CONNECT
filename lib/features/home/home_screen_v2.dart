@@ -151,7 +151,6 @@ class _CommunityTip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tips = [
-      (t('tip_save'), Icons.lightbulb_outline, t('finance_tip')),
       (t('tip_sacco'), Icons.groups_outlined, t('community_tip')),
       (t('tip_photos'), Icons.camera_alt_outlined, t('business_tip')),
       (t('tip_water'), Icons.water_drop_outlined, t('health_tip')),
@@ -312,13 +311,11 @@ class _Services extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (t('finance'), Icons.account_balance_outlined, '/financial'),
       (t('mentors'), Icons.diversity_1_outlined, '/mentorship'),
       (t('jobs'), Icons.work_outline_rounded, '/jobs'),
       (t('skills'), Icons.auto_awesome_outlined, '/skills'),
       (t('health'), Icons.favorite_outline_rounded, '/health'),
       (t('community'), Icons.people_outline_rounded, '/community'),
-      (t('wellbeing'), Icons.spa_outlined, '/wellbeing'),
       (t('settings'), Icons.settings_outlined, '/settings'),
     ];
 

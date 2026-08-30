@@ -29,7 +29,6 @@ class AppShell extends ConsumerWidget {
       _NavDest('home', Icons.home_outlined, Icons.home_rounded, '/'),
       _NavDest('learn', Icons.menu_book_outlined, Icons.menu_book_rounded, '/learn'),
       _NavDest('market', Icons.storefront_outlined, Icons.storefront_rounded, '/marketplace'),
-      _NavDest('finance', Icons.savings_outlined, Icons.savings_rounded, '/financial'),
     ]),
     _NavSection('grow', [
       _NavDest('mentors', Icons.diversity_1_outlined, Icons.diversity_1_rounded, '/mentorship'),
@@ -39,7 +38,6 @@ class AppShell extends ConsumerWidget {
     _NavSection('thrive', [
       _NavDest('health', Icons.favorite_outline, Icons.favorite_rounded, '/health'),
       _NavDest('community', Icons.people_outlined, Icons.people_rounded, '/community'),
-      _NavDest('wellbeing', Icons.spa_outlined, Icons.spa_rounded, '/wellbeing'),
     ]),
     _NavSection('nav_account', [
       _NavDest('ai_chat', Icons.chat_bubble_outline_rounded, Icons.chat_rounded, '/ai-chat'),
