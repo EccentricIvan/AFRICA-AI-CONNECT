@@ -766,16 +766,16 @@ class _ListingDetailSheet extends ConsumerWidget {
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(S.literal('Delete this listing?')),
         content: Text(S.literal("It will be removed from the marketplace. This can't be undone.")),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(dialogContext, false),
             child: Text(S.literal('Cancel')),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dialogContext, true),
             child: Text(S.literal('Delete'), style: const TextStyle(color: Colors.red)),
           ),
         ],
