@@ -949,8 +949,10 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
+    final newName = _nameController.text.trim();
+    final nameChanged = newName != widget.name;
     await ref.read(userDaoProvider).saveUser(
-          name: _nameController.text.trim(),
+          name: newName,
           role: _selectedRole,
           location: _locationController.text.trim().isEmpty
               ? null
@@ -958,6 +960,19 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
           about: _aboutController.text.trim(),
           avatarPath: _avatarPath,
         );
+    if (nameChanged) {
+      // Every mentor listing, marketplace listing, job application, group
+      // membership, and sent message on this device belongs to the local
+      // user (no cross-device sync yet — see CLAUDE.md), so a name change
+      // here should propagate everywhere that name was snapshotted.
+      await Future.wait([
+        ref.read(mentorsDaoProvider).renameAllMentors(newName),
+        ref.read(marketplaceDaoProvider).renameAllSellers(newName),
+        ref.read(jobsDaoProvider).renameAllApplicants(newName),
+        ref.read(groupsDaoProvider).renameMyMembership(newName),
+        ref.read(messagingDaoProvider).renameMyIdentity(newName),
+      ]);
+    }
     if (!mounted) return;
     Navigator.of(context).pop();
   }

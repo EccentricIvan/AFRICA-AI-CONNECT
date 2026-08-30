@@ -148,4 +148,20 @@ class GroupsDao extends DatabaseAccessor<AppDatabase> with _$GroupsDaoMixin {
           ..where((m) => m.groupId.equals(groupId) & m.isMe.equals(true)))
         .go();
   }
+
+  /// The local user's own membership row wherever it exists (no
+  /// cross-device sync yet — see CLAUDE.md), kept in step with a profile
+  /// name change.
+  Future<void> renameMyMembership(String newName) {
+    return (update(groupMembers)..where((m) => m.isMe.equals(true)))
+        .write(GroupMembersCompanion(memberName: Value(newName)));
+  }
+
+  /// Every group on this device was created by the local user themselves
+  /// (directly, or auto-created via "Become a Mentor") — so no ownership
+  /// check is needed (see CLAUDE.md: no cross-device sync yet).
+  Future<void> deleteGroup(int id) async {
+    await (delete(groupMembers)..where((m) => m.groupId.equals(id))).go();
+    await (delete(groups)..where((g) => g.id.equals(id))).go();
+  }
 }

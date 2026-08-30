@@ -87,4 +87,25 @@ class MessagingDao extends DatabaseAccessor<AppDatabase>
       ConversationsCompanion(lastMessageAt: Value(now)),
     );
   }
+
+  /// Keeps the local user's identity in step with a profile name change:
+  /// their own sent messages, and every place they appear as the
+  /// "counterpart" of a thread they themselves are the subject of (a
+  /// mentor conversation about them, or a marketplace chat about their own
+  /// listing — see CLAUDE.md: no cross-device sync yet, so both cases are
+  /// always the local user).
+  Future<void> renameMyIdentity(String newName) async {
+    await (update(
+      conversations,
+    )..where((c) => c.type.equals('mentor'))).write(
+      ConversationsCompanion(title: Value(newName), counterpartName: Value(newName)),
+    );
+    await (update(
+      conversations,
+    )..where((c) => c.type.equals('marketplace'))).write(
+      ConversationsCompanion(counterpartName: Value(newName)),
+    );
+    await (update(messages)..where((m) => m.senderIsMe.equals(true)))
+        .write(MessagesCompanion(senderName: Value(newName)));
+  }
 }

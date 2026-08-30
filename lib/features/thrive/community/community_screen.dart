@@ -12,6 +12,7 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../db/database.dart';
 import '../../../db/providers/database_provider.dart';
 import '../../../shared/widgets/tap_scale.dart';
+import '../../../shared/widgets/glass/glass_circle_btn.dart';
 import '../../../shared/widgets/community/community_group_card.dart';
 import '../../../shared/widgets/community/community_header_bar.dart';
 import '../../../shared/widgets/community/community_hero_card.dart';
@@ -1277,6 +1278,30 @@ class _GroupDetailBody extends ConsumerWidget {
   final Group group;
   final VoidCallback onOpenChat;
 
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, Group g) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(S.literal('Delete this community?')),
+        content: Text(S.literal("It will be removed for everyone on this device, along with its membership. This can't be undone.")),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(S.literal('Cancel')),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(S.literal('Delete'), style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(groupsDaoProvider).deleteGroup(g.id);
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ui = CommunityUi.of(context);
@@ -1295,6 +1320,10 @@ class _GroupDetailBody extends ConsumerWidget {
               CommunitySubPageHeaderBar(
                 onBack: () => Navigator.of(context).pop(),
                 title: S.literal(g.name),
+                trailing: GlassCircleBtn(
+                  icon: Icons.delete_outline_rounded,
+                  onTap: () => _confirmDelete(context, ref, g),
+                ),
               ),
               Expanded(
                 child: ListView(

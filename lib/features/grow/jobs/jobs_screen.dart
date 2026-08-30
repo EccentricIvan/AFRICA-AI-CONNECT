@@ -257,6 +257,18 @@ class _JobListings extends ConsumerWidget {
                     ),
                   const SizedBox(height: 4),
                   JobApplySection(jobId: j.id, color: color),
+                  const SizedBox(height: 4),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => _confirmDelete(context, ref, j.id),
+                      icon: const Icon(Icons.delete_outline_rounded, size: 16, color: Colors.red),
+                      label: Text(
+                        S.literal('Delete this posting'),
+                        style: const TextStyle(color: Colors.red, fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -264,6 +276,28 @@ class _JobListings extends ConsumerWidget {
         );
       },
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, int jobId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(S.literal('Delete this posting?')),
+        content: Text(S.literal("It will be removed along with any applications to it. This can't be undone.")),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(S.literal('Cancel')),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(S.literal('Delete'), style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(jobsDaoProvider).deleteJob(jobId);
   }
 }
 

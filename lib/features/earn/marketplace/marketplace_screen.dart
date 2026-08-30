@@ -744,11 +744,47 @@ class _ListingDetailSheet extends ConsumerWidget {
                   t('no_contact_available'),
                   style: TextStyle(fontSize: 13, color: ui.textSecondary),
                 ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  onPressed: () => _confirmDelete(context, ref),
+                  icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
+                  label: Text(
+                    S.literal('Delete this listing'),
+                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(S.literal('Delete this listing?')),
+        content: Text(S.literal("It will be removed from the marketplace. This can't be undone.")),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(S.literal('Cancel')),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(S.literal('Delete'), style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(marketplaceDaoProvider).deleteListing(listing.id);
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 }
 

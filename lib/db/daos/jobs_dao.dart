@@ -70,4 +70,23 @@ class JobsDao extends DatabaseAccessor<AppDatabase> with _$JobsDaoMixin {
       ),
     );
   }
+
+  /// Every application on this device was submitted by the local user
+  /// themselves (no cross-device sync yet — see CLAUDE.md), so a profile
+  /// name change updates every application's applicant name.
+  Future<void> renameAllApplicants(String newName) {
+    return update(
+      jobApplications,
+    ).write(JobApplicationsCompanion(applicantName: Value(newName)));
+  }
+
+  /// Deletes the posting and any applications made against it — every job
+  /// on this device was posted by the local user themselves, so no
+  /// ownership check is needed (see CLAUDE.md: no cross-device sync yet).
+  Future<void> deleteJob(int id) {
+    return transaction(() async {
+      await (delete(jobApplications)..where((a) => a.jobId.equals(id))).go();
+      await (delete(jobs)..where((j) => j.id.equals(id))).go();
+    });
+  }
 }

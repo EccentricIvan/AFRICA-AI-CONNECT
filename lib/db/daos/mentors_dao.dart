@@ -35,4 +35,11 @@ class MentorsDao extends DatabaseAccessor<AppDatabase>
       ),
     );
   }
+
+  /// Every mentor row on this device is the local user themselves (no
+  /// cross-device sync yet — see CLAUDE.md), so a profile name change
+  /// updates every mentor listing rather than picking one out.
+  Future<void> renameAllMentors(String newName) {
+    return update(mentors).write(MentorsCompanion(name: Value(newName)));
+  }
 }
