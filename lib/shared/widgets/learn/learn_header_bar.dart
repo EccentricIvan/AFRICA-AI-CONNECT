@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../glass/glass_circle_btn.dart';
 import 'learn_ui.dart';
 
 class LearnHeaderBar extends StatelessWidget {
@@ -20,7 +21,7 @@ class LearnHeaderBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
       child: Row(
         children: [
-          _GlassCircleBtn(
+          GlassCircleBtn(
             icon: Icons.arrow_back_rounded,
             onTap: onBack,
           ),
@@ -58,7 +59,7 @@ class LearnHeaderBar extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              const _GlassCircleBtn(
+              const GlassCircleBtn(
                 icon: Icons.menu_book_outlined,
                 onTap: null,
               ),
@@ -78,35 +79,6 @@ class LearnHeaderBar extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _GlassCircleBtn extends StatelessWidget {
-  const _GlassCircleBtn({required this.icon, this.onTap});
-
-  final IconData icon;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final ui = LearnUi.of(context);
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Ink(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: ui.card,
-            shape: BoxShape.circle,
-            boxShadow: ui.softShadow,
-          ),
-          child: Icon(icon, size: 22, color: ui.textPrimary),
-        ),
       ),
     );
   }

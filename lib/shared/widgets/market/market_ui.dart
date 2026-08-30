@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 
-/// Presentation tokens for Marketplace Premium redesign (Markenzy) —
-/// brightness-aware. Fetch the active palette via `MarketUi.of(context)`
-/// rather than a static constant.
 class MarketUi {
   const MarketUi._({
     required this.pageBg,
@@ -23,30 +21,30 @@ class MarketUi {
   final bool isDark;
 
   static const MarketUi light = MarketUi._(
-    pageBg: Color(0xFFFCFAF8),
+    pageBg: Color(0xFFFFFFFF),
     card: Color(0xFFFFFFFF),
-    textPrimary: Color(0xFF202020),
-    textSecondary: Color(0xFF666666),
-    border: Color(0xFFEFE9E3),
-    iconWell: Color(0xFFF8F0EA),
+    textPrimary: Color(0xFF142840),
+    textSecondary: Color(0xFF3D5A73),
+    border: Color(0xFFE8F2FA),
+    iconWell: Color(0xFFF3F9FD),
     isDark: false,
   );
 
   static const MarketUi darkTheme = MarketUi._(
-    pageBg: Color(0xFF121212),
-    card: Color(0xFF212121),
-    textPrimary: Color(0xFFF2F0EE),
-    textSecondary: Color(0xFFA6A19C),
-    border: Color(0xFF322F2C),
-    iconWell: Color(0xFF2A2622),
+    pageBg: Color(0xFF101820),
+    card: Color(0xFF1A2433),
+    textPrimary: Color(0xFFE8F2FC),
+    textSecondary: Color(0xFF9BB8D4),
+    border: Color(0xFF2A4060),
+    iconWell: Color(0xFF1E2D42),
     isDark: true,
   );
 
   static MarketUi of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? darkTheme : light;
 
-  static const Color accent = Color(0xFFF28A1A);
-  static const Color accentDeep = Color(0xFFE07812);
+  static const Color accent = AppColors.primary;
+  static const Color accentDeep = AppColors.accentDeep;
 
   static const double radiusHero = 34;
   static const double radiusCard = 28;
@@ -55,24 +53,23 @@ class MarketUi {
 
   static const String heroBackgroundAsset =
       'assets/branding/market_background.png';
+  static const String heroBackgroundAssetDark =
+      'assets/branding/market_background_dark.png';
 
-  List<BoxShadow> get softShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF202020).withValues(alpha: 0.06),
-            blurRadius: 22,
-            offset: const Offset(0, 8),
-          ),
-        ];
+  static String heroBackgroundAssetFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? heroBackgroundAssetDark
+          : heroBackgroundAsset;
+
+  List<BoxShadow> get softShadow => isDark ? const [] : AppColors.light.softShadow(false);
 
   List<BoxShadow> get pillShadow => isDark
       ? const []
-      : [
+      : const [
           BoxShadow(
-            color: const Color(0xFF202020).withValues(alpha: 0.07),
+            color: AppColors.glassShadow,
             blurRadius: 14,
-            offset: const Offset(0, 6),
+            offset: Offset(0, 6),
           ),
         ];
 }

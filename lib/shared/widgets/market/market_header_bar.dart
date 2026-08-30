@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../glass/glass_circle_btn.dart';
 import 'market_ui.dart';
 
 class MarketHeaderBar extends StatelessWidget {
@@ -24,7 +25,7 @@ class MarketHeaderBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
       child: Row(
         children: [
-          _GlassCircleBtn(icon: Icons.arrow_back_rounded, onTap: onBack),
+          GlassCircleBtn(icon: Icons.arrow_back_rounded, onTap: onBack),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -56,39 +57,10 @@ class MarketHeaderBar extends StatelessWidget {
               ],
             ),
           ),
-          _GlassCircleBtn(icon: Icons.search_rounded, onTap: onSearch),
+          GlassCircleBtn(icon: Icons.search_rounded, onTap: onSearch),
           const SizedBox(width: 8),
           _GlassAddBtn(onTap: onAdd),
         ],
-      ),
-    );
-  }
-}
-
-class _GlassCircleBtn extends StatelessWidget {
-  const _GlassCircleBtn({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final ui = MarketUi.of(context);
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Ink(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: ui.card,
-            shape: BoxShape.circle,
-            boxShadow: ui.softShadow,
-          ),
-          child: Icon(icon, size: 22, color: ui.textPrimary),
-        ),
       ),
     );
   }
@@ -107,12 +79,13 @@ class _GlassAddBtn extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(14),
-        child: Ink(
+        child: Container(
           width: 44,
           height: 44,
           decoration: BoxDecoration(
             color: ui.card,
             borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: ui.border),
             boxShadow: ui.softShadow,
           ),
           child: const Icon(

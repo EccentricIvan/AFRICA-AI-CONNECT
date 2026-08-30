@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/learn/learn_category_card.dart';
 import '../../shared/widgets/learn/learn_course_card.dart';
 import '../../shared/widgets/learn/learn_header_bar.dart';
@@ -11,7 +12,6 @@ import '../../shared/widgets/learn/learn_journey_timeline.dart';
 import '../../shared/widgets/learn/learn_progress_card.dart';
 import '../../shared/widgets/learn/learn_section_header.dart';
 import '../../shared/widgets/learn/learn_tool_chip.dart';
-import '../../shared/widgets/learn/learn_ui.dart';
 
 class LearnHubScreen extends ConsumerStatefulWidget {
   const LearnHubScreen({super.key});
@@ -131,8 +131,10 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: LearnUi.of(context).pageBg,
-      body: SafeArea(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: AppColors.pageDecoration(context),
+        child: SafeArea(
         child: Column(
           children: [
             LearnHeaderBar(
@@ -302,6 +304,7 @@ class _LearnHubScreenState extends ConsumerState<LearnHubScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

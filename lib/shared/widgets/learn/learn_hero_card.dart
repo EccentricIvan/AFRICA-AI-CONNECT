@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../tap_scale.dart';
 import 'learn_ui.dart';
 
@@ -43,8 +44,8 @@ class LearnHeroCard extends StatelessWidget {
               color: ui.card,
               borderRadius: BorderRadius.circular(LearnUi.radiusHero),
               boxShadow: ui.softShadow,
-              image: const DecorationImage(
-                image: AssetImage(LearnUi.heroBackgroundAsset),
+              image: DecorationImage(
+                image: AssetImage(LearnUi.heroBackgroundAssetFor(context)),
                 fit: BoxFit.cover,
                 alignment: Alignment.centerRight,
               ),
@@ -58,12 +59,7 @@ class LearnHeroCard extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.96),
-                          Colors.white.withValues(alpha: 0.82),
-                          Colors.white.withValues(alpha: 0.35),
-                          Colors.white.withValues(alpha: 0.08),
-                        ],
+                        colors: AppColors.heroOverlayColors(context),
                         stops: const [0.0, 0.38, 0.62, 0.9],
                       ),
                     ),
@@ -84,7 +80,7 @@ class LearnHeroCard extends StatelessWidget {
                                 fontFamily: 'Saira',
                                 fontSize: titleSize,
                                 fontWeight: FontWeight.w700,
-                                color: LearnUi.light.textPrimary,
+                                color: ui.textPrimary,
                                 height: 1.12,
                                 letterSpacing: -0.5,
                               ),
@@ -109,7 +105,7 @@ class LearnHeroCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: compact ? 12.5 : 13.5,
                           fontWeight: FontWeight.w400,
-                          color: LearnUi.light.textSecondary,
+                          color: ui.textSecondary,
                           height: 1.45,
                         ),
                         maxLines: 3,
@@ -184,10 +180,11 @@ class LearnHeroCard extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
-                                  color: LearnUi.light.card,
+                                  color: ui.card,
                                   borderRadius:
                                       BorderRadius.circular(LearnUi.radiusBtn),
-                                  boxShadow: LearnUi.light.pillShadow,
+                                  border: Border.all(color: LearnUi.accent),
+                                  boxShadow: ui.pillShadow,
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -195,16 +192,16 @@ class LearnHeroCard extends StatelessWidget {
                                     Icon(
                                       Icons.grid_view_rounded,
                                       size: 16,
-                                      color: LearnUi.light.textPrimary,
+                                      color: LearnUi.accent,
                                     ),
                                     const SizedBox(width: 6),
                                     Flexible(
                                       child: Text(
                                         secondaryLabel,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 12.5,
                                           fontWeight: FontWeight.w700,
-                                          color: LearnUi.light.textPrimary,
+                                          color: LearnUi.accent,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
