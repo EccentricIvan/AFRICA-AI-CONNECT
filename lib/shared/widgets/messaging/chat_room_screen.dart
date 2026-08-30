@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../db/database.dart';
 import '../../../db/providers/database_provider.dart';
+import '../../../features/thrive/community/community_screen.dart';
 
 /// Generic persisted chat thread — used by Mentorship "Connect", Marketplace
 /// "Chat with seller", and Community group chat. Reads/writes through
@@ -52,9 +54,14 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
     final conversationAsync = ref.watch(conversationProvider(widget.conversationId));
     final messagesAsync = ref.watch(conversationMessagesProvider(widget.conversationId));
 
+    final conversation = conversationAsync.valueOrNull;
+    final title = Text(conversation?.title ?? S.literal('Chat'));
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(conversationAsync.valueOrNull?.title ?? S.literal('Chat')),
+        title: conversation == null || conversation.type == 'marketplace'
+            ? title
+            : _GroupLinkTitle(conversation: conversation, title: title),
       ),
       body: Column(
         children: [
@@ -145,6 +152,39 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Makes the AppBar title tappable for group/mentor threads — resolves a
+/// 'mentor' conversation's subjectId (a mentor id) back to that mentor's
+/// circle before navigating, since a 'group' conversation's subjectId is
+/// already the group id directly.
+class _GroupLinkTitle extends ConsumerWidget {
+  const _GroupLinkTitle({required this.conversation, required this.title});
+  final Conversation conversation;
+  final Widget title;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final groupIdAsync = conversation.type == 'group'
+        ? AsyncData<int?>(conversation.subjectId)
+        : ref.watch(groupForMentorProvider(conversation.subjectId)).whenData((g) => g?.id);
+    final groupId = groupIdAsync.valueOrNull;
+
+    return InkWell(
+      onTap: groupId == null
+          ? null
+          : () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => GroupDetailPage(groupId: groupId)),
+              ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(child: title),
+          if (groupId != null) const Icon(Icons.chevron_right, size: 18),
         ],
       ),
     );

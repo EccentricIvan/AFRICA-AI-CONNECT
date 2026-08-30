@@ -1190,7 +1190,7 @@ class _GroupPreviewCard extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).pop();
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => _GroupDetailPage(group: g)),
+                            MaterialPageRoute(builder: (_) => GroupDetailPage(groupId: g.id)),
                           );
                         },
                         child: Text(S.literal('View details')),
@@ -1237,11 +1237,14 @@ class _DiscoverGroupRow extends StatelessWidget {
 
 /// The group's detail view — shown from the Discover preview or from a
 /// chat room's header.
-class _GroupDetailPage extends ConsumerWidget {
-  const _GroupDetailPage({required this.group});
-  final Group group;
+/// Reachable from Community's Discover preview and from a group/mentor
+/// chat's header (see ChatRoomScreen) — takes just an id so either caller
+/// can navigate here without holding a full [Group] in hand.
+class GroupDetailPage extends ConsumerWidget {
+  const GroupDetailPage({super.key, required this.groupId});
+  final int groupId;
 
-  Future<void> _openChat(BuildContext context, WidgetRef ref) async {
+  Future<void> _openChat(BuildContext context, WidgetRef ref, Group group) async {
     final conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
           type: 'group',
           subjectId: group.id,
@@ -1252,6 +1255,27 @@ class _GroupDetailPage extends ConsumerWidget {
       MaterialPageRoute(builder: (_) => ChatRoomScreen(conversationId: conversationId)),
     );
   }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final groupAsync = ref.watch(groupProvider(groupId));
+    return groupAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (_, __) => Scaffold(body: Center(child: Text(S.literal('Could not load this group.')))),
+      data: (g) {
+        if (g == null) {
+          return Scaffold(body: Center(child: Text(S.literal('This group is no longer available.'))));
+        }
+        return _GroupDetailBody(group: g, onOpenChat: () => _openChat(context, ref, g));
+      },
+    );
+  }
+}
+
+class _GroupDetailBody extends ConsumerWidget {
+  const _GroupDetailBody({required this.group, required this.onOpenChat});
+  final Group group;
+  final VoidCallback onOpenChat;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1350,7 +1374,7 @@ class _GroupDetailPage extends ConsumerWidget {
                       if (isMember)
                         TapScale(
                           borderRadius: 20,
-                          onTap: () => _openChat(context, ref),
+                          onTap: onOpenChat,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                             decoration: BoxDecoration(

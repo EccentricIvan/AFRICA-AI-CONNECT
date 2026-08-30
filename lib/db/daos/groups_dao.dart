@@ -32,6 +32,13 @@ class GroupsDao extends DatabaseAccessor<AppDatabase> with _$GroupsDaoMixin {
   Stream<Group?> watchGroup(int id) =>
       (select(groups)..where((g) => g.id.equals(id))).watchSingleOrNull();
 
+  /// The circle auto-created for a given mentor, if one exists yet — used
+  /// to resolve a 'mentor'-type conversation's subjectId (a mentor id, not
+  /// a group id) back to its group for the "view details" link.
+  Stream<Group?> watchGroupForMentor(int mentorId) =>
+      (select(groups)..where((g) => g.mentorId.equals(mentorId)))
+          .watchSingleOrNull();
+
   Stream<List<GroupMember>> watchMembers(int groupId) {
     return (select(
       groupMembers,
