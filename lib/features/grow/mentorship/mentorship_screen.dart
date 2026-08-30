@@ -3,6 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../db/database.dart';
+import '../../../db/providers/database_provider.dart';
+import '../../../shared/widgets/messaging/chat_room_screen.dart';
+
+Color colorForMentorKey(String key) {
+  switch (key) {
+    case 'health':
+      return AppColors.healthColor;
+    case 'finance':
+      return AppColors.financeColor;
+    case 'chat':
+      return AppColors.chatColor;
+    case 'earn':
+      return AppColors.earnColor;
+    default:
+      return AppColors.mentorshipColor;
+  }
+}
 
 class MentorshipScreen extends ConsumerWidget {
   const MentorshipScreen({super.key});
@@ -11,13 +29,7 @@ class MentorshipScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(localeProvider);
     String t(String key) => S.tr(context, ref, key);
-
-    const mentors = [
-      _Mentor('Amina B.', 'Agriculture & Agribusiness', 'Kampala', 12, AppColors.healthColor),
-      _Mentor('Florence N.', 'Financial Management', 'Jinja', 8, AppColors.financeColor),
-      _Mentor('Esther K.', 'Digital Marketing', 'Mbale', 5, AppColors.chatColor),
-      _Mentor('Harriet O.', 'Entrepreneurship', 'Kampala', 15, AppColors.earnColor),
-    ];
+    final mentorsAsync = ref.watch(mentorsProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -38,10 +50,19 @@ class MentorshipScreen extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(t('find_mentor_desc'), style: TextStyle(fontSize: 13, color: AppColors.of(context).textHint)),
                     const SizedBox(height: 14),
-                    ...mentors.map((m) => Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _MentorCard(mentor: m, t: t),
-                    )),
+                    mentorsAsync.when(
+                      loading: () => const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                      error: (_, __) => Text(S.literal('Could not load mentors. Try again later.')),
+                      data: (mentors) => Column(
+                        children: mentors.map((m) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _MentorCard(mentor: m, t: t),
+                        )).toList(),
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     _BecomeMentorCard(t: t),
                     const SizedBox(height: 32),
@@ -168,14 +189,51 @@ class _GrowHero extends StatelessWidget {
   }
 }
 
-class _MentorCard extends StatelessWidget {
+class _MentorCard extends ConsumerStatefulWidget {
   const _MentorCard({required this.mentor, required this.t});
-  final _Mentor mentor;
+  final Mentor mentor;
   final String Function(String) t;
 
   @override
+  ConsumerState<_MentorCard> createState() => _MentorCardState();
+}
+
+class _MentorCardState extends ConsumerState<_MentorCard> {
+  bool _connecting = false;
+
+  Future<void> _connect() async {
+    setState(() => _connecting = true);
+    final mentor = widget.mentor;
+    final user = await ref.read(currentUserProvider.future);
+    final myName = user?.name ?? S.literal('Me');
+
+    final groupId = await ref.read(groupsDaoProvider).getOrCreateMentorGroup(
+          mentorId: mentor.id,
+          mentorName: mentor.name,
+          colorKey: mentor.colorKey,
+        );
+    await ref.read(groupsDaoProvider).joinGroup(groupId: groupId, memberName: myName);
+
+    final conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
+          type: 'mentor',
+          subjectId: mentor.id,
+          title: mentor.name,
+          counterpartName: mentor.name,
+        );
+
+    if (!mounted) return;
+    setState(() => _connecting = false);
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => ChatRoomScreen(conversationId: conversationId)),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final mentor = widget.mentor;
+    final t = widget.t;
     final ac = AppColors.of(context);
+    final color = colorForMentorKey(mentor.colorKey);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -188,15 +246,15 @@ class _MentorCard extends StatelessWidget {
           Container(
             width: 52, height: 52,
             decoration: BoxDecoration(
-              color: mentor.color.withValues(alpha: 0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: mentor.color.withValues(alpha: 0.3)),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
             ),
             child: Center(
               child: Text(
                 mentor.name[0],
                 style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.w700, color: mentor.color,
+                  fontSize: 20, fontWeight: FontWeight.w700, color: color,
                 ),
               ),
             ),
@@ -231,7 +289,7 @@ class _MentorCard extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () {},
+            onTap: _connecting ? null : _connect,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
@@ -239,12 +297,18 @@ class _MentorCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.mentorshipColor.withValues(alpha: 0.3)),
               ),
-              child: Text(
-                t('connect_btn'),
-                style: const TextStyle(
-                  fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.mentorshipColor,
-                ),
-              ),
+              child: _connecting
+                  ? const SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(
+                      t('connect_btn'),
+                      style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.mentorshipColor,
+                      ),
+                    ),
             ),
           ),
         ],
@@ -253,12 +317,63 @@ class _MentorCard extends StatelessWidget {
   }
 }
 
-class _BecomeMentorCard extends StatelessWidget {
+class _BecomeMentorCard extends ConsumerWidget {
   const _BecomeMentorCard({required this.t});
   final String Function(String) t;
 
+  Future<void> _openApplyDialog(BuildContext context, WidgetRef ref) async {
+    final expertiseController = TextEditingController();
+    final messageController = TextEditingController();
+    final submitted = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t('apply_to_mentor')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: expertiseController,
+              decoration: InputDecoration(labelText: S.literal('Your area of expertise')),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: messageController,
+              maxLines: 3,
+              decoration: InputDecoration(labelText: S.literal('Why do you want to mentor? (optional)')),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(S.literal('Cancel')),
+          ),
+          FilledButton(
+            onPressed: expertiseController.text.trim().isEmpty
+                ? null
+                : () => Navigator.of(context).pop(true),
+            child: Text(S.literal('Submit')),
+          ),
+        ],
+      ),
+    );
+    if (submitted != true) return;
+
+    final user = await ref.read(currentUserProvider.future);
+    await ref.read(mentorsDaoProvider).apply(
+          applicantName: user?.name ?? S.literal('Applicant'),
+          expertise: expertiseController.text.trim(),
+          message: messageController.text.trim().isEmpty ? null : messageController.text.trim(),
+        );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.literal('Application submitted — thank you!'))),
+      );
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -310,7 +425,7 @@ class _BecomeMentorCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           GestureDetector(
-            onTap: () {},
+            onTap: () => _openApplyDialog(context, ref),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
               decoration: BoxDecoration(
@@ -349,13 +464,4 @@ class _SectionLabel extends StatelessWidget {
       ),
     );
   }
-}
-
-class _Mentor {
-  const _Mentor(this.name, this.expertise, this.location, this.yearsExp, this.color);
-  final String name;
-  final String expertise;
-  final String location;
-  final int yearsExp;
-  final Color color;
 }
