@@ -4,8 +4,20 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../db/providers/database_provider.dart';
 import '../../../shared/widgets/section_header.dart';
-import 'job_detail_screen.dart';
 import 'cv_editor_screen.dart';
+
+Color colorForJobKey(String key) {
+  switch (key) {
+    case 'health':
+      return AppColors.healthColor;
+    case 'skills':
+      return AppColors.skillsColor;
+    case 'mentorship':
+      return AppColors.mentorshipColor;
+    default:
+      return AppColors.jobsColor;
+  }
+}
 
 class JobsScreen extends ConsumerWidget {
   const JobsScreen({super.key});
@@ -126,10 +138,8 @@ class _JobListings extends ConsumerWidget {
           children: jobs.map((j) {
             final color = colorForJobKey(j.colorKey);
             return Card(
-              child: ListTile(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => JobDetailScreen(jobId: j.id)),
-                ),
+              clipBehavior: Clip.antiAlias,
+              child: ExpansionTile(
                 leading: Container(
                   width: 44,
                   height: 44,
@@ -157,9 +167,118 @@ class _JobListings extends ConsumerWidget {
                         color: color),
                   ),
                 ),
+                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (j.location != null) ...[
+                    Text(
+                      j.location!,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                  if (j.description != null) ...[
+                    Text(j.description!, style: Theme.of(context).textTheme.bodyMedium),
+                    const SizedBox(height: 16),
+                  ],
+                  JobApplySection(jobId: j.id, color: color),
+                ],
               ),
             );
           }).toList(),
+        );
+      },
+    );
+  }
+}
+
+/// Shown inside each job's inline dropdown — switches to a confirmation
+/// once the local user has already applied.
+class JobApplySection extends ConsumerStatefulWidget {
+  const JobApplySection({super.key, required this.jobId, required this.color});
+  final int jobId;
+  final Color color;
+
+  @override
+  ConsumerState<JobApplySection> createState() => _JobApplySectionState();
+}
+
+class _JobApplySectionState extends ConsumerState<JobApplySection> {
+  final _coverNoteController = TextEditingController();
+  bool _submitting = false;
+
+  @override
+  void dispose() {
+    _coverNoteController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _apply() async {
+    setState(() => _submitting = true);
+    final user = await ref.read(currentUserProvider.future);
+    await ref.read(jobsDaoProvider).apply(
+          jobId: widget.jobId,
+          applicantName: user?.name ?? S.literal('Applicant'),
+          coverNote: _coverNoteController.text.trim().isEmpty
+              ? null
+              : _coverNoteController.text.trim(),
+        );
+    if (mounted) setState(() => _submitting = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final applicationAsync = ref.watch(myJobApplicationProvider(widget.jobId));
+
+    return applicationAsync.when(
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (application) {
+        if (application != null) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.green.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.green),
+                const SizedBox(width: 10),
+                Expanded(child: Text(S.literal('Applied — the employer will contact you.'))),
+              ],
+            ),
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _coverNoteController,
+              maxLines: 3,
+              decoration: InputDecoration(
+                hintText: S.literal('Add a short note (optional)'),
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _submitting ? null : _apply,
+                style: ElevatedButton.styleFrom(backgroundColor: widget.color),
+                child: _submitting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : Text(S.literal('Apply')),
+              ),
+            ),
+          ],
         );
       },
     );
