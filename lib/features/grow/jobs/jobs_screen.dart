@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../db/providers/database_provider.dart';
 import '../../../shared/widgets/section_header.dart';
+import 'job_detail_screen.dart';
+import 'cv_editor_screen.dart';
 
-class JobsScreen extends StatelessWidget {
+class JobsScreen extends ConsumerWidget {
   const JobsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.literal('Job Board')),
-        actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -24,21 +25,21 @@ class JobsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _JobsHero(),
+                const _JobsHero(),
                 const SizedBox(height: 24),
                 SectionHeader(
                   title: S.literal('Recent Opportunities'),
                   subtitle: S.literal('Jobs and gigs near you'),
                 ),
                 const SizedBox(height: 12),
-                _JobListings(),
+                const _JobListings(),
                 const SizedBox(height: 24),
                 SectionHeader(
                   title: S.literal('Build Your CV'),
                   subtitle: S.literal('Create a professional profile'),
                 ),
                 const SizedBox(height: 12),
-                _CvBuilderCard(),
+                const _CvBuilderCard(),
                 const SizedBox(height: 32),
               ],
             ),
@@ -50,6 +51,8 @@ class JobsScreen extends StatelessWidget {
 }
 
 class _JobsHero extends StatelessWidget {
+  const _JobsHero();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,67 +105,70 @@ class _JobsHero extends StatelessWidget {
   }
 }
 
-class _JobListings extends StatelessWidget {
-  static const _jobs = [
-    _Job('Community Health Worker', 'NGO Partner · Kampala', 'Full-time',
-        AppColors.healthColor),
-    _Job('Digital Marketing Assistant', 'Tech Hub · Remote', 'Part-time',
-        AppColors.skillsColor),
-    _Job('Agricultural Extension Officer', 'District Gov · Mbale',
-        'Contract', AppColors.healthColor),
-    _Job('Tailoring Trainer', 'Women\'s Centre · Jinja', 'Part-time',
-        AppColors.mentorshipColor),
-  ];
+class _JobListings extends ConsumerWidget {
+  const _JobListings();
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: _jobs.map((j) {
-        return Card(
-          child: ListTile(
-            leading: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: j.color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final jobsAsync = ref.watch(jobsProvider);
+
+    return jobsAsync.when(
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(vertical: 24),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, __) => Text(S.literal('Could not load jobs. Try again later.')),
+      data: (jobs) {
+        if (jobs.isEmpty) {
+          return Text(S.literal('No opportunities posted yet.'));
+        }
+        return Column(
+          children: jobs.map((j) {
+            final color = colorForJobKey(j.colorKey);
+            return Card(
+              child: ListTile(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => JobDetailScreen(jobId: j.id)),
+                ),
+                leading: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.work, color: color, size: 22),
+                ),
+                title: Text(j.title,
+                    style: Theme.of(context).textTheme.titleMedium),
+                subtitle: Text(j.employer),
+                trailing: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    j.type,
+                    style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: color),
+                  ),
+                ),
               ),
-              child: Icon(Icons.work, color: j.color, size: 22),
-            ),
-            title: Text(S.literal(j.title),
-                style: Theme.of(context).textTheme.titleMedium),
-            subtitle: Text(S.literal(j.employer)),
-            trailing: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: j.color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                S.literal(j.type),
-                style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: j.color),
-              ),
-            ),
-          ),
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
   }
 }
 
-class _Job {
-  const _Job(this.title, this.employer, this.type, this.color);
-  final String title;
-  final String employer;
-  final String type;
-  final Color color;
-}
-
 class _CvBuilderCard extends StatelessWidget {
+  const _CvBuilderCard();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -187,12 +193,14 @@ class _CvBuilderCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            S.literal('Create a professional CV that highlights your skills and experience. AI-assisted — just answer a few questions.'),
+            S.literal('Write down your experience, skills, and education so employers can see who you are.'),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 14),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const CvEditorScreen()),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.skillsColor,
             ),
