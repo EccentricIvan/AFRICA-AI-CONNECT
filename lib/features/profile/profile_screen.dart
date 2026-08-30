@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../core/theme/app_colors.dart';
 import '../../db/providers/database_provider.dart';
 import '../../shared/widgets/tap_scale.dart';
 import '../../shared/widgets/home/home_ui.dart';
@@ -75,9 +76,14 @@ class ProfileScreen extends ConsumerWidget {
     final contentTop = statsTop + _statsCardHeight + 16;
 
     return Scaffold(
-      backgroundColor: ui.pageBg,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: AppColors.pageDecoration(context),
+            ),
+          ),
           Positioned.fill(
             child: SingleChildScrollView(
               padding: EdgeInsets.fromLTRB(24, contentTop, 24, 28),
@@ -184,7 +190,7 @@ class _ProfileHeroBanner extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [HomeUi.accent, HomeUi.thrive],
+          colors: [HomeUi.accent, HomeUi.learn, HomeUi.thrive],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(36),
@@ -195,9 +201,41 @@ class _ProfileHeroBanner extends StatelessWidget {
         children: [
           Row(
             children: [
-              _GlassCircleBtn(Icons.arrow_back_rounded, onBack),
+              Material(
+                color: Colors.transparent,
+                shape: const CircleBorder(),
+                child: InkWell(
+                  onTap: onBack,
+                  customBorder: const CircleBorder(),
+                  child: Ink(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.22),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.arrow_back_rounded, size: 18, color: Colors.white),
+                  ),
+                ),
+              ),
               const Spacer(),
-              _GlassCircleBtn(Icons.edit_outlined, onEdit),
+              Material(
+                color: Colors.transparent,
+                shape: const CircleBorder(),
+                child: InkWell(
+                  onTap: onEdit,
+                  customBorder: const CircleBorder(),
+                  child: Ink(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.22),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.edit_outlined, size: 18, color: Colors.white),
+                  ),
+                ),
+              ),
             ],
           ),
           // Trimmed from 20 to lift the avatar closer to the back/edit row —
@@ -280,33 +318,6 @@ class _ProfileHeroBanner extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _GlassCircleBtn extends StatelessWidget {
-  const _GlassCircleBtn(this.icon, this.onTap);
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      shape: const CircleBorder(),
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Ink(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.22),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, size: 18, color: Colors.white),
-        ),
       ),
     );
   }
@@ -493,7 +504,7 @@ class _StreakCard extends StatelessWidget {
   final String coursesInProgress;
   final String pointsEarned;
 
-  static const _color = Color(0xFFE89A9A);
+  static const _color = Color(0xFF6AACDE);
   static const _labels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   @override

@@ -103,7 +103,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [ac.bgTop, ac.bgBottom],
+            colors: [ac.bgTop, ac.pageGradientMid, ac.bgBottom],
           ),
         ),
         child: SafeArea(
@@ -124,7 +124,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       decoration: BoxDecoration(
                         color: active
                             ? AppColors.primary
-                            : const Color(0xFFE5D8CF),
+                            : const Color(0xFFD4EBFA),
                         borderRadius: BorderRadius.circular(99),
                       ),
                     );
@@ -297,8 +297,8 @@ class _LanguageVisual {
 const _languageVisuals = <AppLocale, _LanguageVisual>{
   AppLocale.en: _LanguageVisual(
     icon: Icons.public_rounded,
-    iconColor: Color(0xFFC96F4A),
-    tileColor: Color(0xFFF6E4DA),
+    iconColor: Color(0xFF2E96E8),
+    tileColor: Color(0xFFE8F4FD),
   ),
   AppLocale.lg: _LanguageVisual(
     icon: Icons.eco_rounded,
@@ -827,7 +827,7 @@ class _WelcomePage extends ConsumerWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     ac.bgBottom.withValues(alpha: 0),
-                    const Color(0xFFE8C4D8).withValues(alpha: 0.08),
+                    const Color(0xFFB8D9F0).withValues(alpha: 0.08),
                     AppColors.primary.withValues(alpha: 0.05),
                   ],
                 ),
@@ -1046,7 +1046,7 @@ class _WelcomeFeatureStrip extends StatelessWidget {
       title: S.literal('Learn AI'),
       subtitle: S.literal('Courses & skills'),
       accent: AppColors.primary,
-      tint: const Color(0xFFF6E4DA),
+      tint: const Color(0xFFE8F4FD),
     ),
     (
       icon: Icons.work_outline_rounded,

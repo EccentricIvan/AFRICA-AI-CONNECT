@@ -70,9 +70,9 @@ class _GrowAppBar extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: const Color(0x183A2E29),
+              color: const Color(0x18142840),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0x123A2E29)),
+              border: Border.all(color: const Color(0x12142840)),
             ),
             child: IconButton(
               padding: EdgeInsets.zero,
@@ -179,9 +179,9 @@ class _MentorCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0x123A2E29),
+        color: const Color(0x12142840),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0x153A2E29)),
+        border: Border.all(color: const Color(0x15142840)),
       ),
       child: Row(
         children: [

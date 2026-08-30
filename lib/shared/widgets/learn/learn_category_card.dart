@@ -38,7 +38,7 @@ class LearnCategoryCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: ui.isDark ? const Color(0xFF2A2622) : const Color(0xFFF4F0EC),
+                color: ui.isDark ? const Color(0xFF2A2622) : const Color(0xFFEEF6FC),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(icon, size: 22, color: ui.textPrimary),

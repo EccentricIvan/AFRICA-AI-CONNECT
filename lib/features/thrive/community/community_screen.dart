@@ -7,8 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../db/providers/database_provider.dart';
+import '../../../shared/widgets/glass/glass_circle_btn.dart';
 import '../../../shared/widgets/tap_scale.dart';
 import '../../../shared/widgets/community/community_group_card.dart';
 import '../../../shared/widgets/community/community_header_bar.dart';
@@ -142,19 +144,20 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ui = CommunityUi.of(context);
     final totalMembers =
         _CommunityData.groups.fold<int>(0, (sum, g) => sum + g.members);
 
     return Scaffold(
-      backgroundColor: ui.pageBg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            CommunityHeaderBar(
-              title: S.literal('Community'),
-              onBack: () => context.go('/'),
-            ),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: AppColors.pageDecoration(context),
+        child: SafeArea(
+          child: Column(
+            children: [
+              CommunityHeaderBar(
+                title: S.literal('Community'),
+                onBack: () => context.go('/'),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
               child: _FadeSlideIn(
@@ -166,7 +169,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   avatarColors: const [
                     CommunityUi.accent,
                     CommunityUi.accentDeep,
-                    Color(0xFFD65C6A),
+                    Color(0xFF5BB8E8),
                   ],
                   ctaLabel: S.literal('Create a Community'),
                   onCta: _openCreateGroup,
@@ -198,6 +201,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

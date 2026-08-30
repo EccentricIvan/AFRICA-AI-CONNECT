@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/theme_provider.dart';
 import '../../db/providers/database_provider.dart';
+import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/home/home_community_card.dart';
 import '../../shared/widgets/home/home_header_bar.dart';
 import '../../shared/widgets/home/home_hero_card.dart';
@@ -74,7 +75,7 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        color: HomeUi.of(context).pageBg,
+        decoration: AppColors.pageDecoration(context),
         child: SafeArea(
           bottom: false,
           child: Column(

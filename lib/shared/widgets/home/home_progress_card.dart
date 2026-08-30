@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../core/theme/app_colors.dart';
 import 'home_ui.dart';
 
 enum HomeProgressKind { courses, points, streak }
@@ -25,19 +26,19 @@ class HomeProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = switch (kind) {
       HomeProgressKind.courses => (
-          const Color(0xFF7BA8E0),
+          const Color(0xFF4A8FE8),
           Icons.menu_book_rounded,
           '↑ 20%',
           S.literal('Keep learning'),
         ),
       HomeProgressKind.points => (
-          const Color(0xFFF0A878),
+          const Color(0xFF6EC4FF),
           Icons.star_rounded,
           '↑ 12%',
           S.literal('Awesome progress!'),
         ),
       HomeProgressKind.streak => (
-          const Color(0xFFE89A9A),
+          const Color(0xFF5BB8E8),
           Icons.local_fire_department_rounded,
           '↑ 1d',
           S.literal("You're on fire!"),
@@ -46,30 +47,13 @@ class HomeProgressCard extends StatelessWidget {
 
     final ui = HomeUi.of(context);
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
       decoration: BoxDecoration(
         color: ui.card,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: ui.border),
-        boxShadow: ui.isDark
-            ? const []
-            : [
-                BoxShadow(
-                  color: const Color(0xFF1A1A1A).withValues(alpha: 0.04),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            ui.card,
-            theme.$1.withValues(alpha: ui.isDark ? 0.16 : 0.05),
-          ],
-        ),
+        boxShadow: ui.softShadow,
       ),
+      padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -138,12 +122,13 @@ class _GlowIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final well = AppColors.of(context).iconWell;
     return Container(
       width: 24,
       height: 24,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color.withValues(alpha: 0.12),
+        color: well,
       ),
       child: Icon(icon, color: color, size: 12),
     );
@@ -162,6 +147,7 @@ class _TrendBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(99),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
       child: Text(
         text,
@@ -235,7 +221,7 @@ class _PointsFooter extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
-        color: ui.isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF8F5F1),
+        color: AppColors.of(context).iconWell,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(

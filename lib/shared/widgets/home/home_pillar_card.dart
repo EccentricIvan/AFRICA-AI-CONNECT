@@ -27,17 +27,10 @@ class HomePillarCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(18, 18, 16, 14),
         decoration: BoxDecoration(
+          color: ui.card,
           borderRadius: BorderRadius.circular(HomeUi.radiusCard),
-          border: Border.all(color: ui.border),
+          border: Border.all(color: accent, width: 1.5),
           boxShadow: ui.softShadow,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              ui.card,
-              accent.withValues(alpha: ui.isDark ? 0.14 : 0.06),
-            ],
-          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,13 +64,13 @@ class HomePillarCard extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: accent,
                   shape: BoxShape.circle,
+                  border: Border.all(color: accent, width: 1.5),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_forward_rounded,
                   size: 16,
-                  color: Colors.white,
+                  color: accent,
                 ),
               ),
             ),

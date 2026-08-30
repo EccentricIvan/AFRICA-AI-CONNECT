@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 
-/// Presentation tokens for Chat Premium redesign (Markenzy) —
-/// brightness-aware. Fetch the active palette via `ChatUi.of(context)`
-/// rather than a static constant.
 class ChatUi {
   const ChatUi._({
     required this.pageBg,
@@ -25,34 +23,34 @@ class ChatUi {
   final bool isDark;
 
   static const ChatUi light = ChatUi._(
-    pageBg: Color(0xFFFFF9F4),
+    pageBg: Color(0xFFFFFFFF),
     card: Color(0xFFFFFFFF),
-    textPrimary: Color(0xFF1F1F1F),
-    textSecondary: Color(0xFF6B6B6B),
-    border: Color(0xFFF2E7DD),
-    userBubble: Color(0xFFFFF0E4),
-    iconWell: Color(0xFFF8F0EA),
+    textPrimary: Color(0xFF142840),
+    textSecondary: Color(0xFF3D5A73),
+    border: Color(0xFFE8F2FA),
+    userBubble: Color(0xFFF3F9FD),
+    iconWell: Color(0xFFF3F9FD),
     isDark: false,
   );
 
   static const ChatUi darkTheme = ChatUi._(
-    pageBg: Color(0xFF121212),
-    card: Color(0xFF212121),
-    textPrimary: Color(0xFFF2F0EE),
-    textSecondary: Color(0xFFA6A19C),
-    border: Color(0xFF322F2C),
-    userBubble: Color(0xFF3A2A1E),
-    iconWell: Color(0xFF2A2622),
+    pageBg: Color(0xFF101820),
+    card: Color(0xFF1A2433),
+    textPrimary: Color(0xFFE8F2FC),
+    textSecondary: Color(0xFF9BB8D4),
+    border: Color(0xFF2A4060),
+    userBubble: Color(0xFF1E3A52),
+    iconWell: Color(0xFF1E2D42),
     isDark: true,
   );
 
   static ChatUi of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? darkTheme : light;
 
-  static const Color accent = Color(0xFFF28C28);
-  static const Color accentDeep = Color(0xFFE07818);
-  static const Color accentGold = Color(0xFFF6C36B);
-  static const Color online = Color(0xFF4D8B55);
+  static const Color accent = AppColors.primary;
+  static const Color accentDeep = AppColors.accentDeep;
+  static const Color accentGold = AppColors.gold;
+  static const Color online = AppColors.online;
 
   static const double radiusCard = 24;
   static const double radiusHero = 28;
@@ -61,20 +59,19 @@ class ChatUi {
 
   static const String pageBackgroundAsset =
       'assets/branding/chat_background.png';
+  static const String pageBackgroundAssetDark =
+      'assets/branding/chat_background_dark.png';
 
-  List<BoxShadow> get softShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1F1F1F).withValues(alpha: 0.06),
-            blurRadius: 22,
-            offset: const Offset(0, 8),
-          ),
-        ];
+  static String pageBackgroundAssetFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? pageBackgroundAssetDark
+          : pageBackgroundAsset;
+
+  List<BoxShadow> get softShadow => isDark ? const [] : AppColors.light.softShadow(false);
 
   List<BoxShadow> get glowShadow => [
         BoxShadow(
-          color: accent.withValues(alpha: 0.28),
+          color: AppColors.accentGlow,
           blurRadius: 14,
           offset: const Offset(0, 6),
         ),
