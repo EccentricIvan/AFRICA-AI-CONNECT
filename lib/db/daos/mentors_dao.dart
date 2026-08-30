@@ -4,7 +4,7 @@ import '../tables/mentors_table.dart';
 
 part 'mentors_dao.g.dart';
 
-@DriftAccessor(tables: [Mentors, MentorApplications])
+@DriftAccessor(tables: [Mentors])
 class MentorsDao extends DatabaseAccessor<AppDatabase>
     with _$MentorsDaoMixin {
   MentorsDao(super.db);
@@ -13,12 +13,16 @@ class MentorsDao extends DatabaseAccessor<AppDatabase>
     return (select(mentors)..orderBy([(m) => OrderingTerm.asc(m.id)])).watch();
   }
 
-  Future<int> seedMentor({
+  /// Becoming a mentor is immediate — no application/approval step. The
+  /// caller (mentorship_screen.dart) also creates and joins the paired
+  /// Group for this mentor's circle right after this succeeds.
+  Future<int> createMentor({
     required String name,
     required String expertise,
     required String location,
     required int yearsExp,
     required String colorKey,
+    String? bio,
   }) {
     return into(mentors).insert(
       MentorsCompanion.insert(
@@ -27,23 +31,7 @@ class MentorsDao extends DatabaseAccessor<AppDatabase>
         location: location,
         yearsExp: yearsExp,
         colorKey: colorKey,
-      ),
-    );
-  }
-
-  Future<bool> hasAnyMentors() async =>
-      (await (select(mentors)..limit(1)).get()).isNotEmpty;
-
-  Future<int> apply({
-    required String applicantName,
-    required String expertise,
-    String? message,
-  }) {
-    return into(mentorApplications).insert(
-      MentorApplicationsCompanion.insert(
-        applicantName: applicantName,
-        expertise: expertise,
-        message: Value(message),
+        bio: Value(bio),
       ),
     );
   }

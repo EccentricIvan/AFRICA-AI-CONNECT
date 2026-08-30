@@ -1,7 +1,8 @@
 import 'package:drift/drift.dart';
 
-/// Curated mentor directory — seeded content (see mentors_seed.dart), same
-/// "team-curated, not user-generated" shape as Jobs/Courses.
+/// Real mentor directory — created directly via "Become a Mentor" (no
+/// application/approval gate), same "this device's own content" shape as
+/// MarketplaceListings/Jobs. No seeded content.
 class Mentors extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
@@ -9,17 +10,8 @@ class Mentors extends Table {
   TextColumn get location => text()();
   IntColumn get yearsExp => integer()();
   TextColumn get colorKey => text()();
+  /// What the mentor offers — free-text details/description, filled in on
+  /// the "Become a Mentor" form.
   TextColumn get bio => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-}
-
-/// One row per "become a mentor" submission. Insert-only for v1 — no
-/// reviewer/approval screen yet.
-class MentorApplications extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get applicantName => text()();
-  TextColumn get expertise => text()();
-  TextColumn get message => text().nullable()();
-  TextColumn get status => text().withDefault(const Constant('pending'))();
-  DateTimeColumn get appliedAt => dateTime().withDefault(currentDateAndTime)();
 }

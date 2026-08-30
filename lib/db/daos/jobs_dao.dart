@@ -17,13 +17,16 @@ class JobsDao extends DatabaseAccessor<AppDatabase> with _$JobsDaoMixin {
   Stream<Job?> watchJob(int id) =>
       (select(jobs)..where((j) => j.id.equals(id))).watchSingleOrNull();
 
-  Future<int> seedJob({
+  Future<int> postJob({
     required String title,
     required String employer,
     required String type,
     required String colorKey,
     String? location,
     String? description,
+    String? requirements,
+    String? education,
+    String? niceToHave,
   }) {
     return into(jobs).insert(
       JobsCompanion.insert(
@@ -33,12 +36,17 @@ class JobsDao extends DatabaseAccessor<AppDatabase> with _$JobsDaoMixin {
         colorKey: colorKey,
         location: Value(location),
         description: Value(description),
+        requirements: Value(requirements),
+        education: Value(education),
+        niceToHave: Value(niceToHave),
       ),
     );
   }
 
-  Future<bool> hasAnyJobs() async =>
-      (await (select(jobs)..limit(1)).get()).isNotEmpty;
+  /// Total applications the local user has submitted, across every job —
+  /// feeds Profile's real achievements.
+  Future<int> myApplicationsCount() async =>
+      (await select(jobApplications).get()).length;
 
   /// Reactive — null until the local user has applied to this job.
   Stream<JobApplication?> watchMyApplication(int jobId) {

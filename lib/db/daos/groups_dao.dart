@@ -79,7 +79,10 @@ class GroupsDao extends DatabaseAccessor<AppDatabase> with _$GroupsDaoMixin {
       (await (select(groups)..limit(1)).get()).isNotEmpty;
 
   /// Idempotent — reuses a mentor's existing circle instead of creating a
-  /// duplicate every time someone connects with that mentor.
+  /// duplicate every time someone connects with that mentor. Falls back to
+  /// an auto-named circle only if one doesn't already exist — in normal
+  /// use createMentorGroup already created it, with the real name the
+  /// mentor chose, at "Become a Mentor" time.
   Future<int> getOrCreateMentorGroup({
     required int mentorId,
     required String mentorName,
@@ -97,6 +100,27 @@ class GroupsDao extends DatabaseAccessor<AppDatabase> with _$GroupsDaoMixin {
         iconKey: 'diversity',
         colorKey: colorKey,
         mentorId: Value(mentorId),
+      ),
+    );
+  }
+
+  /// Creates a mentor's circle with the real name/description they chose
+  /// on the "Become a Mentor" form — called once, right after
+  /// MentorsDao.createMentor succeeds.
+  Future<int> createMentorGroup({
+    required int mentorId,
+    required String name,
+    required String colorKey,
+    String? description,
+  }) {
+    return into(groups).insert(
+      GroupsCompanion.insert(
+        name: name,
+        category: 'mentorship',
+        iconKey: 'diversity',
+        colorKey: colorKey,
+        mentorId: Value(mentorId),
+        description: Value(description),
       ),
     );
   }
