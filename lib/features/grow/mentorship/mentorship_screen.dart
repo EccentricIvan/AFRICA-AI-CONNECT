@@ -17,10 +17,25 @@ Color colorForMentorKey(String key) {
       return AppColors.chatColor;
     case 'earn':
       return AppColors.earnColor;
+    case 'agriculture':
+      return AppColors.agricultureColor;
+    case 'community':
+      return AppColors.communityColor;
     default:
       return AppColors.mentorshipColor;
   }
 }
+
+/// Expertise areas offered on the "Become a Mentor" form — a fixed
+/// taxonomy, same convention as Marketplace's category picker.
+const _expertiseMeta = [
+  ('Agriculture & Farming', 'agriculture'),
+  ('Financial Management', 'finance'),
+  ('Digital Marketing & Tech', 'chat'),
+  ('Entrepreneurship & Business', 'earn'),
+  ('Health & Wellbeing', 'health'),
+  ('Leadership & Community', 'community'),
+];
 
 class MentorshipScreen extends ConsumerWidget {
   const MentorshipScreen({super.key});
@@ -354,55 +369,15 @@ class _BecomeMentorCard extends ConsumerWidget {
   const _BecomeMentorCard({required this.t});
   final String Function(String) t;
 
-  Future<void> _openApplyDialog(BuildContext context, WidgetRef ref) async {
-    final expertiseController = TextEditingController();
-    final messageController = TextEditingController();
-    final submitted = await showDialog<bool>(
+  void _openBecomeMentorSheet(BuildContext context) {
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(t('apply_to_mentor')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: expertiseController,
-              decoration: InputDecoration(labelText: S.literal('Your area of expertise')),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: messageController,
-              maxLines: 3,
-              decoration: InputDecoration(labelText: S.literal('Why do you want to mentor? (optional)')),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(S.literal('Cancel')),
-          ),
-          FilledButton(
-            onPressed: expertiseController.text.trim().isEmpty
-                ? null
-                : () => Navigator.of(context).pop(true),
-            child: Text(S.literal('Submit')),
-          ),
-        ],
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
+      builder: (_) => const _BecomeMentorSheet(),
     );
-    if (submitted != true) return;
-
-    final user = await ref.read(currentUserProvider.future);
-    await ref.read(mentorsDaoProvider).apply(
-          applicantName: user?.name ?? S.literal('Applicant'),
-          expertise: expertiseController.text.trim(),
-          message: messageController.text.trim().isEmpty ? null : messageController.text.trim(),
-        );
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.literal('Application submitted — thank you!'))),
-      );
-    }
   }
 
   @override
@@ -458,7 +433,7 @@ class _BecomeMentorCard extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           GestureDetector(
-            onTap: () => _openApplyDialog(context, ref),
+            onTap: () => _openBecomeMentorSheet(context),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
               decoration: BoxDecoration(
@@ -494,6 +469,199 @@ class _SectionLabel extends StatelessWidget {
       style: TextStyle(
         fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1.2,
         color: AppColors.of(context).textHint,
+      ),
+    );
+  }
+}
+
+// ─────────────────────────── Become a Mentor form ───────────────────────
+
+/// Becoming a mentor is immediate — filling this out and confirming makes
+/// you a real, listed mentor right away (no application/approval step),
+/// and auto-creates the named circle other people join when they connect
+/// with you.
+class _BecomeMentorSheet extends ConsumerStatefulWidget {
+  const _BecomeMentorSheet();
+
+  @override
+  ConsumerState<_BecomeMentorSheet> createState() => _BecomeMentorSheetState();
+}
+
+class _BecomeMentorSheetState extends ConsumerState<_BecomeMentorSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final _locationController = TextEditingController();
+  final _yearsController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _groupNameController = TextEditingController();
+  String? _selectedExpertise;
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    _locationController.dispose();
+    _yearsController.dispose();
+    _bioController.dispose();
+    _groupNameController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_selectedExpertise == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.literal('Please choose your area of expertise'))),
+      );
+      return;
+    }
+
+    setState(() => _saving = true);
+    final meta = _expertiseMeta.firstWhere((e) => e.$1 == _selectedExpertise);
+    final user = await ref.read(currentUserProvider.future);
+    final name = user?.name ?? S.literal('Mentor');
+
+    final mentorId = await ref.read(mentorsDaoProvider).createMentor(
+          name: name,
+          expertise: meta.$1,
+          location: _locationController.text.trim(),
+          yearsExp: int.tryParse(_yearsController.text.trim()) ?? 0,
+          colorKey: meta.$2,
+          bio: _bioController.text.trim().isEmpty ? null : _bioController.text.trim(),
+        );
+
+    final groupId = await ref.read(groupsDaoProvider).createMentorGroup(
+          mentorId: mentorId,
+          name: _groupNameController.text.trim(),
+          colorKey: meta.$2,
+          description: _bioController.text.trim().isEmpty ? null : _bioController.text.trim(),
+        );
+    await ref.read(groupsDaoProvider).joinGroup(groupId: groupId, memberName: name);
+    await ref.read(messagingDaoProvider).getOrCreateConversation(
+          type: 'group',
+          subjectId: groupId,
+          title: _groupNameController.text.trim(),
+        );
+
+    if (!mounted) return;
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(S.literal("You're now listed as a mentor!"))),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ac = AppColors.of(context);
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: ac.border,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    S.literal('Become a Mentor'),
+                    style: TextStyle(
+                        fontFamily: 'Saira', fontSize: 20, fontWeight: FontWeight.w700, color: ac.textPrimary),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    S.literal('Fill this out to be listed as a mentor others can connect with.'),
+                    style: TextStyle(fontSize: 13, color: ac.textSecondary),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    S.literal('Your area of expertise'),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ac.textPrimary),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _expertiseMeta.map((e) {
+                      final isSelected = _selectedExpertise == e.$1;
+                      final color = colorForMentorKey(e.$2);
+                      return ChoiceChip(
+                        label: Text(e.$1),
+                        selected: isSelected,
+                        onSelected: (_) => setState(() => _selectedExpertise = e.$1),
+                        selectedColor: color.withValues(alpha: 0.18),
+                        labelStyle: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w600,
+                          color: isSelected ? color : ac.textSecondary,
+                        ),
+                        side: BorderSide(color: isSelected ? color : ac.border),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _yearsController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(hintText: S.literal('Years of experience')),
+                    validator: (v) => (int.tryParse((v ?? '').trim()) == null)
+                        ? S.literal('Enter a number')
+                        : null,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _locationController,
+                    decoration: InputDecoration(hintText: S.literal('Location')),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? S.literal('Enter a location') : null,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _bioController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: S.literal('Details — what you offer, your background'),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _groupNameController,
+                    decoration: InputDecoration(
+                      hintText: S.literal('Name your mentorship circle'),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? S.literal('Enter a group name') : null,
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _saving ? null : _submit,
+                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.growColor),
+                      child: _saving
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            )
+                          : Text(S.literal('Confirm — Offer Mentorship')),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
