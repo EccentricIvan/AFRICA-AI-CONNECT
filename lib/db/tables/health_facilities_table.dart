@@ -7,7 +7,6 @@ class HealthFacilities extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
   TextColumn get type => text()(); // 'Clinic' | 'Hospital' | 'Pharmacy' | 'Maternity' | 'Other'
-  TextColumn get phone => text().nullable()();
   TextColumn get address => text().nullable()();
   DateTimeColumn get addedAt => dateTime().withDefault(currentDateAndTime)();
 }

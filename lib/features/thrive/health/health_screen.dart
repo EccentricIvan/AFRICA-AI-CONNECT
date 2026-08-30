@@ -434,11 +434,6 @@ class _FacilityCard extends StatelessWidget {
     );
   }
 
-  Future<void> _call() async {
-    if (facility.phone == null) return;
-    await launchUrl(Uri.parse('tel:${facility.phone}'));
-  }
-
   @override
   Widget build(BuildContext context) {
     final ac = AppColors.of(context);
@@ -488,19 +483,6 @@ class _FacilityCard extends StatelessWidget {
               ],
             ),
           ),
-          if (facility.phone != null)
-            GestureDetector(
-              onTap: _call,
-              child: Container(
-                margin: const EdgeInsets.only(right: 6),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.call_outlined, color: Colors.green, size: 20),
-              ),
-            ),
           GestureDetector(
             onTap: _openDirections,
             child: Container(
@@ -546,7 +528,6 @@ class _AddFacilitySheet extends ConsumerStatefulWidget {
 class _AddFacilitySheetState extends ConsumerState<_AddFacilitySheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   String _type = _facilityTypes.first;
   bool _saving = false;
@@ -554,7 +535,6 @@ class _AddFacilitySheetState extends ConsumerState<_AddFacilitySheet> {
   @override
   void dispose() {
     _nameController.dispose();
-    _phoneController.dispose();
     _addressController.dispose();
     super.dispose();
   }
@@ -565,7 +545,6 @@ class _AddFacilitySheetState extends ConsumerState<_AddFacilitySheet> {
     await ref.read(healthFacilitiesDaoProvider).addFacility(
           name: _nameController.text.trim(),
           type: _type,
-          phone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
           address: _addressController.text.trim().isEmpty ? null : _addressController.text.trim(),
         );
     if (mounted) Navigator.of(context).pop();
@@ -617,13 +596,7 @@ class _AddFacilitySheetState extends ConsumerState<_AddFacilitySheet> {
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _addressController,
-                  decoration: InputDecoration(hintText: S.literal('Address (optional)')),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(hintText: S.literal('Phone (optional)')),
+                  decoration: InputDecoration(hintText: S.literal('Where it\'s located (address)')),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

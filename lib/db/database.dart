@@ -81,7 +81,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -214,6 +214,12 @@ class AppDatabase extends _$AppDatabase {
             // "Apply to Mentor" is gone — becoming a mentor is now
             // immediate, no application/approval step.
             await m.deleteTable('mentor_applications');
+          }
+          if (from < 14) {
+            // Nearby services never needed a phone number — recreate the
+            // table without it, preserving name/type/address for any
+            // facility already added rather than wiping it.
+            await m.alterTable(TableMigration(healthFacilities));
           }
         },
       );
