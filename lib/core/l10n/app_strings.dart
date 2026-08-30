@@ -1246,6 +1246,11 @@ class S {
       AppLocale.lg: 'Kitundibwa',
       AppLocale.sw: 'Inauzwa na',
     },
+    'chat_on_platform': {
+      AppLocale.en: 'Chat with seller',
+      AppLocale.lg: 'Yogera n\'atunda mu app',
+      AppLocale.sw: 'Ongea na muuzaji kwenye programu',
+    },
     'message_on_whatsapp': {
       AppLocale.en: 'Message on WhatsApp',
       AppLocale.lg: 'Weewandiikire ku WhatsApp',

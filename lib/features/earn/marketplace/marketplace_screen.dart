@@ -18,6 +18,7 @@ import '../../../shared/widgets/market/market_hero_card.dart';
 import '../../../shared/widgets/market/market_listing_card.dart';
 import '../../../shared/widgets/market/market_section_header.dart';
 import '../../../shared/widgets/market/market_ui.dart';
+import '../../../shared/widgets/messaging/chat_room_screen.dart';
 
 /// Copies a user-picked image into the app's own persistent documents
 /// directory (not the OS picker's temp/cache path, which isn't guaranteed
@@ -586,6 +587,22 @@ class _ListingDetailSheet extends ConsumerWidget {
     await launchUrl(Uri.parse('tel:$phone'));
   }
 
+  /// Opens (or resumes) a persisted in-app chat with the seller instead of
+  /// deep-linking out to WhatsApp — keeps the conversation, and the user,
+  /// on the platform.
+  Future<void> _chatOnPlatform(BuildContext context, WidgetRef ref) async {
+    final conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
+          type: 'marketplace',
+          subjectId: listing.id,
+          title: listing.title,
+          counterpartName: listing.sellerName,
+        );
+    if (!context.mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => ChatRoomScreen(conversationId: conversationId)),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(localeProvider);
@@ -655,7 +672,25 @@ class _ListingDetailSheet extends ConsumerWidget {
                 style: TextStyle(fontSize: 13, color: ui.textSecondary),
               ),
               const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _chatOnPlatform(context, ref),
+                  icon: const Icon(Icons.forum_outlined, size: 18),
+                  label: Text(t('chat_on_platform')),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: MarketUi.accent,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(MarketUi.radiusBtn),
+                    ),
+                  ),
+                ),
+              ),
               if (hasContact) ...[
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
