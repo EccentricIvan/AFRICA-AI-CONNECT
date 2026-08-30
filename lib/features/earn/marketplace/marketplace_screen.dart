@@ -333,10 +333,24 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
       );
       return;
     }
-    final seller = ref.read(currentUserProvider).valueOrNull?.name;
-    if (seller == null) return;
 
     setState(() => _saving = true);
+    // Await the real value instead of reading whatever's synchronously
+    // available — currentUserProvider's stream may not have emitted its
+    // first snapshot yet if this sheet is opened right after app start,
+    // and reading a not-yet-loaded value here used to fail this whole
+    // submit silently (no error, no listing) with zero feedback.
+    final seller = (await ref.read(currentUserProvider.future))?.name;
+    if (seller == null) {
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.literal('Could not find your profile. Please try again.'))),
+        );
+      }
+      return;
+    }
+
     await ref.read(marketplaceDaoProvider).addListing(
           title: _titleController.text.trim(),
           price: double.parse(_priceController.text.trim()),
