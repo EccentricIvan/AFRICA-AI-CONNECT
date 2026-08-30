@@ -63,6 +63,7 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
   Widget build(BuildContext context) {
     final questionsAsync = ref.watch(quizQuestionsProvider(widget.topicId));
     final completed = ref.watch(topicCompletedProvider(widget.topicId)).valueOrNull ?? false;
+    final viewed = ref.watch(resourceViewedProvider(widget.topicId)).valueOrNull ?? false;
 
     return Scaffold(
       appBar: AppBar(title: Text(S.literal('Quiz'))),
@@ -72,6 +73,36 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
         data: (questions) {
           if (questions.isEmpty) {
             return Center(child: Text(S.literal('No quiz questions for this topic yet.')));
+          }
+
+          if (!completed && !viewed) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.menu_book_outlined, color: widget.color, size: 56),
+                    const SizedBox(height: 12),
+                    Text(
+                      S.literal('Read the material first'),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      S.literal("You need to open this topic's reading before you can take the quiz."),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: ElevatedButton.styleFrom(backgroundColor: widget.color),
+                      child: Text(S.literal('Go back')),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           if (completed) {

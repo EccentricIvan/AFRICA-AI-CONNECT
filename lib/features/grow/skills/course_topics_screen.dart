@@ -4,7 +4,7 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../db/database.dart';
 import '../../../db/providers/database_provider.dart';
 import 'skills_screen.dart';
-import 'topic_quiz_screen.dart';
+import 'topic_reading_screen.dart';
 
 class CourseTopicsScreen extends ConsumerWidget {
   const CourseTopicsScreen({super.key, required this.courseId});
@@ -99,10 +99,9 @@ class _TopicRow extends ConsumerWidget {
       child: ListTile(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => TopicQuizScreen(
-              topicId: topic.id,
+            builder: (_) => TopicReadingScreen(
+              topic: topic,
               courseId: topic.courseId,
-              pointsValue: topic.pointsValue,
               color: color,
             ),
           ),
