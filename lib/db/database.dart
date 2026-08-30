@@ -12,6 +12,7 @@ import 'tables/mentors_table.dart';
 import 'tables/groups_table.dart';
 import 'tables/skill_topics_table.dart';
 import 'tables/user_stats_table.dart';
+import 'tables/health_facilities_table.dart';
 import 'daos/user_dao.dart';
 import 'daos/marketplace_dao.dart';
 import 'daos/chat_content_dao.dart';
@@ -23,10 +24,9 @@ import 'daos/courses_dao.dart';
 import 'daos/mentors_dao.dart';
 import 'daos/groups_dao.dart';
 import 'daos/user_stats_dao.dart';
+import 'daos/health_facilities_dao.dart';
 import 'chat_content_seed.dart';
-import 'jobs_seed.dart';
 import 'courses_seed.dart';
-import 'mentors_seed.dart';
 
 part 'database.g.dart';
 
@@ -48,14 +48,15 @@ part 'database.g.dart';
     Courses,
     CourseProgress,
     Mentors,
-    MentorApplications,
     Groups,
     GroupMembers,
     CourseTopics,
     TopicQuizQuestions,
     TopicCompletions,
+    TopicResourceViews,
     UserStats,
     ActivityDays,
+    HealthFacilities,
   ],
   daos: [
     UserDao,
@@ -69,6 +70,7 @@ part 'database.g.dart';
     MentorsDao,
     GroupsDao,
     UserStatsDao,
+    HealthFacilitiesDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -79,7 +81,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -87,9 +89,7 @@ class AppDatabase extends _$AppDatabase {
           await m.createAll();
           await seedChatContentFromAsset(chatContentDao);
           await settingsDao.ensureRowExists();
-          await seedJobsIfEmpty(jobsDao);
           await seedCoursesIfEmpty(coursesDao);
-          await seedMentorsIfEmpty(mentorsDao);
           await userStatsDao.ensureRowExists();
         },
         onUpgrade: (m, from, to) async {
@@ -122,19 +122,15 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(users, users.resumeText);
             await m.createTable(jobs);
             await m.createTable(jobApplications);
-            await seedJobsIfEmpty(jobsDao);
           }
           if (from < 10) {
             await m.createTable(courses);
             await m.createTable(courseProgress);
-            await seedCoursesIfEmpty(coursesDao);
           }
           if (from < 11) {
             await m.createTable(mentors);
-            await m.createTable(mentorApplications);
             await m.createTable(groups);
             await m.createTable(groupMembers);
-            await seedMentorsIfEmpty(mentorsDao);
           }
           if (from < 12) {
             await m.createTable(courseTopics);
@@ -142,15 +138,82 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(topicCompletions);
             await m.createTable(userStats);
             await m.createTable(activityDays);
-            // The Skills catalog gained topics/quizzes in this version —
-            // pre-v12 installs only have the old flat course list with no
-            // topics under it, so replace rather than leave it stranded.
-            // Safe pre-release: no real course-progress data exists yet to
-            // preserve.
+          }
+          if (from < 13) {
+            // Real, user-added nearby health facilities — no seed.
+            await m.createTable(healthFacilities);
+
+            // Skill topics gained real reading material and a "must read
+            // before the quiz unlocks" gate. Wipe and reseed from the
+            // content-pack JSON — pre-release, no real course progress
+            // exists yet to preserve — rather than leave old rows with a
+            // blank resourceText.
+            await m.addColumn(courseTopics, courseTopics.resourceText);
+            await m.addColumn(courseTopics, courseTopics.resourceType);
+            await m.createTable(topicResourceViews);
+            await delete(topicCompletions).go();
             await delete(courseProgress).go();
+            await delete(topicQuizQuestions).go();
+            await delete(courseTopics).go();
             await delete(courses).go();
             await seedCoursesIfEmpty(coursesDao);
-            await userStatsDao.ensureRowExists();
+
+            // Jobs and Mentors are no longer curated/seeded content — from
+            // this version on they only exist once someone actually posts
+            // a job or becomes a mentor through the app. Clear out
+            // whatever the old seed left behind so a device that already
+            // ran it doesn't keep showing postings nobody created.
+            await m.addColumn(jobs, jobs.requirements);
+            await m.addColumn(jobs, jobs.education);
+            await m.addColumn(jobs, jobs.niceToHave);
+            await delete(jobApplications).go();
+            await delete(jobs).go();
+
+            final mentorGroups = await (select(
+              groups,
+            )..where((g) => g.mentorId.isNotNull())).get();
+            final mentorGroupIds = mentorGroups.map((g) => g.id).toList();
+            if (mentorGroupIds.isNotEmpty) {
+              await (delete(
+                groupMembers,
+              )..where((gm) => gm.groupId.isIn(mentorGroupIds))).go();
+              final groupConvos = await (select(conversations)
+                    ..where(
+                      (c) =>
+                          c.type.equals('group') &
+                          c.subjectId.isIn(mentorGroupIds),
+                    ))
+                  .get();
+              final groupConvoIds = groupConvos.map((c) => c.id).toList();
+              if (groupConvoIds.isNotEmpty) {
+                await (delete(
+                  messages,
+                )..where((msg) => msg.conversationId.isIn(groupConvoIds))).go();
+                await (delete(
+                  conversations,
+                )..where((c) => c.id.isIn(groupConvoIds))).go();
+              }
+              await (delete(
+                groups,
+              )..where((g) => g.id.isIn(mentorGroupIds))).go();
+            }
+            final mentorConvos = await (select(
+              conversations,
+            )..where((c) => c.type.equals('mentor'))).get();
+            final mentorConvoIds = mentorConvos.map((c) => c.id).toList();
+            if (mentorConvoIds.isNotEmpty) {
+              await (delete(
+                messages,
+              )..where((msg) => msg.conversationId.isIn(mentorConvoIds))).go();
+              await (delete(
+                conversations,
+              )..where((c) => c.id.isIn(mentorConvoIds))).go();
+            }
+            await delete(mentors).go();
+
+            // "Apply to Mentor" is gone — becoming a mentor is now
+            // immediate, no application/approval step.
+            await m.deleteTable('mentor_applications');
           }
         },
       );
@@ -163,9 +226,9 @@ class AppDatabase extends _$AppDatabase {
   /// so a shared device doesn't carry the previous person's data into the
   /// next session (see the "Sign out" tile in Settings). Deliberately
   /// leaves the offline chat knowledge base (ChatIntents/Patterns/
-  /// ResponseVariants/ContentMeta) untouched — that's shared reference
-  /// content, not personal data, and gets re-seeded from the bundled asset
-  /// on next launch regardless.
+  /// ResponseVariants/ContentMeta) and the Skills content pack
+  /// (Courses/CourseTopics/TopicQuizQuestions) untouched — that's shared
+  /// reference content, not personal data.
   ///
   /// Extend this list whenever a new table of personal/user-generated data
   /// is added.
@@ -177,11 +240,14 @@ class AppDatabase extends _$AppDatabase {
       await delete(chatSessions).go();
       await delete(marketplaceListings).go();
       await delete(jobApplications).go();
+      await delete(jobs).go();
       await delete(courseProgress).go();
       await delete(topicCompletions).go();
-      await delete(mentorApplications).go();
+      await delete(topicResourceViews).go();
+      await delete(mentors).go();
       await delete(groupMembers).go();
       await delete(groups).go();
+      await delete(healthFacilities).go();
       await delete(settings).go();
       await delete(activityDays).go();
       await delete(userStats).go();

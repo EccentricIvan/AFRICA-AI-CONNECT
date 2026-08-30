@@ -11,6 +11,7 @@ import '../daos/courses_dao.dart';
 import '../daos/mentors_dao.dart';
 import '../daos/groups_dao.dart';
 import '../daos/user_stats_dao.dart';
+import '../daos/health_facilities_dao.dart';
 import '../chat_content_seed.dart';
 import '../../services/offline_chat_service.dart';
 import '../../services/chat_content_sync_service.dart';
@@ -144,6 +145,12 @@ final topicCompletedProvider = StreamProvider.family<bool, int>((ref, topicId) {
   return ref.watch(coursesDaoProvider).watchTopicCompleted(topicId);
 });
 
+/// Whether the local user has opened this topic's reading material — the
+/// quiz stays locked until this is true.
+final resourceViewedProvider = StreamProvider.family<bool, int>((ref, topicId) {
+  return ref.watch(coursesDaoProvider).watchResourceViewed(topicId);
+});
+
 // ── Points / streak ──
 
 final userStatsDaoProvider = Provider<UserStatsDao>((ref) {
@@ -198,6 +205,16 @@ final isGroupMemberProvider = StreamProvider.family<bool, int>((ref, groupId) {
 
 final groupForMentorProvider = StreamProvider.family<Group?, int>((ref, mentorId) {
   return ref.watch(groupsDaoProvider).watchGroupForMentor(mentorId);
+});
+
+// ── Health ──
+
+final healthFacilitiesDaoProvider = Provider<HealthFacilitiesDao>((ref) {
+  return ref.watch(appDatabaseProvider).healthFacilitiesDao;
+});
+
+final healthFacilitiesProvider = StreamProvider<List<HealthFacility>>((ref) {
+  return ref.watch(healthFacilitiesDaoProvider).watchFacilities();
 });
 
 // ── AI Chat ──
