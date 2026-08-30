@@ -6,7 +6,14 @@ import '../tables/skill_topics_table.dart';
 part 'courses_dao.g.dart';
 
 @DriftAccessor(
-  tables: [Courses, CourseProgress, CourseTopics, TopicQuizQuestions, TopicCompletions],
+  tables: [
+    Courses,
+    CourseProgress,
+    CourseTopics,
+    TopicQuizQuestions,
+    TopicCompletions,
+    TopicResourceViews,
+  ],
 )
 class CoursesDao extends DatabaseAccessor<AppDatabase>
     with _$CoursesDaoMixin {
@@ -145,10 +152,35 @@ class CoursesDao extends DatabaseAccessor<AppDatabase>
         .map((rows) => rows.isNotEmpty);
   }
 
+  /// Reactive — true once the local user has opened this topic's reading
+  /// material at least once. The quiz stays locked until this is true.
+  Stream<bool> watchResourceViewed(int topicId) {
+    return (select(topicResourceViews)
+          ..where((v) => v.topicId.equals(topicId)))
+        .watch()
+        .map((rows) => rows.isNotEmpty);
+  }
+
+  Future<void> markResourceViewed(int topicId) async {
+    final existing = await (select(
+      topicResourceViews,
+    )..where((v) => v.topicId.equals(topicId))).getSingleOrNull();
+    if (existing != null) return;
+    await into(
+      topicResourceViews,
+    ).insert(TopicResourceViewsCompanion.insert(topicId: topicId));
+  }
+
   /// Idempotent — records completion once; a later re-completion attempt
   /// (e.g. retaking a quiz) is a no-op here, points/streak aren't
-  /// re-awarded for the same topic.
+  /// re-awarded for the same topic. Requires the resource to have been
+  /// viewed first — returns false without recording anything otherwise.
   Future<bool> completeTopic(int topicId) async {
+    final viewed = await (select(
+      topicResourceViews,
+    )..where((v) => v.topicId.equals(topicId))).getSingleOrNull();
+    if (viewed == null) return false;
+
     final existing = await (select(
       topicCompletions,
     )..where((c) => c.topicId.equals(topicId))).getSingleOrNull();
@@ -159,16 +191,25 @@ class CoursesDao extends DatabaseAccessor<AppDatabase>
     return true;
   }
 
+  /// Total topics completed across every course — feeds Profile's real
+  /// achievements.
+  Future<int> myCompletedTopicsCount() async =>
+      (await select(topicCompletions).get()).length;
+
   Future<int> seedTopic({
     required int courseId,
     required String title,
+    required String resourceText,
     required int orderIndex,
     int pointsValue = 10,
+    String resourceType = 'text',
   }) {
     return into(courseTopics).insert(
       CourseTopicsCompanion.insert(
         courseId: courseId,
         title: title,
+        resourceText: Value(resourceText),
+        resourceType: Value(resourceType),
         orderIndex: Value(orderIndex),
         pointsValue: Value(pointsValue),
       ),
