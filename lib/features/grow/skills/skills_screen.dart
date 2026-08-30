@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/feature_card.dart';
+import '../../../db/providers/database_provider.dart';
+import 'course_detail_screen.dart';
 
-class SkillsScreen extends StatelessWidget {
+class SkillsScreen extends ConsumerWidget {
   const SkillsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final coursesAsync = ref.watch(coursesProvider);
+
     return Scaffold(
       appBar: AppBar(title: Text(S.literal('Skills & Training'))),
       body: SingleChildScrollView(
@@ -73,42 +78,67 @@ class SkillsScreen extends StatelessWidget {
                   subtitle: S.literal('Upskill with structured courses'),
                 ),
                 const SizedBox(height: 12),
-                FeatureCard(
-                  title: S.literal('Digital Literacy'),
-                  subtitle: S.literal('Phone, internet, and computer basics'),
-                  icon: Icons.computer,
-                  color: AppColors.skillsColor,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 8),
-                FeatureCard(
-                  title: S.literal('Business Management'),
-                  subtitle: S.literal('Planning, accounting, and operations'),
-                  icon: Icons.business_center,
-                  color: AppColors.earnColor,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 8),
-                FeatureCard(
-                  title: S.literal('Value Addition'),
-                  subtitle: S.literal('Processing, packaging, and branding products'),
-                  icon: Icons.inventory,
-                  color: AppColors.marketplaceColor,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 8),
-                FeatureCard(
-                  title: S.literal('Communication Skills'),
-                  subtitle: S.literal('Negotiation, presentation, and networking'),
-                  icon: Icons.record_voice_over,
-                  color: AppColors.communityColor,
-                  onTap: () {},
+                coursesAsync.when(
+                  loading: () => const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  error: (_, __) => Text(S.literal('Could not load courses. Try again later.')),
+                  data: (courses) => Column(
+                    children: [
+                      for (final course in courses) ...[
+                        _CourseCard(courseId: course.id, title: course.title, subtitle: course.subtitle, iconKey: course.iconKey, colorKey: course.colorKey),
+                        const SizedBox(height: 8),
+                      ],
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 32),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CourseCard extends ConsumerWidget {
+  const _CourseCard({
+    required this.courseId,
+    required this.title,
+    required this.subtitle,
+    required this.iconKey,
+    required this.colorKey,
+  });
+
+  final int courseId;
+  final String title;
+  final String subtitle;
+  final String iconKey;
+  final String colorKey;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progressAsync = ref.watch(courseProgressProvider(courseId));
+    final color = colorForCourseKey(colorKey);
+    final status = progressAsync.valueOrNull?.status;
+
+    return FeatureCard(
+      title: title,
+      subtitle: subtitle,
+      icon: iconForCourseKey(iconKey),
+      color: color,
+      trailing: status == 'completed'
+          ? Icon(Icons.check_circle, color: color, size: 22)
+          : status == 'in_progress'
+              ? Text(
+                  S.literal('In progress'),
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
+                )
+              : null,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => CourseDetailScreen(courseId: courseId)),
       ),
     );
   }
