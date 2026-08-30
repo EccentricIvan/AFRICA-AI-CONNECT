@@ -19,8 +19,32 @@ Color colorForJobKey(String key) {
   }
 }
 
+const _jobTypes = ['Full-time', 'Part-time', 'Contract'];
+
+String _colorKeyForType(String type) {
+  switch (type) {
+    case 'Part-time':
+      return 'skills';
+    case 'Contract':
+      return 'mentorship';
+    default:
+      return 'health';
+  }
+}
+
 class JobsScreen extends ConsumerWidget {
   const JobsScreen({super.key});
+
+  void _openPostJobSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (_) => const _PostJobSheet(),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,11 +61,22 @@ class JobsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _JobsHero(),
+                _JobsHero(onPostJob: () => _openPostJobSheet(context)),
                 const SizedBox(height: 24),
-                SectionHeader(
-                  title: S.literal('Recent Opportunities'),
-                  subtitle: S.literal('Jobs and gigs near you'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SectionHeader(
+                        title: S.literal('Recent Opportunities'),
+                        subtitle: S.literal('Jobs and gigs near you'),
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => _openPostJobSheet(context),
+                      icon: const Icon(Icons.add, size: 18),
+                      label: Text(S.literal('Post a Job')),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 const _JobListings(),
@@ -63,7 +98,8 @@ class JobsScreen extends ConsumerWidget {
 }
 
 class _JobsHero extends StatelessWidget {
-  const _JobsHero();
+  const _JobsHero({required this.onPostJob});
+  final VoidCallback onPostJob;
 
   @override
   Widget build(BuildContext context) {
@@ -82,34 +118,49 @@ class _JobsHero extends StatelessWidget {
         border: Border.all(
             color: AppColors.jobsColor.withValues(alpha: 0.15)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  S.literal('Find your next opportunity'),
-                  style: Theme.of(context).textTheme.headlineSmall,
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      S.literal('Find your next opportunity'),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      S.literal('Browse jobs and gigs posted by people in your community.'),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  S.literal('Browse jobs, freelance gigs, and training programmes from verified employers.'),
-                  style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(width: 16),
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: AppColors.jobsColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ],
-            ),
+                child: const Icon(Icons.work,
+                    color: AppColors.jobsColor, size: 28),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: AppColors.jobsColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(16),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: onPostJob,
+              icon: const Icon(Icons.add),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.jobsColor),
+              label: Text(S.literal('Post a Job')),
             ),
-            child: const Icon(Icons.work,
-                color: AppColors.jobsColor, size: 28),
           ),
         ],
       ),
@@ -132,7 +183,7 @@ class _JobListings extends ConsumerWidget {
       error: (_, __) => Text(S.literal('Could not load jobs. Try again later.')),
       data: (jobs) {
         if (jobs.isEmpty) {
-          return Text(S.literal('No opportunities posted yet.'));
+          return Text(S.literal('No opportunities posted yet — be the first to post one!'));
         }
         return Column(
           children: jobs.map((j) {
@@ -171,16 +222,40 @@ class _JobListings extends ConsumerWidget {
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (j.location != null) ...[
-                    Text(
-                      j.location!,
-                      style: Theme.of(context).textTheme.bodySmall,
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_outlined, size: 16, color: color),
+                        const SizedBox(width: 4),
+                        Text(j.location!, style: Theme.of(context).textTheme.bodySmall),
+                      ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 14),
                   ],
-                  if (j.description != null) ...[
-                    Text(j.description!, style: Theme.of(context).textTheme.bodyMedium),
-                    const SizedBox(height: 16),
-                  ],
+                  if (j.description != null && j.description!.trim().isNotEmpty)
+                    _JdSection(
+                      title: S.literal('About this role'),
+                      body: j.description!,
+                      color: color,
+                    ),
+                  if (j.requirements != null && j.requirements!.trim().isNotEmpty)
+                    _JdSection(
+                      title: S.literal('Requirements'),
+                      body: j.requirements!,
+                      color: color,
+                    ),
+                  if (j.education != null && j.education!.trim().isNotEmpty)
+                    _JdSection(
+                      title: S.literal('Education'),
+                      body: j.education!,
+                      color: color,
+                    ),
+                  if (j.niceToHave != null && j.niceToHave!.trim().isNotEmpty)
+                    _JdSection(
+                      title: S.literal('Good to Have'),
+                      body: j.niceToHave!,
+                      color: color,
+                    ),
+                  const SizedBox(height: 4),
                   JobApplySection(jobId: j.id, color: color),
                 ],
               ),
@@ -188,6 +263,36 @@ class _JobListings extends ConsumerWidget {
           }).toList(),
         );
       },
+    );
+  }
+}
+
+class _JdSection extends StatelessWidget {
+  const _JdSection({required this.title, required this.body, required this.color});
+  final String title;
+  final String body;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: color,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(body, style: Theme.of(context).textTheme.bodyMedium),
+        ],
+      ),
     );
   }
 }
@@ -281,6 +386,178 @@ class _JobApplySectionState extends ConsumerState<JobApplySection> {
           ],
         );
       },
+    );
+  }
+}
+
+// ─────────────────────────── Post a Job form ───────────────────────
+
+class _PostJobSheet extends ConsumerStatefulWidget {
+  const _PostJobSheet();
+
+  @override
+  ConsumerState<_PostJobSheet> createState() => _PostJobSheetState();
+}
+
+class _PostJobSheetState extends ConsumerState<_PostJobSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final _titleController = TextEditingController();
+  final _employerController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _requirementsController = TextEditingController();
+  final _educationController = TextEditingController();
+  final _niceToHaveController = TextEditingController();
+  String _type = _jobTypes.first;
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _employerController.dispose();
+    _locationController.dispose();
+    _descriptionController.dispose();
+    _requirementsController.dispose();
+    _educationController.dispose();
+    _niceToHaveController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _saving = true);
+    await ref.read(jobsDaoProvider).postJob(
+          title: _titleController.text.trim(),
+          employer: _employerController.text.trim(),
+          type: _type,
+          colorKey: _colorKeyForType(_type),
+          location: _locationController.text.trim().isEmpty
+              ? null
+              : _locationController.text.trim(),
+          description: _descriptionController.text.trim().isEmpty
+              ? null
+              : _descriptionController.text.trim(),
+          requirements: _requirementsController.text.trim().isEmpty
+              ? null
+              : _requirementsController.text.trim(),
+          education: _educationController.text.trim().isEmpty
+              ? null
+              : _educationController.text.trim(),
+          niceToHave: _niceToHaveController.text.trim().isEmpty
+              ? null
+              : _niceToHaveController.text.trim(),
+        );
+    if (mounted) Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).dividerColor,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    S.literal('Post a Job'),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: InputDecoration(hintText: S.literal('Job title')),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? S.literal('Enter a job title') : null,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _employerController,
+                    decoration: InputDecoration(hintText: S.literal('Company / organisation name')),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? S.literal('Enter a company name') : null,
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    children: _jobTypes.map((t) {
+                      final selected = _type == t;
+                      return ChoiceChip(
+                        label: Text(t),
+                        selected: selected,
+                        onSelected: (_) => setState(() => _type = t),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _locationController,
+                    decoration: InputDecoration(hintText: S.literal('Location (optional)')),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _descriptionController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: S.literal('About this role — responsibilities, what the job involves'),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _requirementsController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: S.literal('Requirements — experience, skills needed'),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _educationController,
+                    decoration: InputDecoration(hintText: S.literal('Education required')),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _niceToHaveController,
+                    maxLines: 2,
+                    decoration: InputDecoration(hintText: S.literal('Good to have (optional)')),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _saving ? null : _submit,
+                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.jobsColor),
+                      child: _saving
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            )
+                          : Text(S.literal('Post Job')),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
