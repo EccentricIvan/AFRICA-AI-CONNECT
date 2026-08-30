@@ -16,6 +16,7 @@ class AfricaAiConnectApp extends ConsumerWidget {
     // awaiting) means this never delays first paint — see
     // chatBootstrapProvider's doc comment.
     ref.watch(chatBootstrapProvider);
+    ref.watch(settingsBootstrapProvider);
     return MaterialApp.router(
       title: 'AI Connect Africa',
       theme: AppTheme.light,
