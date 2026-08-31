@@ -9,13 +9,15 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../db/database.dart';
 import '../../../db/providers/database_provider.dart';
-import '../../../shared/widgets/glass/glass_circle_btn.dart';
 import '../../../shared/widgets/tap_scale.dart';
+import '../../../shared/widgets/glass/glass_circle_btn.dart';
 import '../../../shared/widgets/community/community_group_card.dart';
 import '../../../shared/widgets/community/community_header_bar.dart';
 import '../../../shared/widgets/community/community_hero_card.dart';
 import '../../../shared/widgets/community/community_ui.dart';
+import '../../../shared/widgets/messaging/chat_room_screen.dart';
 
 /// Copies a user-picked image into the app's own persistent documents
 /// directory, mirroring Marketplace's `_pickAndSaveImage` — the OS
@@ -37,59 +39,58 @@ Future<String?> _pickAndSaveGroupImage() async {
   return destPath;
 }
 
-/// The mock data every tab and the search overlay reads from — pulled
-/// out of any one screen/page class now that Discover/My Community/
-/// Feed are tabs on one screen rather than separate pushed pages.
-class _CommunityData {
-  _CommunityData._();
+/// Category taxonomy for community groups — a fixed UI mapping (label →
+/// icon/color keys), same convention as Marketplace's category metadata.
+/// Not a data model: categories don't need their own table.
+const _categoryOptions = [
+  ('Business', 'trending_up', 'business'),
+  ('Digital Skills', 'computer', 'digital'),
+  ('Agriculture', 'agriculture', 'agriculture'),
+  ('Family & Support', 'child_care', 'family'),
+  ('Fashion & Crafts', 'checkroom', 'fashion'),
+  ('Finance', 'savings', 'finance'),
+];
 
-  static const groups = [
-    _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
-        Color(0xFF2E8B8B), 'Business', 'Kampala'),
-    _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
-        'Digital Skills', 'Kampala'),
-    _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
-        'Agriculture', 'Gulu'),
-    _Group('Young Mothers Support', 67, Icons.child_care, Color(0xFFB4436C),
-        'Family & Support', 'Mbale'),
-    _Group('Tailors & Textile Circle', 52, Icons.checkroom, Color(0xFFD4A24E),
-        'Fashion & Crafts', 'Jinja'),
-    _Group('Savings Circle Kampala', 143, Icons.savings, Color(0xFF5B8AA8),
-        'Finance', 'Kampala'),
-  ];
+IconData iconForGroupKey(String key) {
+  switch (key) {
+    case 'trending_up':
+      return Icons.trending_up;
+    case 'computer':
+      return Icons.computer;
+    case 'agriculture':
+      return Icons.agriculture;
+    case 'child_care':
+      return Icons.child_care;
+    case 'checkroom':
+      return Icons.checkroom;
+    case 'savings':
+      return Icons.savings;
+    case 'diversity':
+      return Icons.diversity_1_rounded;
+    default:
+      return Icons.groups_rounded;
+  }
+}
 
-  static const conversations = [
-    _Conversation(
-      _Group('Kampala Women Entrepreneurs', 124, Icons.trending_up,
-          Color(0xFF2E8B8B), 'Business', 'Kampala'),
-      'Grace',
-      'Anyone free for the Saturday market meet-up?',
-      '12m',
-      unread: 3,
-      senderColor: Color(0xFFD4A24E),
-    ),
-    _Conversation(
-      _Group('Digital Skills Network', 89, Icons.computer, Color(0xFF7C5CBF),
-          'Digital Skills', 'Kampala'),
-      'Amina',
-      'Just shared the new tutorial link!',
-      '2h',
-      unread: 2,
-      senderColor: Color(0xFFB4436C),
-    ),
-    _Conversation(
-      _Group('Farmers United', 256, Icons.agriculture, Color(0xFF5E8C4A),
-          'Agriculture', 'Gulu'),
-      'You',
-      'Thanks everyone, see you at the training.',
-      '1d',
-      unread: 0,
-      senderColor: CommunityUi.accent,
-    ),
-  ];
-
-  static int get totalUnread =>
-      conversations.fold(0, (sum, c) => sum + c.unread);
+Color colorForGroupKey(String key) {
+  switch (key) {
+    case 'business':
+      return const Color(0xFF2E8B8B);
+    case 'digital':
+      return const Color(0xFF7C5CBF);
+    case 'agriculture':
+      return const Color(0xFF5E8C4A);
+    case 'family':
+      return const Color(0xFFB4436C);
+    case 'fashion':
+      return const Color(0xFFD4A24E);
+    case 'finance':
+      return const Color(0xFF5B8AA8);
+    case 'mentorship':
+      return const Color(0xFFB4436C);
+    default:
+      return CommunityUi.accent;
+  }
 }
 
 class CommunityScreen extends StatefulWidget {
@@ -132,64 +133,66 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final totalMembers =
-        _CommunityData.groups.fold<int>(0, (sum, g) => sum + g.members);
+    return Consumer(
+      builder: (context, ref, _) {
+        final groupsAsync = ref.watch(groupsProvider);
+        final groupCount = groupsAsync.valueOrNull?.length ?? 0;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: AppColors.pageDecoration(context),
-        child: SafeArea(
-          child: Column(
-            children: [
-              CommunityHeaderBar(
-                title: S.literal('Community'),
-                onBack: () => context.go('/'),
-              ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
-              child: _FadeSlideIn(
-                child: CommunityHeroCard(
-                  title: S.literal('Stronger together'),
-                  body: S.literal('Connect. Learn. Grow.'),
-                  membershipLine:
-                      '${S.literal('Join')} $totalMembers ${S.literal('women across')} ${_CommunityData.groups.length} ${S.literal('communities')}',
-                  avatarColors: const [
-                    CommunityUi.accent,
-                    CommunityUi.accentDeep,
-                    Color(0xFF5BB8E8),
-                  ],
-                  ctaLabel: S.literal('Create a Community'),
-                  onCta: _openCreateGroup,
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: _CommunityTabBar(
-                selected: _tab,
-                unreadBadge: _CommunityData.totalUnread,
-                onChanged: _selectTab,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              // A real sliding transition between tabs — tapping a segment
-              // animates the page; swiping works too, for free.
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (i) => setState(() => _tab = i),
-                children: const [
-                  _ChatsTab(),
-                  _DiscoverTab(),
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+            decoration: AppColors.pageDecoration(context),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  CommunityHeaderBar(
+                    title: S.literal('Community'),
+                    onBack: () => context.go('/'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                    child: _FadeSlideIn(
+                      child: CommunityHeroCard(
+                        title: S.literal('Stronger together'),
+                        body: S.literal('Connect. Learn. Grow.'),
+                        membershipLine: groupCount == 0
+                            ? S.literal('Be the first to start a community')
+                            : '$groupCount ${S.literal('communities to join')}',
+                        avatarColors: const [
+                          CommunityUi.accent,
+                          CommunityUi.accentDeep,
+                          Color(0xFF5BB8E8),
+                        ],
+                        ctaLabel: S.literal('Create a Community'),
+                        onCta: _openCreateGroup,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: _CommunityTabBar(
+                      selected: _tab,
+                      onChanged: _selectTab,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (i) => setState(() => _tab = i),
+                      children: const [
+                        _ChatsTab(),
+                        _DiscoverTab(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -215,19 +218,14 @@ class _FadeSlideIn extends StatelessWidget {
 
 // ──────────────────────────────── Tabs ────────────────────────────────
 
-/// Chats (default) / Feed / Discover — a pill segmented control
-/// switching between three full-height tabs instead of three stacked
-/// preview sections.
 class _CommunityTabBar extends StatelessWidget {
   const _CommunityTabBar({
     required this.selected,
     required this.onChanged,
-    required this.unreadBadge,
   });
 
   final int selected;
   final ValueChanged<int> onChanged;
-  final int unreadBadge;
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +247,6 @@ class _CommunityTabBar extends StatelessWidget {
               child: _TabSegment(
                 label: labels[i],
                 active: selected == i,
-                badge: i == 0 && unreadBadge > 0 ? unreadBadge : null,
                 onTap: () => onChanged(i),
               ),
             ),
@@ -264,13 +261,11 @@ class _TabSegment extends StatelessWidget {
     required this.label,
     required this.active,
     required this.onTap,
-    this.badge,
   });
 
   final String label;
   final bool active;
   final VoidCallback onTap;
-  final int? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -299,24 +294,6 @@ class _TabSegment extends StatelessWidget {
                 color: active ? CommunityUi.accent : ui.textSecondary,
               ),
             ),
-            if (badge != null) ...[
-              const SizedBox(width: 5),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                decoration: BoxDecoration(
-                  color: CommunityUi.unread,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '$badge',
-                  style: const TextStyle(
-                    fontSize: 9.5,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
           ],
         ),
       ),
@@ -381,82 +358,109 @@ class _TabScaffold extends StatelessWidget {
   }
 }
 
-class _ChatsTab extends StatefulWidget {
+class _ChatsTab extends ConsumerStatefulWidget {
   const _ChatsTab();
 
   @override
-  State<_ChatsTab> createState() => _ChatsTabState();
+  ConsumerState<_ChatsTab> createState() => _ChatsTabState();
 }
 
-class _ChatsTabState extends State<_ChatsTab> {
+class _ChatsTabState extends ConsumerState<_ChatsTab> {
   String _query = '';
 
   @override
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
+    final myGroupsAsync = ref.watch(myGroupsProvider);
     final q = _query.trim().toLowerCase();
-    final list = q.isEmpty
-        ? _CommunityData.conversations
-        : _CommunityData.conversations
-            .where((c) =>
-                c.group.name.toLowerCase().contains(q) ||
-                c.lastMessage.toLowerCase().contains(q))
-            .toList();
 
     return _TabScaffold(
       title: S.literal('Chats'),
       searchHint: S.literal('Search your communities'),
       onSearchChanged: (v) => setState(() => _query = v),
-      child: list.isEmpty
-          ? Center(
-              child: Text(S.literal('No conversations found'),
-                  style: TextStyle(
-                      fontSize: 13, color: ui.textSecondary)))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              children:
-                  list.map((c) => _ConversationRow(conversation: c)).toList(),
-            ),
+      child: myGroupsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, __) => Center(child: Text(S.literal('Could not load your communities.'))),
+        data: (groups) {
+          final list = q.isEmpty
+              ? groups
+              : groups.where((g) => g.name.toLowerCase().contains(q)).toList();
+          if (list.isEmpty) {
+            return Center(
+              child: Text(
+                groups.isEmpty
+                    ? S.literal('Join a community to start chatting')
+                    : S.literal('No conversations found'),
+                style: TextStyle(fontSize: 13, color: ui.textSecondary),
+              ),
+            );
+          }
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            children: list.map((g) => _ChatRow(group: g)).toList(),
+          );
+        },
+      ),
     );
   }
 }
 
-/// The "Discover" tab bar segment opens this — titled "Communities"
-/// inline, since that's what's actually being browsed here.
-class _DiscoverTab extends StatefulWidget {
+class _ChatRow extends ConsumerWidget {
+  const _ChatRow({required this.group});
+  final Group group;
+
+  Future<void> _open(BuildContext context, WidgetRef ref) async {
+    final conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
+          type: 'group',
+          subjectId: group.id,
+          title: group.name,
+        );
+    if (!context.mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => ChatRoomScreen(conversationId: conversationId)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final color = colorForGroupKey(group.colorKey);
+    return CommunityGroupCard(
+      onTap: () => _open(context, ref),
+      leading: CommunityAvatar(color: color, initial: group.name[0], imagePath: group.imagePath),
+      title: group.name,
+      subtitle: _CategoryTag(color: color, label: group.category),
+      trailing: Icon(Icons.chevron_right_rounded, color: CommunityUi.of(context).textSecondary),
+    );
+  }
+}
+
+class _DiscoverTab extends ConsumerStatefulWidget {
   const _DiscoverTab();
 
   @override
-  State<_DiscoverTab> createState() => _DiscoverTabState();
+  ConsumerState<_DiscoverTab> createState() => _DiscoverTabState();
 }
 
-class _DiscoverTabState extends State<_DiscoverTab> {
+class _DiscoverTabState extends ConsumerState<_DiscoverTab> {
   String _query = '';
   final Set<String> _categories = {};
-  final Set<String> _locations = {};
 
-  bool get _hasActiveFilters => _categories.isNotEmpty || _locations.isNotEmpty;
+  bool get _hasActiveFilters => _categories.isNotEmpty;
 
   Future<void> _openFilter() async {
-    final result = await showModalBottomSheet<(Set<String>, Set<String>)>(
+    final result = await showModalBottomSheet<Set<String>>(
       context: context,
       backgroundColor: CommunityUi.of(context).card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (_) => _FilterSheet(
-        initialCategories: _categories,
-        initialLocations: _locations,
-      ),
+      builder: (_) => _FilterSheet(initialCategories: _categories),
     );
     if (result != null && mounted) {
       setState(() {
         _categories
           ..clear()
-          ..addAll(result.$1);
-        _locations
-          ..clear()
-          ..addAll(result.$2);
+          ..addAll(result);
       });
     }
   }
@@ -464,15 +468,8 @@ class _DiscoverTabState extends State<_DiscoverTab> {
   @override
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
+    final groupsAsync = ref.watch(groupsProvider);
     final q = _query.trim().toLowerCase();
-    final list = _CommunityData.groups.where((g) {
-      final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
-      final matchesCategory =
-          _categories.isEmpty || _categories.contains(g.category);
-      final matchesLocation =
-          _locations.isEmpty || _locations.contains(g.location);
-      return matchesQuery && matchesCategory && matchesLocation;
-    }).toList();
 
     return _TabScaffold(
       title: S.literal('Communities'),
@@ -497,23 +494,35 @@ class _DiscoverTabState extends State<_DiscoverTab> {
                   : ui.textSecondary),
         ),
       ),
-      child: list.isEmpty
-          ? Center(
+      child: groupsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, __) => Center(child: Text(S.literal('Could not load communities.'))),
+        data: (groups) {
+          final list = groups.where((g) {
+            final matchesQuery = q.isEmpty || g.name.toLowerCase().contains(q);
+            final matchesCategory =
+                _categories.isEmpty || _categories.contains(g.category);
+            return matchesQuery && matchesCategory;
+          }).toList();
+          if (list.isEmpty) {
+            return Center(
               child: Text(S.literal('No groups found'),
-                  style: TextStyle(
-                      fontSize: 13, color: ui.textSecondary)))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              children: list.map((g) => _DiscoverGroupRow(group: g)).toList(),
-            ),
+                  style: TextStyle(fontSize: 13, color: ui.textSecondary)),
+            );
+          }
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            children: list.map((g) => _DiscoverGroupRow(group: g)).toList(),
+          );
+        },
+      ),
     );
   }
 }
 
 class _FilterSheet extends StatefulWidget {
-  const _FilterSheet({required this.initialCategories, required this.initialLocations});
+  const _FilterSheet({required this.initialCategories});
   final Set<String> initialCategories;
-  final Set<String> initialLocations;
 
   @override
   State<_FilterSheet> createState() => _FilterSheetState();
@@ -521,67 +530,6 @@ class _FilterSheet extends StatefulWidget {
 
 class _FilterSheetState extends State<_FilterSheet> {
   late final Set<String> _categories = {...widget.initialCategories};
-  late final Set<String> _locations = {...widget.initialLocations};
-
-  static const _categoryOptions = [
-    'Business',
-    'Digital Skills',
-    'Agriculture',
-    'Family & Support',
-    'Fashion & Crafts',
-    'Finance',
-  ];
-
-  static const _locationOptions = [
-    'Kampala',
-    'Gulu',
-    'Mbale',
-    'Jinja',
-  ];
-
-  Widget _chipRow(
-    String label,
-    List<String> options,
-    Set<String> selected,
-  ) {
-    final ui = CommunityUi.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          S.literal(label),
-          style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: ui.textPrimary),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 10,
-          children: options.map((c) {
-            final isSelected = selected.contains(c);
-            return ChoiceChip(
-              label: Text(S.literal(c)),
-              selected: isSelected,
-              onSelected: (_) => setState(
-                  () => isSelected ? selected.remove(c) : selected.add(c)),
-              selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
-              labelStyle: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color:
-                    isSelected ? CommunityUi.accent : ui.textSecondary,
-              ),
-              side: BorderSide(
-                color: isSelected ? CommunityUi.accent : ui.border,
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -612,16 +560,39 @@ class _FilterSheetState extends State<_FilterSheet> {
                 color: ui.textPrimary),
           ),
           const SizedBox(height: 18),
-          _chipRow('Category', _categoryOptions, _categories),
-          const SizedBox(height: 18),
-          _chipRow('Location', _locationOptions, _locations),
+          Text(
+            S.literal('Category'),
+            style: TextStyle(
+                fontSize: 13, fontWeight: FontWeight.w700, color: ui.textPrimary),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 10,
+            children: _categoryOptions.map((c) {
+              final label = c.$1;
+              final isSelected = _categories.contains(label);
+              return ChoiceChip(
+                label: Text(S.literal(label)),
+                selected: isSelected,
+                onSelected: (_) => setState(
+                    () => isSelected ? _categories.remove(label) : _categories.add(label)),
+                selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
+                labelStyle: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? CommunityUi.accent : ui.textSecondary,
+                ),
+                side: BorderSide(color: isSelected ? CommunityUi.accent : ui.border),
+              );
+            }).toList(),
+          ),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: TapScale(
               borderRadius: CommunityUi.radiusBtn,
-              onTap: () =>
-                  Navigator.of(context).pop((_categories, _locations)),
+              onTap: () => Navigator.of(context).pop(_categories),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 alignment: Alignment.center,
@@ -633,9 +604,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                 ),
                 child: Text(S.literal('Apply'),
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14)),
+                        color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
               ),
             ),
           ),
@@ -653,9 +622,6 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
-    // A true pill (radius = height / 2), generous icon padding — matching
-    // the reference search bar's proportions, just in this app's light
-    // "Markenzy" palette instead of a dark glass style. No filter icon.
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -669,8 +635,7 @@ class _SearchField extends StatelessWidget {
           isDense: true,
           hintText: hint,
           hintStyle: TextStyle(fontSize: 14, color: ui.textSecondary),
-          prefixIcon: Icon(Icons.search_rounded,
-              size: 21, color: ui.textSecondary),
+          prefixIcon: Icon(Icons.search_rounded, size: 21, color: ui.textSecondary),
           prefixIconConstraints: const BoxConstraints(minWidth: 52),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -680,25 +645,27 @@ class _SearchField extends StatelessWidget {
   }
 }
 
-class _MemberAvatars extends StatelessWidget {
-  const _MemberAvatars({required this.color, required this.count});
+class _MemberAvatars extends ConsumerWidget {
+  const _MemberAvatars({required this.color, required this.groupId});
   final Color color;
-  final String count;
+  final int groupId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ui = CommunityUi.of(context);
+    final members = ref.watch(groupMembersProvider(groupId)).valueOrNull ?? const [];
     const size = 22.0;
     const overlap = size * 0.62;
+    final dots = members.isEmpty ? 1 : members.length.clamp(1, 3);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: overlap * 2 + size,
+          width: overlap * (dots - 1) + size,
           height: size,
           child: Stack(
             children: [
-              for (var i = 0; i < 3; i++)
+              for (var i = 0; i < dots; i++)
                 Positioned(
                   left: i * overlap,
                   child: Container(
@@ -716,12 +683,8 @@ class _MemberAvatars extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Text(
-          count,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: ui.textSecondary,
-          ),
+          '${members.length} ${S.literal('members')}',
+          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: ui.textSecondary),
         ),
       ],
     );
@@ -730,23 +693,36 @@ class _MemberAvatars extends StatelessWidget {
 
 // ─────────────────────────── Join button ───────────────────────────
 
-class _JoinButton extends StatefulWidget {
-  const _JoinButton({
-    required this.color,
-    required this.groupName,
-  });
+class _JoinButton extends ConsumerStatefulWidget {
+  const _JoinButton({required this.color, required this.group});
   final Color color;
-  final String groupName;
+  final Group group;
 
   @override
-  State<_JoinButton> createState() => _JoinButtonState();
+  ConsumerState<_JoinButton> createState() => _JoinButtonState();
 }
 
-class _JoinButtonState extends State<_JoinButton> {
-  bool _joined = false;
+class _JoinButtonState extends ConsumerState<_JoinButton> {
+  bool _busy = false;
 
-  void _toggle() {
-    setState(() => _joined = !_joined);
+  Future<void> _toggle(bool isMember) async {
+    setState(() => _busy = true);
+    if (isMember) {
+      await ref.read(groupsDaoProvider).leaveGroup(widget.group.id);
+    } else {
+      final user = await ref.read(currentUserProvider.future);
+      await ref.read(groupsDaoProvider).joinGroup(
+            groupId: widget.group.id,
+            memberName: user?.name ?? S.literal('Me'),
+          );
+      await ref.read(messagingDaoProvider).getOrCreateConversation(
+            type: 'group',
+            subjectId: widget.group.id,
+            title: widget.group.name,
+          );
+    }
+    if (!mounted) return;
+    setState(() => _busy = false);
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -754,9 +730,9 @@ class _JoinButtonState extends State<_JoinButton> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: CommunityUi.of(context).textPrimary,
         content: Text(
-          _joined
-              ? '${S.literal('Joined')} ${widget.groupName}'
-              : '${S.literal('Left')} ${widget.groupName}',
+          isMember
+              ? '${S.literal('Left')} ${widget.group.name}'
+              : '${S.literal('Joined')} ${widget.group.name}',
           style: const TextStyle(color: Colors.white, fontSize: 13),
         ),
       ),
@@ -767,23 +743,26 @@ class _JoinButtonState extends State<_JoinButton> {
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final color = widget.color;
+    final isMember = ref.watch(isGroupMemberProvider(widget.group.id)).valueOrNull ?? false;
     return TapScale(
       borderRadius: 20,
-      onTap: _toggle,
+      onTap: () {
+        if (!_busy) _toggle(isMember);
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient: _joined
+          gradient: isMember
               ? null
               : LinearGradient(
                   colors: [color, Color.lerp(color, Colors.black, 0.15)!],
                 ),
-          color: _joined ? ui.iconWell : null,
+          color: isMember ? ui.iconWell : null,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: _joined
+          boxShadow: isMember
               ? []
               : [
                   BoxShadow(
@@ -793,26 +772,32 @@ class _JoinButtonState extends State<_JoinButton> {
                   ),
                 ],
         ),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 180),
-          child: Row(
-            key: ValueKey(_joined),
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(_joined ? Icons.check_rounded : Icons.add_rounded,
-                  size: 14, color: _joined ? color : Colors.white),
-              const SizedBox(width: 4),
-              Text(
-                _joined ? S.literal('Joined') : S.literal('Join'),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: _joined ? color : Colors.white,
+        child: _busy
+            ? const SizedBox(
+                width: 14,
+                height: 14,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: Row(
+                  key: ValueKey(isMember),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(isMember ? Icons.check_rounded : Icons.add_rounded,
+                        size: 14, color: isMember ? color : Colors.white),
+                    const SizedBox(width: 4),
+                    Text(
+                      isMember ? S.literal('Joined') : S.literal('Join'),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: isMember ? color : Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -820,34 +805,28 @@ class _JoinButtonState extends State<_JoinButton> {
 
 // ─────────────────────────── Create Group form ───────────────────────
 
-class _CreateGroupSheet extends StatefulWidget {
+class _CreateGroupSheet extends ConsumerStatefulWidget {
   const _CreateGroupSheet();
 
   @override
-  State<_CreateGroupSheet> createState() => _CreateGroupSheetState();
+  ConsumerState<_CreateGroupSheet> createState() => _CreateGroupSheetState();
 }
 
-class _CreateGroupSheetState extends State<_CreateGroupSheet> {
+class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descController = TextEditingController();
+  final _locationController = TextEditingController();
   String? _selectedCategory;
   String? _imagePath;
   bool _pickingImage = false;
-
-  static const _categories = [
-    'Business',
-    'Digital Skills',
-    'Agriculture',
-    'Family & Support',
-    'Fashion & Crafts',
-    'Finance',
-  ];
+  bool _submitting = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _descController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -861,7 +840,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
     });
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -869,7 +848,35 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
       );
       return;
     }
+    setState(() => _submitting = true);
     final name = _nameController.text.trim();
+    final meta = _categoryOptions.firstWhere((c) => c.$1 == _selectedCategory);
+
+    final groupId = await ref.read(groupsDaoProvider).createGroup(
+          name: name,
+          category: meta.$1,
+          iconKey: meta.$2,
+          colorKey: meta.$3,
+          location: _locationController.text.trim().isEmpty
+              ? null
+              : _locationController.text.trim(),
+          imagePath: _imagePath,
+          description: _descController.text.trim().isEmpty
+              ? null
+              : _descController.text.trim(),
+        );
+    final user = await ref.read(currentUserProvider.future);
+    await ref.read(groupsDaoProvider).joinGroup(
+          groupId: groupId,
+          memberName: user?.name ?? S.literal('Me'),
+        );
+    await ref.read(messagingDaoProvider).getOrCreateConversation(
+          type: 'group',
+          subjectId: groupId,
+          title: name,
+        );
+
+    if (!mounted) return;
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -929,8 +936,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: _pickingImage
-                          ? const Center(
-                              child: CircularProgressIndicator(strokeWidth: 2))
+                          ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
                           : _imagePath != null
                               ? Stack(
                                   fit: StackFit.expand,
@@ -940,16 +946,14 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                                       top: 4,
                                       right: 4,
                                       child: GestureDetector(
-                                        onTap: () =>
-                                            setState(() => _imagePath = null),
+                                        onTap: () => setState(() => _imagePath = null),
                                         child: Container(
                                           padding: const EdgeInsets.all(3),
                                           decoration: const BoxDecoration(
                                             color: Colors.black54,
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.close,
-                                              size: 14, color: Colors.white),
+                                          child: const Icon(Icons.close, size: 14, color: Colors.white),
                                         ),
                                       ),
                                     ),
@@ -965,40 +969,37 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(hintText: S.literal('Group name')),
-                  validator: (v) => (v == null || v.trim().isEmpty)
-                      ? S.literal('Enter a group name')
-                      : null,
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? S.literal('Enter a group name') : null,
+                ),
+                const SizedBox(height: 14),
+                TextFormField(
+                  controller: _locationController,
+                  decoration: InputDecoration(hintText: S.literal('Location (optional)')),
                 ),
                 const SizedBox(height: 14),
                 Text(
                   S.literal('Category'),
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: ui.textPrimary),
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: ui.textPrimary),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _categories.map((c) {
-                    final isSelected = _selectedCategory == c;
+                  children: _categoryOptions.map((c) {
+                    final label = c.$1;
+                    final isSelected = _selectedCategory == label;
                     return ChoiceChip(
-                      label: Text(S.literal(c)),
+                      label: Text(S.literal(label)),
                       selected: isSelected,
-                      onSelected: (_) => setState(() => _selectedCategory = c),
+                      onSelected: (_) => setState(() => _selectedCategory = label),
                       selectedColor: CommunityUi.accent.withValues(alpha: 0.16),
                       labelStyle: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: isSelected
-                            ? CommunityUi.accent
-                            : ui.textSecondary,
+                        color: isSelected ? CommunityUi.accent : ui.textSecondary,
                       ),
-                      side: BorderSide(
-                        color:
-                            isSelected ? CommunityUi.accent : ui.border,
-                      ),
+                      side: BorderSide(color: isSelected ? CommunityUi.accent : ui.border),
                     );
                   }).toList(),
                 ),
@@ -1006,15 +1007,16 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                 TextFormField(
                   controller: _descController,
                   maxLines: 3,
-                  decoration: InputDecoration(
-                      hintText: S.literal('What is this group about?')),
+                  decoration: InputDecoration(hintText: S.literal('What is this group about?')),
                 ),
                 const SizedBox(height: 22),
                 SizedBox(
                   width: double.infinity,
                   child: TapScale(
                     borderRadius: CommunityUi.radiusBtn,
-                    onTap: _submit,
+                    onTap: () {
+                      if (!_submitting) _submit();
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       alignment: Alignment.center,
@@ -1031,13 +1033,17 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
                           ),
                         ],
                       ),
-                      child: Text(
-                        S.literal('Create Community'),
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14),
-                      ),
+                      child: _submitting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            )
+                          : Text(
+                              S.literal('Create Community'),
+                              style: const TextStyle(
+                                  color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
+                            ),
                     ),
                   ),
                 ),
@@ -1052,7 +1058,7 @@ class _CreateGroupSheetState extends State<_CreateGroupSheet> {
 
 // ─────────────────────────── Group preview popup ───────────────────────
 
-Future<void> _showGroupPreview(BuildContext context, _Group group) {
+Future<void> _showGroupPreview(BuildContext context, Group group) {
   return showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -1066,13 +1072,12 @@ Future<void> _showGroupPreview(BuildContext context, _Group group) {
       ),
     ),
     transitionBuilder: (ctx, animation, __, child) => BackdropFilter(
-      filter: ImageFilter.blur(
-          sigmaX: 6 * animation.value, sigmaY: 6 * animation.value),
+      filter: ImageFilter.blur(sigmaX: 6 * animation.value, sigmaY: 6 * animation.value),
       child: FadeTransition(
         opacity: animation,
         child: ScaleTransition(
-          scale: Tween<double>(begin: 0.9, end: 1).animate(
-              CurvedAnimation(parent: animation, curve: Curves.easeOutBack)),
+          scale: Tween<double>(begin: 0.9, end: 1)
+              .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutBack)),
           child: child,
         ),
       ),
@@ -1082,12 +1087,13 @@ Future<void> _showGroupPreview(BuildContext context, _Group group) {
 
 class _GroupPreviewCard extends StatelessWidget {
   const _GroupPreviewCard({required this.group});
-  final _Group group;
+  final Group group;
 
   @override
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
     final g = group;
+    final color = colorForGroupKey(g.colorKey);
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -1097,11 +1103,7 @@ class _GroupPreviewCard extends StatelessWidget {
           color: ui.card,
           borderRadius: BorderRadius.circular(CommunityUi.radiusCard),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              blurRadius: 30,
-              offset: const Offset(0, 14),
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 30, offset: const Offset(0, 14)),
           ],
         ),
         child: Column(
@@ -1116,7 +1118,7 @@ class _GroupPreviewCard extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [g.color, Color.lerp(g.color, Colors.black, 0.15)!],
+                      colors: [color, Color.lerp(color, Colors.black, 0.15)!],
                     ),
                   ),
                   alignment: Alignment.center,
@@ -1126,9 +1128,9 @@ class _GroupPreviewCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                      border: Border.all(color: g.color, width: 3),
+                      border: Border.all(color: color, width: 3),
                     ),
-                    child: Icon(g.icon, color: g.color, size: 28),
+                    child: Icon(iconForGroupKey(g.iconKey), color: color, size: 28),
                   ),
                 ),
                 Positioned(
@@ -1136,8 +1138,7 @@ class _GroupPreviewCard extends StatelessWidget {
                   right: 6,
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close_rounded,
-                        color: Colors.white, size: 22),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white, size: 22),
                   ),
                 ),
               ],
@@ -1151,46 +1152,52 @@ class _GroupPreviewCard extends StatelessWidget {
                   Text(
                     S.literal(g.name),
                     style: TextStyle(
-                      fontFamily: 'Saira',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: ui.textPrimary,
-                    ),
+                        fontFamily: 'Saira', fontSize: 16, fontWeight: FontWeight.w700, color: ui.textPrimary),
                   ),
                   const SizedBox(height: 6),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _CategoryTag(color: g.color, label: g.category),
-                      const SizedBox(width: 6),
-                      Icon(Icons.location_on_rounded, size: 13, color: g.color),
-                      const SizedBox(width: 2),
-                      Text(
-                        S.literal(g.location),
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: g.color),
-                      ),
+                      _CategoryTag(color: color, label: g.category),
+                      if (g.location != null) ...[
+                        const SizedBox(width: 6),
+                        Icon(Icons.location_on_rounded, size: 13, color: color),
+                        const SizedBox(width: 2),
+                        Text(
+                          S.literal(g.location!),
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
+                        ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 8),
-                  _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
+                  _MemberAvatars(color: color, groupId: g.id),
                   const SizedBox(height: 12),
                   Text(
-                    S.literal(
-                      'A place for women in this community to share opportunities, ask questions, and support one another.',
-                    ),
-                    maxLines: 2,
+                    g.description ??
+                        S.literal(
+                          'A place for women in this community to share opportunities, ask questions, and support one another.',
+                        ),
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: ui.textSecondary,
-                      height: 1.4,
-                    ),
+                    style: TextStyle(fontSize: 12, color: ui.textSecondary, height: 1.4),
                   ),
                   const SizedBox(height: 16),
-                  _JoinButton(color: g.color, groupName: g.name),
+                  Row(
+                    children: [
+                      _JoinButton(color: color, group: g),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => GroupDetailPage(groupId: g.id)),
+                          );
+                        },
+                        child: Text(S.literal('View details')),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -1205,83 +1212,126 @@ class _GroupPreviewCard extends StatelessWidget {
 
 class _DiscoverGroupRow extends StatelessWidget {
   const _DiscoverGroupRow({required this.group});
-  final _Group group;
+  final Group group;
 
   @override
   Widget build(BuildContext context) {
     final g = group;
+    final color = colorForGroupKey(g.colorKey);
     return CommunityGroupCard(
       onTap: () => _showGroupPreview(context, g),
-      leading: CommunityAvatar(color: g.color, initial: g.name[0]),
+      leading: CommunityAvatar(color: color, initial: g.name[0], imagePath: g.imagePath),
       title: S.literal(g.name),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _CategoryTag(color: g.color, label: g.category),
+          _CategoryTag(color: color, label: g.category),
           const SizedBox(height: 5),
-          _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
+          _MemberAvatars(color: color, groupId: g.id),
         ],
       ),
-      trailing: _JoinButton(color: g.color, groupName: g.name),
+      trailing: _JoinButton(color: color, group: g),
     );
   }
 }
 
-class _Group {
-  const _Group(this.name, this.members, this.icon, this.color, this.category,
-      this.location);
-  final String name;
-  final int members;
-  final IconData icon;
-  final Color color;
-  final String category;
-  final String location;
+/// The group's detail view — shown from the Discover preview or from a
+/// chat room's header.
+/// Reachable from Community's Discover preview and from a group/mentor
+/// chat's header (see ChatRoomScreen) — takes just an id so either caller
+/// can navigate here without holding a full [Group] in hand.
+class GroupDetailPage extends ConsumerWidget {
+  const GroupDetailPage({super.key, required this.groupId});
+  final int groupId;
 
-  String get memberCount => '$members';
-}
-
-class _Member {
-  const _Member(this.name, this.roles, {this.isAdmin = false});
-  final String name;
-  final List<String> roles;
-  final bool isAdmin;
-}
-
-/// The "already a member" view — reached only from a group's chat
-/// header, so membership is a fact, not a decision: no Join button,
-/// just a status.
-class _GroupDetailPage extends StatelessWidget {
-  const _GroupDetailPage({required this.group});
-  final _Group group;
-
-  static const _mockMembers = [
-    _Member('Sarah M.', ['Entrepreneur', 'Mentor', 'Community Leader'],
-        isAdmin: true),
-    _Member('Grace K.', ['Trader', 'Entrepreneur']),
-    _Member('Amina', ['Student', 'Volunteer']),
-    _Member('Peace N.', ['Mentor', 'Entrepreneur', 'Trader']),
-    _Member('Joyce O.', ['Volunteer', 'Student']),
-  ];
+  Future<void> _openChat(BuildContext context, WidgetRef ref, Group group) async {
+    final conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
+          type: 'group',
+          subjectId: group.id,
+          title: group.name,
+        );
+    if (!context.mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => ChatRoomScreen(conversationId: conversationId)),
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final groupAsync = ref.watch(groupProvider(groupId));
+    return groupAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (_, __) => Scaffold(body: Center(child: Text(S.literal('Could not load this group.')))),
+      data: (g) {
+        if (g == null) {
+          return Scaffold(body: Center(child: Text(S.literal('This group is no longer available.'))));
+        }
+        return _GroupDetailBody(group: g, onOpenChat: () => _openChat(context, ref, g));
+      },
+    );
+  }
+}
+
+class _GroupDetailBody extends ConsumerWidget {
+  const _GroupDetailBody({required this.group, required this.onOpenChat});
+  final Group group;
+  final VoidCallback onOpenChat;
+
+  Future<void> _confirmClose(BuildContext context, WidgetRef ref, Group g) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(S.literal('Close this community?')),
+        content: Text(S.literal(
+          "Members keep their chat history but can no longer post, and it drops out of Discover. This can't be undone.",
+        )),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(S.literal('Cancel')),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(S.literal('Close community'), style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(groupsDaoProvider).closeGroup(g.id);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final ui = CommunityUi.of(context);
     final g = group;
-    final creator = _mockMembers.first;
+    final color = colorForGroupKey(g.colorKey);
+    final isMember = ref.watch(isGroupMemberProvider(g.id)).valueOrNull ?? false;
+    final membersAsync = ref.watch(groupMembersProvider(g.id));
+    final isClosed = g.closedAt != null;
+
     return Scaffold(
-      backgroundColor: ui.pageBg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            CommunitySubPageHeaderBar(
-              onBack: () => Navigator.of(context).pop(),
-              title: S.literal(g.name),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-                children: [
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: AppColors.pageDecoration(context),
+        child: SafeArea(
+          child: Column(
+            children: [
+              CommunitySubPageHeaderBar(
+                onBack: () => Navigator.of(context).pop(),
+                title: S.literal(g.name),
+                trailing: isClosed
+                    ? null
+                    : GlassCircleBtn(
+                        icon: Icons.delete_outline_rounded,
+                        onTap: () => _confirmClose(context, ref, g),
+                      ),
+              ),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+                  children: [
                   Container(
                     height: 120,
                     decoration: BoxDecoration(
@@ -1289,10 +1339,7 @@ class _GroupDetailPage extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [
-                          g.color.withValues(alpha: 0.85),
-                          g.color.withValues(alpha: 0.55),
-                        ],
+                        colors: [color.withValues(alpha: 0.85), color.withValues(alpha: 0.55)],
                       ),
                     ),
                     alignment: Alignment.center,
@@ -1302,105 +1349,154 @@ class _GroupDetailPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,
-                        border: Border.all(color: g.color, width: 3),
+                        border: Border.all(color: color, width: 3),
                       ),
-                      child: Icon(g.icon, color: g.color, size: 34),
+                      child: Icon(iconForGroupKey(g.iconKey), color: color, size: 34),
                     ),
                   ),
                   const SizedBox(height: 18),
                   Text(
                     S.literal(g.name),
                     style: TextStyle(
-                      fontFamily: 'Saira',
-                      fontSize: 19,
-                      fontWeight: FontWeight.w700,
-                      color: ui.textPrimary,
-                    ),
+                        fontFamily: 'Saira', fontSize: 19, fontWeight: FontWeight.w700, color: ui.textPrimary),
                   ),
                   const SizedBox(height: 6),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _CategoryTag(color: g.color, label: g.category),
-                      const SizedBox(width: 6),
-                      Icon(Icons.location_on_rounded, size: 13, color: g.color),
-                      const SizedBox(width: 2),
-                      Text(
-                        S.literal(g.location),
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: g.color),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  _MemberAvatars(color: g.color, count: '${g.memberCount} members'),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${S.literal('Created by')} ${creator.name}',
-                    style: TextStyle(
-                        fontSize: 12, color: ui.textSecondary),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: g.color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.check_circle_rounded, color: g.color, size: 16),
+                      _CategoryTag(color: color, label: g.category),
+                      if (g.location != null) ...[
                         const SizedBox(width: 6),
+                        Icon(Icons.location_on_rounded, size: 13, color: color),
+                        const SizedBox(width: 2),
                         Text(
-                          S.literal("You're a member"),
-                          style: TextStyle(
-                            color: g.color,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                          ),
+                          S.literal(g.location!),
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
                         ),
                       ],
+                      if (isClosed) ...[
+                        const SizedBox(width: 6),
+                        _CategoryTag(color: Colors.red, label: S.literal('Closed')),
+                      ],
+                    ],
+                  ),
+                  if (isClosed) ...[
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.lock_outline_rounded, size: 16, color: Colors.red),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              S.literal('This community was closed by its creator. You can still read past messages, but no one can post new ones.'),
+                              style: const TextStyle(fontSize: 12, color: Colors.red, height: 1.4),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  ],
+                  const SizedBox(height: 8),
+                  _MemberAvatars(color: color, groupId: g.id),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      if (isMember)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: color.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.check_circle_rounded, color: color, size: 16),
+                              const SizedBox(width: 6),
+                              Text(
+                                S.literal("You're a member"),
+                                style: TextStyle(color: color, fontWeight: FontWeight.w700, fontSize: 13),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        _JoinButton(color: color, group: g),
+                      const SizedBox(width: 10),
+                      if (isMember)
+                        TapScale(
+                          borderRadius: 20,
+                          onTap: onOpenChat,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.forum_outlined, size: 15, color: Colors.white),
+                                const SizedBox(width: 5),
+                                Text(
+                                  S.literal('Open Chat'),
+                                  style: const TextStyle(
+                                      fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Text(
                     S.literal('About'),
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: ui.textPrimary,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: ui.textPrimary),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    S.literal(
-                      'A place for women in this community to share opportunities, ask questions, and support one another\'s growth.',
-                    ),
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: ui.textSecondary,
-                      height: 1.5,
-                    ),
+                    g.description ??
+                        S.literal(
+                          "A place for women in this community to share opportunities, ask questions, and support one another's growth.",
+                        ),
+                    style: TextStyle(fontSize: 13, color: ui.textSecondary, height: 1.5),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    '${S.literal('Members')} (${g.memberCount})',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: ui.textPrimary,
+                  membersAsync.when(
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                    data: (members) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${S.literal('Members')} (${members.length})',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: ui.textPrimary),
+                        ),
+                        const SizedBox(height: 8),
+                        if (members.isEmpty)
+                          Text(
+                            S.literal('No members yet — be the first to join.'),
+                            style: TextStyle(fontSize: 12, color: ui.textSecondary),
+                          )
+                        else
+                          ...members.map((m) => _MemberListRow(color: color, member: m)),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  ..._mockMembers.map((m) => _MemberListRow(color: g.color, member: m)),
                 ],
               ),
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -1409,43 +1505,22 @@ class _GroupDetailPage extends StatelessWidget {
 class _MemberListRow extends StatelessWidget {
   const _MemberListRow({required this.color, required this.member});
   final Color color;
-  final _Member member;
+  final GroupMember member;
 
   @override
   Widget build(BuildContext context) {
     final ui = CommunityUi.of(context);
-    final m = member;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CommunityAvatar(color: color, initial: m.name[0], size: 40),
+          CommunityAvatar(color: color, initial: member.memberName[0], size: 40),
           const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(m.name,
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: ui.textPrimary)),
-                    if (m.isAdmin) ...[
-                      const SizedBox(width: 6),
-                      const _AdminBadge(),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: m.roles.map((r) => _RoleChip(label: r)).toList(),
-                ),
-              ],
+            child: Text(
+              member.isMe ? '${member.memberName} (${S.literal('You')})' : member.memberName,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: ui.textPrimary),
             ),
           ),
         ],
@@ -1471,413 +1546,8 @@ class _CategoryTag extends StatelessWidget {
       ),
       child: Text(
         S.literal(label),
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          color: color,
-        ),
+        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: color),
       ),
     );
   }
 }
-
-class _AdminBadge extends StatelessWidget {
-  const _AdminBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-      decoration: BoxDecoration(
-        color: const Color(0xFFD4A24E).withValues(alpha: 0.16),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        S.literal('Admin'),
-        style: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFFB48A2E),
-        ),
-      ),
-    );
-  }
-}
-
-class _RoleChip extends StatelessWidget {
-  const _RoleChip({required this.label});
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final ui = CommunityUi.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: ui.iconWell,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        S.literal(label),
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: ui.textSecondary,
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────── Chatroom ────────────────────────────
-
-class _ConversationRow extends StatelessWidget {
-  const _ConversationRow({required this.conversation});
-  final _Conversation conversation;
-
-  @override
-  Widget build(BuildContext context) {
-    final ui = CommunityUi.of(context);
-    final c = conversation;
-    return CommunityGroupCard(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => _ChatRoomPage(conversation: c)),
-      ),
-      // The last sender's own avatar, not the group's — matches how a
-      // real chat list shows who most recently spoke.
-      leading: CommunityAvatar(color: c.senderColor, initial: c.lastSender[0]),
-      title: c.group.name,
-      subtitle: Text(
-        '${c.lastSender}: ${c.lastMessage}',
-        style: TextStyle(
-          fontSize: 12,
-          color: c.unread > 0 ? ui.textPrimary : ui.textSecondary,
-          fontWeight: c.unread > 0 ? FontWeight.w600 : FontWeight.w400,
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            S.literal(c.time),
-            style: TextStyle(fontSize: 11, color: ui.textSecondary),
-          ),
-          const SizedBox(height: 6),
-          if (c.unread > 0)
-            Container(
-              width: 20,
-              height: 20,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: CommunityUi.unread,
-              ),
-              child: Text(
-                '${c.unread}',
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Conversation {
-  const _Conversation(
-      this.group, this.lastSender, this.lastMessage, this.time,
-      {this.unread = 0, required this.senderColor});
-  final _Group group;
-  final String lastSender;
-  final String lastMessage;
-  final String time;
-  final int unread;
-  final Color senderColor;
-}
-
-class _ChatRoomPage extends ConsumerStatefulWidget {
-  const _ChatRoomPage({required this.conversation});
-  final _Conversation conversation;
-
-  @override
-  ConsumerState<_ChatRoomPage> createState() => _ChatRoomPageState();
-}
-
-class _ChatRoomPageState extends ConsumerState<_ChatRoomPage> {
-  late final List<(String sender, String text, bool isMe)> _messages;
-  final _controller = TextEditingController();
-  final _scroll = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    final c = widget.conversation;
-    _messages = [
-      (c.lastSender, "Hey everyone, hope you're all doing well this week!",
-          c.lastSender == 'You'),
-      ('You', 'Doing great, thanks for asking!', true),
-      (c.lastSender, c.lastMessage, c.lastSender == 'You'),
-    ];
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _scroll.dispose();
-    super.dispose();
-  }
-
-  void _send() {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
-    setState(() => _messages.add(('You', text, true)));
-    _controller.clear();
-    Future.delayed(const Duration(milliseconds: 50), () {
-      if (_scroll.hasClients) {
-        _scroll.animateTo(_scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final ui = CommunityUi.of(context);
-    final g = widget.conversation.group;
-    final me = ref.watch(currentUserProvider).valueOrNull;
-    return Scaffold(
-      backgroundColor: ui.pageBg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 8, 20, 12),
-              child: Row(
-                children: [
-                  GlassCircleBtn(
-                    icon: Icons.arrow_back_rounded,
-                    onTap: () => Navigator.of(context).pop(),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TapScale(
-                      borderRadius: 12,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => _GroupDetailPage(group: g)),
-                      ),
-                      child: Row(
-                        children: [
-                          CommunityAvatar(color: g.color, initial: g.name[0], size: 40),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  S.literal(g.name),
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: ui.textPrimary),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  '${g.memberCount} ${S.literal('members')} · ${S.literal('tap for details')}',
-                                  style: TextStyle(
-                                      fontSize: 11, color: ui.textSecondary),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: g.color.withValues(alpha: 0.03),
-                child: ListView.builder(
-                  controller: _scroll,
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _messages.length,
-                  itemBuilder: (context, i) {
-                    final (sender, text, isMe) = _messages[i];
-                    final bubble = Container(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 10),
-                      decoration: BoxDecoration(
-                        gradient: isMe
-                            ? LinearGradient(colors: [
-                                g.color,
-                                Color.lerp(g.color, Colors.black, 0.12)!,
-                              ])
-                            : null,
-                        color: isMe ? null : ui.card,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(16),
-                          topRight: const Radius.circular(16),
-                          bottomLeft: Radius.circular(isMe ? 16 : 4),
-                          bottomRight: Radius.circular(isMe ? 4 : 16),
-                        ),
-                        boxShadow: ui.softShadow,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (!isMe)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 2),
-                              child: Text(
-                                sender,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: g.color,
-                                ),
-                              ),
-                            ),
-                          Text(
-                            text,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color:
-                                  isMe ? Colors.white : ui.textPrimary,
-                              height: 1.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-
-                    // Group chats show who spoke — a small avatar sits
-                    // next to every bubble, including your own outgoing
-                    // ones (using your real saved photo when you've set
-                    // one), not just incoming messages.
-                    if (isMe) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.sizeOf(context).width * 0.64),
-                            child: bubble,
-                          ),
-                          const SizedBox(width: 8),
-                          CommunityAvatar(
-                            color: g.color,
-                            initial: (me?.name.isNotEmpty ?? false)
-                                ? me!.name[0]
-                                : 'Y',
-                            imagePath: me?.avatarPath,
-                            size: 30,
-                          ),
-                        ],
-                      );
-                    }
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        CommunityAvatar(
-                          color: widget.conversation.senderColor,
-                          initial: sender[0],
-                          size: 30,
-                        ),
-                        const SizedBox(width: 8),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: MediaQuery.sizeOf(context).width * 0.64),
-                          child: bubble,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
-              decoration: BoxDecoration(
-                color: ui.card,
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF202020).withValues(alpha: 0.06),
-                    blurRadius: 10,
-                    offset: const Offset(0, -3),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: ui.iconWell,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: TextField(
-                        controller: _controller,
-                        style: const TextStyle(fontSize: 13),
-                        decoration: InputDecoration(
-                          isDense: true,
-                          hintText: S.literal('Message'),
-                          hintStyle: TextStyle(
-                              fontSize: 13, color: ui.textSecondary),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 18, vertical: 12),
-                        ),
-                        onSubmitted: (_) => _send(),
-                        textInputAction: TextInputAction.send,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  TapScale(
-                    borderRadius: 22,
-                    onTap: _send,
-                    child: Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          g.color,
-                          Color.lerp(g.color, Colors.black, 0.12)!,
-                        ]),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              color: g.color.withValues(alpha: 0.4),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3)),
-                        ],
-                      ),
-                      child: const Icon(Icons.send_rounded,
-                          color: Colors.white, size: 18),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
