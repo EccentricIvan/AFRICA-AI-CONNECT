@@ -10,7 +10,6 @@ build/
 
 # IDE and editor files
 .idea/
-.vscode/
 *.iml
 *.swp
 *.swo
@@ -67,5 +66,10 @@ AI_BACKEND/otic_nllb_luganda_lora_full_final/
 AI_BACKEND/otic_nllb_swahili_lora_full_final/
 luganda_adapter_temp/
 swahili_adapter_temp/.vercel/
-.env.local
 AI_BACKEND/app/Data/processed/luganda_correction_candidates.csv
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
+config.bat
+node_modules
