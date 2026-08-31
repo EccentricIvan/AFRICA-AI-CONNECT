@@ -68,13 +68,7 @@ class AppShell extends ConsumerWidget {
 
     if (isWide) {
       return Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [ac.bgTop, ac.bgBottom],
-          ),
-        ),
+        decoration: AppColors.pageDecoration(context),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Row(
@@ -92,13 +86,7 @@ class AppShell extends ConsumerWidget {
     final isChatActive = GoRouterState.of(context).uri.path == _chatPath;
 
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [ac.bgTop, ac.bgBottom],
-        ),
-      ),
+      decoration: AppColors.pageDecoration(context),
       child: Scaffold(
         key: mobileScaffoldKey,
         backgroundColor: Colors.transparent,
@@ -117,17 +105,8 @@ class AppShell extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: ac.surface,
                     borderRadius: BorderRadius.circular(32),
-                    border: ac.isDark ? Border.all(color: ac.border) : null,
-                    boxShadow: ac.isDark
-                        ? null
-                        : [
-                            BoxShadow(
-                              color:
-                                  const Color(0xFF1A1A1A).withValues(alpha: 0.10),
-                              blurRadius: 28,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
+                    border: Border.all(color: ac.border),
+                    boxShadow: ac.isDark ? null : ac.navShadow(false),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: Row(
@@ -142,8 +121,6 @@ class AppShell extends ConsumerWidget {
                             onTap: () => context.go(_destinations[i].path),
                           ),
                         ),
-                        // Gap in the middle (after the 2nd of 4 items)
-                        // reserved for the floating chat FAB below.
                         if (i == 1) const SizedBox(width: 58),
                       ],
                     ],
@@ -156,7 +133,7 @@ class AppShell extends ConsumerWidget {
                     children: [
                       _ChatFabButton(
                         active: isChatActive,
-                        ringColor: ac.surface,
+                        ringColor: ac.isDark ? ac.surface : Colors.white,
                         onTap: () => context.go(_chatPath),
                       ),
                       const SizedBox(height: 4),
@@ -167,7 +144,7 @@ class AppShell extends ConsumerWidget {
                           fontWeight:
                               isChatActive ? FontWeight.w700 : FontWeight.w500,
                           color: isChatActive
-                              ? const Color(0xFFF28A1A)
+                              ? AppColors.primary
                               : ac.textHint,
                         ),
                       ),
@@ -393,7 +370,7 @@ class _FloatingNavItem extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  static const _activeColor = Color(0xFFF26B2D);
+  static const _activeColor = AppColors.primary;
 
   @override
   Widget build(BuildContext context) {
@@ -465,18 +442,14 @@ class _ChatFabButton extends StatelessWidget {
             color: ringColor,
           ),
           child: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFF28A1A), Color(0xFFE07812)],
-              ),
+              gradient: AppColors.fabGradient,
               boxShadow: [
                 BoxShadow(
-                  color: Color(0x73F28A1A),
+                  color: AppColors.accentGlow,
                   blurRadius: 16,
-                  offset: Offset(0, 6),
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),

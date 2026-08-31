@@ -10,7 +10,7 @@ Africa AI Connect is an offline-first, AI-powered digital empowerment ecosystem 
 - **Database**: Drift (SQLite) — local cache; **Firestore** — cross-device
   source of truth (see **Backend** below)
 - **Auth**: Firebase Auth, phone number + OTP
-- **Theme**: Material Design 3, "Terracotta Blush" design tokens (see below)
+- **Theme**: Material Design 3, "White-First Crystal Blue" design tokens (see below)
 
 ## Backend — Firebase
 Firebase project `africa-ai-connect` (Firestore database in `europe-west1`,
@@ -61,29 +61,35 @@ row back to the Firestore doc it mirrors.
   Blaze cost-monitoring; a realtime Firestore→Drift sync listener (today's
   reconciliation is a one-time pull/push at sign-in only); sign-out UI.
 
-## Design System — "Terracotta Blush"
+## Design System — "White-First Crystal Blue"
 All colors and fonts are tokens in `lib/core/theme/app_colors.dart` and
 `app_theme.dart` — feature screens should reference these, not hardcode hex.
-- **Background**: warm blush cream (`bgTop`/`bgBottom`, `#FAF1EC`)
-- **Surfaces**: white cards (`surface`) with a soft `#F0E2DA` border (`border`)
-- **Brand**: terracotta (`primary`/`accent`, `#C96F4A`) drives buttons, active
-  nav, and links; `secondary` is a muted teal
-- **Reward color**: `gold` (`#D4A24E`) — used only for points/streak/milestone
-  UI, kept distinct from the terracotta brand color
-- **Text tiers**: three solid (non-alpha) colors so contrast is guaranteed
-  regardless of background — `textPrimary` (headings, `#3A2E29`),
-  `textSecondary` (body, `#4A403B`), `textHint` (captions/secondary — the
-  floor, `#6E5F57`, never go lighter)
-- **Category colors**: each Learn topic / pillar has a fixed color
-  (`skillsColor` violet, `financeColor` teal, `marketplaceColor` terracotta,
-  `agricultureColor` leaf green, `healthColor`/`thriveColor` rose, etc.) used
-  for card left-bars, tinted icon backgrounds, and lesson-count pills
+Premium screens use per-feature `*Ui` token files (`home_ui.dart`, etc.).
+- **Background**: white-first canvas (`bgTop` `#FAFCFF` → `bgBottom` `#FFFFFF`
+  whisper gradient on top 18% only via `AppColors.pageDecoration()`); dark mode
+  is navy (`#0A1018`–`#101820`) — blue is accent-only, not a full-page wash
+- **Surfaces**: solid white cards (`surface`) with soft `#E8F2FA` border (`border`)
+  and light shadow; **no** `BackdropFilter` on progress cards, header chips, or
+  bottom nav — glass blur is opt-in (`useGlass: true`) for modals only
+- **Brand**: crystal blue (`primary`/`accent`, `#2E96E8`) drives active nav,
+  primary CTAs, icon tints, and progress fills; `accentDeep` `#1B7FD4` for pressed
+- **Reward color**: ice blue (`gold`, `#6EC4FF`) — points/streak/milestone UI
+- **Text tiers**: `textPrimary` `#142840`, `textSecondary` `#3D5A73`,
+  `textHint` `#6B8499` (light); `#E8F2FC` / `#9BB8D4` / `#6B8499` (dark)
+- **Hero PNGs**: light + dark asset pairs in `assets/branding/` (e.g.
+  `learn_background.png` / `learn_background_dark.png`); regenerate with
+  `python tools/recolor_branding_assets.py` (Pillow hue-shift script)
+- **Category colors**: cohesive blue-teal family (`learnColor` `#4A8FE8`,
+  `financeColor` `#2EA8C4`, `marketplaceColor` `#2E96E8`, `healthColor` `#6AACDE`, etc.)
 - **Typography**: two-font pairing — `Saira` (variable font,
   `assets/fonts/Saira-Variable.ttf`) for headings/display text, contrasted
   with `PlusJakartaSans` for body copy, optimized for legibility on cheap,
   dim, low-DPI screens
 - **Tap affordance**: `lib/shared/widgets/tap_scale.dart` wraps tappable
   cards with ripple + a subtle 0.98 press-down scale
+- **Glass kit** (opt-in): `GlassSurface`, `GlassCircleBtn`, `GlassPageScaffold` in
+  `lib/shared/widgets/glass/` — default to solid white; pass `useGlass: true` only
+  when frosted blur is intentional (modals, overlays)
 
 ## Architecture
 - `lib/core/` — theme (colors/fonts), router, l10n, app-level config

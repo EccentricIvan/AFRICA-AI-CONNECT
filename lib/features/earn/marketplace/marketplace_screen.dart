@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../db/database.dart';
 import '../../../db/providers/database_provider.dart';
 import '../../../shared/widgets/market/market_category_card.dart';
@@ -45,37 +46,37 @@ const _categoryMeta = [
     key: 'agriculture',
     labelKey: 'cat_agri',
     icon: Icons.grass_outlined,
-    color: Color(0xFFD65C6A),
+    color: Color(0xFF5BB8E8),
   ),
   (
     key: 'crafts',
     labelKey: 'cat_crafts',
     icon: Icons.palette_outlined,
-    color: Color(0xFF7C5CBF),
+    color: Color(0xFF7EB8E8),
   ),
   (
     key: 'food_drink',
     labelKey: 'cat_food_drink',
     icon: Icons.restaurant_outlined,
-    color: MarketUi.accent,
+    color: AppColors.primary,
   ),
   (
     key: 'fashion',
     labelKey: 'cat_fashion',
     icon: Icons.checkroom_outlined,
-    color: Color(0xFF4A6FA5),
+    color: Color(0xFF4A8FE8),
   ),
   (
     key: 'beauty',
     labelKey: 'cat_beauty',
     icon: Icons.spa_outlined,
-    color: Color(0xFFC4783A),
+    color: Color(0xFF3BAFD4),
   ),
   (
     key: 'services',
     labelKey: 'cat_services',
     icon: Icons.handyman_outlined,
-    color: Color(0xFF4D8B55),
+    color: AppColors.online,
   ),
 ];
 
@@ -123,9 +124,11 @@ class MarketplaceScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: ui.pageBg,
-      body: SafeArea(
-        child: Column(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: AppColors.pageDecoration(context),
+        child: SafeArea(
+          child: Column(
           children: [
             MarketHeaderBar(
               title: t('marketplace'),
@@ -176,6 +179,7 @@ class MarketplaceScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

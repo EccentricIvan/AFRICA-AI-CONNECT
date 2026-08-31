@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 
-/// Presentation tokens for Home Premium Visual Pass (V3) — now brightness-
-/// aware. Surfaces/text/border swap between [light] and [darkTheme]; brand
-/// and pillar accent colors stay identical in both (they're colorful pops
-/// against a card, not a background, so they read fine either way).
-/// Widgets fetch the active palette via `HomeUi.of(context)` instead of
-/// static constants, since the two variants aren't compile-time constants
-/// of each other.
 class HomeUi {
   const HomeUi._({
     required this.card,
@@ -28,42 +22,41 @@ class HomeUi {
 
   static const HomeUi light = HomeUi._(
     card: Color(0xFFFFFFFF),
-    surface: Color(0xFFF3EEE8),
-    pageBg: Color(0xFFFAF8F6),
-    textPrimary: Color(0xFF1A1A1A),
-    textSecondary: Color(0xFF6B6B6B),
-    border: Color(0xFFECE8E3),
+    surface: Color(0xFFF3F9FD),
+    pageBg: Color(0xFFFFFFFF),
+    textPrimary: Color(0xFF142840),
+    textSecondary: Color(0xFF3D5A73),
+    border: Color(0xFFE8F2FA),
     isDark: false,
   );
 
   static const HomeUi darkTheme = HomeUi._(
-    card: Color(0xFF212121),
-    surface: Color(0xFF1A1A1A),
-    pageBg: Color(0xFF121212),
-    textPrimary: Color(0xFFF2F0EE),
-    textSecondary: Color(0xFFA6A19C),
-    border: Color(0xFF322F2C),
+    card: Color(0xFF1A2433),
+    surface: Color(0xFF1E2D42),
+    pageBg: Color(0xFF101820),
+    textPrimary: Color(0xFFE8F2FC),
+    textSecondary: Color(0xFF9BB8D4),
+    border: Color(0xFF2A4060),
     isDark: true,
   );
 
   static HomeUi of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? darkTheme : light;
 
-  // Brand/pillar/status accents — identical in both themes.
-  static const Color accent = Color(0xFFF26B2D);
-  static const Color accentDeep = Color(0xFFE85A1C);
-  static const Color dark = Color(0xFF1A1A1A);
-  static const Color success = Color(0xFF4D8B55);
+  static const Color accent = AppColors.primary;
+  static const Color accentDeep = AppColors.accentDeep;
+  static const Color dark = AppColors.surfaceDark;
+  static const Color success = AppColors.online;
 
-  static const Color learn = Color(0xFF4A6FA5);
-  static const Color earn = Color(0xFFC4783A);
-  static const Color grow = Color(0xFF4D8B55);
-  static const Color thrive = Color(0xFFD65C6A);
+  static const Color learn = AppColors.learnColor;
+  static const Color earn = AppColors.earnColor;
+  static const Color grow = AppColors.growColor;
+  static const Color thrive = AppColors.thriveColor;
 
-  static const Color askAi = Color(0xFF2E8B8B);
-  static const Color findJobs = Color(0xFFF26B2D);
-  static const Color learnAction = Color(0xFF4A6FA5);
-  static const Color marketplaceAction = Color(0xFF7C5CBF);
+  static const Color askAi = AppColors.chatColor;
+  static const Color findJobs = AppColors.jobsColor;
+  static const Color learnAction = AppColors.learnColor;
+  static const Color marketplaceAction = AppColors.communityColor;
 
   static const double radiusHero = 32;
   static const double radiusCard = 24;
@@ -74,26 +67,14 @@ class HomeUi {
 
   static const String heroBackgroundAsset =
       'assets/branding/card_background_light.png';
+  static const String heroBackgroundAssetDark =
+      'assets/branding/card_background_dark.png';
 
-  // Shadows barely register against a dark surface and just look like a
-  // muddy halo — cards lean on [border] alone for definition in dark mode.
-  List<BoxShadow> get softShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1A1A1A).withValues(alpha: 0.07),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ];
+  static String heroBackgroundAssetFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? heroBackgroundAssetDark
+          : heroBackgroundAsset;
 
-  List<BoxShadow> get navShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1A1A1A).withValues(alpha: 0.10),
-            blurRadius: 28,
-            offset: const Offset(0, 10),
-          ),
-        ];
+  List<BoxShadow> get softShadow => isDark ? const [] : AppColors.light.softShadow(false);
+  List<BoxShadow> get navShadow => isDark ? const [] : AppColors.light.navShadow(false);
 }

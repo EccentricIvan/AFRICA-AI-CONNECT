@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../tap_scale.dart';
 import 'community_ui.dart';
 
@@ -54,8 +55,8 @@ class CommunityHeroCard extends StatelessWidget {
               color: ui.card,
               borderRadius: BorderRadius.circular(CommunityUi.radiusHero),
               boxShadow: ui.softShadow,
-              image: const DecorationImage(
-                image: AssetImage(CommunityUi.heroBackgroundAsset),
+              image: DecorationImage(
+                image: AssetImage(CommunityUi.heroBackgroundAssetFor(context)),
                 fit: BoxFit.cover,
                 alignment: Alignment.centerRight,
               ),
@@ -69,12 +70,7 @@ class CommunityHeroCard extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.94),
-                          Colors.white.withValues(alpha: 0.78),
-                          Colors.white.withValues(alpha: 0.28),
-                          Colors.white.withValues(alpha: 0.05),
-                        ],
+                        colors: AppColors.heroOverlayColors(context),
                         stops: const [0.0, 0.36, 0.62, 0.88],
                       ),
                     ),
@@ -93,7 +89,7 @@ class CommunityHeroCard extends StatelessWidget {
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: CommunityUi.light.iconWell,
+                              color: ui.iconWell,
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: const Icon(
@@ -110,7 +106,7 @@ class CommunityHeroCard extends StatelessWidget {
                                 fontFamily: 'Saira',
                                 fontSize: titleSize,
                                 fontWeight: FontWeight.w700,
-                                color: const Color(0xFF3D2A1E),
+                                color: ui.textPrimary,
                                 height: 1.2,
                                 letterSpacing: -0.3,
                               ),
@@ -128,7 +124,7 @@ class CommunityHeroCard extends StatelessWidget {
                           body,
                           style: TextStyle(
                             fontSize: compact ? 12.5 : 13.5,
-                            color: CommunityUi.light.textSecondary,
+                            color: ui.textSecondary,
                             height: 1.4,
                           ),
                           maxLines: 2,
@@ -153,7 +149,7 @@ class CommunityHeroCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12.5,
                                   fontWeight: FontWeight.w600,
-                                  color: CommunityUi.light.textPrimary,
+                                  color: ui.textPrimary,
                                   height: 1.3,
                                 ),
                                 maxLines: 2,

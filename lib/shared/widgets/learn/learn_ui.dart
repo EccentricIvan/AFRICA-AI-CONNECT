@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 
-/// Presentation tokens for Learn Premium redesign — brightness-aware.
-/// Fetch the active palette via `LearnUi.of(context)` rather than a
-/// static constant.
 class LearnUi {
   const LearnUi._({
     required this.pageBg,
@@ -21,29 +19,29 @@ class LearnUi {
   final bool isDark;
 
   static const LearnUi light = LearnUi._(
-    pageBg: Color(0xFFFAF8F6),
+    pageBg: Color(0xFFFFFFFF),
     card: Color(0xFFFFFFFF),
-    textPrimary: Color(0xFF1B1B1B),
-    textSecondary: Color(0xFF6D6D6D),
-    border: Color(0xFFECE8E3),
+    textPrimary: Color(0xFF142840),
+    textSecondary: Color(0xFF3D5A73),
+    border: Color(0xFFE8F2FA),
     isDark: false,
   );
 
   static const LearnUi darkTheme = LearnUi._(
-    pageBg: Color(0xFF121212),
-    card: Color(0xFF212121),
-    textPrimary: Color(0xFFF2F0EE),
-    textSecondary: Color(0xFFA6A19C),
-    border: Color(0xFF322F2C),
+    pageBg: Color(0xFF101820),
+    card: Color(0xFF1A2433),
+    textPrimary: Color(0xFFE8F2FC),
+    textSecondary: Color(0xFF9BB8D4),
+    border: Color(0xFF2A4060),
     isDark: true,
   );
 
   static LearnUi of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? darkTheme : light;
 
-  static const Color accent = Color(0xFFF26B2D);
-  static const Color accentDeep = Color(0xFFE85A1C);
-  static const Color success = Color(0xFF4D8B55);
+  static const Color accent = AppColors.primary;
+  static const Color accentDeep = AppColors.accentDeep;
+  static const Color success = AppColors.online;
 
   static const double radiusHero = 32;
   static const double radiusCard = 24;
@@ -52,27 +50,26 @@ class LearnUi {
 
   static const String heroBackgroundAsset =
       'assets/branding/learn_background.png';
+  static const String heroBackgroundAssetDark =
+      'assets/branding/learn_background_dark.png';
 
   static const String progressMascotAsset =
       'assets/branding/learn_progress_mascot.png';
 
-  List<BoxShadow> get softShadow => isDark
-      ? const []
-      : [
-          BoxShadow(
-            color: const Color(0xFF1B1B1B).withValues(alpha: 0.07),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ];
+  static String heroBackgroundAssetFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? heroBackgroundAssetDark
+          : heroBackgroundAsset;
+
+  List<BoxShadow> get softShadow => isDark ? const [] : AppColors.light.softShadow(false);
 
   List<BoxShadow> get pillShadow => isDark
       ? const []
-      : [
+      : const [
           BoxShadow(
-            color: const Color(0xFF1B1B1B).withValues(alpha: 0.08),
+            color: AppColors.glassShadow,
             blurRadius: 14,
-            offset: const Offset(0, 6),
+            offset: Offset(0, 6),
           ),
         ];
 }

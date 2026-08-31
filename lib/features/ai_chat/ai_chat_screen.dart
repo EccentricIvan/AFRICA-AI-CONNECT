@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../db/providers/database_provider.dart';
 import '../../services/web_lookup_service.dart';
+import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/chat/chat_composer.dart';
 import '../../shared/widgets/chat/chat_header_bar.dart';
 import '../../shared/widgets/chat/chat_message_bubble.dart';
@@ -153,53 +154,46 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
       (
         Icons.work_outline_rounded,
         S.literal('Business\nAdvice'),
-        const Color(0xFFF28C28),
+        const Color(0xFF2E96E8),
         _t('topic_business_q'),
       ),
       (
         Icons.eco_outlined,
         S.literal('Farming\nTips'),
-        const Color(0xFF4D8B55),
+        const Color(0xFF3DAA6D),
         _t('topic_farming_q'),
       ),
       (
         Icons.favorite_border_rounded,
         S.literal('Health\nInfo'),
-        const Color(0xFF4A6FA5),
+        const Color(0xFF6AACDE),
         S.literal('Health tips for my family'),
       ),
       (
         Icons.bar_chart_rounded,
         S.literal('Finance\nGuidance'),
-        const Color(0xFFE07818),
+        const Color(0xFF2EA8C4),
         _t('topic_savings_q'),
       ),
       (
         Icons.more_horiz_rounded,
         S.literal('More\nTopics'),
-        const Color(0xFF7C5CBF),
+        const Color(0xFF7EB8E8),
         _t('topic_sell_online_q'),
       ),
     ];
 
     final chatUi = ChatUi.of(context);
     return Scaffold(
-      backgroundColor: chatUi.pageBg,
+      backgroundColor: Colors.transparent,
       body: Container(
-        decoration: BoxDecoration(
-          color: chatUi.pageBg,
-          // The branded background photo is a light, cream-toned image —
-          // it only stays legible under light-mode's dark text. In dark
-          // mode we drop it and just show the solid dark page color, or
-          // every title/label sitting directly on the page (not inside an
-          // opaque card) would wash out against it, exactly as reported.
-          image: chatUi.isDark
-              ? null
-              : const DecorationImage(
-                  image: AssetImage(ChatUi.pageBackgroundAsset),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.centerRight,
-                ),
+        decoration: AppColors.pageDecoration(context).copyWith(
+          image: DecorationImage(
+            image: AssetImage(ChatUi.pageBackgroundAssetFor(context)),
+            fit: BoxFit.cover,
+            alignment: Alignment.centerRight,
+            opacity: chatUi.isDark ? 0.22 : 0.35,
+          ),
         ),
         child: SafeArea(
           child: Column(

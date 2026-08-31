@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../tap_scale.dart';
 import 'market_ui.dart';
 
@@ -39,8 +40,8 @@ class MarketHeroCard extends StatelessWidget {
               color: ui.card,
               borderRadius: BorderRadius.circular(MarketUi.radiusHero),
               boxShadow: ui.softShadow,
-              image: const DecorationImage(
-                image: AssetImage(MarketUi.heroBackgroundAsset),
+              image: DecorationImage(
+                image: AssetImage(MarketUi.heroBackgroundAssetFor(context)),
                 fit: BoxFit.cover,
                 alignment: Alignment.centerRight,
               ),
@@ -54,12 +55,7 @@ class MarketHeroCard extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.94),
-                          Colors.white.withValues(alpha: 0.78),
-                          Colors.white.withValues(alpha: 0.28),
-                          Colors.white.withValues(alpha: 0.05),
-                        ],
+                        colors: AppColors.heroOverlayColors(context),
                         stops: const [0.0, 0.36, 0.62, 0.88],
                       ),
                     ),
@@ -80,7 +76,7 @@ class MarketHeroCard extends StatelessWidget {
                               // Fixed light tone, not theme-reactive — this
                               // badge sits on the hero's own bright photo
                               // wash, which doesn't change with app theme.
-                              color: MarketUi.light.iconWell,
+                              color: ui.iconWell,
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: const Icon(
@@ -97,7 +93,7 @@ class MarketHeroCard extends StatelessWidget {
                                 fontFamily: 'Saira',
                                 fontSize: titleSize,
                                 fontWeight: FontWeight.w700,
-                                color: const Color(0xFF3D2A1E),
+                                color: ui.textPrimary,
                                 height: 1.2,
                                 letterSpacing: -0.3,
                               ),
@@ -117,7 +113,7 @@ class MarketHeroCard extends StatelessWidget {
                             fontSize: compact ? 12.5 : 13.5,
                             fontWeight: FontWeight.w400,
                             // Fixed — same reasoning as the icon badge above.
-                            color: MarketUi.light.textSecondary,
+                            color: ui.textSecondary,
                             height: 1.45,
                           ),
                           maxLines: 4,

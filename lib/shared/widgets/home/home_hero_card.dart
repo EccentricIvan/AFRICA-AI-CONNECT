@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../tap_scale.dart';
 import 'home_ui.dart';
 
@@ -78,8 +79,8 @@ class HomeHeroCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(HomeUi.radiusHero),
               boxShadow: ui.softShadow,
               border: Border.all(color: ui.border),
-              image: const DecorationImage(
-                image: AssetImage(HomeUi.heroBackgroundAsset),
+              image: DecorationImage(
+                image: AssetImage(HomeUi.heroBackgroundAssetFor(context)),
                 fit: BoxFit.cover,
                 alignment: Alignment.centerRight,
               ),
@@ -94,12 +95,8 @@ class HomeHeroCard extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.72),
-                          Colors.white.withValues(alpha: 0.35),
-                          Colors.transparent,
-                        ],
-                        stops: const [0.0, 0.42, 0.78],
+                        colors: AppColors.heroOverlayColors(context),
+                        stops: const [0.0, 0.42, 0.78, 1.0],
                       ),
                     ),
                   ),
@@ -115,6 +112,7 @@ class HomeHeroCard extends StatelessWidget {
                         runSpacing: 6,
                         children: [
                           _HeroChip(
+                            ui: ui,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -129,16 +127,17 @@ class HomeHeroCard extends StatelessWidget {
                                 const SizedBox(width: 5),
                                 Text(
                                   onlineLabel,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w600,
-                                    color: HomeUi.dark,
+                                    color: ui.textPrimary,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           _HeroChip(
+                            ui: ui,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -150,10 +149,10 @@ class HomeHeroCard extends StatelessWidget {
                                 const SizedBox(width: 4),
                                 Text(
                                   streakLabel,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w600,
-                                    color: HomeUi.dark,
+                                    color: ui.textPrimary,
                                   ),
                                 ),
                               ],
@@ -168,7 +167,7 @@ class HomeHeroCard extends StatelessWidget {
                       // text either way, not the page's light/dark swap.
                       Text.rich(
                         TextSpan(
-                          children: _titleSpans(title, titleSize, HomeUi.dark),
+                          children: _titleSpans(title, titleSize, ui.textPrimary),
                         ),
                       ),
                       SizedBox(height: compact ? 8 : 10),
@@ -177,7 +176,7 @@ class HomeHeroCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: subtitleSize,
                           height: 1.4,
-                          color: const Color(0xFF4A4A4A),
+                          color: ui.textSecondary,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -248,7 +247,8 @@ class HomeHeroCard extends StatelessWidget {
 }
 
 class _HeroChip extends StatelessWidget {
-  const _HeroChip({required this.child});
+  const _HeroChip({required this.ui, required this.child});
+  final HomeUi ui;
   final Widget child;
 
   @override
@@ -256,9 +256,9 @@ class _HeroChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.78),
+        color: ui.card.withValues(alpha: ui.isDark ? 0.85 : 0.78),
         borderRadius: BorderRadius.circular(99),
-        border: Border.all(color: HomeUi.light.border),
+        border: Border.all(color: ui.border),
       ),
       child: child,
     );

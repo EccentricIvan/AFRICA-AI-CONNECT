@@ -83,9 +83,9 @@ class _HealthAppBar extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: const Color(0x183A2E29),
+              color: const Color(0x18142840),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0x123A2E29)),
+              border: Border.all(color: const Color(0x12142840)),
             ),
             child: IconButton(
               padding: EdgeInsets.zero,
@@ -227,9 +227,9 @@ class _ResourceCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0x123A2E29),
+          color: const Color(0x12142840),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0x153A2E29)),
+          border: Border.all(color: const Color(0x15142840)),
         ),
         child: Row(
           children: [
@@ -260,7 +260,7 @@ class _ResourceCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: Color(0x553A2E29), size: 20),
+            const Icon(Icons.chevron_right_rounded, color: Color(0x55142840), size: 20),
           ],
         ),
       ),
@@ -279,9 +279,9 @@ class _FacilityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0x123A2E29),
+        color: const Color(0x12142840),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0x153A2E29)),
+        border: Border.all(color: const Color(0x15142840)),
       ),
       child: Row(
         children: [
@@ -309,7 +309,7 @@ class _FacilityCard extends StatelessWidget {
                       facility.type,
                       style: TextStyle(fontSize: 12, color: ac.textHint),
                     ),
-                    const Text('  ·  ', style: TextStyle(fontSize: 12, color: Color(0x443A2E29))),
+                    const Text('  ·  ', style: TextStyle(fontSize: 12, color: Color(0x44142840))),
                     Icon(Icons.location_on_rounded, size: 11, color: facility.color.withValues(alpha: 0.7)),
                     const SizedBox(width: 2),
                     Text(
