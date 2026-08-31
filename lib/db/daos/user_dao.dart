@@ -41,4 +41,13 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
       ),
     );
   }
+
+  Future<void> updateResumeText(String? resumeText) {
+    return (update(users)..where((u) => u.id.equals(_singletonId))).write(
+      UsersCompanion(
+        resumeText: Value(resumeText),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
 }

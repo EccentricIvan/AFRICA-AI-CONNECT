@@ -356,17 +356,22 @@ class _HeroFact extends StatelessWidget {
   }
 }
 
-class _StatsCard extends StatelessWidget {
+class _StatsCard extends ConsumerWidget {
   const _StatsCard();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ui = HomeUi.of(context);
+    final completedSkills = (ref.watch(allCourseProgressProvider).valueOrNull ?? const [])
+        .where((p) => p.status == 'completed')
+        .length;
+    final communities = ref.watch(myGroupsProvider).valueOrNull?.length ?? 0;
+    final badgesEarned = ref.watch(unlockedAchievementsProvider).length;
     final stats = [
-      (S.literal('Completed Courses'), '6', Icons.menu_book_outlined,
+      (S.literal('Skills Completed'), '$completedSkills', Icons.auto_awesome_outlined,
           HomeUi.learn),
-      (S.literal('Communities Joined'), '3', Icons.groups_outlined, HomeUi.grow),
-      (S.literal('Badges Earned'), '5', Icons.emoji_events_outlined,
+      (S.literal('Communities Joined'), '$communities', Icons.groups_outlined, HomeUi.grow),
+      (S.literal('Badges Earned'), '$badgesEarned', Icons.emoji_events_outlined,
           HomeUi.thrive),
     ];
 
@@ -434,15 +439,18 @@ class _StatsCard extends StatelessWidget {
 /// Learn's own progress-banner shell (stat row + streak strip), reused
 /// for Profile's own "streak progress" stat set and an enlarged copy of
 /// Home's streak card instead of Learn's "next milestone" bar.
-class _ProfileProgressBanner extends StatelessWidget {
+class _ProfileProgressBanner extends ConsumerWidget {
   const _ProfileProgressBanner();
 
   @override
-  Widget build(BuildContext context) {
-    // Mon..Sun — mock week, matching the "5" badge/streak-day mock numbers
-    // used elsewhere on this screen.
-    const hitDays = [true, true, true, true, true, false, false];
+  Widget build(BuildContext context, WidgetRef ref) {
     final ui = LearnUi.of(context);
+    final stats = ref.watch(userStatsProvider).valueOrNull;
+    final hitDays = ref.watch(currentWeekActivityProvider).valueOrNull ??
+        const [false, false, false, false, false, false, false];
+    final inProgress = (ref.watch(allCourseProgressProvider).valueOrNull ?? const [])
+        .where((p) => p.status == 'in_progress')
+        .length;
 
     return Container(
       width: double.infinity,
@@ -472,12 +480,12 @@ class _ProfileProgressBanner extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          const _StreakCard(
-            streakDays: 7,
+          _StreakCard(
+            streakDays: stats?.currentStreakDays ?? 0,
             hit: hitDays,
-            bestDays: 12,
-            coursesInProgress: '2',
-            pointsEarned: '450',
+            bestDays: stats?.bestStreakDays ?? 0,
+            skillsInProgress: '$inProgress',
+            pointsEarned: '${stats?.totalPoints ?? 0}',
           ),
         ],
       ),
@@ -494,14 +502,14 @@ class _StreakCard extends StatelessWidget {
     required this.streakDays,
     required this.hit,
     required this.bestDays,
-    required this.coursesInProgress,
+    required this.skillsInProgress,
     required this.pointsEarned,
   });
 
   final int streakDays;
   final List<bool> hit;
   final int bestDays;
-  final String coursesInProgress;
+  final String skillsInProgress;
   final String pointsEarned;
 
   static const _color = Color(0xFF6AACDE);
@@ -542,8 +550,8 @@ class _StreakCard extends StatelessWidget {
                 width: 64,
                 child: _MiniStat(
                   icon: Icons.auto_stories_outlined,
-                  value: coursesInProgress,
-                  label: S.literal('Ongoing Courses'),
+                  value: skillsInProgress,
+                  label: S.literal('Ongoing Skills'),
                   color: ui.textPrimary,
                   secondaryColor: ui.textSecondary,
                 ),
@@ -697,28 +705,97 @@ class _MiniStat extends StatelessWidget {
   }
 }
 
+class _AchievementDef {
+  const _AchievementDef({
+    required this.key,
+    required this.label,
+    required this.hint,
+    required this.icon,
+    required this.color,
+  });
+  final String key;
+  final String label;
+  final String hint;
+  final IconData icon;
+  final Color color;
+}
+
+const _achievementDefs = [
+  _AchievementDef(
+    key: 'first_step',
+    label: 'First Step',
+    hint: 'Do anything in the app for the first time',
+    icon: Icons.flag_rounded,
+    color: HomeUi.accent,
+  ),
+  _AchievementDef(
+    key: 'quick_learner',
+    label: 'Quick Learner',
+    hint: 'Complete your first skill topic',
+    icon: Icons.bolt_rounded,
+    color: HomeUi.earn,
+  ),
+  _AchievementDef(
+    key: 'community_star',
+    label: 'Community Star',
+    hint: 'Join your first community',
+    icon: Icons.star_rounded,
+    color: HomeUi.grow,
+  ),
+  _AchievementDef(
+    key: 'go_getter',
+    label: 'Go-Getter',
+    hint: 'Apply to a job or connect with a mentor',
+    icon: Icons.rocket_launch_rounded,
+    color: HomeUi.thrive,
+  ),
+  _AchievementDef(
+    key: 'consistent',
+    label: 'Consistent',
+    hint: 'Reach a 3-day streak',
+    icon: Icons.local_fire_department_rounded,
+    color: HomeUi.learn,
+  ),
+];
+
+/// Real, rule-based unlocks computed from actual data — no achievement is
+/// ever marked earned unless the underlying action genuinely happened. A
+/// brand-new user sees every badge locked.
+final unlockedAchievementsProvider = Provider<List<String>>((ref) {
+  final hasActivity = ref.watch(hasAnyActivityProvider).valueOrNull ?? false;
+  final completedTopics = ref.watch(completedTopicsCountProvider).valueOrNull ?? 0;
+  final communities = ref.watch(myGroupsProvider).valueOrNull?.length ?? 0;
+  final applications = ref.watch(myApplicationsCountProvider).valueOrNull ?? 0;
+  final mentorConnections = (ref.watch(conversationsProvider).valueOrNull ?? const [])
+      .where((c) => c.type == 'mentor')
+      .length;
+  final bestStreak = ref.watch(userStatsProvider).valueOrNull?.bestStreakDays ?? 0;
+
+  return [
+    if (hasActivity) 'first_step',
+    if (completedTopics >= 1) 'quick_learner',
+    if (communities >= 1) 'community_star',
+    if (applications >= 1 || mentorConnections >= 1) 'go_getter',
+    if (bestStreak >= 3) 'consistent',
+  ];
+});
+
 /// Exactly 5 badges per row (matching Home's dense icon-grid density),
 /// any beyond 5 wrap to additional rows. Row uses top cross-alignment so
 /// icons always line up regardless of whether a neighboring badge's title
-/// wraps to a second line.
-class _AchievementsGrid extends StatelessWidget {
+/// wraps to a second line. Unearned badges show locked, not hidden — so a
+/// new user can see what there is to work toward.
+class _AchievementsGrid extends ConsumerWidget {
   const _AchievementsGrid();
 
   @override
-  Widget build(BuildContext context) {
-    final badges = [
-      (S.literal('First Step'), Icons.flag_rounded, HomeUi.accent),
-      (S.literal('Quick Learner'), Icons.bolt_rounded, HomeUi.earn),
-      (S.literal('Community Star'), Icons.star_rounded, HomeUi.grow),
-      (S.literal('Entrepreneur'), Icons.rocket_launch_rounded, HomeUi.thrive),
-      (S.literal('Consistent'), Icons.local_fire_department_rounded,
-          HomeUi.learn),
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unlocked = ref.watch(unlockedAchievementsProvider).toSet();
 
     const perRow = 5;
-    final rows = <List<(String, IconData, Color)>>[];
-    for (var i = 0; i < badges.length; i += perRow) {
-      rows.add(badges.sublist(i, (i + perRow).clamp(0, badges.length)));
+    final rows = <List<_AchievementDef>>[];
+    for (var i = 0; i < _achievementDefs.length; i += perRow) {
+      rows.add(_achievementDefs.sublist(i, (i + perRow).clamp(0, _achievementDefs.length)));
     }
 
     return Column(
@@ -733,9 +810,8 @@ class _AchievementsGrid extends StatelessWidget {
                 Expanded(
                   child: i < rows[r].length
                       ? _BadgeTile(
-                          label: rows[r][i].$1,
-                          icon: rows[r][i].$2,
-                          color: rows[r][i].$3,
+                          def: rows[r][i],
+                          unlocked: unlocked.contains(rows[r][i].key),
                         )
                       : const SizedBox.shrink(),
                 ),
@@ -749,43 +825,60 @@ class _AchievementsGrid extends StatelessWidget {
 }
 
 class _BadgeTile extends StatelessWidget {
-  const _BadgeTile({
-    required this.label,
-    required this.icon,
-    required this.color,
-  });
+  const _BadgeTile({required this.def, required this.unlocked});
 
-  final String label;
-  final IconData icon;
-  final Color color;
+  final _AchievementDef def;
+  final bool unlocked;
 
   @override
   Widget build(BuildContext context) {
+    final color = unlocked ? def.color : HomeUi.of(context).textSecondary;
     return TapScale(
-      onTap: () {},
+      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(unlocked ? def.label : '${S.literal('Locked')}: ${def.hint}')),
+      ),
       borderRadius: 99,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color.withValues(alpha: 0.14),
-            ),
-            child: Icon(icon, color: color, size: 22),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: unlocked ? 0.14 : 0.08),
+                ),
+                child: Icon(def.icon, color: color, size: 22),
+              ),
+              if (!unlocked)
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: HomeUi.of(context).card,
+                      border: Border.all(color: HomeUi.of(context).border),
+                    ),
+                    child: Icon(Icons.lock_outline, size: 11, color: HomeUi.of(context).textSecondary),
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 8),
           Text(
-            label,
+            def.label,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 9.5,
               fontWeight: FontWeight.w600,
-              color: HomeUi.of(context).textPrimary,
+              color: unlocked ? HomeUi.of(context).textPrimary : HomeUi.of(context).textSecondary,
             ),
           ),
         ],
@@ -856,8 +949,10 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
+    final newName = _nameController.text.trim();
+    final nameChanged = newName != widget.name;
     await ref.read(userDaoProvider).saveUser(
-          name: _nameController.text.trim(),
+          name: newName,
           role: _selectedRole,
           location: _locationController.text.trim().isEmpty
               ? null
@@ -865,6 +960,19 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
           about: _aboutController.text.trim(),
           avatarPath: _avatarPath,
         );
+    if (nameChanged) {
+      // Every mentor listing, marketplace listing, job application, group
+      // membership, and sent message on this device belongs to the local
+      // user (no cross-device sync yet — see CLAUDE.md), so a name change
+      // here should propagate everywhere that name was snapshotted.
+      await Future.wait([
+        ref.read(mentorsDaoProvider).renameAllMentors(newName),
+        ref.read(marketplaceDaoProvider).renameAllSellers(newName),
+        ref.read(jobsDaoProvider).renameAllApplicants(newName),
+        ref.read(groupsDaoProvider).renameMyMembership(newName),
+        ref.read(messagingDaoProvider).renameMyIdentity(newName),
+      ]);
+    }
     if (!mounted) return;
     Navigator.of(context).pop();
   }
