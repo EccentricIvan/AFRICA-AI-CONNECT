@@ -101,8 +101,8 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
                         subtitle: _t('hero_subtitle'),
                         onlineLabel: _t('online'),
                         streakLabel: '7 ${_t('day_streak')}',
-                        ctaLabel: _t('continue_learning'),
-                        onCta: () => context.go('/learn'),
+                        ctaLabel: _t('market'),
+                        onCta: () => context.go('/marketplace'),
                       ),
                       const SizedBox(height: 24),
                       HomeSectionHeader(
@@ -217,7 +217,6 @@ class _QuickActions extends StatelessWidget {
     final actions = [
       (t('ask_ai'), Icons.chat_bubble_outline_rounded, HomeUi.askAi, '/ai-chat'),
       (t('find_jobs'), Icons.work_outline_rounded, HomeUi.findJobs, '/jobs'),
-      (t('learn'), Icons.menu_book_outlined, HomeUi.learnAction, '/learn'),
       (
         t('marketplace'),
         Icons.storefront_outlined,
@@ -250,13 +249,6 @@ class _Pillars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pillars = [
-      (
-        t('learn'),
-        t('learn_desc'),
-        Icons.menu_book_outlined,
-        HomeUi.learn,
-        '/learn',
-      ),
       (
         t('earn'),
         t('earn_desc'),
@@ -311,13 +303,11 @@ class _Services extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (t('finance'), Icons.account_balance_outlined, '/financial'),
       (t('mentors'), Icons.diversity_1_outlined, '/mentorship'),
       (t('jobs'), Icons.work_outline_rounded, '/jobs'),
       (t('skills'), Icons.auto_awesome_outlined, '/skills'),
       (t('health'), Icons.favorite_outline_rounded, '/health'),
       (t('community'), Icons.people_outline_rounded, '/community'),
-      (t('wellbeing'), Icons.spa_outlined, '/wellbeing'),
       (t('settings'), Icons.settings_outlined, '/settings'),
     ];
 
