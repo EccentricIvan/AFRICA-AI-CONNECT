@@ -18,6 +18,7 @@ import '../../../shared/widgets/market/market_hero_card.dart';
 import '../../../shared/widgets/market/market_listing_card.dart';
 import '../../../shared/widgets/market/market_section_header.dart';
 import '../../../shared/widgets/market/market_ui.dart';
+import '../../../shared/widgets/messaging/chat_room_screen.dart';
 
 /// Copies a user-picked image into the app's own persistent documents
 /// directory (not the OS picker's temp/cache path, which isn't guaranteed
@@ -332,10 +333,24 @@ class _ListProductSheetState extends ConsumerState<_ListProductSheet> {
       );
       return;
     }
-    final seller = ref.read(currentUserProvider).valueOrNull?.name;
-    if (seller == null) return;
 
     setState(() => _saving = true);
+    // Await the real value instead of reading whatever's synchronously
+    // available — currentUserProvider's stream may not have emitted its
+    // first snapshot yet if this sheet is opened right after app start,
+    // and reading a not-yet-loaded value here used to fail this whole
+    // submit silently (no error, no listing) with zero feedback.
+    final seller = (await ref.read(currentUserProvider.future))?.name;
+    if (seller == null) {
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.literal('Could not find your profile. Please try again.'))),
+        );
+      }
+      return;
+    }
+
     await ref.read(marketplaceDaoProvider).addListing(
           title: _titleController.text.trim(),
           price: double.parse(_priceController.text.trim()),
@@ -586,6 +601,22 @@ class _ListingDetailSheet extends ConsumerWidget {
     await launchUrl(Uri.parse('tel:$phone'));
   }
 
+  /// Opens (or resumes) a persisted in-app chat with the seller instead of
+  /// deep-linking out to WhatsApp — keeps the conversation, and the user,
+  /// on the platform.
+  Future<void> _chatOnPlatform(BuildContext context, WidgetRef ref) async {
+    final conversationId = await ref.read(messagingDaoProvider).getOrCreateConversation(
+          type: 'marketplace',
+          subjectId: listing.id,
+          title: listing.title,
+          counterpartName: listing.sellerName,
+        );
+    if (!context.mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => ChatRoomScreen(conversationId: conversationId)),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(localeProvider);
@@ -655,7 +686,25 @@ class _ListingDetailSheet extends ConsumerWidget {
                 style: TextStyle(fontSize: 13, color: ui.textSecondary),
               ),
               const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _chatOnPlatform(context, ref),
+                  icon: const Icon(Icons.forum_outlined, size: 18),
+                  label: Text(t('chat_on_platform')),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: MarketUi.accent,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(MarketUi.radiusBtn),
+                    ),
+                  ),
+                ),
+              ),
               if (hasContact) ...[
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
@@ -695,11 +744,47 @@ class _ListingDetailSheet extends ConsumerWidget {
                   t('no_contact_available'),
                   style: TextStyle(fontSize: 13, color: ui.textSecondary),
                 ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  onPressed: () => _confirmDelete(context, ref),
+                  icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
+                  label: Text(
+                    S.literal('Delete this listing'),
+                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(S.literal('Delete this listing?')),
+        content: Text(S.literal("It will be removed from the marketplace. This can't be undone.")),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(S.literal('Cancel')),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(S.literal('Delete'), style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(marketplaceDaoProvider).deleteListing(listing.id);
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 }
 
