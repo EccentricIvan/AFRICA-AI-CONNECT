@@ -73,6 +73,8 @@ flutter:
     - assets/branding/
     - assets/offline/
     - assets/localization/
+    - assets/skills/
+    - assets/health/
 
   fonts:
     - family: PlusJakartaSans

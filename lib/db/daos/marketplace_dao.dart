@@ -40,4 +40,17 @@ class MarketplaceDao extends DatabaseAccessor<AppDatabase> with _$MarketplaceDao
       ),
     );
   }
+
+  /// Every listing on this device was posted by the local user themselves
+  /// (no cross-device sync yet — see CLAUDE.md), so a profile name change
+  /// updates every listing's seller name rather than picking one out.
+  Future<void> renameAllSellers(String newName) {
+    return update(
+      marketplaceListings,
+    ).write(MarketplaceListingsCompanion(sellerName: Value(newName)));
+  }
+
+  Future<void> deleteListing(int id) {
+    return (delete(marketplaceListings)..where((l) => l.id.equals(id))).go();
+  }
 }
