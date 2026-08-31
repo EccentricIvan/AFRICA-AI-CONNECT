@@ -9,6 +9,7 @@ class Users extends Table {
   TextColumn get about => text().nullable()();
   TextColumn get avatarPath => text().nullable()();
   TextColumn get firebaseUid => text().nullable()();
+  TextColumn get resumeText => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 
