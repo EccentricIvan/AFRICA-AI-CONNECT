@@ -1,0 +1,256 @@
+{
+  "courses": [
+    {
+      "title": "Digital Skills",
+      "subtitle": "Phone, internet, and mobile money basics",
+      "iconKey": "laptop_mac",
+      "colorKey": "skills",
+      "topics": [
+        {
+          "title": "Using a Smartphone Safely",
+          "pointsValue": 10,
+          "resourceText": "Your smartphone holds a lot of your life — photos, contacts, messages, and often your mobile money app. A few habits keep it safe. First, use a strong lock screen PIN or pattern, never something obvious like 1234 or your birth year, and never share it with anyone. Second, be careful on public WiFi (at a market, church, or trading centre) — avoid logging into banking or mobile money apps on networks you don't control, and turn off automatic file sharing when you're not using it. Third, be skeptical of links and messages that ask you to click something urgently, especially ones claiming you've won a prize or that your account will be closed. Scammers rely on panic to make you act before you think. Finally, keep your phone's software updated when you can — updates often fix security problems you can't see. None of this requires being a tech expert; it just means slowing down for a moment before you tap, share, or type something sensitive.",
+          "questions": [
+            {
+              "question": "What should you do before connecting to public WiFi?",
+              "options": ["Nothing special", "Turn off automatic file sharing and avoid entering passwords", "Turn off your phone entirely", "Delete all your apps"],
+              "correctIndex": 1
+            },
+            {
+              "question": "Which of these is the strongest type of password?",
+              "options": ["Your birthday", "123456", "A mix of letters, numbers, and symbols", "Your name"],
+              "correctIndex": 2
+            }
+          ]
+        },
+        {
+          "title": "Mobile Money Basics",
+          "pointsValue": 10,
+          "resourceText": "Mobile money has made it possible to send, receive, and save money without a bank branch nearby — but it works best when you treat it with the same care as cash. Every transaction sends you a confirmation SMS; always read it before you close the message, and check that the amount and recipient match what you intended. If a transaction looks wrong, contact your provider immediately rather than waiting. Your PIN is the single most important piece of security you have — never share it with anyone, including agents, family members, or anyone claiming to be from your mobile money provider over the phone. A real agent or provider will never need your PIN to help you; anyone who asks for it is very likely trying to steal from you. Keep your transaction receipts or SMS history for a while in case you need to dispute something later, and if your phone is lost or stolen, contact your provider right away to have your mobile money line suspended.",
+          "questions": [
+            {
+              "question": "What should you always do after a mobile money transaction?",
+              "options": ["Ignore the confirmation SMS", "Check the confirmation SMS matches what you intended", "Delete the SMS immediately", "Share your PIN with the agent"],
+              "correctIndex": 1
+            },
+            {
+              "question": "Who should you share your mobile money PIN with?",
+              "options": ["No one, not even agents or family", "Your mobile money agent", "A trusted friend", "Anyone who asks"],
+              "correctIndex": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Financial Literacy",
+      "subtitle": "Budgeting, saving, and growing your money",
+      "iconKey": "account_balance",
+      "colorKey": "finance",
+      "topics": [
+        {
+          "title": "Building a Simple Budget",
+          "pointsValue": 10,
+          "resourceText": "A budget doesn't need to be complicated — it's simply a plan for money you already expect to earn and spend. Start by listing every source of income for the month, even small or irregular ones. Then list your expenses: rent, food, transport, school fees, business supplies, and anything else that regularly costs money. Separate these into needs (things you must pay) and wants (things that are nice but could be delayed). Once you can see income and expenses side by side, you can spot problems before they happen — for example, if expenses are consistently higher than income, something has to change, either by cutting a want or finding another source of income. Small daily expenses like transport fares, snacks, or airtime often feel too small to matter, but tracked over a month they can add up to a significant amount — which is exactly why writing them down, even roughly, reveals patterns you wouldn't notice otherwise. A budget you actually look at each week is far more useful than a perfect one you write once and forget.",
+          "questions": [
+            {
+              "question": "What is the first step in creating a budget?",
+              "options": ["Buy everything you want first", "List your income and expenses", "Ignore small expenses", "Borrow money"],
+              "correctIndex": 1
+            },
+            {
+              "question": "Why is it useful to track small daily expenses?",
+              "options": ["They don't matter", "They can add up to a large amount over time", "They're illegal", "They only matter for rich people"],
+              "correctIndex": 1
+            }
+          ]
+        },
+        {
+          "title": "Growing Your Savings",
+          "pointsValue": 10,
+          "resourceText": "Saving is easiest when it happens automatically, before you have a chance to spend the money elsewhere. Rather than saving whatever happens to be left at the end of the month — which for most people is nothing — set aside a fixed amount as soon as you receive income, even if it's small. Consistency matters far more than the amount: saving a little every week builds both the habit and a real cushion over time. Joining a savings group, such as a SACCO or a local village savings and loan association, adds two benefits beyond just storing money safely: it builds a track record that can qualify you for a loan later, and the shared discipline of a group often makes it easier to stick to a saving habit than doing it entirely alone. Keep an emergency fund separate from savings meant for a specific goal (like school fees or business stock) so an unexpected cost doesn't derail your longer-term plans. Over time, even modest, regular saving compounds into a meaningful safety net and a foundation for bigger goals.",
+          "questions": [
+            {
+              "question": "What is a benefit of joining a savings group (SACCO)?",
+              "options": ["Access to loans and shared savings discipline", "It guarantees you'll never lose money", "It replaces the need to budget", "It's only for men"],
+              "correctIndex": 0
+            },
+            {
+              "question": "Which is a good savings habit?",
+              "options": ["Saving whatever is left at the end of the month", "Setting aside a fixed amount first, before spending", "Never saving", "Only saving once a year"],
+              "correctIndex": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Entrepreneurship",
+      "subtitle": "Starting and growing a small business",
+      "iconKey": "rocket_launch",
+      "colorKey": "earn",
+      "topics": [
+        {
+          "title": "Starting a Small Business",
+          "pointsValue": 10,
+          "resourceText": "Before investing time or money into a business idea, it pays to check whether people actually want what you plan to offer. Talk to potential customers, look at what's already being sold nearby and at what price, and be honest about whether there's real demand — not just something you personally like the idea of selling. A business doesn't need to be entirely original to succeed; it needs to solve a real problem or meet a real need better, cheaper, or more conveniently than the alternatives. One way small producers increase their income is through value addition — taking a raw product and processing, packaging, or improving it before selling, rather than selling it unprocessed. For example, selling dried and packaged fruit earns more than selling the same fruit raw, and selling finished garments earns more than selling raw fabric. Start small enough that a mistake doesn't wipe you out, learn from what does and doesn't sell, and grow the parts of the business that are actually working rather than trying to do everything at once.",
+          "questions": [
+            {
+              "question": "What should you research before starting a business?",
+              "options": ["Nothing, just start", "Whether there's demand for your product or service", "Only the price of your rent", "Your competitors' personal lives"],
+              "correctIndex": 1
+            },
+            {
+              "question": "What is 'value addition' in business?",
+              "options": ["Selling raw goods unprocessed", "Processing or improving a product to sell it for more", "Lowering your prices below cost", "Copying a competitor exactly"],
+              "correctIndex": 1
+            }
+          ]
+        },
+        {
+          "title": "Pricing Your Products",
+          "pointsValue": 10,
+          "resourceText": "Setting a price is one of the most common places new business owners lose money without realizing it. At minimum, your price must cover your full costs — materials, transport, your time, and any fees — plus a profit margin on top; pricing below that means you're effectively paying to work. It helps to separate fixed costs (rent, equipment) from variable costs (materials per item) so you understand what each unit actually costs to produce before adding a margin. Look at what competitors charge as a reference point, but don't assume the lowest price wins — customers often care about quality, reliability, and service as much as price, especially once they trust you. Whatever price you choose, keep simple records of what you sell, what it cost you to make or buy, and what you spent on the business overall. Without records, it's easy to feel busy while actually losing money — tracking sales and costs, even in a simple notebook, is what turns a hunch about profitability into something you can actually verify and improve.",
+          "questions": [
+            {
+              "question": "What should your price cover, at minimum?",
+              "options": ["Nothing in particular", "Your costs plus a profit margin", "Only your competitor's price", "Whatever feels right that day"],
+              "correctIndex": 1
+            },
+            {
+              "question": "Why keep records of your sales and costs?",
+              "options": ["It's required by law only", "To know if your business is actually making a profit", "Records aren't useful for small businesses", "Only for tax evasion"],
+              "correctIndex": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Agriculture",
+      "subtitle": "Modern farming and post-harvest techniques",
+      "iconKey": "agriculture",
+      "colorKey": "agriculture",
+      "topics": [
+        {
+          "title": "Improving Crop Yields",
+          "pointsValue": 10,
+          "resourceText": "Good yields start well before harvest, with decisions made at planting time. Crop rotation — changing what you plant in a given plot from season to season instead of growing the same crop repeatedly — helps maintain soil fertility naturally and breaks the life cycle of pests and diseases that build up when the same crop is grown continuously. Quality seed also matters more than many farmers realize: seed that is certified, disease-free, and suited to the local climate typically produces higher and more reliable yields than reused or low-quality seed, even when the growing conditions are otherwise identical. Spacing plants correctly gives each one enough access to sunlight, water, and nutrients, and timely weeding prevents weeds from competing with your crop for those same resources. None of these practices require expensive equipment — they're mostly about timing and consistency. Combined, good rotation, good seed, and good field management can meaningfully increase what the same plot of land produces season after season.",
+          "questions": [
+            {
+              "question": "Why is crop rotation useful?",
+              "options": ["It has no real effect", "It helps maintain soil fertility and reduce pests", "It makes farming more expensive", "It's only for large farms"],
+              "correctIndex": 1
+            },
+            {
+              "question": "What's a benefit of using quality seeds?",
+              "options": ["Higher and more reliable yields", "They cost more so are never worth it", "No difference from any seed", "They require no water"],
+              "correctIndex": 0
+            }
+          ]
+        },
+        {
+          "title": "Post-Harvest Handling",
+          "pointsValue": 10,
+          "resourceText": "A lot of hard-earned harvest is lost not in the field but after it — through poor drying, storage, or handling. Crops that aren't dried properly before storage retain moisture that encourages mould, insects, and rot, all of which reduce both the quantity and the market value of what you're able to sell. Drying produce fully and storing it in a clean, dry, well-ventilated space — off the ground and away from damp walls — dramatically reduces these losses. Damp storage conditions are one of the most common causes of spoilage, so checking your storage area for leaks or dampness before the harvest season is a simple step that protects the value of your entire crop. Sorting produce to remove damaged or diseased pieces before storage also prevents spoilage from spreading to healthy produce nearby. These post-harvest practices don't increase what grows in the field, but they protect it — often the difference between a profitable season and a disappointing one comes down to what happens after the harvest, not just during it.",
+          "questions": [
+            {
+              "question": "Why is proper drying and storage of crops important?",
+              "options": ["It reduces spoilage and loss after harvest", "It has no effect on crop quality", "It's only necessary for export crops", "It makes crops heavier to sell"],
+              "correctIndex": 0
+            },
+            {
+              "question": "What can happen if produce is stored in damp conditions?",
+              "options": ["It stays fresh longer", "Mould and spoilage are more likely", "It becomes more valuable", "Nothing changes"],
+              "correctIndex": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Health & Nutrition",
+      "subtitle": "Family health and wellbeing essentials",
+      "iconKey": "favorite",
+      "colorKey": "health",
+      "topics": [
+        {
+          "title": "Balanced Family Meals",
+          "pointsValue": 10,
+          "resourceText": "A balanced meal doesn't need to be expensive or complicated — it means combining foods from different groups so the body gets what it needs. Carbohydrates (like posho, rice, or matooke) provide energy; proteins (like beans, fish, eggs, or meat) support growth and repair; and vegetables and fruits provide vitamins and minerals that keep the immune system working well. A meal built mostly around one food group, even a filling one, leaves gaps that can affect energy, growth in children, and overall health over time. Clean drinking water is just as important as food — water that isn't properly treated or stored can carry bacteria and parasites that cause diarrhoea and other illnesses, which are especially dangerous for young children. Boiling water, using a safe water source, or treating water with approved purification methods significantly reduces this risk. Small, consistent choices — a bit of vegetable with each meal, treated water, and variety where possible — do more for a family's long-term health than occasional large efforts.",
+          "questions": [
+            {
+              "question": "What does a balanced meal typically include?",
+              "options": ["Only one type of food", "A mix of carbohydrates, proteins, and vegetables or fruits", "Only sugar and fats", "Only meat"],
+              "correctIndex": 1
+            },
+            {
+              "question": "Why is clean drinking water important for health?",
+              "options": ["It has no health impact", "It helps prevent waterborne diseases", "It's only important for adults", "Only bottled water matters"],
+              "correctIndex": 1
+            }
+          ]
+        },
+        {
+          "title": "Maternal & Child Health Basics",
+          "pointsValue": 10,
+          "resourceText": "Regular antenatal check-ups during pregnancy allow a health worker to monitor both the mother's and baby's health and catch potential complications — such as high blood pressure, anaemia, or abnormal growth — early enough to manage them safely, even when the pregnancy feels entirely normal. Waiting until something feels wrong to seek care means some problems are caught later than they should be, when they're harder to treat. After birth, childhood immunizations protect against serious diseases like measles, polio, and tetanus that were once common causes of childhood death and disability — vaccines work by preparing a child's immune system before they're ever exposed to the real disease, and missing doses leaves real gaps in that protection. Growth monitoring visits, even when a child seems healthy, help catch nutritional problems early. None of this requires you to become a health expert — it means using the health services available to you consistently, on schedule, rather than only when something already seems wrong.",
+          "questions": [
+            {
+              "question": "Why are regular antenatal check-ups important during pregnancy?",
+              "options": ["They help catch and manage health risks early", "They are not necessary if you feel fine", "They are only for first pregnancies", "They replace the need for a balanced diet"],
+              "correctIndex": 0
+            },
+            {
+              "question": "Why are childhood immunizations important?",
+              "options": ["They protect children from serious preventable diseases", "They are optional and rarely useful", "They are only needed once in a lifetime", "They are only for children in cities"],
+              "correctIndex": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Leadership",
+      "subtitle": "Community leadership and advocacy skills",
+      "iconKey": "emoji_events",
+      "colorKey": "community",
+      "topics": [
+        {
+          "title": "Leading with Confidence",
+          "pointsValue": 10,
+          "resourceText": "Effective community leadership isn't about having all the answers — it's about listening well and involving the people you lead in decisions that affect them. A leader who only issues instructions without listening tends to lose the trust and buy-in of the people around them, even if their decisions are technically sound; a leader who genuinely listens, even while still having to make the final call, tends to earn cooperation that lasts. Clear communication matters just as much: people work better toward a goal they actually understand than one they're only vaguely aware of. That means explaining not just what needs to be done, but why it matters, in language everyone in the group can follow. Confidence as a leader grows less from certainty and more from preparation and consistency — showing up reliably, following through on commitments, and being honest when something didn't go as planned all build the kind of trust that makes people willing to follow your lead, even through difficulty.",
+          "questions": [
+            {
+              "question": "What is an important quality of an effective community leader?",
+              "options": ["Refusing to listen to others", "Listening to and involving the people you lead", "Making all decisions in secret", "Avoiding responsibility"],
+              "correctIndex": 1
+            },
+            {
+              "question": "Why is clear communication important in leadership?",
+              "options": ["It helps others understand goals and expectations", "It doesn't matter as long as decisions are made", "It's only useful in large organizations", "It slows things down unnecessarily"],
+              "correctIndex": 0
+            }
+          ]
+        },
+        {
+          "title": "Public Speaking & Advocacy",
+          "pointsValue": 10,
+          "resourceText": "Speaking in front of a group feels less intimidating once you realize that preparation matters far more than natural talent. Knowing your topic well, organizing your points in a clear order, and practicing beforehand — even just saying it out loud to yourself once — makes a bigger difference than any speaking style trick. It's fine to be nervous; what matters is that the audience can follow what you're saying, which usually means speaking a little slower than feels natural and pausing between points rather than rushing through them. Advocacy is closely related: it means speaking up and taking deliberate action on behalf of a cause or a group of people, whether that's raising an issue with local leaders, organizing others around a shared concern, or simply making sure a community's needs are heard by people who can act on them. Effective advocacy usually combines the same skills as good public speaking — clarity, preparation, and knowing your subject — with persistence, since most meaningful change takes more than one conversation to achieve.",
+          "questions": [
+            {
+              "question": "What helps most when preparing to speak in front of a group?",
+              "options": ["Improvising with no preparation", "Knowing your topic well and practicing beforehand", "Speaking as fast as possible", "Avoiding eye contact entirely"],
+              "correctIndex": 1
+            },
+            {
+              "question": "What is 'advocacy' in a community context?",
+              "options": ["Ignoring community issues", "Speaking up and taking action for a cause or group of people", "Only criticizing others", "Something only politicians do"],
+              "correctIndex": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
