@@ -17,6 +17,7 @@ class AppShell extends ConsumerWidget {
   // "scan button" nav style rather than sitting flush as a 5th item.
   static const _destinations = [
     _NavDest('home', Icons.home_outlined, Icons.home_rounded, '/'),
+    _NavDest('skills', Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, '/skills'),
     _NavDest('market', Icons.storefront_outlined, Icons.storefront_rounded, '/marketplace'),
     _NavDest('community', Icons.people_outline_rounded, Icons.people_rounded, '/community'),
   ];
