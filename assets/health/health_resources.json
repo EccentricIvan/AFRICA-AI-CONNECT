@@ -1,0 +1,28 @@
+{
+  "resources": [
+    {
+      "titleKey": "maternal_health",
+      "subtitleKey": "maternal_health_desc",
+      "iconKey": "pregnant_woman",
+      "readingText": "Regular antenatal check-ups let a health worker monitor both your health and your baby's growth throughout pregnancy, catching issues like high blood pressure or anaemia early enough to manage safely. Aim for at least four visits during a pregnancy, starting as early as possible once you know you're pregnant. After birth, postnatal check-ups in the first weeks matter just as much as antenatal care — this is when many complications for both mother and baby can still arise. Family planning services are available at most health facilities and let you space pregnancies in a way that's healthiest for you and your family; a trained health worker can walk you through the options available to you."
+    },
+    {
+      "titleKey": "nutrition_guide",
+      "subtitleKey": "nutrition_guide_desc",
+      "iconKey": "restaurant",
+      "readingText": "Children under five need a variety of foods to grow well — a mix of energy-giving foods (like posho, rice, or matooke), body-building foods (like beans, fish, eggs, or milk), and protective foods (vegetables and fruits) at most meals. Breast milk alone is recommended for the first six months, after which nutritious solid foods should be gradually introduced alongside continued breastfeeding. For the whole family, eating a variety of locally available foods, drinking clean water, and reducing added sugar and very processed snacks supports better long-term health for everyone, not just children. If a child seems unusually small for their age or isn't gaining weight, a health worker can check their growth and advise on nutrition."
+    },
+    {
+      "titleKey": "child_health",
+      "subtitleKey": "child_health_desc",
+      "iconKey": "child_care",
+      "readingText": "Childhood immunizations protect against diseases like measles, polio, whooping cough, and tetanus — diseases that used to be common causes of childhood death and disability before vaccines became widely available. Following the full immunization schedule, not just the first dose, is what provides real protection. Common childhood illnesses like diarrhoea, malaria, and respiratory infections are often preventable or manageable if caught early — knowing the warning signs (persistent fever, difficulty breathing, refusal to eat or drink, unusual lethargy) and seeking care promptly can make a significant difference. Keeping a simple record of your child's immunization dates and growth check-ups helps you and health workers track whether they're on schedule."
+    },
+    {
+      "titleKey": "mental_wellness",
+      "subtitleKey": "mental_wellness_desc",
+      "iconKey": "self_improvement",
+      "readingText": "Mental wellbeing matters as much as physical health, even though it's talked about less. Ongoing stress, sadness, or anxiety that doesn't improve with time or rest is worth taking seriously rather than dismissing — these are common experiences, not a sign of weakness, and support is available. Simple daily practices — talking to someone you trust, taking short breaks during a demanding day, getting enough sleep when possible, and staying connected to family or community — all support mental wellbeing over time. If stress or low mood is affecting your ability to function day to day, or if you're having thoughts of harming yourself, reach out to a trusted health worker, counsellor, or community leader, or use one of the helplines listed under Support Resources — you don't have to manage it alone."
+    }
+  ]
+}
