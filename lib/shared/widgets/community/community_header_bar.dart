@@ -48,11 +48,13 @@ class CommunitySubPageHeaderBar extends StatelessWidget {
     required this.onBack,
     this.title,
     this.searchField,
+    this.trailing,
   });
 
   final VoidCallback onBack;
   final String? title;
   final Widget? searchField;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +80,7 @@ class CommunitySubPageHeaderBar extends StatelessWidget {
             )
           else if (searchField != null)
             Expanded(child: searchField!),
+          if (trailing != null) ...[const SizedBox(width: 12), trailing!],
         ],
       ),
     );
