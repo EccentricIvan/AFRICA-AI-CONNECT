@@ -514,7 +514,7 @@ class S {
       AppLocale.sw: 'HUDUMA ZOTE',
     },
     'courses': {
-      AppLocale.en: 'Courses',
+      AppLocale.en: 'Materials',
       AppLocale.lg: 'Amasomo',
       AppLocale.sw: 'Kozi',
     },
@@ -543,7 +543,7 @@ class S {
       AppLocale.sw: 'Stawi',
     },
     'learn_desc': {
-      AppLocale.en: 'Courses & digital skills',
+      AppLocale.en: 'Learning materials & digital skills',
       AppLocale.lg: 'Amasomo n\'obukugu bw\'ekikompyuta',
       AppLocale.sw: 'Kozi na ujuzi wa kidijitali',
     },
@@ -1246,6 +1246,11 @@ class S {
       AppLocale.lg: 'Kitundibwa',
       AppLocale.sw: 'Inauzwa na',
     },
+    'chat_on_platform': {
+      AppLocale.en: 'Chat with seller',
+      AppLocale.lg: 'Yogera n\'atunda mu app',
+      AppLocale.sw: 'Ongea na muuzaji kwenye programu',
+    },
     'message_on_whatsapp': {
       AppLocale.en: 'Message on WhatsApp',
       AppLocale.lg: 'Weewandiikire ku WhatsApp',
@@ -1275,11 +1280,11 @@ class S {
     },
     'grow_with_guidance_desc': {
       AppLocale.en:
-          'Every successful woman had someone who believed in her. Find your mentor or become one.',
+          'Every thriving community had someone who believed in others. Find your mentor or become one.',
       AppLocale.lg:
-          'Omukazi buli omu eyakuwerera yaali n\'omuntu eyamwesiga. Noonyereza omuyambi wo oba gwa obenga.',
+          'Buli abantu abakulaakulana baalimu omuntu eyakkiriza abalala. Noonyereza omuyambi wo oba gwa obenga.',
       AppLocale.sw:
-          'Kila mwanamke aliyefanikiwa alikuwa na mtu aliyemwamini. Tafuta mshauri wako au uwe mmoja.',
+          'Kila jamii iliyofanikiwa ilikuwa na mtu aliyewaamini wengine. Tafuta mshauri wako au uwe mmoja.',
     },
     'find_mentor_title': {
       AppLocale.en: 'Find a Mentor',
@@ -1287,10 +1292,10 @@ class S {
       AppLocale.sw: 'Tafuta Mshauri',
     },
     'find_mentor_desc': {
-      AppLocale.en: 'Connect with experienced women who can guide you',
+      AppLocale.en: 'Connect with experienced mentors from your community who can guide you',
       AppLocale.lg:
-          'Kolagana n\'abakazi ab\'obutegefu abasobola okukuyongereza',
-      AppLocale.sw: 'Unganika na wanawake wenye uzoefu wanaoweza kukuongoza',
+          'Kolagana n\'abayambi ab\'obutegefu okuva mu bantu bo abasobola okukuyongereza',
+      AppLocale.sw: 'Unganika na washauri wenye uzoefu kutoka jamii yako wanaoweza kukuongoza',
     },
     'become_mentor_title': {
       AppLocale.en: 'Become a Mentor',
@@ -1308,9 +1313,9 @@ class S {
       AppLocale.sw: 'Unganika',
     },
     'apply_to_mentor': {
-      AppLocale.en: 'Apply to Mentor',
-      AppLocale.lg: 'Saba Okuba Omuyambi',
-      AppLocale.sw: 'Omba Kuwa Mshauri',
+      AppLocale.en: 'Offer Mentorship',
+      AppLocale.lg: 'Wayo Obuyambi',
+      AppLocale.sw: 'Toa Ushauri',
     },
     'share_knowledge': {
       AppLocale.en: 'Share your knowledge',
@@ -1319,11 +1324,11 @@ class S {
     },
     'share_knowledge_desc': {
       AppLocale.en:
-          'Help other women grow by sharing your skills and experience. Being a mentor is one of the most impactful things you can do.',
+          'Help others in your community grow by sharing your skills and experience. Being a mentor is one of the most impactful things you can do.',
       AppLocale.lg:
-          'Yamba abakazi abalala okukula nga ogabana obukugu bwo n\'obutegefu bwo. Okuba omuyambi kye kimu mu bintu ebimu ebyongeza ennyo.',
+          'Yamba abantu mu bantu bo okukula nga ogabana obukugu bwo n\'obutegefu bwo. Okuba omuyambi kye kimu mu bintu ebimu ebyongeza ennyo.',
       AppLocale.sw:
-          'Saidia wanawake wengine kukua kwa kushiriki ujuzi na uzoefu wako. Kuwa mshauri ni moja ya mambo yenye athari zaidi unayoweza kufanya.',
+          'Saidia wengine katika jamii yako kukua kwa kushiriki ujuzi na uzoefu wako. Kuwa mshauri ni moja ya mambo yenye athari zaidi unayoweza kufanya.',
     },
     'yrs_experience': {
       AppLocale.en: 'yrs experience',

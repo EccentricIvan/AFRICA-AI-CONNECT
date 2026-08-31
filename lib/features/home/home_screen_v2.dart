@@ -67,6 +67,7 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
     ref.watch(localeProvider);
     final user = ref.watch(currentUserProvider).valueOrNull;
     final userName = user?.name ?? S.literal('Friend');
+    final streak = ref.watch(userStatsProvider).valueOrNull?.currentStreakDays ?? 0;
     final themeMode = ref.watch(themeModeProvider);
     final isDarkMode = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
@@ -101,9 +102,9 @@ class _HomeScreenV2State extends ConsumerState<HomeScreenV2> {
                         title: _t('hero_title'),
                         subtitle: _t('hero_subtitle'),
                         onlineLabel: _t('online'),
-                        streakLabel: '7 ${_t('day_streak')}',
-                        ctaLabel: _t('market'),
-                        onCta: () => context.go('/marketplace'),
+                        streakLabel: '$streak ${_t('day_streak')}',
+                        ctaLabel: _t('continue_learning'),
+                        onCta: () => context.go('/skills'),
                       ),
                       const SizedBox(height: 24),
                       HomeSectionHeader(
@@ -151,7 +152,6 @@ class _CommunityTip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tips = [
-      (t('tip_save'), Icons.lightbulb_outline, t('finance_tip')),
       (t('tip_sacco'), Icons.groups_outlined, t('community_tip')),
       (t('tip_photos'), Icons.camera_alt_outlined, t('business_tip')),
       (t('tip_water'), Icons.water_drop_outlined, t('health_tip')),
@@ -167,12 +167,24 @@ class _CommunityTip extends StatelessWidget {
   }
 }
 
-class _ProgressRow extends StatelessWidget {
+class _ProgressRow extends ConsumerWidget {
   const _ProgressRow({required this.t});
   final String Function(String) t;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final coursesAsync = ref.watch(coursesProvider);
+    final progressAsync = ref.watch(allCourseProgressProvider);
+    final statsAsync = ref.watch(userStatsProvider);
+
+    final totalCourses = coursesAsync.valueOrNull?.length ?? 0;
+    final completedCourses = (progressAsync.valueOrNull ?? const [])
+        .where((p) => p.status == 'completed')
+        .length;
+    final points = statsAsync.valueOrNull?.totalPoints ?? 0;
+    final streak = statsAsync.valueOrNull?.currentStreakDays ?? 0;
+    final nextMilestone = ((points ~/ 100) + 1) * 100;
+
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -181,8 +193,8 @@ class _ProgressRow extends StatelessWidget {
             child: HomeProgressCard(
               kind: HomeProgressKind.courses,
               label: t('courses'),
-              value: '3',
-              progress: 0.30,
+              value: '$completedCourses',
+              progress: totalCourses == 0 ? 0 : completedCourses / totalCourses,
             ),
           ),
           const SizedBox(width: 6),
@@ -190,8 +202,8 @@ class _ProgressRow extends StatelessWidget {
             child: HomeProgressCard(
               kind: HomeProgressKind.points,
               label: t('points'),
-              value: '450',
-              progress: 0.81,
+              value: '$points',
+              progress: nextMilestone == 0 ? 0 : points / nextMilestone,
             ),
           ),
           const SizedBox(width: 6),
@@ -199,8 +211,8 @@ class _ProgressRow extends StatelessWidget {
             child: HomeProgressCard(
               kind: HomeProgressKind.streak,
               label: t('streak'),
-              value: '7d',
-              progress: 0.45,
+              value: '${streak}d',
+              progress: (streak / 7).clamp(0, 1).toDouble(),
             ),
           ),
         ],
@@ -218,6 +230,7 @@ class _QuickActions extends StatelessWidget {
     final actions = [
       (t('ask_ai'), Icons.chat_bubble_outline_rounded, HomeUi.askAi, '/ai-chat'),
       (t('find_jobs'), Icons.work_outline_rounded, HomeUi.findJobs, '/jobs'),
+      (t('skills'), Icons.auto_awesome_outlined, HomeUi.learnAction, '/skills'),
       (
         t('marketplace'),
         Icons.storefront_outlined,
@@ -250,6 +263,13 @@ class _Pillars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pillars = [
+      (
+        t('skills'),
+        t('learn_desc'),
+        Icons.auto_awesome_outlined,
+        HomeUi.learn,
+        '/skills',
+      ),
       (
         t('earn'),
         t('earn_desc'),

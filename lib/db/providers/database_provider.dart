@@ -4,6 +4,14 @@ import '../daos/user_dao.dart';
 import '../daos/marketplace_dao.dart';
 import '../daos/chat_content_dao.dart';
 import '../daos/chat_history_dao.dart';
+import '../daos/messaging_dao.dart';
+import '../daos/settings_dao.dart';
+import '../daos/jobs_dao.dart';
+import '../daos/courses_dao.dart';
+import '../daos/mentors_dao.dart';
+import '../daos/groups_dao.dart';
+import '../daos/user_stats_dao.dart';
+import '../daos/health_facilities_dao.dart';
 import '../chat_content_seed.dart';
 import '../../services/offline_chat_service.dart';
 import '../../services/chat_content_sync_service.dart';
@@ -39,6 +47,190 @@ final selectedMarketplaceCategoryProvider = StateProvider<String?>((ref) => null
 final marketplaceListingsProvider = StreamProvider<List<MarketplaceListing>>((ref) {
   final category = ref.watch(selectedMarketplaceCategoryProvider);
   return ref.watch(marketplaceDaoProvider).watchListings(category: category);
+});
+
+// ── Messaging (Mentorship connect / Marketplace seller chat / Community group chat) ──
+
+final messagingDaoProvider = Provider<MessagingDao>((ref) {
+  return ref.watch(appDatabaseProvider).messagingDao;
+});
+
+final conversationsProvider = StreamProvider<List<Conversation>>((ref) {
+  return ref.watch(messagingDaoProvider).watchConversations();
+});
+
+final conversationProvider = StreamProvider.family<Conversation?, int>((ref, id) {
+  return ref.watch(messagingDaoProvider).watchConversation(id);
+});
+
+/// Whether a conversation already exists for a given (type, subjectId) pair
+/// — e.g. to show "Connected" instead of "Connect" on a mentor card.
+final conversationExistsProvider = StreamProvider.family<bool, ({String type, int subjectId})>((ref, params) {
+  return ref.watch(messagingDaoProvider).watchConversationExists(
+        type: params.type,
+        subjectId: params.subjectId,
+      );
+});
+
+final conversationMessagesProvider = StreamProvider.family<List<Message>, int>((ref, conversationId) {
+  return ref.watch(messagingDaoProvider).watchMessages(conversationId);
+});
+
+// ── Settings ──
+
+final settingsDaoProvider = Provider<SettingsDao>((ref) {
+  return ref.watch(appDatabaseProvider).settingsDao;
+});
+
+final settingsProvider = StreamProvider<Setting>((ref) {
+  return ref.watch(settingsDaoProvider).watchSettings();
+});
+
+/// Fire-and-forget startup work: makes sure the Settings singleton row
+/// exists before anything reads it. Watched once, non-blockingly, from
+/// app.dart alongside chatBootstrapProvider.
+final settingsBootstrapProvider = FutureProvider<void>((ref) async {
+  await ref.read(settingsDaoProvider).ensureRowExists();
+});
+
+// ── Jobs ──
+
+final jobsDaoProvider = Provider<JobsDao>((ref) {
+  return ref.watch(appDatabaseProvider).jobsDao;
+});
+
+final jobsProvider = StreamProvider<List<Job>>((ref) {
+  return ref.watch(jobsDaoProvider).watchJobs();
+});
+
+final jobProvider = StreamProvider.family<Job?, int>((ref, id) {
+  return ref.watch(jobsDaoProvider).watchJob(id);
+});
+
+final myJobApplicationProvider = StreamProvider.family<JobApplication?, int>((ref, jobId) {
+  return ref.watch(jobsDaoProvider).watchMyApplication(jobId);
+});
+
+final myApplicationsCountProvider = StreamProvider<int>((ref) {
+  return ref.watch(jobsDaoProvider).watchMyApplicationsCount();
+});
+
+// ── Skills / courses ──
+
+final coursesDaoProvider = Provider<CoursesDao>((ref) {
+  return ref.watch(appDatabaseProvider).coursesDao;
+});
+
+final coursesProvider = StreamProvider<List<Course>>((ref) {
+  return ref.watch(coursesDaoProvider).watchCourses();
+});
+
+final courseProvider = StreamProvider.family<Course?, int>((ref, id) {
+  return ref.watch(coursesDaoProvider).watchCourse(id);
+});
+
+final courseProgressProvider = StreamProvider.family<CourseProgressRow?, int>((ref, courseId) {
+  return ref.watch(coursesDaoProvider).watchProgress(courseId);
+});
+
+final allCourseProgressProvider = StreamProvider<List<CourseProgressRow>>((ref) {
+  return ref.watch(coursesDaoProvider).watchAllProgress();
+});
+
+final topicsProvider = StreamProvider.family<List<CourseTopic>, int>((ref, courseId) {
+  return ref.watch(coursesDaoProvider).watchTopics(courseId);
+});
+
+final quizQuestionsProvider = StreamProvider.family<List<QuizQuestionRow>, int>((ref, topicId) {
+  return ref.watch(coursesDaoProvider).watchQuizQuestions(topicId);
+});
+
+final topicCompletedProvider = StreamProvider.family<bool, int>((ref, topicId) {
+  return ref.watch(coursesDaoProvider).watchTopicCompleted(topicId);
+});
+
+/// Whether the local user has opened this topic's reading material — the
+/// quiz stays locked until this is true.
+final resourceViewedProvider = StreamProvider.family<bool, int>((ref, topicId) {
+  return ref.watch(coursesDaoProvider).watchResourceViewed(topicId);
+});
+
+final completedTopicsCountProvider = StreamProvider<int>((ref) {
+  return ref.watch(coursesDaoProvider).watchCompletedTopicsCount();
+});
+
+// ── Points / streak ──
+
+final userStatsDaoProvider = Provider<UserStatsDao>((ref) {
+  return ref.watch(appDatabaseProvider).userStatsDao;
+});
+
+final userStatsProvider = StreamProvider<UserStat>((ref) {
+  return ref.watch(userStatsDaoProvider).watchStats();
+});
+
+/// Fire-and-forget startup work: makes sure the UserStats singleton row
+/// exists before anything reads it, same pattern as settingsBootstrapProvider.
+final userStatsBootstrapProvider = FutureProvider<void>((ref) async {
+  await ref.read(userStatsDaoProvider).ensureRowExists();
+});
+
+final currentWeekActivityProvider = StreamProvider<List<bool>>((ref) {
+  return ref.watch(userStatsDaoProvider).watchCurrentWeekActivity();
+});
+
+final hasAnyActivityProvider = StreamProvider<bool>((ref) {
+  return ref.watch(userStatsDaoProvider).watchHasAnyActivity();
+});
+
+// ── Mentorship ──
+
+final mentorsDaoProvider = Provider<MentorsDao>((ref) {
+  return ref.watch(appDatabaseProvider).mentorsDao;
+});
+
+final mentorsProvider = StreamProvider<List<Mentor>>((ref) {
+  return ref.watch(mentorsDaoProvider).watchMentors();
+});
+
+// ── Community groups (also used by Mentorship "Connect") ──
+
+final groupsDaoProvider = Provider<GroupsDao>((ref) {
+  return ref.watch(appDatabaseProvider).groupsDao;
+});
+
+final groupsProvider = StreamProvider<List<Group>>((ref) {
+  return ref.watch(groupsDaoProvider).watchGroups();
+});
+
+final myGroupsProvider = StreamProvider<List<Group>>((ref) {
+  return ref.watch(groupsDaoProvider).watchMyGroups();
+});
+
+final groupProvider = StreamProvider.family<Group?, int>((ref, id) {
+  return ref.watch(groupsDaoProvider).watchGroup(id);
+});
+
+final groupMembersProvider = StreamProvider.family<List<GroupMember>, int>((ref, groupId) {
+  return ref.watch(groupsDaoProvider).watchMembers(groupId);
+});
+
+final isGroupMemberProvider = StreamProvider.family<bool, int>((ref, groupId) {
+  return ref.watch(groupsDaoProvider).watchIsMember(groupId);
+});
+
+final groupForMentorProvider = StreamProvider.family<Group?, int>((ref, mentorId) {
+  return ref.watch(groupsDaoProvider).watchGroupForMentor(mentorId);
+});
+
+// ── Health ──
+
+final healthFacilitiesDaoProvider = Provider<HealthFacilitiesDao>((ref) {
+  return ref.watch(appDatabaseProvider).healthFacilitiesDao;
+});
+
+final healthFacilitiesProvider = StreamProvider<List<HealthFacility>>((ref) {
+  return ref.watch(healthFacilitiesDaoProvider).watchFacilities();
 });
 
 // ── AI Chat ──
