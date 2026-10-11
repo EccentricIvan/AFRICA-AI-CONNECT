@@ -17,6 +17,10 @@ class ConversationMemory {
     this.factClipChars = 90,
     this.digestClipChars = 280,
     this.anchorClipChars = 240,
+    this.maxSlots = 4,
+    this.maxEntities = 6,
+    this.maxUnresolved = 2,
+    this.stateClipChars = 60,
   }) : assert(maxRawTurns >= 2 && maxRawTurns.isEven);
 
   /// Raw Student/Tutor lines kept verbatim (always an even count).
@@ -26,12 +30,26 @@ class ConversationMemory {
   final int factClipChars;
   final int digestClipChars;
   final int anchorClipChars;
+  final int maxSlots;
+  final int maxEntities;
+  final int maxUnresolved;
+
+  /// Clip for each topic / intent / slot value / entity.
+  final int stateClipChars;
 
   /// Rolling one-line digest of older exchanges folded out of [turns].
   String? lessonDigest;
 
   /// Last substantive student question (for follow-up resolution).
   String? anchorQuestion;
+
+  // Active conversation state used to resolve follow-ups. Every collection is
+  // capped (oldest dropped) so the recall file stays bounded.
+  String? activeTopic;
+  String? activeIntent;
+  final Map<String, String> activeSlots = {};
+  final List<String> activeEntities = [];
+  final List<String> unresolvedQuestions = [];
 
   final List<({String role, String text})> turns = [];
   final List<String> established = [];
@@ -48,6 +66,12 @@ class ConversationMemory {
     established.clear();
     lessonDigest = null;
     anchorQuestion = null;
+
+    activeTopic = null;
+    activeIntent = null;
+    activeSlots.clear();
+    activeEntities.clear();
+    unresolvedQuestions.clear();
   }
 
   /// Record one English exchange. Returns `false` when the write was rejected
@@ -58,6 +82,10 @@ class ConversationMemory {
     required String tutor,
     List<String> verified = const [],
     String? languageCode,
+    String? topic,
+    String? intent,
+    Map<String, String> slots = const {},
+    List<String> entities = const [],
   }) {
     final studentClean = _cleanStudent(student, languageCode: languageCode);
     final tutorClean = _cleanTutor(tutor);
@@ -70,9 +98,68 @@ class ConversationMemory {
 
     turns.add((role: 'student', text: _clip(studentClean, turnClipChars)));
     turns.add((role: 'tutor', text: _clip(tutorClean, turnClipChars)));
+
+    // Applied on every accepted turn, not only substantive ones: a short
+    // correction ("in cm") is exactly what sets a slot.
+    _mergeActiveState(
+      topic: topic,
+      intent: intent,
+      slots: slots,
+      entities: entities,
+    );
     _mergeFacts(verified);
     _foldOverflow();
     return true;
+  }
+
+  /// A supplied topic or intent replaces the current one. Slots merge by key
+  /// (a corrected value overwrites the old one); entities are deduped.
+  void _mergeActiveState({
+    String? topic,
+    String? intent,
+    Map<String, String> slots = const {},
+    List<String> entities = const [],
+  }) {
+    final t = topic?.trim() ?? '';
+    if (t.isNotEmpty) activeTopic = _clip(t, stateClipChars);
+    final i = intent?.trim() ?? '';
+    if (i.isNotEmpty) activeIntent = _clip(i, stateClipChars);
+
+    for (final entry in slots.entries) {
+      final key = _clip(entry.key.trim(), stateClipChars);
+      final value = _clip(entry.value.trim(), stateClipChars);
+      if (key.isEmpty || value.isEmpty) continue;
+      // Re-insert so the newest slot is last and survives the cap.
+      activeSlots.remove(key);
+      activeSlots[key] = value;
+    }
+    while (activeSlots.length > maxSlots) {
+      activeSlots.remove(activeSlots.keys.first);
+    }
+
+    for (final raw in entities) {
+      final value = _clip(raw.trim(), stateClipChars);
+      if (value.isEmpty) continue;
+      activeEntities.remove(value);
+      activeEntities.add(value);
+    }
+    if (activeEntities.length > maxEntities) {
+      activeEntities.removeRange(0, activeEntities.length - maxEntities);
+    }
+  }
+
+  /// Record a question the tutor hasn't answered yet (newest kept).
+  void addUnresolved(String question) {
+    final q = _clip(question.trim(), turnClipChars);
+    if (q.isEmpty) return;
+    unresolvedQuestions.remove(q);
+    unresolvedQuestions.add(q);
+    if (unresolvedQuestions.length > maxUnresolved) {
+      unresolvedQuestions.removeRange(
+        0,
+        unresolvedQuestions.length - maxUnresolved,
+      );
+    }
   }
 
   void _mergeFacts(List<String> verified) {
@@ -157,8 +244,7 @@ class ConversationMemory {
   }
 
   bool isContinuing(String message, {String? languageCode}) {
-    if (turns.isEmpty &&
-        (anchorQuestion == null || anchorQuestion!.isEmpty)) {
+    if (turns.isEmpty && (anchorQuestion == null || anchorQuestion!.isEmpty)) {
       return false;
     }
     final gloss = toEnglishFollowUp(message, langCode: languageCode);
@@ -180,10 +266,27 @@ class ConversationMemory {
   }
 
   static const _continuingPhrases = {
-    'yes', 'yeah', 'yep', 'ok', 'okay', 'sure', 'no',
-    'why', 'how', 'what', 'more', 'again', 'example', 'an example',
-    'explain', 'explain more', 'continue', 'go on', 'next',
-    'and then', 'what about that',
+    'yes',
+    'yeah',
+    'yep',
+    'ok',
+    'okay',
+    'sure',
+    'no',
+    'why',
+    'how',
+    'what',
+    'more',
+    'again',
+    'example',
+    'an example',
+    'explain',
+    'explain more',
+    'continue',
+    'go on',
+    'next',
+    'and then',
+    'what about that',
   };
 
   bool isCorrection(String message, {String? languageCode}) {
@@ -198,8 +301,20 @@ class ConversationMemory {
         t.contains('you got it wrong');
   }
 
-  void noteCorrection() {
-    if (established.isNotEmpty) established.removeLast();
+  /// Drops the fact named by [factKey], or the newest fact when no key is
+  /// known (the student only said "that's wrong").
+  void noteCorrection({String? factKey}) {
+    if (factKey != null && factKey.trim().isNotEmpty) {
+      invalidateFact(factKey);
+    } else if (established.isNotEmpty) {
+      established.removeLast();
+    }
+  }
+
+  void invalidateFact(String key) {
+    final normalizedKey = key.trim().toLowerCase();
+    if (normalizedKey.isEmpty) return;
+    established.removeWhere((fact) => _factKey(fact) == normalizedKey);
   }
 
   /// Snapshot the whole mutable state so a session can be reopened later.
@@ -208,13 +323,19 @@ class ConversationMemory {
   /// [maxRawTurns] and each entry at [turnClipChars], so this stays a
   /// compressed recall, never a transcript.
   Map<String, Object?> toJson() => {
-        'digest': lessonDigest,
-        'anchor': anchorQuestion,
-        'turns': [
-          for (final t in turns) {'role': t.role, 'text': t.text},
-        ],
-        'facts': List<String>.from(established),
-      };
+    'digest': lessonDigest,
+    'anchor': anchorQuestion,
+    'schemaVersion': 2,
+    'activeTopic': activeTopic,
+    'activeIntent': activeIntent,
+    'activeSlots': Map<String, String>.from(activeSlots),
+    'activeEntities': List<String>.from(activeEntities),
+    'unresolvedQuestions': List<String>.from(unresolvedQuestions),
+    'turns': [
+      for (final t in turns) {'role': t.role, 'text': t.text},
+    ],
+    'facts': List<String>.from(established),
+  };
 
   /// Re-seed from [toJson]. Replaces any current state.
   ///
@@ -260,6 +381,34 @@ class ConversationMemory {
         if (established.length >= maxFacts) break;
       }
     }
+
+    // Active state (schemaVersion 2). Older files have none of these keys.
+    // Routed through the same merge as [remember] so caps and clips apply.
+    final topic = json['activeTopic'];
+    final intent = json['activeIntent'];
+    final rawSlots = json['activeSlots'];
+    final rawEntities = json['activeEntities'];
+    _mergeActiveState(
+      topic: topic is String ? topic : null,
+      intent: intent is String ? intent : null,
+      slots: {
+        if (rawSlots is Map)
+          for (final entry in rawSlots.entries)
+            if (entry.key is String && entry.value is String)
+              entry.key as String: entry.value as String,
+      },
+      entities: [
+        if (rawEntities is List)
+          for (final item in rawEntities)
+            if (item is String) item,
+      ],
+    );
+    final rawQuestions = json['unresolvedQuestions'];
+    if (rawQuestions is List) {
+      for (final item in rawQuestions) {
+        if (item is String) addUnresolved(item);
+      }
+    }
   }
 
   String resolveCurrent(String message, {String? languageCode}) {
@@ -303,12 +452,41 @@ class ConversationMemory {
     ];
     var facts = List<String>.from(established);
 
+    // Optional active-state sections; dropped before THREAD is touched,
+    // because THREAD is what keeps follow-ups coherent on a 1.5B model.
+    var withUnresolved = true;
+    var withEntities = true;
+    var withSlots = true;
+
     String build({
       required String? dig,
       required List<String> lines,
       required List<String> factLines,
     }) {
       final buf = StringBuffer();
+      final topic = activeTopic;
+      if (topic != null && topic.isNotEmpty) {
+        buf.writeln('ACTIVE_TOPIC: $topic');
+      }
+      final intent = activeIntent;
+      if (intent != null && intent.isNotEmpty) {
+        buf.writeln('ACTIVE_INTENT: $intent');
+      }
+      if (withSlots && activeSlots.isNotEmpty) {
+        buf.writeln('ACTIVE_CONSTRAINTS:');
+        for (final entry in activeSlots.entries) {
+          buf.writeln('- ${entry.key}: ${entry.value}');
+        }
+      }
+      if (withEntities && activeEntities.isNotEmpty) {
+        buf.writeln('ACTIVE_ENTITIES: ${activeEntities.join(', ')}');
+      }
+      if (withUnresolved && unresolvedQuestions.isNotEmpty) {
+        buf.writeln('UNRESOLVED_QUESTIONS:');
+        for (final question in unresolvedQuestions) {
+          buf.writeln('- $question');
+        }
+      }
       if (dig != null && dig.isNotEmpty) {
         buf.writeln('DIGEST: $dig');
       }
@@ -329,6 +507,17 @@ class ConversationMemory {
 
     var block = build(dig: digest, lines: threadLines, factLines: facts);
     if (maxChars == null || block.length <= maxChars) return block;
+
+    // 0) Drop optional active state, least useful first.
+    withUnresolved = false;
+    block = build(dig: digest, lines: threadLines, factLines: facts);
+    if (block.length <= maxChars) return block;
+    withEntities = false;
+    block = build(dig: digest, lines: threadLines, factLines: facts);
+    if (block.length <= maxChars) return block;
+    withSlots = false;
+    block = build(dig: digest, lines: threadLines, factLines: facts);
+    if (block.length <= maxChars) return block;
 
     // 1) Drop digest.
     block = build(dig: null, lines: threadLines, factLines: facts);

@@ -54,12 +54,15 @@ class DiagramMarker {
 
   String get key => '$document|$page|$caption';
 
-  static String _clean(String s) =>
-      s.replaceAll(RegExp(r'[\[\]|"\n]'), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+  static String _clean(String s) => s
+      .replaceAll(RegExp(r'[\[\]|"\n]'), ' ')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
 }
 
 /// True for lines that are diagram markers, so heading detection skips them.
-bool isDiagramMarkerLine(String line) => line.trimLeft().startsWith('[DIAGRAM: ');
+bool isDiagramMarkerLine(String line) =>
+    line.trimLeft().startsWith('[DIAGRAM: ');
 
 final _captionStart = RegExp(
   r'^(fig(?:ure)?\.?|diagram|illustration|chart|graph|map|plate)\s*'
@@ -140,7 +143,10 @@ double inkRatio(RenderedPage page) {
   for (var y = 0; y < page.height; y += stride) {
     for (var x = 0; x < page.width; x += stride) {
       final i = (y * page.width + x) * 4;
-      final luma = 0.114 * page.bgra[i] + 0.587 * page.bgra[i + 1] + 0.299 * page.bgra[i + 2];
+      final luma =
+          0.114 * page.bgra[i] +
+          0.587 * page.bgra[i + 1] +
+          0.299 * page.bgra[i + 2];
       if (luma < 140) dark++;
       seen++;
     }
@@ -162,7 +168,10 @@ int countPictureRegions(RenderedPage page, List<PageBox> textBoxes) {
     final c0 = ((b.left * page.width) / cell - 0.5).floor().clamp(0, cols - 1);
     final c1 = ((b.right * page.width) / cell + 0.5).floor().clamp(0, cols - 1);
     final r0 = ((b.top * page.height) / cell - 0.5).floor().clamp(0, rows - 1);
-    final r1 = ((b.bottom * page.height) / cell + 0.5).floor().clamp(0, rows - 1);
+    final r1 = ((b.bottom * page.height) / cell + 0.5).floor().clamp(
+      0,
+      rows - 1,
+    );
     for (var r = r0; r <= r1; r++) {
       for (var c = c0; c <= c1; c++) {
         isText[r * cols + c] = true;
@@ -177,13 +186,16 @@ int countPictureRegions(RenderedPage page, List<PageBox> textBoxes) {
   for (var r = marginR; r < rows - marginR; r++) {
     for (var c = marginC; c < cols - marginC; c++) {
       if (isText[r * cols + c]) continue;
-      final x0 = (c * cell).floor(), x1 = ((c + 1) * cell).floor().clamp(0, page.width);
-      final y0 = (r * cell).floor(), y1 = ((r + 1) * cell).floor().clamp(0, page.height);
+      final x0 = (c * cell).floor(),
+          x1 = ((c + 1) * cell).floor().clamp(0, page.width);
+      final y0 = (r * cell).floor(),
+          y1 = ((r + 1) * cell).floor().clamp(0, page.height);
       var dark = 0, seen = 0;
       for (var y = y0; y < y1; y += stride) {
         for (var x = x0; x < x1; x += stride) {
           final i = (y * page.width + x) * 4;
-          final luma = 0.114 * page.bgra[i] +
+          final luma =
+              0.114 * page.bgra[i] +
               0.587 * page.bgra[i + 1] +
               0.299 * page.bgra[i + 2];
           if (luma < 140) dark++;

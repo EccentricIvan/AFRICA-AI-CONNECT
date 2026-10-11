@@ -35,11 +35,7 @@ class AiEngineService {
         );
       }
       try {
-        return await t.toEnglishDetailed(
-          text,
-          languageCode,
-          onToken: onToken,
-        );
+        return await t.toEnglishDetailed(text, languageCode, onToken: onToken);
       } finally {
         // Pipeline owns native scratch; no LiteRT/GGUF handles here.
       }

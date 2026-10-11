@@ -81,7 +81,8 @@ class ChatInferencePipeline {
     String englishUser,
     String userText,
   ) async {
-    final wants = preferProgramming ||
+    final wants =
+        preferProgramming ||
         _programmingThread ||
         looksLikeProgramming(englishUser) ||
         looksLikeProgramming(userText);
@@ -147,7 +148,8 @@ class ChatInferencePipeline {
     String? pretranslatedEnglish,
     void Function(String cumulative)? onUiToken,
   }) async {
-    final skipInbound = pretranslatedEnglish != null ||
+    final skipInbound =
+        pretranslatedEnglish != null ||
         languageCode == 'en' ||
         isMathPassThrough(userText) ||
         queryLooksLikeMath(userText) ||
@@ -170,9 +172,7 @@ class ChatInferencePipeline {
       unawaited(pending.whenComplete(ingest.close));
     } else {
       ingest
-        ..add(
-          toEnglishFollowUp(userText, langCode: languageCode) ?? userText,
-        )
+        ..add(toEnglishFollowUp(userText, langCode: languageCode) ?? userText)
         ..close();
     }
 
@@ -192,8 +192,10 @@ class ChatInferencePipeline {
       }
     }
 
-    final (activeTutor, activeReasoner) =
-        await _brainFor(englishUser, userText);
+    final (activeTutor, activeReasoner) = await _brainFor(
+      englishUser,
+      userText,
+    );
 
     final overlapOutbound =
         languageCode != 'en' && translator != null && canOverlapNative;
@@ -214,7 +216,8 @@ class ChatInferencePipeline {
     }
 
     final queued = <String>[];
-    var translateFree = skipInbound || inboundFuture == null || !canOverlapNative;
+    var translateFree =
+        skipInbound || inboundFuture == null || !canOverlapNative;
 
     final uiDone = Completer<void>();
     late final StreamSubscription<String> uiSub;

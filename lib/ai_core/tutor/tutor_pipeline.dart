@@ -363,6 +363,7 @@ Tutor:''';
       tutor: tutorText,
       verified: verified,
       languageCode: languageCode,
+      topic: _activeMatch?.lesson.title ?? _currentTopic.replaceAll('_', ' '),
     );
   }
 

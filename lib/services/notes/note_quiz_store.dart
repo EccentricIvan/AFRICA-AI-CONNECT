@@ -41,13 +41,7 @@ class NoteQuizStore {
   /// The row text for [q], written from [page] of the PDF (0 when not
   /// known) under [topic].
   static String format(QuizQuestion q, int page, {String? topic}) =>
-      '[QUIZ: page=$page] ${jsonEncode({
-        'question': q.question,
-        'options': q.options,
-        'correctIndex': q.correct,
-        'explanation': q.explanation,
-        if (topic != null && topic.isNotEmpty) 'topic': topic,
-      })}';
+      '[QUIZ: page=$page] ${jsonEncode({'question': q.question, 'options': q.options, 'correctIndex': q.correct, 'explanation': q.explanation, if (topic != null && topic.isNotEmpty) 'topic': topic})}';
 
   /// The question, its page and topic in [content], or null if it isn't
   /// one.

@@ -40,7 +40,8 @@ class OcrResult {
   /// Reading order, top to bottom.
   final List<OcrLine> lines;
 
-  String get text => lines.map((l) => l.text.trim()).where((t) => t.isNotEmpty).join('\n');
+  String get text =>
+      lines.map((l) => l.text.trim()).where((t) => t.isNotEmpty).join('\n');
 }
 
 /// On-device text recognition for scanned PDF pages. Every implementation

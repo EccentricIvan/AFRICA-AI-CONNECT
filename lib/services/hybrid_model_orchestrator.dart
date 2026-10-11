@@ -7,9 +7,6 @@ class HybridModelOrchestrator {
   static final HybridModelOrchestrator instance = HybridModelOrchestrator._();
 
   Future<T> runExclusive<T>(Future<T> Function() job) {
-    return EngineScheduler.instance.exclusive(
-      job,
-      lane: EngineLane.hybrid,
-    );
+    return EngineScheduler.instance.exclusive(job, lane: EngineLane.hybrid);
   }
 }

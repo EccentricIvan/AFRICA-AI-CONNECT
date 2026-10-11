@@ -37,7 +37,10 @@ class PdfrxPageSource implements PdfPageSource {
   static Future<PdfrxPageSource> open(Uint8List bytes, {String? name}) async {
     await pdfrxFlutterInitialize();
     return PdfrxPageSource._(
-      await PdfDocument.openData(bytes, sourceName: name ?? 'import-${bytes.length}'),
+      await PdfDocument.openData(
+        bytes,
+        sourceName: name ?? 'import-${bytes.length}',
+      ),
     );
   }
 
@@ -53,7 +56,9 @@ class PdfrxPageSource implements PdfPageSource {
     for (var i = 0; i < t.charRects.length && i < t.fullText.length; i++) {
       if (t.fullText[i].trim().isEmpty) continue;
       final r = t.charRects[i];
-      boxes.add(PageBox(r.left / w, (h - r.top) / h, r.right / w, (h - r.bottom) / h));
+      boxes.add(
+        PageBox(r.left / w, (h - r.top) / h, r.right / w, (h - r.bottom) / h),
+      );
     }
     return PageText(t.fullText, boxes);
   }
@@ -218,7 +223,8 @@ Future<PdfExtraction> extractPdfPages(
     try {
       rendered ??= await source.render(n, maxSide: _pictureCheckMaxSide);
       if (rendered != null) {
-        hasPicture = countPictureRegions(rendered, readable ? boxes : const []) > 0;
+        hasPicture =
+            countPictureRegions(rendered, readable ? boxes : const []) > 0;
         blank = !readable && body.trim().isEmpty && inkRatio(rendered) < 0.005;
       }
     } catch (e) {
@@ -227,13 +233,22 @@ Future<PdfExtraction> extractPdfPages(
     if (blank) continue;
 
     if (readable) {
-      final a = annotatePage(body, page: n, document: documentTitle, hasPicture: hasPicture);
+      final a = annotatePage(
+        body,
+        page: n,
+        document: documentTitle,
+        hasPicture: hasPicture,
+      );
       pages.add(a.text);
       diagrams += a.diagrams;
     } else if (hasPicture) {
       // A page that is only a picture is still worth pointing students to.
       pages.add(
-        DiagramMarker(caption: DiagramMarker.kUncaptioned, page: n, document: documentTitle).format(),
+        DiagramMarker(
+          caption: DiagramMarker.kUncaptioned,
+          page: n,
+          document: documentTitle,
+        ).format(),
       );
       diagrams++;
     } else {

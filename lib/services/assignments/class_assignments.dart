@@ -159,7 +159,9 @@ class GradePayload {
       feedback: feedback is String
           ? (feedback.length > 1000 ? feedback.substring(0, 1000) : feedback)
           : null,
-      gradedAt: json['graded_at'] is String ? json['graded_at'] as String : null,
+      gradedAt: json['graded_at'] is String
+          ? json['graded_at'] as String
+          : null,
     );
   }
 }
@@ -214,10 +216,11 @@ class ClassAssignments {
 
   /// This device's own assignments (the ones it may grade).
   Future<List<ClassAssignment>> own() async => [
-    for (final r in await (_db.select(_db.topicResources)
-          ..where((t) => t.topicKey.equals(kAssignmentTopicKey))
-          ..where((t) => t.classGroupUuid.isNull()))
-        .get())
+    for (final r
+        in await (_db.select(_db.topicResources)
+              ..where((t) => t.topicKey.equals(kAssignmentTopicKey))
+              ..where((t) => t.classGroupUuid.isNull()))
+            .get())
       ?ClassAssignment.parse(r),
   ];
 
@@ -251,15 +254,16 @@ class ClassAssignments {
   /// Assignments a learner in [classUuid] may see: this device's own, and
   /// those received for their class.
   Future<List<ClassAssignment>> visible(String? classUuid) async => [
-    for (final r in await (_db.select(_db.topicResources)
-          ..where((t) => t.topicKey.equals(kAssignmentTopicKey))
-          ..where(
-            (t) => classUuid == null
-                ? t.classGroupUuid.isNull()
-                : t.classGroupUuid.isNull() |
-                      t.classGroupUuid.equals(classUuid),
-          ))
-        .get())
+    for (final r
+        in await (_db.select(_db.topicResources)
+              ..where((t) => t.topicKey.equals(kAssignmentTopicKey))
+              ..where(
+                (t) => classUuid == null
+                    ? t.classGroupUuid.isNull()
+                    : t.classGroupUuid.isNull() |
+                          t.classGroupUuid.equals(classUuid),
+              ))
+            .get())
       ?ClassAssignment.parse(r),
   ];
 
@@ -305,9 +309,7 @@ class ClassAssignments {
     int studentId,
     String classUuid,
   ) async {
-    final ids = {
-      for (final a in await _received(classUuid)) a.id,
-    };
+    final ids = {for (final a in await _received(classUuid)) a.id};
     if (ids.isEmpty) return const [];
     final rows =
         await (_db.select(_db.assignmentSubmissions)
@@ -329,10 +331,11 @@ class ClassAssignments {
   }
 
   Future<List<ClassAssignment>> _received(String classUuid) async => [
-    for (final r in await (_db.select(_db.topicResources)
-          ..where((t) => t.topicKey.equals(kAssignmentTopicKey))
-          ..where((t) => t.classGroupUuid.equals(classUuid)))
-        .get())
+    for (final r
+        in await (_db.select(_db.topicResources)
+              ..where((t) => t.topicKey.equals(kAssignmentTopicKey))
+              ..where((t) => t.classGroupUuid.equals(classUuid)))
+            .get())
       ?ClassAssignment.parse(r),
   ];
 
@@ -399,14 +402,18 @@ class ClassAssignments {
 
   /// On the teacher's device: which of [uuids] it holds as [memberKey]'s
   /// answers — what the reply tells the learner's device arrived.
-  Future<List<String>> heldFrom(String memberKey, Iterable<String> uuids) async {
+  Future<List<String>> heldFrom(
+    String memberKey,
+    Iterable<String> uuids,
+  ) async {
     final wanted = uuids.toSet();
     if (wanted.isEmpty) return const [];
     return [
-      for (final r in await (_db.select(_db.assignmentSubmissions)
-            ..where((t) => t.uuid.isIn(wanted))
-            ..where((t) => t.memberKey.equals(memberKey)))
-          .get())
+      for (final r
+          in await (_db.select(_db.assignmentSubmissions)
+                ..where((t) => t.uuid.isIn(wanted))
+                ..where((t) => t.memberKey.equals(memberKey)))
+              .get())
         r.uuid,
     ];
   }

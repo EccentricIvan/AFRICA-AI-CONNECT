@@ -22,7 +22,10 @@ enum ProjectKind {
     return null;
   }
 
-  static ProjectKind fromName(String? name, {ProjectKind fallback = ProjectKind.website}) {
+  static ProjectKind fromName(
+    String? name, {
+    ProjectKind fallback = ProjectKind.website,
+  }) {
     for (final k in values) {
       if (k.name == name) return k;
     }
@@ -78,37 +81,36 @@ class ProjectManifest {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? exportedAt,
-  }) =>
-      ProjectManifest(
-        id: id ?? this.id,
-        kind: kind ?? this.kind,
-        title: title ?? this.title,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        source: source,
-        template: template,
-        templateName: templateName,
-        features: features,
-        answers: answers,
-        hasBackend: hasBackend,
-        exportedAt: exportedAt ?? this.exportedAt,
-      );
+  }) => ProjectManifest(
+    id: id ?? this.id,
+    kind: kind ?? this.kind,
+    title: title ?? this.title,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    source: source,
+    template: template,
+    templateName: templateName,
+    features: features,
+    answers: answers,
+    hasBackend: hasBackend,
+    exportedAt: exportedAt ?? this.exportedAt,
+  );
 
   Map<String, Object?> toJson() => {
-        'format': formatVersion,
-        'id': id,
-        'kind': kind.name,
-        'title': title,
-        'source': source,
-        'template': template,
-        'templateName': templateName,
-        'features': features,
-        'answers': answers,
-        'hasBackend': hasBackend,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'exportedAt': exportedAt?.toIso8601String(),
-      };
+    'format': formatVersion,
+    'id': id,
+    'kind': kind.name,
+    'title': title,
+    'source': source,
+    'template': template,
+    'templateName': templateName,
+    'features': features,
+    'answers': answers,
+    'hasBackend': hasBackend,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'exportedAt': exportedAt?.toIso8601String(),
+  };
 
   String encode() => const JsonEncoder.withIndent('  ').convert(toJson());
 
@@ -117,19 +119,20 @@ class ProjectManifest {
     try {
       final j = jsonDecode(raw);
       if (j is! Map) return null;
-      DateTime date(Object? v) =>
-          v is String ? (DateTime.tryParse(v) ?? DateTime.now()) : DateTime.now();
+      DateTime date(Object? v) => v is String
+          ? (DateTime.tryParse(v) ?? DateTime.now())
+          : DateTime.now();
       return ProjectManifest(
         id: (j['id'] as String?) ?? newId(),
-        kind: ProjectKind.fromName(j['kind'] as String?,
-            fallback: kindHint ?? ProjectKind.website),
+        kind: ProjectKind.fromName(
+          j['kind'] as String?,
+          fallback: kindHint ?? ProjectKind.website,
+        ),
         title: (j['title'] as String?) ?? 'Untitled',
         source: (j['source'] as String?) ?? '',
         template: (j['template'] as String?) ?? '',
         templateName: (j['templateName'] as String?) ?? '',
-        features: [
-          for (final f in (j['features'] as List?) ?? const []) '$f',
-        ],
+        features: [for (final f in (j['features'] as List?) ?? const []) '$f'],
         answers: {
           for (final e in ((j['answers'] as Map?) ?? const {}).entries)
             '${e.key}': '${e.value}',
