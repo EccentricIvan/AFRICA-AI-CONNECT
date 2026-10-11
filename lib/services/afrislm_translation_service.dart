@@ -49,11 +49,15 @@ class AfriSlmTranslationService {
         if (!controller.isClosed) controller.add(token);
       },
     );
-    unawaited(done.then((_) {
-      if (!controller.isClosed) controller.close();
-    }).catchError((Object e, StackTrace st) {
-      if (!controller.isClosed) controller.addError(e, st);
-    }));
+    unawaited(
+      done
+          .then((_) {
+            if (!controller.isClosed) controller.close();
+          })
+          .catchError((Object e, StackTrace st) {
+            if (!controller.isClosed) controller.addError(e, st);
+          }),
+    );
     var any = false;
     await for (final chunk in controller.stream) {
       any = true;
@@ -91,11 +95,15 @@ class AfriSlmTranslationService {
         if (!controller.isClosed) controller.add(token);
       },
     );
-    unawaited(done.then((_) {
-      if (!controller.isClosed) controller.close();
-    }).catchError((Object e, StackTrace st) {
-      if (!controller.isClosed) controller.addError(e, st);
-    }));
+    unawaited(
+      done
+          .then((_) {
+            if (!controller.isClosed) controller.close();
+          })
+          .catchError((Object e, StackTrace st) {
+            if (!controller.isClosed) controller.addError(e, st);
+          }),
+    );
     var any = false;
     await for (final chunk in controller.stream) {
       any = true;

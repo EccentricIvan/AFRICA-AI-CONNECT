@@ -201,7 +201,9 @@ class NotePdfStore {
     await for (final e in dir.list()) {
       if (e is! File) continue;
       final name = e.uri.pathSegments.last;
-      final sha = name.endsWith('.pdf') ? name.substring(0, name.length - 4) : null;
+      final sha = name.endsWith('.pdf')
+          ? name.substring(0, name.length - 4)
+          : null;
       if (sha != null && keep.contains(sha)) continue;
       try {
         // Just written by an import or sync that hasn't recorded it yet.

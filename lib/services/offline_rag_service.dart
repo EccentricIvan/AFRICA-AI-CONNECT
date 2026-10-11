@@ -69,8 +69,12 @@ class OfflineRagService {
       // may still fall back to insertion order — the teacher's opening
       // paragraphs on the very topic the student is sitting on.
       if (onTopic.isNotEmpty) {
-        final ranked =
-            rankChunks(userQuery, onTopic, limit: limit, allowUnscored: true);
+        final ranked = rankChunks(
+          userQuery,
+          onTopic,
+          limit: limit,
+          allowUnscored: true,
+        );
         if (ranked.isNotEmpty) return formatContextBlock(ranked);
       }
 
@@ -205,13 +209,70 @@ Set<String> keywordsOf(String query) {
 }
 
 const _stopwords = {
-  'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her',
-  'was', 'one', 'our', 'out', 'has', 'him', 'his', 'how', 'its', 'may',
-  'new', 'now', 'old', 'see', 'two', 'who', 'did', 'get', 'why', 'what',
-  'when', 'where', 'which', 'this', 'that', 'with', 'from', 'have', 'been',
-  'does', 'about', 'into', 'more', 'some', 'such', 'than', 'then', 'them',
-  'these', 'they', 'will', 'would', 'could', 'should', 'there', 'their',
-  'please', 'explain', 'tell', 'give', 'help', 'need', 'want', 'know',
+  'the',
+  'and',
+  'for',
+  'are',
+  'but',
+  'not',
+  'you',
+  'all',
+  'can',
+  'her',
+  'was',
+  'one',
+  'our',
+  'out',
+  'has',
+  'him',
+  'his',
+  'how',
+  'its',
+  'may',
+  'new',
+  'now',
+  'old',
+  'see',
+  'two',
+  'who',
+  'did',
+  'get',
+  'why',
+  'what',
+  'when',
+  'where',
+  'which',
+  'this',
+  'that',
+  'with',
+  'from',
+  'have',
+  'been',
+  'does',
+  'about',
+  'into',
+  'more',
+  'some',
+  'such',
+  'than',
+  'then',
+  'them',
+  'these',
+  'they',
+  'will',
+  'would',
+  'could',
+  'should',
+  'there',
+  'their',
+  'please',
+  'explain',
+  'tell',
+  'give',
+  'help',
+  'need',
+  'want',
+  'know',
 };
 
 /// Joins ranked chunks into one clean context block.

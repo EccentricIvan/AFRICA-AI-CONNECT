@@ -254,8 +254,7 @@ class NoteTextIndexer {
 
   void _clearProgress(NotePdf pdf) {
     final n = _ref.read(noteReadingProvider.notifier);
-    n.state = {...n.state}
-      ..remove(noteKey(pdf.subjectId, pdf.documentTitle));
+    n.state = {...n.state}..remove(noteKey(pdf.subjectId, pdf.documentTitle));
   }
 
   void _refresh(NotePdf pdf) =>

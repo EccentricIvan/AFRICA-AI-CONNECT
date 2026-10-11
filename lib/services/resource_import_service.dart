@@ -15,7 +15,8 @@ import 'notes/note_text_indexer.dart';
 import 'pdf/pdf_page_extractor.dart';
 import 'resource_text_extractor.dart';
 
-typedef PdfOpener = Future<PdfPageSource> Function(Uint8List bytes, String name);
+typedef PdfOpener =
+    Future<PdfPageSource> Function(Uint8List bytes, String name);
 typedef OcrLookup = Future<OcrEngine?> Function();
 
 Future<PdfPageSource> _openWithPdfium(Uint8List bytes, String name) =>
@@ -142,7 +143,11 @@ class ResourceImportService {
         isCancelled: isCancelled,
       );
       if (read.failure != null) {
-        return ImportReport.failed(fileName, read.failure!, cancelled: read.cancelled);
+        return ImportReport.failed(
+          fileName,
+          read.failure!,
+          cancelled: read.cancelled,
+        );
       }
       text = read.text;
       format = 'pdf';
@@ -316,14 +321,18 @@ class ResourceImportService {
     try {
       source = await _openPdf(bytes, fileName);
     } catch (e) {
-      debugPrint('PDFium could not open $fileName, using the fallback reader: $e');
+      debugPrint(
+        'PDFium could not open $fileName, using the fallback reader: $e',
+      );
     }
     if (source == null) {
       final r = extractPdfText(bytes);
       return (
         text: r.text,
         pdf: null,
-        failure: r.ok ? null : (r.failure ?? 'No text could be read from that PDF.'),
+        failure: r.ok
+            ? null
+            : (r.failure ?? 'No text could be read from that PDF.'),
         cancelled: false,
       );
     }
@@ -338,16 +347,26 @@ class ResourceImportService {
         isCancelled: isCancelled,
       );
       if (pdf.cancelled) {
-        return (text: '', pdf: pdf, failure: 'Import cancelled. Nothing was saved.', cancelled: true);
+        return (
+          text: '',
+          pdf: pdf,
+          failure: 'Import cancelled. Nothing was saved.',
+          cancelled: true,
+        );
       }
-      final hasText = pdf.text.replaceAll(RegExp(r'\[DIAGRAM: [^\]]*\]'), '').trim().isNotEmpty;
+      final hasText = pdf.text
+          .replaceAll(RegExp(r'\[DIAGRAM: [^\]]*\]'), '')
+          .trim()
+          .isNotEmpty;
       if (!hasText) {
         final String why;
         if (ocr == null && pdf.unreadablePages > 0) {
-          why = 'This PDF is a scan and no text could be read from it. '
+          why =
+              'This PDF is a scan and no text could be read from it. '
               '${ocrUnavailableReason()}';
         } else if (pdf.unreadablePages > 0) {
-          why = 'No text could be read from that PDF, even as a scan. The pages '
+          why =
+              'No text could be read from that PDF, even as a scan. The pages '
               'may be too faint or blurred — try a clearer scan, or type or '
               'paste the notes in instead.';
         } else {
@@ -357,7 +376,12 @@ class ResourceImportService {
       }
       return (text: pdf.text, pdf: pdf, failure: null, cancelled: false);
     } catch (e) {
-      return (text: '', pdf: null, failure: 'That PDF could not be read ($e).', cancelled: false);
+      return (
+        text: '',
+        pdf: null,
+        failure: 'That PDF could not be read ($e).',
+        cancelled: false,
+      );
     } finally {
       await source.close();
     }
@@ -427,18 +451,21 @@ class ImportReport {
   }) : failure = null,
        cancelled = false;
 
-  const ImportReport.failed(this.fileName, this.failure, {this.cancelled = false})
-    : documentTitle = '',
-      format = '',
-      chunkCount = 0,
-      topics = const [],
-      wordCount = 0,
-      pageCount = 0,
-      ocrPages = 0,
-      unreadablePages = 0,
-      diagramCount = 0,
-      keptOriginal = false,
-      readingLater = false;
+  const ImportReport.failed(
+    this.fileName,
+    this.failure, {
+    this.cancelled = false,
+  }) : documentTitle = '',
+       format = '',
+       chunkCount = 0,
+       topics = const [],
+       wordCount = 0,
+       pageCount = 0,
+       ocrPages = 0,
+       unreadablePages = 0,
+       diagramCount = 0,
+       keptOriginal = false,
+       readingLater = false;
 
   /// PDFs only: pages in the file, pages read by OCR, pages with nothing
   /// readable, and diagram markers added.

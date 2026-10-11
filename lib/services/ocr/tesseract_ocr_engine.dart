@@ -57,13 +57,15 @@ List<OcrLine> parseTesseractTsv(String tsv) {
       if (l + w > right) right = l + w;
       if (t + h > bottom) bottom = t + h;
     }
-    lines.add(OcrLine(
-      group.map((c) => c[11].trim()).join(' '),
-      left,
-      top,
-      right - left,
-      bottom - top,
-    ));
+    lines.add(
+      OcrLine(
+        group.map((c) => c[11].trim()).join(' '),
+        left,
+        top,
+        right - left,
+        bottom - top,
+      ),
+    );
   }
   return lines..sort((a, b) => a.top.compareTo(b.top));
 }

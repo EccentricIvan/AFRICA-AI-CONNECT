@@ -183,7 +183,7 @@ class QwenChatService {
 /// Backward-compatible alias used by [ChatInferencePipeline].
 class QwenReasoningService {
   QwenReasoningService(InferenceEngine engine, {String? modelPath})
-      : _chat = QwenChatService(engine, modelPath: modelPath);
+    : _chat = QwenChatService(engine, modelPath: modelPath);
 
   final QwenChatService _chat;
 

@@ -60,7 +60,10 @@ void main() {
     final m = ConversationMemory();
     m.remember(student: 'What is a cell?', tutor: 'Basic unit of life.');
     m.remember(student: 'What is DNA?', tutor: 'Genetic material.');
-    m.remember(student: 'What is a gene?', tutor: 'A DNA segment that codes for a trait.');
+    m.remember(
+      student: 'What is a gene?',
+      tutor: 'A DNA segment that codes for a trait.',
+    );
     expect(m.turns.length, 4);
     expect(m.lessonDigest, isNotNull);
     expect(m.lessonDigest, contains('cell'));
@@ -108,8 +111,10 @@ void main() {
       tutor: 'They make tissues.',
       verified: ['cell: the basic unit of life'],
     );
-    expect(m.established.where((e) => e.toLowerCase().startsWith('cell:')),
-        hasLength(1));
+    expect(
+      m.established.where((e) => e.toLowerCase().startsWith('cell:')),
+      hasLength(1),
+    );
     expect(m.established.last, contains('basic unit of life'));
   });
 
@@ -122,5 +127,96 @@ void main() {
     m.remember(student: 'why', tutor: 'Chlorophyll captures light energy.');
     expect(m.anchorQuestion, contains('photosynthesis'));
     expect(m.resolveCurrent('more'), contains('photosynthesis'));
+  });
+
+  group('active state', () {
+    test('a short correction still updates a slot', () {
+      final m = ConversationMemory();
+      m.remember(
+        student: 'How long is the field?',
+        tutor: 'It is 100 metres long.',
+        topic: 'Measurement',
+        slots: {'unit': 'metres'},
+      );
+      m.remember(student: 'in cm', tutor: '10,000 cm.', slots: {'unit': 'cm'});
+      expect(m.activeSlots, {'unit': 'cm'});
+      expect(m.activeTopic, 'Measurement');
+      expect(m.turns, hasLength(4));
+    });
+
+    test('collections stay capped', () {
+      final m = ConversationMemory();
+      m.remember(
+        student: 'What is a cell?',
+        tutor: 'Basic unit of life.',
+        entities: [for (var i = 0; i < 50; i++) 'entity $i'],
+        slots: {for (var i = 0; i < 50; i++) 'k$i': 'v$i'},
+      );
+      for (var i = 0; i < 50; i++) {
+        m.addUnresolved('question $i?');
+      }
+      expect(m.activeEntities, hasLength(m.maxEntities));
+      expect(m.activeEntities.last, 'entity 49');
+      expect(m.activeSlots, hasLength(m.maxSlots));
+      expect(m.activeSlots['k49'], 'v49');
+      expect(m.unresolvedQuestions, hasLength(m.maxUnresolved));
+    });
+
+    test('round-trips through toJson and restoreFrom', () {
+      final m = ConversationMemory()
+        ..remember(
+          student: 'What is photosynthesis?',
+          tutor: 'Plants make food from light.',
+          topic: 'Photosynthesis',
+          intent: 'explain',
+          slots: {'level': 'S2'},
+          entities: ['chlorophyll'],
+        )
+        ..addUnresolved('Why are leaves green?');
+      final copy = ConversationMemory()..restoreFrom(m.toJson());
+      expect(copy.activeTopic, 'Photosynthesis');
+      expect(copy.activeIntent, 'explain');
+      expect(copy.activeSlots, {'level': 'S2'});
+      expect(copy.activeEntities, ['chlorophyll']);
+      expect(copy.unresolvedQuestions, ['Why are leaves green?']);
+    });
+
+    test('an older recall file without active state still restores', () {
+      final m = ConversationMemory()
+        ..restoreFrom({
+          'anchor': 'What is DNA?',
+          'turns': [
+            {'role': 'student', 'text': 'What is DNA?'},
+            {'role': 'tutor', 'text': 'Genetic material.'},
+          ],
+        });
+      expect(m.turns, hasLength(2));
+      expect(m.activeTopic, isNull);
+      expect(m.activeSlots, isEmpty);
+    });
+
+    test('active state is dropped before THREAD under a tight budget', () {
+      final m = ConversationMemory()
+        ..remember(
+          student: 'What is photosynthesis?',
+          tutor: 'Plants make food from light.',
+          topic: 'Photosynthesis',
+          entities: [for (var i = 0; i < 6; i++) 'a long entity name $i'],
+        );
+      final block = m.promptBlock(maxChars: 160);
+      expect(block, contains('THREAD:'));
+      expect(block, isNot(contains('ACTIVE_ENTITIES')));
+    });
+
+    test('a correction with a key drops only that fact', () {
+      final m = ConversationMemory()
+        ..remember(
+          student: 'What is DNA?',
+          tutor: 'Genetic material.',
+          verified: ['DNA: genetic material', 'Gene: DNA segment'],
+        );
+      m.noteCorrection(factKey: 'DNA');
+      expect(m.established, ['Gene: DNA segment']);
+    });
   });
 }

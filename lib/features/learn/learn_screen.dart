@@ -1254,14 +1254,7 @@ class _ComposerBar extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Icon(
-                Icons.attach_file_rounded,
-                color: AppColors.accentSlate,
-                size: 22,
-              ),
-            ),
+            const SizedBox(width: 12),
             Expanded(
               child: TextField(
                 controller: controller,
