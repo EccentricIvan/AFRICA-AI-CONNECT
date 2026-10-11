@@ -84,5 +84,5 @@ class GroundedTutorService {
 /// service; pass one in explicitly at the call site if the app exposes several.
 final groundedTutorServiceProvider =
     Provider.family<GroundedTutorService, QwenChatService>((ref, chat) {
-  return GroundedTutorService(ref.watch(offlineRagServiceProvider), chat);
-});
+      return GroundedTutorService(ref.watch(offlineRagServiceProvider), chat);
+    });

@@ -18,8 +18,6 @@ import 'package:archive/archive.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:xml/xml.dart';
 
-
-
 /// What an extraction attempt produced.
 class ExtractionResult {
   const ExtractionResult({
@@ -85,7 +83,7 @@ ExtractionResult extractResourceText(String fileName, Uint8List bytes) {
         ext.isEmpty
             ? 'That file has no file type, so it cannot be read.'
             : 'Files of type ".$ext" cannot be read. '
-                'Try PDF, Word, or a plain text file.',
+                  'Try PDF, Word, or a plain text file.',
       );
   }
 }
@@ -94,7 +92,10 @@ ExtractionResult _wrap(String format, String Function() run) {
   try {
     final text = normalizeExtractedText(run());
     if (text.trim().isEmpty) {
-      return ExtractionResult.failed(format, 'No text could be read from that file.');
+      return ExtractionResult.failed(
+        format,
+        'No text could be read from that file.',
+      );
     }
     return ExtractionResult(text: text, format: format);
   } catch (e) {
@@ -117,7 +118,9 @@ String _htmlToText(String source) {
     node.remove();
   }
   // Block elements become paragraph breaks so chunking has boundaries to find.
-  for (final node in doc.querySelectorAll('p, div, br, li, h1, h2, h3, h4, h5, h6')) {
+  for (final node in doc.querySelectorAll(
+    'p, div, br, li, h1, h2, h3, h4, h5, h6',
+  )) {
     node.append(html_parser.parseFragment('\n\n').clone(true));
   }
   return doc.body?.text ?? doc.documentElement?.text ?? '';
@@ -175,7 +178,10 @@ ExtractionResult extractDocxText(Uint8List bytes) {
     }
     return ExtractionResult(text: text, format: 'docx');
   } catch (e) {
-    return ExtractionResult.failed('docx', 'That Word file could not be read ($e).');
+    return ExtractionResult.failed(
+      'docx',
+      'That Word file could not be read ($e).',
+    );
   }
 }
 
@@ -228,7 +234,7 @@ ExtractionResult extractPdfText(Uint8List bytes) {
       return const ExtractionResult.failed(
         'pdf',
         'No text could be read from that PDF. If it is a scan or a photo of '
-        'a page, type or paste the notes in instead.',
+            'a page, type or paste the notes in instead.',
       );
     }
     return ExtractionResult(text: text, format: 'pdf');
@@ -432,14 +438,21 @@ String _textFromContentStream(String content) {
 }
 
 bool _isNumberStart(String c) =>
-    (c.codeUnitAt(0) >= 48 && c.codeUnitAt(0) <= 57) || c == '-' || c == '+' || c == '.';
+    (c.codeUnitAt(0) >= 48 && c.codeUnitAt(0) <= 57) ||
+    c == '-' ||
+    c == '+' ||
+    c == '.';
 
 bool _isNumberBody(String c) =>
     (c.codeUnitAt(0) >= 48 && c.codeUnitAt(0) <= 57) || c == '.' || c == '-';
 
 bool _isOperatorChar(String c) {
   final u = c.codeUnitAt(0);
-  return (u >= 65 && u <= 90) || (u >= 97 && u <= 122) || c == '*' || c == "'" || c == '"';
+  return (u >= 65 && u <= 90) ||
+      (u >= 97 && u <= 122) ||
+      c == '*' ||
+      c == "'" ||
+      c == '"';
 }
 
 class _PdfLiteral {
@@ -572,9 +585,7 @@ bool looksLikeRealText(String text, {double minPrintableRatio = 0.85}) {
 
 /// Characters no font shows: control codes, private-use glyph ids, the
 /// replacement character. A PDF font without a text map comes out as these.
-final _unreadableChars = RegExp(
-  r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F-�￾￿]',
-);
+final _unreadableChars = RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F-�￾￿]');
 
 /// Drops lines that are mostly unreadable characters, and strips the odd
 /// stray one from the rest.

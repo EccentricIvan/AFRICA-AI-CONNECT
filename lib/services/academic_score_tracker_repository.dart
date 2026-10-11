@@ -27,14 +27,13 @@ class AcademicScoreTrackerRepository {
     required int termMarker,
     required String title,
     int pointValue = 10,
-  }) =>
-      _assignments.assign(
-        studentId: studentId,
-        subjectId: subjectId,
-        termMarker: termMarker,
-        title: title,
-        pointValue: pointValue,
-      );
+  }) => _assignments.assign(
+    studentId: studentId,
+    subjectId: subjectId,
+    termMarker: termMarker,
+    title: title,
+    pointValue: pointValue,
+  );
 
   /// Marks [assignmentId] done and credits its points to the student's
   /// profile — one Drift transaction, so a process death between the two
@@ -56,11 +55,14 @@ class AcademicScoreTrackerRepository {
         final when = completedAt ?? DateTime.now();
         await _assignments.setCompleted(assignmentId, when);
 
-        final student =
-            await _db.studentDao.getStudentById(assignment.studentId);
+        final student = await _db.studentDao.getStudentById(
+          assignment.studentId,
+        );
         if (student == null) {
-          throw StateError('student ${assignment.studentId} not found — '
-              'rolling back the completion too');
+          throw StateError(
+            'student ${assignment.studentId} not found — '
+            'rolling back the completion too',
+          );
         }
         await _db.studentDao.updateStudent(
           StudentsCompanion(
@@ -75,8 +77,10 @@ class AcademicScoreTrackerRepository {
       // transaction) — nothing here is half-applied. Surfaced to the
       // caller as a normal exception; logged here so a silent catch
       // upstream still leaves a trace of what actually failed.
-      debugPrint('AcademicScoreTrackerRepository.markCompleted($assignmentId) '
-          'failed: $e\n$st');
+      debugPrint(
+        'AcademicScoreTrackerRepository.markCompleted($assignmentId) '
+        'failed: $e\n$st',
+      );
       rethrow;
     }
   }
@@ -85,22 +89,20 @@ class AcademicScoreTrackerRepository {
     required int studentId,
     required String subjectId,
     required int termMarker,
-  }) =>
-      _assignments.forTerm(
-        studentId: studentId,
-        subjectId: subjectId,
-        termMarker: termMarker,
-      );
+  }) => _assignments.forTerm(
+    studentId: studentId,
+    subjectId: subjectId,
+    termMarker: termMarker,
+  );
 
   /// Rolling, year-long progress for one subject — every term combined,
   /// regardless of which term's assignments a caller has been looking at.
   Future<SubjectYearProgress> yearProgress({
     required int studentId,
     required String subjectId,
-  }) =>
-      _assignments.yearProgress(studentId: studentId, subjectId: subjectId);
+  }) => _assignments.yearProgress(studentId: studentId, subjectId: subjectId);
 
   Future<Map<String, SubjectYearProgress>> yearProgressBySubject(
-          int studentId) =>
-      _assignments.yearProgressBySubject(studentId);
+    int studentId,
+  ) => _assignments.yearProgressBySubject(studentId);
 }

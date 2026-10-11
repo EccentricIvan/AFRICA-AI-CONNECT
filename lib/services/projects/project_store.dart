@@ -45,7 +45,8 @@ class ProjectFolder {
 /// The disk is the source of truth: a folder cut or deleted in Explorer is
 /// simply gone next time [list] runs, and a folder pasted in shows up.
 class ProjectStore {
-  ProjectStore({Future<Directory> Function()? root}) : _root = root ?? defaultRoot;
+  ProjectStore({Future<Directory> Function()? root})
+    : _root = root ?? defaultRoot;
 
   final Future<Directory> Function() _root;
 
@@ -69,7 +70,10 @@ class ProjectStore {
 
   /// `<name>-<id>`. Matched by the `-<id>` suffix, so renaming a learner
   /// never orphans their projects.
-  Future<Directory> learnerDirectory(int studentId, {String? studentName}) async {
+  Future<Directory> learnerDirectory(
+    int studentId, {
+    String? studentName,
+  }) async {
     final root = await _root();
     await root.create(recursive: true);
     final suffix = '-$studentId';
@@ -100,8 +104,11 @@ class ProjectStore {
     }
   }
 
-  Future<Directory> kindDirectory(int studentId, ProjectKind kind,
-      {String? studentName}) async {
+  Future<Directory> kindDirectory(
+    int studentId,
+    ProjectKind kind, {
+    String? studentName,
+  }) async {
     final learner = await learnerDirectory(studentId, studentName: studentName);
     final dir = Directory(p.join(learner.path, kind.folderName));
     await dir.create(recursive: true);
@@ -133,15 +140,18 @@ class ProjectStore {
   /// now is.
   Future<ProjectFolder?> read(Directory dir, {ProjectKind? kindHint}) async {
     if (!await dir.exists()) return null;
-    final kind = kindHint ??
+    final kind =
+        kindHint ??
         ProjectKind.fromFolderName(p.basename(dir.parent.path)) ??
         ProjectKind.website;
     final manifestFile = File(p.join(dir.path, ProjectManifest.fileName));
     ProjectManifest? manifest;
     final hasManifest = await manifestFile.exists();
     if (hasManifest) {
-      manifest = ProjectManifest.tryDecode(await manifestFile.readAsString(),
-          kindHint: kind);
+      manifest = ProjectManifest.tryDecode(
+        await manifestFile.readAsString(),
+        kindHint: kind,
+      );
     }
     final stat = await dir.stat();
     manifest ??= ProjectManifest(
@@ -180,9 +190,15 @@ class ProjectStore {
   /// Every file in the project, relative path → File, sorted.
   Future<List<(String, File)>> files(ProjectFolder folder) async {
     final out = <(String, File)>[];
-    await for (final e in folder.directory.list(recursive: true, followLinks: false)) {
+    await for (final e in folder.directory.list(
+      recursive: true,
+      followLinks: false,
+    )) {
       if (e is File) {
-        out.add((p.relative(e.path, from: folder.path).replaceAll('\\', '/'), e));
+        out.add((
+          p.relative(e.path, from: folder.path).replaceAll('\\', '/'),
+          e,
+        ));
       }
     }
     out.sort((a, b) => a.$1.compareTo(b.$1));
@@ -211,13 +227,19 @@ class ProjectStore {
     Map<String, String> answers = const {},
     bool? hasBackend,
   }) async {
-    final existing = projectId == null ? null : await findById(studentId, projectId);
+    final existing = projectId == null
+        ? null
+        : await findById(studentId, projectId);
     final now = DateTime.now();
     final Directory dir;
     if (existing != null) {
       dir = existing.directory;
     } else {
-      final parent = await kindDirectory(studentId, kind, studentName: studentName);
+      final parent = await kindDirectory(
+        studentId,
+        kind,
+        studentName: studentName,
+      );
       dir = await _uniqueDir(parent, projectSlug(title));
     }
     await dir.create(recursive: true);
@@ -249,9 +271,11 @@ class ProjectStore {
 
   /// Adds (or replaces) files in an existing project without touching the
   /// rest — e.g. an image the student picked.
-  Future<void> addFiles(ProjectFolder folder,
-      {Map<String, String> files = const {},
-      Map<String, Uint8List> binaryFiles = const {}}) async {
+  Future<void> addFiles(
+    ProjectFolder folder, {
+    Map<String, String> files = const {},
+    Map<String, Uint8List> binaryFiles = const {},
+  }) async {
     for (final e in files.entries) {
       await _writeAtomic(folder.directory, e.key, text: e.value);
     }
@@ -269,13 +293,19 @@ class ProjectStore {
       final target = await _uniqueDir(dir.parent, wanted);
       dir = await dir.rename(target.path);
     }
-    await _writeManifest(dir, folder.manifest.copyWith(title: title, updatedAt: DateTime.now()));
+    await _writeManifest(
+      dir,
+      folder.manifest.copyWith(title: title, updatedAt: DateTime.now()),
+    );
     return (await read(dir))!;
   }
 
   /// Copy → a new project with a new id, in [kind] (default: same folder).
-  Future<ProjectFolder> duplicate(ProjectFolder folder, int studentId,
-      {ProjectKind? kind}) async {
+  Future<ProjectFolder> duplicate(
+    ProjectFolder folder,
+    int studentId, {
+    ProjectKind? kind,
+  }) async {
     final targetKind = kind ?? folder.kind;
     final parent = await kindDirectory(studentId, targetKind);
     final title = '${folder.title} (copy)';
@@ -302,8 +332,11 @@ class ProjectStore {
   }
 
   /// Cut → paste into another category folder.
-  Future<ProjectFolder> moveToKind(ProjectFolder folder, int studentId,
-      ProjectKind kind) async {
+  Future<ProjectFolder> moveToKind(
+    ProjectFolder folder,
+    int studentId,
+    ProjectKind kind,
+  ) async {
     if (kind == folder.kind) return folder;
     final parent = await kindDirectory(studentId, kind);
     final target = await _uniqueDir(parent, folder.folderName);
@@ -316,7 +349,10 @@ class ProjectStore {
       await folder.directory.delete(recursive: true);
       moved = target;
     }
-    await _writeManifest(moved, folder.manifest.copyWith(kind: kind, updatedAt: DateTime.now()));
+    await _writeManifest(
+      moved,
+      folder.manifest.copyWith(kind: kind, updatedAt: DateTime.now()),
+    );
     return (await read(moved, kindHint: kind))!;
   }
 
@@ -333,35 +369,53 @@ class ProjectStore {
     for (final (rel, file) in await files(folder)) {
       if (rel == ProjectManifest.fileName) continue;
       final bytes = await file.readAsBytes();
-      archive.addFile(ArchiveFile('${folder.folderName}/$rel', bytes.length, bytes));
+      archive.addFile(
+        ArchiveFile('${folder.folderName}/$rel', bytes.length, bytes),
+      );
     }
     return Uint8List.fromList(ZipEncoder().encode(archive));
   }
 
   /// Desktop "Copy to…": copies the folder into [destination]. Returns the
   /// new folder's path.
-  Future<String> exportToDirectory(ProjectFolder folder, String destination) async {
+  Future<String> exportToDirectory(
+    ProjectFolder folder,
+    String destination,
+  ) async {
     final target = await _uniqueDir(Directory(destination), folder.folderName);
-    await copyDirectory(folder.directory, target, skip: {ProjectManifest.fileName});
+    await copyDirectory(
+      folder.directory,
+      target,
+      skip: {ProjectManifest.fileName},
+    );
     return target.path;
   }
 
   Future<ProjectFolder> markExported(ProjectFolder folder) async {
     final now = DateTime.now();
-    await _writeManifest(folder.directory, folder.manifest.copyWith(exportedAt: now));
+    await _writeManifest(
+      folder.directory,
+      folder.manifest.copyWith(exportedAt: now),
+    );
     return (await read(folder.directory, kindHint: folder.kind))!;
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
-  Future<void> _touch(ProjectFolder folder) =>
-      _writeManifest(folder.directory, folder.manifest.copyWith(updatedAt: DateTime.now()));
+  Future<void> _touch(ProjectFolder folder) => _writeManifest(
+    folder.directory,
+    folder.manifest.copyWith(updatedAt: DateTime.now()),
+  );
 
   Future<void> _writeManifest(Directory dir, ProjectManifest m) =>
       _writeAtomic(dir, ProjectManifest.fileName, text: m.encode());
 
-  Future<void> _writeAtomic(Directory dir, String relPath,
-      {String? text, List<int>? bytes}) async {
+  Future<void> _writeAtomic(
+    Directory dir,
+    String relPath, {
+    String? text,
+    List<int>? bytes,
+  }) async {
     final clean = relPath.replaceAll('\\', '/');
     if (clean.split('/').any((s) => s == '..') || p.isAbsolute(clean)) {
       throw ArgumentError('Unsafe project path: $relPath');
@@ -401,8 +455,11 @@ class ProjectStore {
 }
 
 /// Recursive copy. [skip] names files (basename) to leave out.
-Future<void> copyDirectory(Directory from, Directory to,
-    {Set<String> skip = const {}}) async {
+Future<void> copyDirectory(
+  Directory from,
+  Directory to, {
+  Set<String> skip = const {},
+}) async {
   await to.create(recursive: true);
   await for (final e in from.list(recursive: false, followLinks: false)) {
     final name = p.basename(e.path);

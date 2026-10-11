@@ -3,10 +3,7 @@ import '../ai_core/inference/runtime_config.dart';
 /// Flushes coder/UI tokens the moment a clause ends or the pending span
 /// crosses [flushChars] (default 60) so the preview stays fluid.
 class ClauseStreamChopper {
-  ClauseStreamChopper({
-    this.flushChars = kCoderStreamFlushChars,
-    this.onFlush,
-  });
+  ClauseStreamChopper({this.flushChars = kCoderStreamFlushChars, this.onFlush});
 
   final int flushChars;
   final void Function(String cumulative)? onFlush;

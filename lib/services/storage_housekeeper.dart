@@ -67,7 +67,7 @@ class HousekeepingReport {
 /// database level, and something that actually calls either of them.
 class StorageHousekeeper {
   StorageHousekeeper(this._db, {SessionRecallStore? store})
-      : _store = store ?? SessionRecallStore();
+    : _store = store ?? SessionRecallStore();
 
   final OticDatabase _db;
   final SessionRecallStore _store;
