@@ -1324,6 +1324,48 @@ void main() {
       expect(await store.has(sha), isFalse);
     });
 
+    test('a download that stopped part-way carries on from where it was',
+        () async {
+      final big = Uint8List.fromList(
+        List.generate(kFileChunkBytes * 2 + 1234, (i) => (i * 31) % 251),
+      );
+      final sha = (await teacherPdfs.put(big))!;
+      await teacherPdfs.recordOwn(
+        subjectId: 'chemistry',
+        documentTitle: 'Acids notes',
+        sha: sha,
+        pages: 9,
+        bytes: big.length,
+      );
+      final (_, m, store) = await pdfStudent();
+      final group = await join(m, east);
+      // The first part arrived before the connection dropped.
+      expect(
+        await store.appendPartial(sha, big.sublist(0, kFileChunkBytes), 0),
+        isTrue,
+      );
+      final r = await m.syncClass(teacher: endpoint, group: group);
+      expect(r.ok, isTrue, reason: r.error);
+      expect(r.pdfsFetched, 1);
+      expect(await (await store.fileFor(sha))!.readAsBytes(), big);
+      expect(await store.partialLength(sha), 0);
+    });
+
+    test('a damaged part is thrown away and the next sync starts over',
+        () async {
+      final sha = await keepOnTeacher();
+      final (_, m, store) = await pdfStudent();
+      final group = await join(m, east);
+      await store.appendPartial(sha, utf8.encode('%PDF-junk'), 0);
+      final first = await m.syncClass(teacher: endpoint, group: group);
+      expect(first.pdfsFetched, 0, reason: 'never kept: wrong hash');
+      expect(await store.has(sha), isFalse);
+      expect(await store.partialLength(sha), 0);
+      final again = await m.syncClass(teacher: endpoint, group: group);
+      expect(again.pdfsFetched, 1);
+      expect(await (await store.fileFor(sha))!.readAsBytes(), pdf);
+    });
+
     test('unsharing the note removes the PDF too', () async {
       final sha = await keepOnTeacher();
       final (_, m, store) = await pdfStudent();

@@ -50,6 +50,12 @@ const kReportPath = 'api/v4/report';
 /// still syncs as text.
 const kFilePath = 'api/v4/sync/file';
 
+/// Most bytes of a PDF one [kFilePath] reply carries when the requester
+/// asks for a part (an `offset`), so a dropped connection loses one part,
+/// not the whole file. Without `offset` the whole file comes back, as
+/// before.
+const kFileChunkBytes = 2 * 1024 * 1024;
+
 /// After a sync, a student device tells the teacher which version of each
 /// subject it now holds, so the teacher sees how many devices have a note.
 /// Best-effort and added without a version bump: a build without it
@@ -853,7 +859,13 @@ class ClassShareServer {
       kReportPath when !served.isDelegate =>
         await _report(served, classKey, nonce, body['report']),
       kReportPath => null,
-      kFilePath => await _noteFile(served, body['subject_id'], body['sha256']),
+      kFilePath => await _noteFile(
+        served,
+        body['subject_id'],
+        body['sha256'],
+        offset: body['offset'],
+        length: body['length'],
+      ),
       kAckPath when rootServes && deviceKey != null => await _ack(
         served,
         deviceKey,
@@ -1114,12 +1126,17 @@ class ClassShareServer {
   }
 
   /// The PDF [sha] of [subject], if a note in that channel records it and
-  /// this device has the file.
+  /// this device has the file: the whole file, or with [offset] the part
+  /// from there (at most [length], capped at [kFileChunkBytes]) and the
+  /// file's total size, so the requester can carry on after a break.
   Future<Map<String, Object?>?> _noteFile(
     _ServedClass served,
     Object? subject,
-    Object? sha,
-  ) async {
+    Object? sha, {
+    Object? offset,
+    Object? length,
+  }) async {
+    if (offset != null && (offset is! int || offset < 0)) return null;
     if (subject is! String || sha is! String || sha.length != 64) return null;
     if (served.allocatedSubjects != null &&
         !served.allocatedSubjects!.contains(subject)) {
@@ -1142,6 +1159,29 @@ class ClassShareServer {
       final file = await pdfStore.fileFor(sha);
       if (file == null) return null;
       final path = file.path;
+      if (offset is int) {
+        final want = length is int && length > 0 && length < kFileChunkBytes
+            ? length
+            : kFileChunkBytes;
+        final part = await Isolate.run(() {
+          final raf = File(path).openSync();
+          try {
+            final total = raf.lengthSync();
+            if (total > kMaxNotePdfBytes || offset > total) return null;
+            raf.setPositionSync(offset);
+            return (total: total, data: base64Encode(raf.readSync(want)));
+          } finally {
+            raf.closeSync();
+          }
+        });
+        if (part == null) return null;
+        return {
+          'sha256': sha,
+          'offset': offset,
+          'total': part.total,
+          'data': part.data,
+        };
+      }
       final data = await Isolate.run(() {
         final bytes = File(path).readAsBytesSync();
         return bytes.length > kMaxNotePdfBytes ? null : base64Encode(bytes);

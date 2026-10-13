@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart';
@@ -124,6 +125,68 @@ class NotePdfStore {
     return sha;
   }
 
+  // ── Resumable downloads ───────────────────────────────────────────────
+
+  Future<File> _partial(String sha) async =>
+      File('${(await _dir()).path}${Platform.pathSeparator}$sha.pdf.partial');
+
+  /// Bytes of [sha] downloaded so far (0 when none). A download stopped by
+  /// a dropped connection, or the app closing, carries on from here.
+  Future<int> partialLength(String sha) async {
+    final f = await _partial(sha);
+    return await f.exists() ? f.length() : 0;
+  }
+
+  /// Writes [bytes] at [offset] of [sha]'s download. False when [offset]
+  /// isn't where the download stands (the part is then started again).
+  Future<bool> appendPartial(String sha, List<int> bytes, int offset) async {
+    final f = await _partial(sha);
+    final have = await f.exists() ? await f.length() : 0;
+    if (offset != have || have + bytes.length > kMaxNotePdfBytes) {
+      await dropPartial(sha);
+      return false;
+    }
+    final raf = await f.open(mode: FileMode.append);
+    try {
+      await raf.writeFrom(bytes);
+      await raf.flush();
+    } finally {
+      await raf.close();
+    }
+    return true;
+  }
+
+  /// Keeps the finished download if it hashes to [sha]; otherwise throws it
+  /// away so the next sync starts over. Returns whether it was kept.
+  Future<bool> finishPartial(String sha) async {
+    final f = await _partial(sha);
+    if (!await f.exists()) return false;
+    final path = f.path;
+    final actual = await Isolate.run(
+      () => sha256.convert(File(path).readAsBytesSync()).toString(),
+    );
+    if (actual != sha) {
+      await dropPartial(sha);
+      return false;
+    }
+    await f.rename((await _file(sha)).path);
+    return true;
+  }
+
+  Future<void> dropPartial(String sha) async {
+    final f = await _partial(sha);
+    if (await f.exists()) await f.delete();
+  }
+
+  /// Bytes this device holds in note PDFs, finished and partial.
+  Future<int> storedBytes() async {
+    var total = 0;
+    await for (final e in (await _dir()).list()) {
+      if (e is File) total += await e.length();
+    }
+    return total;
+  }
+
   /// Records [sha] as the original of this device's note [documentTitle] in
   /// [subjectId], replacing any earlier record.
   Future<void> recordOwn({
@@ -226,8 +289,11 @@ class NotePdfStore {
     await for (final e in dir.list()) {
       if (e is! File) continue;
       final name = e.uri.pathSegments.last;
+      // A download in progress is kept while its note still wants it.
       final sha = name.endsWith('.pdf')
           ? name.substring(0, name.length - 4)
+          : name.endsWith('.pdf.partial')
+          ? name.substring(0, name.length - 12)
           : null;
       if (sha != null && keep.contains(sha)) continue;
       try {

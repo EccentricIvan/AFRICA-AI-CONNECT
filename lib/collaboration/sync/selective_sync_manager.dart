@@ -24,6 +24,7 @@ import 'class_share_server.dart'
         kJoinApprovalTimeout,
         kJoinPath,
         kMacHeader,
+        kFileChunkBytes,
         kFilePath,
         kMaxReportsPerDevice,
         kNonceHeader,
@@ -1216,6 +1217,10 @@ class SelectiveSyncManager {
   /// the SHA-256 in its marker row — which came in the signed, verified
   /// channel — so whoever serves it can't swap it. Best-effort: a missing
   /// PDF never fails the sync, and the note still works as text.
+  ///
+  /// Downloaded in parts that are kept on disk, so a break (a dropped
+  /// connection, the app closed) costs one part, and the next sync carries
+  /// on. A device on an older build sends the whole file instead.
   Future<int> _fetchMissingPdfs(
     String classUuid,
     String schoolId, {
@@ -1234,18 +1239,7 @@ class SelectiveSyncManager {
           continue;
         }
         try {
-          final reply = await call(kFilePath, {
-            'school_id': schoolId,
-            'subject_id': p.subjectId,
-            'sha256': p.sha256,
-          });
-          final data = reply['data'];
-          if (data is! String) continue;
-          final kept = await pdfStore.put(
-            await Isolate.run(() => base64Decode(data)),
-            expectedSha: p.sha256,
-          );
-          if (kept != null) fetched++;
+          if (await _fetchPdf(p, schoolId, call)) fetched++;
         } catch (_) {
           // Not on that device (an older build, or a co-teacher's subject).
         }
@@ -1254,6 +1248,49 @@ class SelectiveSyncManager {
       await pdfStore.collectGarbage();
     } catch (_) {}
     return fetched;
+  }
+
+  /// One PDF, part by part from where an earlier download stopped.
+  /// Returns whether it is now stored.
+  Future<bool> _fetchPdf(
+    NotePdf p,
+    String schoolId,
+    Future<Map<String, Object?>> Function(String, Map<String, Object?>) call,
+  ) async {
+    var offset = await pdfStore.partialLength(p.sha256);
+    if (offset > p.bytes) {
+      // Longer than the signed size: it can't be this file.
+      await pdfStore.dropPartial(p.sha256);
+      offset = 0;
+    }
+    // Bounded: a server that never finishes can't keep this loop going.
+    for (var i = 0; i <= kMaxNotePdfBytes ~/ kFileChunkBytes + 1; i++) {
+      final reply = await call(kFilePath, {
+        'school_id': schoolId,
+        'subject_id': p.subjectId,
+        'sha256': p.sha256,
+        'offset': offset,
+        'length': kFileChunkBytes,
+      });
+      final data = reply['data'];
+      if (data is! String) return false;
+      final bytes = await Isolate.run(() => base64Decode(data));
+      final total = reply['total'];
+      if (total is! int) {
+        // An older build: the whole file at once.
+        await pdfStore.dropPartial(p.sha256);
+        return await pdfStore.put(bytes, expectedSha: p.sha256) != null;
+      }
+      if (reply['offset'] != offset ||
+          total > kMaxNotePdfBytes ||
+          !await pdfStore.appendPartial(p.sha256, bytes, offset)) {
+        return false;
+      }
+      offset += bytes.length;
+      if (offset >= total) return pdfStore.finishPartial(p.sha256);
+      if (bytes.isEmpty) return false;
+    }
+    return false;
   }
 
   /// Opens a class key the teacher sealed to this device and stores it.
