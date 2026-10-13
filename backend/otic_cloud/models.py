@@ -144,6 +144,20 @@ class FileRecord(SchoolBase):
     stored_at: Mapped[str] = mapped_column(String(40))
 
 
+class HostBackup(SchoolBase):
+    """A teacher device's host backup (its classes, keys and shared notes),
+    sealed on the device under the teacher's passphrase (PBKDF2 600k,
+    AES-GCM). The server stores it and can't open it."""
+
+    __tablename__ = "host_backups"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    device: Mapped[str] = mapped_column(String(64), index=True)
+    label: Mapped[str] = mapped_column(String(80), default="")
+    payload: Mapped[str] = mapped_column(Text)
+    size: Mapped[int] = mapped_column(Integer)
+    at: Mapped[str] = mapped_column(String(40))
+
+
 class Nonce(SchoolBase):
     __tablename__ = "nonces"
     device: Mapped[str] = mapped_column(String(64), primary_key=True)

@@ -13,6 +13,7 @@ import '../../features/admin/admin_screen.dart';
 import '../../features/assignments/assignments_screens.dart';
 import '../../features/notes/my_notes_screen.dart';
 import '../../features/notes/note_pdf_screen.dart';
+import '../../features/teachers/cloud_screen.dart';
 import '../../features/teachers/teachers_screen.dart';
 import '../../features/certificates/certificates_screen.dart';
 import '../../features/collaborate/class_sync_screen.dart';
@@ -225,6 +226,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/teachers',
             builder: (_, __) => const TeachersScreen(),
+          ),
+          // Behind the Teachers PIN; the Admin's parts also need the Admin.
+          GoRoute(
+            path: '/teachers/cloud',
+            builder: (_, __) => const CloudScreen(),
           ),
           GoRoute(
             path: '/admin',

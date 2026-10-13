@@ -21155,6 +21155,913 @@ class LearnerSupportCompanion extends UpdateCompanion<LearnerSupportItem> {
   }
 }
 
+class $CloudLinkTable extends CloudLink
+    with TableInfo<$CloudLinkTable, CloudLinkData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CloudLinkTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _baseUrlMeta = const VerificationMeta(
+    'baseUrl',
+  );
+  @override
+  late final GeneratedColumn<String> baseUrl = GeneratedColumn<String>(
+    'base_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _schoolNameMeta = const VerificationMeta(
+    'schoolName',
+  );
+  @override
+  late final GeneratedColumn<String> schoolName = GeneratedColumn<String>(
+    'school_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _roleMeta = const VerificationMeta('role');
+  @override
+  late final GeneratedColumn<String> role = GeneratedColumn<String>(
+    'role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _enrolledAtMeta = const VerificationMeta(
+    'enrolledAt',
+  );
+  @override
+  late final GeneratedColumn<String> enrolledAt = GeneratedColumn<String>(
+    'enrolled_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastSentAtMeta = const VerificationMeta(
+    'lastSentAt',
+  );
+  @override
+  late final GeneratedColumn<String> lastSentAt = GeneratedColumn<String>(
+    'last_sent_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastErrorMeta = const VerificationMeta(
+    'lastError',
+  );
+  @override
+  late final GeneratedColumn<String> lastError = GeneratedColumn<String>(
+    'last_error',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    baseUrl,
+    schoolName,
+    role,
+    enrolledAt,
+    lastSentAt,
+    lastError,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cloud_link';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CloudLinkData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('base_url')) {
+      context.handle(
+        _baseUrlMeta,
+        baseUrl.isAcceptableOrUnknown(data['base_url']!, _baseUrlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_baseUrlMeta);
+    }
+    if (data.containsKey('school_name')) {
+      context.handle(
+        _schoolNameMeta,
+        schoolName.isAcceptableOrUnknown(data['school_name']!, _schoolNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_schoolNameMeta);
+    }
+    if (data.containsKey('role')) {
+      context.handle(
+        _roleMeta,
+        role.isAcceptableOrUnknown(data['role']!, _roleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roleMeta);
+    }
+    if (data.containsKey('enrolled_at')) {
+      context.handle(
+        _enrolledAtMeta,
+        enrolledAt.isAcceptableOrUnknown(data['enrolled_at']!, _enrolledAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_enrolledAtMeta);
+    }
+    if (data.containsKey('last_sent_at')) {
+      context.handle(
+        _lastSentAtMeta,
+        lastSentAt.isAcceptableOrUnknown(
+          data['last_sent_at']!,
+          _lastSentAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_error')) {
+      context.handle(
+        _lastErrorMeta,
+        lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CloudLinkData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CloudLinkData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      baseUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}base_url'],
+      )!,
+      schoolName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}school_name'],
+      )!,
+      role: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}role'],
+      )!,
+      enrolledAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}enrolled_at'],
+      )!,
+      lastSentAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_sent_at'],
+      ),
+      lastError: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_error'],
+      ),
+    );
+  }
+
+  @override
+  $CloudLinkTable createAlias(String alias) {
+    return $CloudLinkTable(attachedDatabase, alias);
+  }
+}
+
+class CloudLinkData extends DataClass implements Insertable<CloudLinkData> {
+  final int id;
+
+  /// e.g. `https://cloud.school.ug`, as the Admin typed it.
+  final String baseUrl;
+  final String schoolName;
+
+  /// `admin`, `teacher` or `learner`, as the server enrolled it.
+  final String role;
+
+  /// ISO-8601 UTC.
+  final String enrolledAt;
+
+  /// The last send: when, and its error (null when it worked).
+  final String? lastSentAt;
+  final String? lastError;
+  const CloudLinkData({
+    required this.id,
+    required this.baseUrl,
+    required this.schoolName,
+    required this.role,
+    required this.enrolledAt,
+    this.lastSentAt,
+    this.lastError,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['base_url'] = Variable<String>(baseUrl);
+    map['school_name'] = Variable<String>(schoolName);
+    map['role'] = Variable<String>(role);
+    map['enrolled_at'] = Variable<String>(enrolledAt);
+    if (!nullToAbsent || lastSentAt != null) {
+      map['last_sent_at'] = Variable<String>(lastSentAt);
+    }
+    if (!nullToAbsent || lastError != null) {
+      map['last_error'] = Variable<String>(lastError);
+    }
+    return map;
+  }
+
+  CloudLinkCompanion toCompanion(bool nullToAbsent) {
+    return CloudLinkCompanion(
+      id: Value(id),
+      baseUrl: Value(baseUrl),
+      schoolName: Value(schoolName),
+      role: Value(role),
+      enrolledAt: Value(enrolledAt),
+      lastSentAt: lastSentAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSentAt),
+      lastError: lastError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastError),
+    );
+  }
+
+  factory CloudLinkData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CloudLinkData(
+      id: serializer.fromJson<int>(json['id']),
+      baseUrl: serializer.fromJson<String>(json['baseUrl']),
+      schoolName: serializer.fromJson<String>(json['schoolName']),
+      role: serializer.fromJson<String>(json['role']),
+      enrolledAt: serializer.fromJson<String>(json['enrolledAt']),
+      lastSentAt: serializer.fromJson<String?>(json['lastSentAt']),
+      lastError: serializer.fromJson<String?>(json['lastError']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'baseUrl': serializer.toJson<String>(baseUrl),
+      'schoolName': serializer.toJson<String>(schoolName),
+      'role': serializer.toJson<String>(role),
+      'enrolledAt': serializer.toJson<String>(enrolledAt),
+      'lastSentAt': serializer.toJson<String?>(lastSentAt),
+      'lastError': serializer.toJson<String?>(lastError),
+    };
+  }
+
+  CloudLinkData copyWith({
+    int? id,
+    String? baseUrl,
+    String? schoolName,
+    String? role,
+    String? enrolledAt,
+    Value<String?> lastSentAt = const Value.absent(),
+    Value<String?> lastError = const Value.absent(),
+  }) => CloudLinkData(
+    id: id ?? this.id,
+    baseUrl: baseUrl ?? this.baseUrl,
+    schoolName: schoolName ?? this.schoolName,
+    role: role ?? this.role,
+    enrolledAt: enrolledAt ?? this.enrolledAt,
+    lastSentAt: lastSentAt.present ? lastSentAt.value : this.lastSentAt,
+    lastError: lastError.present ? lastError.value : this.lastError,
+  );
+  CloudLinkData copyWithCompanion(CloudLinkCompanion data) {
+    return CloudLinkData(
+      id: data.id.present ? data.id.value : this.id,
+      baseUrl: data.baseUrl.present ? data.baseUrl.value : this.baseUrl,
+      schoolName: data.schoolName.present
+          ? data.schoolName.value
+          : this.schoolName,
+      role: data.role.present ? data.role.value : this.role,
+      enrolledAt: data.enrolledAt.present
+          ? data.enrolledAt.value
+          : this.enrolledAt,
+      lastSentAt: data.lastSentAt.present
+          ? data.lastSentAt.value
+          : this.lastSentAt,
+      lastError: data.lastError.present ? data.lastError.value : this.lastError,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CloudLinkData(')
+          ..write('id: $id, ')
+          ..write('baseUrl: $baseUrl, ')
+          ..write('schoolName: $schoolName, ')
+          ..write('role: $role, ')
+          ..write('enrolledAt: $enrolledAt, ')
+          ..write('lastSentAt: $lastSentAt, ')
+          ..write('lastError: $lastError')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    baseUrl,
+    schoolName,
+    role,
+    enrolledAt,
+    lastSentAt,
+    lastError,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CloudLinkData &&
+          other.id == this.id &&
+          other.baseUrl == this.baseUrl &&
+          other.schoolName == this.schoolName &&
+          other.role == this.role &&
+          other.enrolledAt == this.enrolledAt &&
+          other.lastSentAt == this.lastSentAt &&
+          other.lastError == this.lastError);
+}
+
+class CloudLinkCompanion extends UpdateCompanion<CloudLinkData> {
+  final Value<int> id;
+  final Value<String> baseUrl;
+  final Value<String> schoolName;
+  final Value<String> role;
+  final Value<String> enrolledAt;
+  final Value<String?> lastSentAt;
+  final Value<String?> lastError;
+  const CloudLinkCompanion({
+    this.id = const Value.absent(),
+    this.baseUrl = const Value.absent(),
+    this.schoolName = const Value.absent(),
+    this.role = const Value.absent(),
+    this.enrolledAt = const Value.absent(),
+    this.lastSentAt = const Value.absent(),
+    this.lastError = const Value.absent(),
+  });
+  CloudLinkCompanion.insert({
+    this.id = const Value.absent(),
+    required String baseUrl,
+    required String schoolName,
+    required String role,
+    required String enrolledAt,
+    this.lastSentAt = const Value.absent(),
+    this.lastError = const Value.absent(),
+  }) : baseUrl = Value(baseUrl),
+       schoolName = Value(schoolName),
+       role = Value(role),
+       enrolledAt = Value(enrolledAt);
+  static Insertable<CloudLinkData> custom({
+    Expression<int>? id,
+    Expression<String>? baseUrl,
+    Expression<String>? schoolName,
+    Expression<String>? role,
+    Expression<String>? enrolledAt,
+    Expression<String>? lastSentAt,
+    Expression<String>? lastError,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (baseUrl != null) 'base_url': baseUrl,
+      if (schoolName != null) 'school_name': schoolName,
+      if (role != null) 'role': role,
+      if (enrolledAt != null) 'enrolled_at': enrolledAt,
+      if (lastSentAt != null) 'last_sent_at': lastSentAt,
+      if (lastError != null) 'last_error': lastError,
+    });
+  }
+
+  CloudLinkCompanion copyWith({
+    Value<int>? id,
+    Value<String>? baseUrl,
+    Value<String>? schoolName,
+    Value<String>? role,
+    Value<String>? enrolledAt,
+    Value<String?>? lastSentAt,
+    Value<String?>? lastError,
+  }) {
+    return CloudLinkCompanion(
+      id: id ?? this.id,
+      baseUrl: baseUrl ?? this.baseUrl,
+      schoolName: schoolName ?? this.schoolName,
+      role: role ?? this.role,
+      enrolledAt: enrolledAt ?? this.enrolledAt,
+      lastSentAt: lastSentAt ?? this.lastSentAt,
+      lastError: lastError ?? this.lastError,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (baseUrl.present) {
+      map['base_url'] = Variable<String>(baseUrl.value);
+    }
+    if (schoolName.present) {
+      map['school_name'] = Variable<String>(schoolName.value);
+    }
+    if (role.present) {
+      map['role'] = Variable<String>(role.value);
+    }
+    if (enrolledAt.present) {
+      map['enrolled_at'] = Variable<String>(enrolledAt.value);
+    }
+    if (lastSentAt.present) {
+      map['last_sent_at'] = Variable<String>(lastSentAt.value);
+    }
+    if (lastError.present) {
+      map['last_error'] = Variable<String>(lastError.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CloudLinkCompanion(')
+          ..write('id: $id, ')
+          ..write('baseUrl: $baseUrl, ')
+          ..write('schoolName: $schoolName, ')
+          ..write('role: $role, ')
+          ..write('enrolledAt: $enrolledAt, ')
+          ..write('lastSentAt: $lastSentAt, ')
+          ..write('lastError: $lastError')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AuditLogTable extends AuditLog
+    with TableInfo<$AuditLogTable, AuditEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AuditLogTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _atMeta = const VerificationMeta('at');
+  @override
+  late final GeneratedColumn<String> at = GeneratedColumn<String>(
+    'at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorMeta = const VerificationMeta('actor');
+  @override
+  late final GeneratedColumn<String> actor = GeneratedColumn<String>(
+    'actor',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+    'action',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _detailMeta = const VerificationMeta('detail');
+  @override
+  late final GeneratedColumn<String> detail = GeneratedColumn<String>(
+    'detail',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _hashMeta = const VerificationMeta('hash');
+  @override
+  late final GeneratedColumn<String> hash = GeneratedColumn<String>(
+    'hash',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sigMeta = const VerificationMeta('sig');
+  @override
+  late final GeneratedColumn<String> sig = GeneratedColumn<String>(
+    'sig',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    at,
+    actor,
+    action,
+    detail,
+    hash,
+    sig,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'audit_log';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AuditEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('at')) {
+      context.handle(_atMeta, at.isAcceptableOrUnknown(data['at']!, _atMeta));
+    } else if (isInserting) {
+      context.missing(_atMeta);
+    }
+    if (data.containsKey('actor')) {
+      context.handle(
+        _actorMeta,
+        actor.isAcceptableOrUnknown(data['actor']!, _actorMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorMeta);
+    }
+    if (data.containsKey('action')) {
+      context.handle(
+        _actionMeta,
+        action.isAcceptableOrUnknown(data['action']!, _actionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('detail')) {
+      context.handle(
+        _detailMeta,
+        detail.isAcceptableOrUnknown(data['detail']!, _detailMeta),
+      );
+    }
+    if (data.containsKey('hash')) {
+      context.handle(
+        _hashMeta,
+        hash.isAcceptableOrUnknown(data['hash']!, _hashMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_hashMeta);
+    }
+    if (data.containsKey('sig')) {
+      context.handle(
+        _sigMeta,
+        sig.isAcceptableOrUnknown(data['sig']!, _sigMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sigMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AuditEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AuditEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      at: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}at'],
+      )!,
+      actor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor'],
+      )!,
+      action: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}action'],
+      )!,
+      detail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}detail'],
+      )!,
+      hash: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}hash'],
+      )!,
+      sig: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sig'],
+      )!,
+    );
+  }
+
+  @override
+  $AuditLogTable createAlias(String alias) {
+    return $AuditLogTable(attachedDatabase, alias);
+  }
+}
+
+class AuditEntry extends DataClass implements Insertable<AuditEntry> {
+  final int id;
+
+  /// ISO-8601 UTC, this device's clock.
+  final String at;
+
+  /// Who acted: `admin`, `teacher:<id>`, `learner:<id>`, `device`.
+  final String actor;
+
+  /// e.g. `teacher.added`, `device.revoked`, `cloud.enrolled`,
+  /// `refused.pin`.
+  final String action;
+  final String detail;
+
+  /// SHA-256 (hex) of the previous row's [hash] and this row's fields.
+  final String hash;
+
+  /// The device key's Ed25519 signature over [hash] (base64url).
+  final String sig;
+  const AuditEntry({
+    required this.id,
+    required this.at,
+    required this.actor,
+    required this.action,
+    required this.detail,
+    required this.hash,
+    required this.sig,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['at'] = Variable<String>(at);
+    map['actor'] = Variable<String>(actor);
+    map['action'] = Variable<String>(action);
+    map['detail'] = Variable<String>(detail);
+    map['hash'] = Variable<String>(hash);
+    map['sig'] = Variable<String>(sig);
+    return map;
+  }
+
+  AuditLogCompanion toCompanion(bool nullToAbsent) {
+    return AuditLogCompanion(
+      id: Value(id),
+      at: Value(at),
+      actor: Value(actor),
+      action: Value(action),
+      detail: Value(detail),
+      hash: Value(hash),
+      sig: Value(sig),
+    );
+  }
+
+  factory AuditEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AuditEntry(
+      id: serializer.fromJson<int>(json['id']),
+      at: serializer.fromJson<String>(json['at']),
+      actor: serializer.fromJson<String>(json['actor']),
+      action: serializer.fromJson<String>(json['action']),
+      detail: serializer.fromJson<String>(json['detail']),
+      hash: serializer.fromJson<String>(json['hash']),
+      sig: serializer.fromJson<String>(json['sig']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'at': serializer.toJson<String>(at),
+      'actor': serializer.toJson<String>(actor),
+      'action': serializer.toJson<String>(action),
+      'detail': serializer.toJson<String>(detail),
+      'hash': serializer.toJson<String>(hash),
+      'sig': serializer.toJson<String>(sig),
+    };
+  }
+
+  AuditEntry copyWith({
+    int? id,
+    String? at,
+    String? actor,
+    String? action,
+    String? detail,
+    String? hash,
+    String? sig,
+  }) => AuditEntry(
+    id: id ?? this.id,
+    at: at ?? this.at,
+    actor: actor ?? this.actor,
+    action: action ?? this.action,
+    detail: detail ?? this.detail,
+    hash: hash ?? this.hash,
+    sig: sig ?? this.sig,
+  );
+  AuditEntry copyWithCompanion(AuditLogCompanion data) {
+    return AuditEntry(
+      id: data.id.present ? data.id.value : this.id,
+      at: data.at.present ? data.at.value : this.at,
+      actor: data.actor.present ? data.actor.value : this.actor,
+      action: data.action.present ? data.action.value : this.action,
+      detail: data.detail.present ? data.detail.value : this.detail,
+      hash: data.hash.present ? data.hash.value : this.hash,
+      sig: data.sig.present ? data.sig.value : this.sig,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AuditEntry(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('actor: $actor, ')
+          ..write('action: $action, ')
+          ..write('detail: $detail, ')
+          ..write('hash: $hash, ')
+          ..write('sig: $sig')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, at, actor, action, detail, hash, sig);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AuditEntry &&
+          other.id == this.id &&
+          other.at == this.at &&
+          other.actor == this.actor &&
+          other.action == this.action &&
+          other.detail == this.detail &&
+          other.hash == this.hash &&
+          other.sig == this.sig);
+}
+
+class AuditLogCompanion extends UpdateCompanion<AuditEntry> {
+  final Value<int> id;
+  final Value<String> at;
+  final Value<String> actor;
+  final Value<String> action;
+  final Value<String> detail;
+  final Value<String> hash;
+  final Value<String> sig;
+  const AuditLogCompanion({
+    this.id = const Value.absent(),
+    this.at = const Value.absent(),
+    this.actor = const Value.absent(),
+    this.action = const Value.absent(),
+    this.detail = const Value.absent(),
+    this.hash = const Value.absent(),
+    this.sig = const Value.absent(),
+  });
+  AuditLogCompanion.insert({
+    this.id = const Value.absent(),
+    required String at,
+    required String actor,
+    required String action,
+    this.detail = const Value.absent(),
+    required String hash,
+    required String sig,
+  }) : at = Value(at),
+       actor = Value(actor),
+       action = Value(action),
+       hash = Value(hash),
+       sig = Value(sig);
+  static Insertable<AuditEntry> custom({
+    Expression<int>? id,
+    Expression<String>? at,
+    Expression<String>? actor,
+    Expression<String>? action,
+    Expression<String>? detail,
+    Expression<String>? hash,
+    Expression<String>? sig,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (at != null) 'at': at,
+      if (actor != null) 'actor': actor,
+      if (action != null) 'action': action,
+      if (detail != null) 'detail': detail,
+      if (hash != null) 'hash': hash,
+      if (sig != null) 'sig': sig,
+    });
+  }
+
+  AuditLogCompanion copyWith({
+    Value<int>? id,
+    Value<String>? at,
+    Value<String>? actor,
+    Value<String>? action,
+    Value<String>? detail,
+    Value<String>? hash,
+    Value<String>? sig,
+  }) {
+    return AuditLogCompanion(
+      id: id ?? this.id,
+      at: at ?? this.at,
+      actor: actor ?? this.actor,
+      action: action ?? this.action,
+      detail: detail ?? this.detail,
+      hash: hash ?? this.hash,
+      sig: sig ?? this.sig,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (at.present) {
+      map['at'] = Variable<String>(at.value);
+    }
+    if (actor.present) {
+      map['actor'] = Variable<String>(actor.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (detail.present) {
+      map['detail'] = Variable<String>(detail.value);
+    }
+    if (hash.present) {
+      map['hash'] = Variable<String>(hash.value);
+    }
+    if (sig.present) {
+      map['sig'] = Variable<String>(sig.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AuditLogCompanion(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('actor: $actor, ')
+          ..write('action: $action, ')
+          ..write('detail: $detail, ')
+          ..write('hash: $hash, ')
+          ..write('sig: $sig')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$OticDatabase extends GeneratedDatabase {
   _$OticDatabase(QueryExecutor e) : super(e);
   $OticDatabaseManager get managers => $OticDatabaseManager(this);
@@ -21224,6 +22131,8 @@ abstract class _$OticDatabase extends GeneratedDatabase {
     this,
   );
   late final $LearnerSupportTable learnerSupport = $LearnerSupportTable(this);
+  late final $CloudLinkTable cloudLink = $CloudLinkTable(this);
+  late final $AuditLogTable auditLog = $AuditLogTable(this);
   late final Index idxTopicResourcesLookup = Index(
     'idx_topic_resources_lookup',
     'CREATE INDEX idx_topic_resources_lookup ON topic_resources (subject_id, topic_key)',
@@ -21375,6 +22284,8 @@ abstract class _$OticDatabase extends GeneratedDatabase {
     channelReceipts,
     removedSubjects,
     learnerSupport,
+    cloudLink,
+    auditLog,
     idxTopicResourcesLookup,
     idxTopicResourcesTitle,
     idxCustomSubjectsSubjectId,
@@ -31999,6 +32910,473 @@ typedef $$LearnerSupportTableProcessedTableManager =
       LearnerSupportItem,
       PrefetchHooks Function()
     >;
+typedef $$CloudLinkTableCreateCompanionBuilder =
+    CloudLinkCompanion Function({
+      Value<int> id,
+      required String baseUrl,
+      required String schoolName,
+      required String role,
+      required String enrolledAt,
+      Value<String?> lastSentAt,
+      Value<String?> lastError,
+    });
+typedef $$CloudLinkTableUpdateCompanionBuilder =
+    CloudLinkCompanion Function({
+      Value<int> id,
+      Value<String> baseUrl,
+      Value<String> schoolName,
+      Value<String> role,
+      Value<String> enrolledAt,
+      Value<String?> lastSentAt,
+      Value<String?> lastError,
+    });
+
+class $$CloudLinkTableFilterComposer
+    extends Composer<_$OticDatabase, $CloudLinkTable> {
+  $$CloudLinkTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get baseUrl => $composableBuilder(
+    column: $table.baseUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get schoolName => $composableBuilder(
+    column: $table.schoolName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get enrolledAt => $composableBuilder(
+    column: $table.enrolledAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastSentAt => $composableBuilder(
+    column: $table.lastSentAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastError => $composableBuilder(
+    column: $table.lastError,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CloudLinkTableOrderingComposer
+    extends Composer<_$OticDatabase, $CloudLinkTable> {
+  $$CloudLinkTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get baseUrl => $composableBuilder(
+    column: $table.baseUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get schoolName => $composableBuilder(
+    column: $table.schoolName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get enrolledAt => $composableBuilder(
+    column: $table.enrolledAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastSentAt => $composableBuilder(
+    column: $table.lastSentAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastError => $composableBuilder(
+    column: $table.lastError,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CloudLinkTableAnnotationComposer
+    extends Composer<_$OticDatabase, $CloudLinkTable> {
+  $$CloudLinkTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get baseUrl =>
+      $composableBuilder(column: $table.baseUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get schoolName => $composableBuilder(
+    column: $table.schoolName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
+
+  GeneratedColumn<String> get enrolledAt => $composableBuilder(
+    column: $table.enrolledAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastSentAt => $composableBuilder(
+    column: $table.lastSentAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastError =>
+      $composableBuilder(column: $table.lastError, builder: (column) => column);
+}
+
+class $$CloudLinkTableTableManager
+    extends
+        RootTableManager<
+          _$OticDatabase,
+          $CloudLinkTable,
+          CloudLinkData,
+          $$CloudLinkTableFilterComposer,
+          $$CloudLinkTableOrderingComposer,
+          $$CloudLinkTableAnnotationComposer,
+          $$CloudLinkTableCreateCompanionBuilder,
+          $$CloudLinkTableUpdateCompanionBuilder,
+          (
+            CloudLinkData,
+            BaseReferences<_$OticDatabase, $CloudLinkTable, CloudLinkData>,
+          ),
+          CloudLinkData,
+          PrefetchHooks Function()
+        > {
+  $$CloudLinkTableTableManager(_$OticDatabase db, $CloudLinkTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CloudLinkTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CloudLinkTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CloudLinkTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> baseUrl = const Value.absent(),
+                Value<String> schoolName = const Value.absent(),
+                Value<String> role = const Value.absent(),
+                Value<String> enrolledAt = const Value.absent(),
+                Value<String?> lastSentAt = const Value.absent(),
+                Value<String?> lastError = const Value.absent(),
+              }) => CloudLinkCompanion(
+                id: id,
+                baseUrl: baseUrl,
+                schoolName: schoolName,
+                role: role,
+                enrolledAt: enrolledAt,
+                lastSentAt: lastSentAt,
+                lastError: lastError,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String baseUrl,
+                required String schoolName,
+                required String role,
+                required String enrolledAt,
+                Value<String?> lastSentAt = const Value.absent(),
+                Value<String?> lastError = const Value.absent(),
+              }) => CloudLinkCompanion.insert(
+                id: id,
+                baseUrl: baseUrl,
+                schoolName: schoolName,
+                role: role,
+                enrolledAt: enrolledAt,
+                lastSentAt: lastSentAt,
+                lastError: lastError,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CloudLinkTableProcessedTableManager =
+    ProcessedTableManager<
+      _$OticDatabase,
+      $CloudLinkTable,
+      CloudLinkData,
+      $$CloudLinkTableFilterComposer,
+      $$CloudLinkTableOrderingComposer,
+      $$CloudLinkTableAnnotationComposer,
+      $$CloudLinkTableCreateCompanionBuilder,
+      $$CloudLinkTableUpdateCompanionBuilder,
+      (
+        CloudLinkData,
+        BaseReferences<_$OticDatabase, $CloudLinkTable, CloudLinkData>,
+      ),
+      CloudLinkData,
+      PrefetchHooks Function()
+    >;
+typedef $$AuditLogTableCreateCompanionBuilder =
+    AuditLogCompanion Function({
+      Value<int> id,
+      required String at,
+      required String actor,
+      required String action,
+      Value<String> detail,
+      required String hash,
+      required String sig,
+    });
+typedef $$AuditLogTableUpdateCompanionBuilder =
+    AuditLogCompanion Function({
+      Value<int> id,
+      Value<String> at,
+      Value<String> actor,
+      Value<String> action,
+      Value<String> detail,
+      Value<String> hash,
+      Value<String> sig,
+    });
+
+class $$AuditLogTableFilterComposer
+    extends Composer<_$OticDatabase, $AuditLogTable> {
+  $$AuditLogTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actor => $composableBuilder(
+    column: $table.actor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get action => $composableBuilder(
+    column: $table.action,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get detail => $composableBuilder(
+    column: $table.detail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get hash => $composableBuilder(
+    column: $table.hash,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sig => $composableBuilder(
+    column: $table.sig,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AuditLogTableOrderingComposer
+    extends Composer<_$OticDatabase, $AuditLogTable> {
+  $$AuditLogTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actor => $composableBuilder(
+    column: $table.actor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get action => $composableBuilder(
+    column: $table.action,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get detail => $composableBuilder(
+    column: $table.detail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get hash => $composableBuilder(
+    column: $table.hash,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sig => $composableBuilder(
+    column: $table.sig,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AuditLogTableAnnotationComposer
+    extends Composer<_$OticDatabase, $AuditLogTable> {
+  $$AuditLogTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => column);
+
+  GeneratedColumn<String> get actor =>
+      $composableBuilder(column: $table.actor, builder: (column) => column);
+
+  GeneratedColumn<String> get action =>
+      $composableBuilder(column: $table.action, builder: (column) => column);
+
+  GeneratedColumn<String> get detail =>
+      $composableBuilder(column: $table.detail, builder: (column) => column);
+
+  GeneratedColumn<String> get hash =>
+      $composableBuilder(column: $table.hash, builder: (column) => column);
+
+  GeneratedColumn<String> get sig =>
+      $composableBuilder(column: $table.sig, builder: (column) => column);
+}
+
+class $$AuditLogTableTableManager
+    extends
+        RootTableManager<
+          _$OticDatabase,
+          $AuditLogTable,
+          AuditEntry,
+          $$AuditLogTableFilterComposer,
+          $$AuditLogTableOrderingComposer,
+          $$AuditLogTableAnnotationComposer,
+          $$AuditLogTableCreateCompanionBuilder,
+          $$AuditLogTableUpdateCompanionBuilder,
+          (
+            AuditEntry,
+            BaseReferences<_$OticDatabase, $AuditLogTable, AuditEntry>,
+          ),
+          AuditEntry,
+          PrefetchHooks Function()
+        > {
+  $$AuditLogTableTableManager(_$OticDatabase db, $AuditLogTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AuditLogTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AuditLogTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AuditLogTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> at = const Value.absent(),
+                Value<String> actor = const Value.absent(),
+                Value<String> action = const Value.absent(),
+                Value<String> detail = const Value.absent(),
+                Value<String> hash = const Value.absent(),
+                Value<String> sig = const Value.absent(),
+              }) => AuditLogCompanion(
+                id: id,
+                at: at,
+                actor: actor,
+                action: action,
+                detail: detail,
+                hash: hash,
+                sig: sig,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String at,
+                required String actor,
+                required String action,
+                Value<String> detail = const Value.absent(),
+                required String hash,
+                required String sig,
+              }) => AuditLogCompanion.insert(
+                id: id,
+                at: at,
+                actor: actor,
+                action: action,
+                detail: detail,
+                hash: hash,
+                sig: sig,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AuditLogTableProcessedTableManager =
+    ProcessedTableManager<
+      _$OticDatabase,
+      $AuditLogTable,
+      AuditEntry,
+      $$AuditLogTableFilterComposer,
+      $$AuditLogTableOrderingComposer,
+      $$AuditLogTableAnnotationComposer,
+      $$AuditLogTableCreateCompanionBuilder,
+      $$AuditLogTableUpdateCompanionBuilder,
+      (AuditEntry, BaseReferences<_$OticDatabase, $AuditLogTable, AuditEntry>),
+      AuditEntry,
+      PrefetchHooks Function()
+    >;
 
 class $OticDatabaseManager {
   final _$OticDatabase _db;
@@ -32086,4 +33464,8 @@ class $OticDatabaseManager {
       $$RemovedSubjectsTableTableManager(_db, _db.removedSubjects);
   $$LearnerSupportTableTableManager get learnerSupport =>
       $$LearnerSupportTableTableManager(_db, _db.learnerSupport);
+  $$CloudLinkTableTableManager get cloudLink =>
+      $$CloudLinkTableTableManager(_db, _db.cloudLink);
+  $$AuditLogTableTableManager get auditLog =>
+      $$AuditLogTableTableManager(_db, _db.auditLog);
 }

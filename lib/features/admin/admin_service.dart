@@ -8,6 +8,7 @@ import '../../collaboration/sync/sync_ids.dart';
 import '../../collaboration/sync/device_registry.dart';
 import '../../db/otic_database.dart';
 import '../../db/providers/db_provider.dart';
+import '../../services/audit/audit_log.dart';
 import '../../services/custom_subject_service.dart';
 import '../../services/learner_data_wiper.dart';
 import '../../services/offline_storage_service.dart';
@@ -30,11 +31,18 @@ class AdminSession {
 /// Like the other PINs, the Admin PIN keeps people apart on a shared
 /// device; it is not real security.
 class AdminService {
-  AdminService(this._db, this._subjects, this._wiper);
+  AdminService(this._db, this._subjects, this._wiper)
+    : _audit = AuditLogService(_db);
 
   final OticDatabase _db;
   final CustomSubjectService _subjects;
   final LearnerDataWiper _wiper;
+  final AuditLogService _audit;
+
+  /// Records an Admin action in the device's audit log: names and ids
+  /// only, never a PIN.
+  Future<void> _log(String action, [String detail = '']) =>
+      _audit.record('admin', action, detail: detail);
 
   Future<AdminIdentityRow?> _row() => (_db.select(
     _db.adminIdentity,
@@ -70,12 +78,14 @@ class AdminService {
             createdAt: DateTime.now().toUtc().toIso8601String(),
           ),
         );
+    await _log('admin.set_up', trimmed);
     return AdminSession._(trimmed);
   }
 
   Future<AdminSession?> signIn(String pin) async {
     final row = await _row();
     if (row == null || !await pinMatches(row.pinSalt, pin, row.pinHash)) {
+      if (row != null) await _log('refused.admin_pin');
       return null;
     }
     if (pinNeedsUpgrade(row.pinHash)) {
@@ -102,6 +112,7 @@ class AdminService {
         pinHash: Value(await hashPinStrong(salt, next)),
       ),
     );
+    await _log('admin.pin_changed');
     return true;
   }
 
@@ -133,6 +144,7 @@ class AdminService {
             uuid: Value(newSyncId()),
           ),
         );
+    await _log('teacher.added', trimmed);
     return null;
   }
 
@@ -148,6 +160,7 @@ class AdminService {
         pinHash: Value(await hashPinStrong(salt, pin)),
       ),
     );
+    if (n > 0) await _log('teacher.pin_reset', 'teacher:$teacherId');
     return n > 0;
   }
 
@@ -156,8 +169,9 @@ class AdminService {
 
   /// Removes a teacher and their assignments. Their notes stay, owned by
   /// nobody, for whoever the Admin assigns next.
-  Future<void> removeTeacher(AdminSession _, int teacherId) =>
-      _db.transaction(() async {
+  Future<void> removeTeacher(AdminSession _, int teacherId) async {
+    await _log('teacher.removed', 'teacher:$teacherId');
+    await _db.transaction(() async {
         await (_db.delete(
           _db.teachingAssignments,
         )..where((t) => t.teacherId.equals(teacherId))).go();
@@ -169,6 +183,7 @@ class AdminService {
         )..where((t) => t.id.equals(teacherId))).go();
         await _prune();
       });
+  }
 
   // ── Classes and streams ───────────────────────────────────────────────
 
@@ -176,25 +191,36 @@ class AdminService {
     AdminSession _, {
     required String className,
     String? streamName,
-  }) => _db.classGroupDao.createClass(
-    className: className,
-    streamName: streamName,
-  );
+  }) async {
+    final id = await _db.classGroupDao.createClass(
+      className: className,
+      streamName: streamName,
+    );
+    await _log('class.added', '$className ${streamName ?? ''}'.trim());
+    return id;
+  }
 
   Future<void> renameClass(
     AdminSession _,
     int id, {
     required String className,
     String? streamName,
-  }) => _db.classGroupDao.renameClass(
-    id,
-    className: className,
-    streamName: streamName,
-  );
+  }) async {
+    await _db.classGroupDao.renameClass(
+      id,
+      className: className,
+      streamName: streamName,
+    );
+    await _log('class.renamed', '$className ${streamName ?? ''}'.trim());
+  }
 
   /// Deletes a class, its assignments and its enrolments. Learners stay.
-  Future<void> deleteClass(AdminSession _, ClassGroup group) =>
-      _db.transaction(() async {
+  Future<void> deleteClass(AdminSession _, ClassGroup group) async {
+    await _log(
+      'class.deleted',
+      '${group.className} ${group.streamName ?? ''}'.trim(),
+    );
+    await _db.transaction(() async {
         final uuid = group.groupUuid;
         if (uuid != null) {
           await (_db.delete(
@@ -206,14 +232,24 @@ class AdminService {
         }
         await _db.classGroupDao.deleteClass(group.id);
       });
+  }
 
   // ── Subjects ──────────────────────────────────────────────────────────
 
-  Future<CustomSubjectResult> addSubject(AdminSession _, String name) =>
-      _subjects.create(name: name);
+  Future<CustomSubjectResult> addSubject(AdminSession _, String name) async {
+    final result = await _subjects.create(name: name);
+    await _log('subject.added', name.trim());
+    return result;
+  }
 
-  Future<void> renameSubject(AdminSession _, String subjectId, String name) =>
-      _subjects.rename(subjectId, name);
+  Future<void> renameSubject(
+    AdminSession _,
+    String subjectId,
+    String name,
+  ) async {
+    await _subjects.rename(subjectId, name);
+    await _log('subject.renamed', '$subjectId → ${name.trim()}');
+  }
 
   /// Deletes a subject, its materials and its assignments. A built-in
   /// subject is hidden instead, and its name is free for the school's own.
@@ -230,6 +266,7 @@ class AdminService {
     } else {
       await _subjects.delete(id);
     }
+    await _log('subject.deleted', id);
   }
 
   /// Shows a removed built-in subject again. Null when done; else why not.
@@ -241,6 +278,7 @@ class AdminService {
       }
     }
     await _subjects.restoreBuiltIn(id);
+    await _log('subject.restored', id);
     return null;
   }
 
@@ -278,6 +316,10 @@ class AdminService {
             createdAt: DateTime.now().toUtc().toIso8601String(),
           ),
         );
+    await _log(
+      'assignment.added',
+      'teacher:$teacherId $subjectId $classGroupUuid $academicYear/$term',
+    );
     return true;
   }
 
@@ -286,6 +328,7 @@ class AdminService {
       _db.teachingAssignments,
     )..where((t) => t.id.equals(assignmentId))).go();
     await _prune();
+    await _log('assignment.removed', 'assignment:$assignmentId');
   }
 
   // ── Learners and enrolments ───────────────────────────────────────────
@@ -293,9 +336,11 @@ class AdminService {
   Future<int?> addLearner(AdminSession _, {required String name}) async {
     final trimmed = name.trim();
     if (trimmed.isEmpty) return null;
-    return _db.studentDao.createStudent(
+    final id = await _db.studentDao.createStudent(
       StudentsCompanion.insert(name: trimmed, uuid: Value(newSyncId())),
     );
+    await _log('learner.added', 'learner:$id');
+    return id;
   }
 
   /// Enrols a learner in a class/stream for [academicYear]; their earlier
@@ -324,6 +369,7 @@ class AdminService {
           ),
         );
     await _db.classGroupDao.assignLearner(studentId, group.id);
+    await _log('learner.enrolled', 'learner:$studentId $uuid $academicYear');
   });
 
   /// Withdraws a learner from their class.
@@ -336,14 +382,20 @@ class AdminService {
               const StudentEnrolmentsCompanion(status: Value('withdrawn')),
             );
         await _db.classGroupDao.assignLearner(studentId, null);
+        await _log('learner.withdrawn', 'learner:$studentId');
       });
 
   /// Deletes a learner and everything scoped to them.
-  Future<void> deleteLearner(AdminSession _, int studentId) =>
-      _wiper.wipeStudent(studentId);
+  Future<void> deleteLearner(AdminSession _, int studentId) async {
+    await _wiper.wipeStudent(studentId);
+    await _log('learner.deleted', 'learner:$studentId');
+  }
 
   /// Deletes every learner's data on this device.
-  Future<void> resetAllLearners(AdminSession _) => _wiper.wipeAll();
+  Future<void> resetAllLearners(AdminSession _) async {
+    await _wiper.wipeAll();
+    await _log('learners.reset');
+  }
 
   // ── Devices ───────────────────────────────────────────────────────────
 
@@ -354,7 +406,10 @@ class AdminService {
     AdminSession _,
     String deviceKey, {
     String name = '',
-  }) => DeviceRegistry(_db).revokeSchoolWide(deviceKey, name: name);
+  }) async {
+    await DeviceRegistry(_db).revokeSchoolWide(deviceKey, name: name);
+    await _log('device.revoked', '${deviceKey.substring(0, 16)} $name'.trim());
+  }
 }
 
 final adminServiceProvider = Provider<AdminService>(

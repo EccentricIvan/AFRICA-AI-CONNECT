@@ -34,6 +34,20 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-fatal-infos
 
+      # The optional school cloud: its own tests, and an installed copy the
+      # app's cloud end-to-end test starts (it skips without one).
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: School cloud backend tests
+        working-directory: backend
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements.txt
+          .venv/bin/python -m pytest -q
+
       - name: Test
         run: flutter test
 

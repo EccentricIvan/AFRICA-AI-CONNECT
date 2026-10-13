@@ -30,6 +30,7 @@ from .models import (
     EnrollmentCode,
     FileRecord,
     GradeRecord,
+    HostBackup,
     Nonce,
     School,
     SubmissionRecord,
@@ -41,6 +42,10 @@ KEY = re.compile(r"^[A-Za-z0-9_-]{43}$")
 UUID_LIKE = re.compile(r"^[A-Za-z0-9_.:-]{1,64}$")
 ROLES = ("admin", "teacher", "learner")
 MAX_RECORDS = 50
+LEDGER_KEYS = {
+    "format", "school_id", "root_public_key", "generation", "created_at",
+    "kdf", "n", "c", "m",
+}
 
 
 class Refused(Exception):
@@ -207,11 +212,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             if not isinstance(v, str) or not v.strip() or len(v) > limit:
                 raise ValueError
             fields[name] = v.strip()
-        if _too_many_failures(_address(request)):
+        key = f"register|{_address(request)}"
+        if _too_many_failures(key):
             return Response(status_code=429)
         rid = store.register(**fields)
-        # Counted like a wrong code, so registrations can't be flooded.
-        _record_failure(_address(request))
+        # Counted, so registrations can't be flooded.
+        _record_failure(key)
         return {"registration_id": rid, "status": "pending"}
 
     # ── Enrollment ──────────────────────────────────────────────────────
@@ -238,10 +244,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if not _https_ok(request):
             raise Refused
         data = _json(await _body(request, 8 * 1024))
-        address = _address(request)
+        code, key = data.get("code"), data.get("device_key")
+        # Per address, with room for a whole school behind one address to
+        # mistype. Guessing is stopped by the code itself (~59 random bits),
+        # not by this limit.
+        address = f"enroll|{_address(request)}"
         if _too_many_failures(address):
             return Response(status_code=429)
-        code, key = data.get("code"), data.get("device_key")
         role, box = data.get("role"), data.get("box_key")
         label = data.get("label") or ""
         if (
@@ -469,8 +478,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         learner = request.query_params.get("learner_uuid", "")
         if kind != "submission" or not UUID_LIKE.match(learner):
             raise ValueError
-        if caller.device.role == "learner" and learner not in json.loads(
-            caller.device.recovers or "[]"
+        # The server doesn't know teaching assignments, so it can't tell
+        # which learners a teacher teaches: only the Admin, and a device
+        # enrolled with a recovery code naming this learner, may read back.
+        role = caller.device.role
+        if role == "teacher" or (
+            role == "learner"
+            and learner not in json.loads(caller.device.recovers or "[]")
         ):
             store.school_audit(
                 caller.school_id, "refused.recovery", caller.device.key, ok=False
@@ -536,5 +550,73 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if not target.is_file():
             raise Refused
         return Response(target.read_bytes(), media_type="application/pdf")
+
+    # ── Teacher host backups ────────────────────────────────────────────
+
+    #: Kept per device; older ones are dropped.
+    keep_backups = 3
+
+    @app.put("/v1/backups/host")
+    async def put_backup(request: Request):
+        caller, body = await _signed(request, settings.max_file_bytes)
+        _require(caller, "teacher", "admin")
+        data = _json(body)
+        ledger = data.get("ledger")
+        # Only a sealed ledger (a plain header plus AES-GCM nonce, ciphertext
+        # and tag): never anything readable beyond the header.
+        if (
+            not isinstance(ledger, dict)
+            or not set(ledger) <= LEDGER_KEYS
+            or not {"kdf", "n", "c", "m"} <= set(ledger)
+            or not all(isinstance(ledger[k], str) for k in ("n", "c", "m"))
+        ):
+            raise ValueError
+        text = json.dumps(ledger)
+        with store.school_session(caller.school_id) as s:
+            s.add(
+                HostBackup(
+                    device=caller.device.key,
+                    label=caller.device.label,
+                    payload=text,
+                    size=len(text),
+                    at=now_iso(),
+                )
+            )
+            s.flush()
+            old = s.scalars(
+                select(HostBackup)
+                .where(HostBackup.device == caller.device.key)
+                .order_by(HostBackup.id.desc())
+                .offset(keep_backups)
+            ).all()
+            for row in old:
+                s.delete(row)
+        store.school_audit(caller.school_id, "backup.stored", caller.device.key)
+        return {"stored": True}
+
+    @app.get("/v1/backups/host")
+    async def list_backups(request: Request):
+        caller, _ = await _signed(request)
+        _require(caller, "teacher", "admin")
+        with store.school_session(caller.school_id) as s:
+            rows = s.scalars(select(HostBackup).order_by(HostBackup.id.desc())).all()
+            return {
+                "backups": [
+                    {"id": r.id, "label": r.label, "at": r.at, "size": r.size}
+                    for r in rows
+                ]
+            }
+
+    @app.get("/v1/backups/host/{backup_id}")
+    async def get_backup(backup_id: int, request: Request):
+        caller, _ = await _signed(request)
+        _require(caller, "teacher", "admin")
+        with store.school_session(caller.school_id) as s:
+            row = s.get(HostBackup, backup_id)
+            if row is None:
+                raise Refused
+            payload = json.loads(row.payload)
+        store.school_audit(caller.school_id, "backup.downloaded", caller.device.key)
+        return {"ledger": payload}
 
     return app

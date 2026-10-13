@@ -37,6 +37,8 @@ import 'tables/earned_badges_table.dart';
 import 'tables/failover_tables.dart';
 import 'tables/learner_subjects_table.dart';
 import 'tables/learning_paths_table.dart';
+import 'tables/audit_log_table.dart';
+import 'tables/cloud_link_table.dart';
 import 'tables/learner_support_table.dart';
 import 'tables/member_reports_table.dart';
 import 'tables/quiz_results_table.dart';
@@ -97,6 +99,8 @@ part 'otic_database.g.dart';
     ChannelReceipts,
     RemovedSubjects,
     LearnerSupport,
+    CloudLink,
+    AuditLog,
   ],
   daos: [
     StudentDao,
@@ -129,7 +133,7 @@ class OticDatabase extends _$OticDatabase {
   OticDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 33;
+  int get schemaVersion => 34;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -697,6 +701,15 @@ class OticDatabase extends _$OticDatabase {
         }
         if (!await _indexExists('idx_learner_support_member')) {
           await m.create(idxLearnerSupportMember);
+        }
+      }
+      if (from < 34) {
+        // The school cloud link and the device's signed audit log.
+        for (final (name, create) in [
+          ('cloud_link', () => m.createTable(cloudLink)),
+          ('audit_log', () => m.createTable(auditLog)),
+        ]) {
+          if (!await _tableExists(name)) await create();
         }
       }
     },

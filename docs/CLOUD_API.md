@@ -104,8 +104,10 @@ production; the server refuses plain HTTP unless started with
 
 - The code is stored only as a SHA-256 hash, is single-use, expires, and
   names the role it grants. A learner code can't enroll a teacher device.
-- Wrong codes are rate-limited per client address; after 20 failures in
-  an hour the address is refused for an hour.
+- Wrong codes are rate-limited per client address: after 200 failures in
+  an hour the address is refused for an hour. The limit is generous
+  because a whole school often shares one public address; guessing is
+  stopped by the code itself (12 characters from 31, about 59 bits).
 - A device key already enrolled in another school is refused.
 
 `POST /v1/enrollment-codes` (signed, Admin only):
@@ -138,9 +140,13 @@ and the app keeps it queued (the outbox counts it as pending).
 `GET /v1/records?kind=submission&learner_uuid=<uuid>` (signed): the
 learner's synced answers and their latest grades. Allowed for:
 
-- teacher and admin devices of the school;
+- the school's Admin devices;
 - a learner device enrolled with a recovery code that names this
   learner.
+
+Not for teacher devices: the server doesn't know teaching assignments,
+so it couldn't keep a teacher to their own classes' learners. Teachers
+see their learners' answers over P2P, where `Policy` applies.
 
 This is how a learner's work comes back on a replacement device: the
 Admin issues a recovery code for that learner, the new device enrolls
@@ -153,6 +159,19 @@ the name; stored as `<school folder>/files/<sha256>`, written to a temp
 file and renamed. `GET /v1/files/<sha256>` (signed, any device of the
 school). The name must be 64 lowercase hex characters — nothing else
 reaches the file system, so `../` can't.
+
+## Teacher device backups
+
+`PUT /v1/backups/host` (signed, teacher/admin): `{ledger}` — the
+device's host backup (classes, keys, shared notes), sealed on the device
+under the teacher's standby passphrase (PBKDF2 600k, AES-GCM). Only a
+sealed ledger is accepted: its plain header plus nonce, ciphertext and
+tag; anything else is refused. The latest 3 per device are kept.
+
+`GET /v1/backups/host` and `GET /v1/backups/host/<id>` (signed,
+teacher/admin): list and download. A replacement teacher device takes
+over with the passphrase, exactly as a standby does
+(`P2PFailoverService.promoteToHostNode`); the server can't open it.
 
 ## Audit
 

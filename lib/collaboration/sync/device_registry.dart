@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 
 import '../../db/otic_database.dart';
+import '../../services/audit/audit_log.dart';
 import 'class_crypto.dart';
 import 'device_keys.dart';
 
@@ -136,7 +137,22 @@ class DeviceRegistry {
   /// Revokes [deviceKey] in [classUuid] and replaces the class key. Returns
   /// how many devices still in the class are on an older build and must
   /// join again to get the new key.
-  Future<int> revoke(String classUuid, String deviceKey) =>
+  Future<int> revoke(String classUuid, String deviceKey) async {
+    final group = await _db.classGroupDao.findByUuid(classUuid);
+    final stale = await _revoke(classUuid, deviceKey);
+    // Only a class this device owns is revoked in (see [_revoke]).
+    if (group != null && !group.joined) {
+      await AuditLogService(_db).record(
+        'teacher',
+        'device.revoked_class',
+        detail:
+            '${deviceKey.length > 16 ? deviceKey.substring(0, 16) : deviceKey} $classUuid',
+      );
+    }
+    return stale;
+  }
+
+  Future<int> _revoke(String classUuid, String deviceKey) =>
       _db.transaction(() async {
         final group = await _db.classGroupDao.findByUuid(classUuid);
         if (group == null || group.joined) return 0;

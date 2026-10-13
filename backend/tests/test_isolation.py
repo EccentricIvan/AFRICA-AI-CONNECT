@@ -83,11 +83,11 @@ def test_school_a_cannot_read_school_b_records(two_schools):
     assert push(b["learner"], submission(b["learner"], "sub-b", "learner-b")).json() == {
         "accepted": ["submission:sub-b"]
     }
-    # A's teacher asks for B's learner: A's database simply has nothing.
-    r = a["teacher"].get("/v1/records?kind=submission&learner_uuid=learner-b")
+    # A's Admin asks for B's learner: A's database simply has nothing.
+    r = a["admin"].get("/v1/records?kind=submission&learner_uuid=learner-b")
     assert r.status_code == 200 and r.json() == {"records": []}
-    # B's teacher sees it.
-    r = b["teacher"].get("/v1/records?kind=submission&learner_uuid=learner-b")
+    # B's Admin sees it.
+    r = b["admin"].get("/v1/records?kind=submission&learner_uuid=learner-b")
     assert [x["submission"]["uuid"] for x in r.json()["records"]] == ["sub-b"]
 
 
@@ -115,9 +115,7 @@ def test_an_admin_cannot_revoke_another_schools_device(two_schools):
     a, b = two_schools["A"], two_schools["B"]
     r = a["admin"].post("/v1/devices/revoke", {"device_key": b["teacher"].key})
     assert r.status_code == 404
-    assert b["teacher"].get(
-        "/v1/records?kind=submission&learner_uuid=x"
-    ).status_code == 200
+    assert b["teacher"].get("/v1/backups/host").status_code == 200
 
 
 def test_files_stay_in_their_school(two_schools):
@@ -141,7 +139,7 @@ def test_file_names_can_never_leave_the_school_folder(two_schools):
 def test_unknown_devices_and_bad_signatures_are_refused(client, two_schools):
     stranger = DeviceClient(client)
     assert stranger.get("/v1/records?kind=submission&learner_uuid=x").status_code == 404
-    learner = two_schools["A"]["learner"]
+    learner = two_schools["A"]["admin"]
     # Signed by another key while claiming the learner's.
     forged = DeviceClient(client)
     path = "/v1/records?kind=submission&learner_uuid=x"
@@ -156,7 +154,7 @@ def test_unknown_devices_and_bad_signatures_are_refused(client, two_schools):
 
 
 def test_a_replayed_request_is_refused(client, two_schools):
-    teacher = two_schools["A"]["teacher"]
+    teacher = two_schools["A"]["admin"]
     path = "/v1/records?kind=submission&learner_uuid=x"
     headers = teacher.headers("GET", path, b"")
     assert client.get(path, headers=headers).status_code == 200
@@ -164,7 +162,7 @@ def test_a_replayed_request_is_refused(client, two_schools):
 
 
 def test_a_wrong_clock_is_allowed_within_a_day_but_not_beyond(two_schools):
-    teacher = two_schools["A"]["teacher"]
+    teacher = two_schools["A"]["admin"]
     path = "/v1/records?kind=submission&learner_uuid=x"
     now = datetime.now(timezone.utc)
     late = (now - timedelta(hours=5)).isoformat()
@@ -228,7 +226,22 @@ def test_a_revoked_device_is_refused(two_schools):
     assert r.status_code == 404
 
 
-def test_too_many_wrong_codes_lock_the_address(client):
+def test_a_teacher_device_cannot_read_learners_records(two_schools):
+    a = two_schools["A"]
+    push(a["learner"], submission(a["learner"], "s1", "amina"))
+    r = a["teacher"].get("/v1/records?kind=submission&learner_uuid=amina")
+    assert r.status_code == 404
+
+
+def test_too_many_wrong_codes_lock_the_address(tmp_path):
+    from fastapi.testclient import TestClient
+
+    from otic_cloud.api import create_app
+    from otic_cloud.config import Settings
+
+    client = TestClient(
+        create_app(Settings(data_dir=tmp_path, allow_http=True, enroll_failures_per_hour=20))
+    )
     device = DeviceClient(client)
     for _ in range(20):
         assert device.enroll("WRON-GCOD-E000", "learner").status_code == 404
@@ -244,8 +257,8 @@ def test_repeats_never_double_and_submissions_are_never_edited(client, two_schoo
     assert push(learner, first).json()["accepted"] == ["submission:s1"]
     edited = submission(learner, "s1", "l1", answer="changed")
     assert push(learner, edited).json()["accepted"] == ["submission:s1"]
-    teacher = two_schools["A"]["teacher"]
-    rows = teacher.get("/v1/records?kind=submission&learner_uuid=l1").json()["records"]
+    admin = two_schools["A"]["admin"]
+    rows = admin.get("/v1/records?kind=submission&learner_uuid=l1").json()["records"]
     assert len(rows) == 1 and rows[0]["submission"]["answer"] == "3/4"
 
 
@@ -272,7 +285,7 @@ def test_grades_only_from_teachers_and_the_highest_version_wins(two_schools):
     assert grade(a["learner"], 1, 10) == []
     assert grade(a["teacher"], 2, 7) == ["grade:s1:2"]
     assert grade(a["teacher"], 1, 3) == ["grade:s1:1"]
-    rows = a["teacher"].get("/v1/records?kind=submission&learner_uuid=l1").json()
+    rows = a["admin"].get("/v1/records?kind=submission&learner_uuid=l1").json()
     assert rows["records"][0]["grade"]["grade"] == 7
 
 
@@ -327,3 +340,46 @@ def test_refusals_are_audited_in_the_schools_own_log_without_secrets(client, two
     assert "secret answer" not in text
     with store.school_session(two_schools["B"]["id"]) as s:
         assert "refused.revoked" not in [r.action for r in s.scalars(select(SchoolAudit))]
+
+
+# ── Teacher host backups ────────────────────────────────────────────────────
+
+SEALED = {
+    "format": 1,
+    "school_id": "x",
+    "root_public_key": "k",
+    "generation": 1,
+    "created_at": "2026-10-13T08:00:00Z",
+    "kdf": {"alg": "pbkdf2-hmac-sha256", "rounds": 600000, "salt": "s"},
+    "n": "bm9uY2U",
+    "c": "Y2lwaGVy",
+    "m": "dGFn",
+}
+
+
+def test_host_backups_are_sealed_only_and_stay_in_their_school(two_schools):
+    a, b = two_schools["A"], two_schools["B"]
+    assert a["teacher"].request(
+        "PUT", "/v1/backups/host", {"ledger": SEALED}
+    ).status_code == 200
+    # Anything readable beyond the header is refused.
+    leaky = {**SEALED, "classes": [{"key": "secret"}]}
+    assert a["teacher"].request(
+        "PUT", "/v1/backups/host", {"ledger": leaky}
+    ).status_code == 400
+    # Learners can't store or read them.
+    assert a["learner"].get("/v1/backups/host").status_code == 404
+    listed = a["admin"].get("/v1/backups/host").json()["backups"]
+    assert len(listed) == 1
+    got = a["admin"].get(f"/v1/backups/host/{listed[0]['id']}").json()
+    assert got["ledger"] == SEALED
+    # School B sees none of A's, even by id.
+    assert b["teacher"].get("/v1/backups/host").json() == {"backups": []}
+    assert b["teacher"].get(f"/v1/backups/host/{listed[0]['id']}").status_code == 404
+
+
+def test_only_the_latest_three_backups_per_device_are_kept(two_schools):
+    t = two_schools["A"]["teacher"]
+    for _ in range(5):
+        t.request("PUT", "/v1/backups/host", {"ledger": SEALED})
+    assert len(t.get("/v1/backups/host").json()["backups"]) == 3

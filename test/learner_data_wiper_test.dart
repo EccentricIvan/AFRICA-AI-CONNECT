@@ -530,6 +530,11 @@ void main() {
       // wiped learner's records are gone, so their entries are dropped
       // unsent.
       'cloud_outbox',
+      // The device's link to its school cloud.
+      'cloud_link',
+      // The device's audit log names learners by id only, and must outlive
+      // a deletion it records.
+      'audit_log',
     };
     final actual = db.allTables.map((t) => t.actualTableName).toSet();
     final classified = LearnerDataWiper.wipedTableNames.union(kept);

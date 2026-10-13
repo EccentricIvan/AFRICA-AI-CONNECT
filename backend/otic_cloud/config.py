@@ -27,7 +27,8 @@ class Settings:
     max_body_bytes: int = 1 * 1024 * 1024
     max_file_bytes: int = 40 * 1024 * 1024
     #: Wrong enrollment codes per client address per hour before refusal.
-    enroll_failures_per_hour: int = 20
+    #: Generous: a whole school often shares one public address.
+    enroll_failures_per_hour: int = 200
 
     @property
     def registry_url(self) -> str:

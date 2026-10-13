@@ -215,6 +215,12 @@ class _TeacherDevicesCard extends ConsumerWidget {
             trailing: chevron,
             onTap: () => context.push('/class-sync'),
           ),
+          ListTile(
+            leading: const Icon(Icons.cloud_outlined),
+            title: const Text('School cloud'),
+            trailing: chevron,
+            onTap: () => context.push('/teachers/cloud'),
+          ),
         ],
       );
     }
