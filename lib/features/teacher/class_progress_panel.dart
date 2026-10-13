@@ -136,7 +136,7 @@ class _MemberRow extends ConsumerWidget {
         const <String>[];
     // Reports without the device clock come from builds before this one.
     final device = [
-      if (r.sentAt == null) 'older app — update this device',
+      if (r.sentAt == null) 'last sync from an older app',
       ?clockNote(r.clockOffset(at)),
     ];
     final accuracy = r.practiceAttempted == 0

@@ -252,7 +252,7 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
       quizzes, there is no "without tutor" label.
   - **Old builds and clocks.** Reports carry `sent_at` (the learner
     device's clock), left out of `reportDigest`. A report without it is
-    shown as "older app — update this device".
+    shown as "last sync from an older app".
     - Class progress and the gradebook name a clock more than 5 minutes
       off (`clockNote`).
     - A timed answer without `started_at` reads "older app: not timed".
