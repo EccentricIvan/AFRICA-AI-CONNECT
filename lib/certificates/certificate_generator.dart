@@ -32,7 +32,7 @@ class CertificateGenerator {
               // Top border decoration
               pw.Container(
                 height: 8,
-                color: const PdfColor.fromInt(0xFF1F6BE5),
+                color: const PdfColor.fromInt(0xFF0057E7),
               ),
               pw.SizedBox(height: 40),
 
@@ -42,7 +42,7 @@ class CertificateGenerator {
                 style: const pw.TextStyle(
                   fontSize: 14,
                   fontWeight: pw.FontWeight.bold,
-                  color: PdfColor.fromInt(0xFF1F6BE5),
+                  color: PdfColor.fromInt(0xFF0057E7),
                   letterSpacing: 3,
                 ),
               ),
@@ -50,7 +50,7 @@ class CertificateGenerator {
               pw.Container(
                 width: 60,
                 height: 2,
-                color: const PdfColor.fromInt(0xFF1F6BE5),
+                color: const PdfColor.fromInt(0xFF0057E7),
               ),
               pw.SizedBox(height: 40),
 
@@ -111,7 +111,7 @@ class CertificateGenerator {
                   style: const pw.TextStyle(
                     fontSize: 18,
                     fontWeight: pw.FontWeight.bold,
-                    color: PdfColor.fromInt(0xFF1F6BE5),
+                    color: PdfColor.fromInt(0xFF0057E7),
                   ),
                   textAlign: pw.TextAlign.center,
                 ),

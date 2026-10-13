@@ -233,9 +233,9 @@ class AppTheme {
         // Lighter tints of the same logo stops so they read on navy.
         primary: AppColors.primaryLight,
         onPrimary: AppColors.navy,
-        secondary: const Color(0xFF9D7BFF),
+        secondary: const Color(0xFF9A6BFF), // brandViolet, lighter
         onSecondary: AppColors.navy,
-        tertiary: const Color(0xFF38BDF8),
+        tertiary: const Color(0xFF40BEF5), // brandCyan, lighter
         onTertiary: AppColors.navy,
         surface: dt.surface,
         onSurface: dt.textPrimary,
