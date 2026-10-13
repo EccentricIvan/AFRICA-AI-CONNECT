@@ -11,6 +11,7 @@ import 'package:ai_connect_africa/db/otic_database.dart';
 import 'package:ai_connect_africa/services/assignments/class_assignments.dart';
 import 'package:ai_connect_africa/services/custom_subject_service.dart';
 import 'package:ai_connect_africa/services/notes/note_pdf_store.dart';
+import 'package:ai_connect_africa/services/assignments/learner_support.dart';
 import 'package:ai_connect_africa/services/offline_storage_service.dart';
 import 'package:ai_connect_africa/services/resource_import_service.dart';
 import 'dart:typed_data';
@@ -920,6 +921,53 @@ void main() {
       }
       expect(await teacherSees(), ['Amina:', 'Amina:']);
     });
+
+    test('extra help reaches only its learner’s device, and what they did '
+        'comes back', () async {
+      final (db, m) = await student();
+      final g = await join(m, east);
+      final amina = await learner(db, 'Amina', g.id);
+      final (otherDb, other) = await student();
+      final og = await join(other, east);
+      await learner(otherDb, 'Brian', og.id);
+      await m.syncClass(teacher: endpoint, group: g);
+      await other.syncClass(teacher: endpoint, group: og);
+
+      final reports = await teacher.classSyncDao
+          .watchMemberReports(east.groupUuid!)
+          .first;
+      final aminaReport = reports
+          .firstWhere((r) => r.report.name == 'Amina')
+          .report;
+      final id = (await LearnerSupportService(teacher).send(
+        classUuid: east.groupUuid!,
+        report: aminaReport,
+        teacherId: null,
+        subjectId: 'chemistry',
+        message: 'Look at acids again.',
+      ))!;
+
+      await m.syncClass(teacher: endpoint, group: g);
+      await other.syncClass(teacher: endpoint, group: og);
+      final mine = await LearnerSupportService(db).watchMine(amina).first;
+      expect(mine.single.message, 'Look at acids again.');
+      expect(
+        await otherDb.select(otherDb.learnerSupport).get(),
+        isEmpty,
+        reason: 'a classmate’s device never receives it',
+      );
+
+      await LearnerSupportService(db).markOpened(amina, id);
+      await m.syncClass(teacher: endpoint, group: g);
+      final back = (await teacher.classSyncDao
+              .watchMemberReports(east.groupUuid!)
+              .first)
+          .firstWhere((r) => r.report.name == 'Amina')
+          .report;
+      expect(back.support.single.id, id);
+      expect(back.support.single.openedAt, isNotNull);
+      expect(back.sentAt, isNotNull);
+    });
   });
 
   // ── Sharer approval ─────────────────────────────────────────────────────
@@ -1274,6 +1322,48 @@ void main() {
       expect(r.ok, isTrue, reason: r.error);
       expect(r.pdfsFetched, 0);
       expect(await store.has(sha), isFalse);
+    });
+
+    test('a download that stopped part-way carries on from where it was',
+        () async {
+      final big = Uint8List.fromList(
+        List.generate(kFileChunkBytes * 2 + 1234, (i) => (i * 31) % 251),
+      );
+      final sha = (await teacherPdfs.put(big))!;
+      await teacherPdfs.recordOwn(
+        subjectId: 'chemistry',
+        documentTitle: 'Acids notes',
+        sha: sha,
+        pages: 9,
+        bytes: big.length,
+      );
+      final (_, m, store) = await pdfStudent();
+      final group = await join(m, east);
+      // The first part arrived before the connection dropped.
+      expect(
+        await store.appendPartial(sha, big.sublist(0, kFileChunkBytes), 0),
+        isTrue,
+      );
+      final r = await m.syncClass(teacher: endpoint, group: group);
+      expect(r.ok, isTrue, reason: r.error);
+      expect(r.pdfsFetched, 1);
+      expect(await (await store.fileFor(sha))!.readAsBytes(), big);
+      expect(await store.partialLength(sha), 0);
+    });
+
+    test('a damaged part is thrown away and the next sync starts over',
+        () async {
+      final sha = await keepOnTeacher();
+      final (_, m, store) = await pdfStudent();
+      final group = await join(m, east);
+      await store.appendPartial(sha, utf8.encode('%PDF-junk'), 0);
+      final first = await m.syncClass(teacher: endpoint, group: group);
+      expect(first.pdfsFetched, 0, reason: 'never kept: wrong hash');
+      expect(await store.has(sha), isFalse);
+      expect(await store.partialLength(sha), 0);
+      final again = await m.syncClass(teacher: endpoint, group: group);
+      expect(again.pdfsFetched, 1);
+      expect(await (await store.fileFor(sha))!.readAsBytes(), pdf);
     });
 
     test('unsharing the note removes the PDF too', () async {

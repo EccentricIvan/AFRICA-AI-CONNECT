@@ -13,6 +13,7 @@ import '../../l10n/app_locale.dart';
 import '../../shared/widgets/responsive.dart';
 import '../../shared/widgets/studio_page.dart';
 import '../teacher/class_providers.dart';
+import '../teacher/register_learners_screen.dart';
 import '../teacher/teacher_pin_screen.dart';
 import '../teacher/teacher_profiles.dart';
 
@@ -215,12 +216,21 @@ class _TeacherDevicesCard extends ConsumerWidget {
             trailing: chevron,
             onTap: () => context.push('/class-sync'),
           ),
+          ListTile(
+            leading: const Icon(Icons.cloud_outlined),
+            title: const Text('School cloud'),
+            trailing: chevron,
+            onTap: () => context.push('/teachers/cloud'),
+          ),
         ],
       );
     }
 
     final owned =
         ref.watch(ownedClassesProvider).valueOrNull ?? const <ClassGroup>[];
+    final classTeacherOf =
+        ref.watch(myClassTeacherClassesProvider).valueOrNull ??
+        const <ClassGroup>[];
     final mine = owned.isEmpty
         ? 'No classes'
         : 'Teaches ${owned.length} ${owned.length == 1 ? 'class' : 'classes'}';
@@ -244,6 +254,14 @@ class _TeacherDevicesCard extends ConsumerWidget {
         const SizedBox(height: 12),
         _InfoCard(
           children: [
+            if (classTeacherOf.isNotEmpty)
+              ListTile(
+                leading: const Icon(Icons.how_to_reg_rounded),
+                title: const Text('Register learners'),
+                subtitle: Text(classTeacherOf.map(classLabel).join(', ')),
+                trailing: chevron,
+                onTap: () => context.push('/teacher/register-learners'),
+              ),
             for (final (icon, title, path) in const [
               (Icons.groups_outlined, 'Classes & learners', '/teacher'),
               (

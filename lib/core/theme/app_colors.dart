@@ -78,17 +78,21 @@ class AppColors {
     return const BoxDecoration(color: Colors.white);
   }
 
-  // Brand
-  static const Color primary = Color(0xFF1F6BE5);
-  static const Color primaryLight = Color(0xFF5B9BF8);
-  static const Color accent = Color(0xFF1F6BE5);
-  static const Color accentDeep = Color(0xFF1449B8);
+  // Brand — sampled from the logo (assets/branding/ai-connect-africa-logo.png),
+  // whose gradient runs cyan (top right) → blue → violet (bottom left). Every
+  // blue in the app is one of these stops or a tint of one.
+  static const Color primary = logoBlue;
+  static const Color primaryLight = Color(0xFF4D93F5); // logoBlue, lighter
+  static const Color accent = logoBlue;
+  static const Color accentDeep = logoBlueDeep;
   static const Color secondary = brandViolet;
 
-  /// The logo's gradient partners: cyan through blue to violet.
-  static const Color brandCyan = Color(0xFF00A8EB);
-  static const Color brandViolet = Color(0xFF5B1EE8);
-  static const Color brandVioletDeep = Color(0xFF3F12B0);
+  /// The logo's stops.
+  static const Color brandCyan = Color(0xFF009AEB);
+  static const Color logoBlue = Color(0xFF0057E7);
+  static const Color logoBlueDeep = Color(0xFF002DE1);
+  static const Color brandViolet = Color(0xFF5A00F3);
+  static const Color brandVioletDeep = Color(0xFF4100C8);
   static const Color navy = Color(0xFF0B1B4D);
 
   static Color get accentGlow => primary.withValues(alpha: 0.24);
@@ -127,9 +131,9 @@ class AppColors {
   /// from the next draws from these rather than inventing a hex. Blue, violet
   /// and cyan are the logo's three stops; teal/green/orange are kept only for
   /// meaning (ready/verified, success, streak fire, awards, warnings).
-  static const Color accentBlue = Color(0xFF1A66E6);
+  static const Color accentBlue = logoBlue;
   static const Color accentViolet = brandViolet;
-  static const Color accentCyan = Color(0xFF0A7AC0);
+  static const Color accentCyan = brandCyan;
   static const Color accentTeal = Color(0xFF0FA37F);
   static const Color accentOrange = Color(0xFFEE7A2B);
   static const Color accentGreen = Color(0xFF12A06A);
@@ -174,13 +178,13 @@ class AppColors {
   static const LinearGradient primaryButtonGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [accentBlue, Color(0xFF5A12E6)],
+    colors: [accentBlue, brandViolet],
   );
 
   static const LinearGradient fabGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [brandCyan, Color(0xFF5A12E6)],
+    colors: [brandCyan, brandViolet],
   );
 
   /// The logo's signature emphasis gradient — headline accents, stage bars,
@@ -188,7 +192,7 @@ class AppColors {
   static const LinearGradient brandGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [brandCyan, Color(0xFF0A6CE9), Color(0xFF5A12E6)],
+    colors: [brandCyan, logoBlue, brandViolet],
   );
 
   /// The student's own chat bubble: a soft wash of the logo's blue→violet

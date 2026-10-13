@@ -19,7 +19,9 @@ import '../../services/custom_subject_service.dart';
 import '../../shared/widgets/responsive.dart';
 import '../../shared/widgets/studio_page.dart';
 import '../teacher/class_providers.dart';
+import '../../services/offline/offline_readiness.dart';
 import 'classmate_share_cards.dart';
+import 'offline_readiness_card.dart';
 
 const _manualAddressKey = 'class_sync_teacher_address';
 
@@ -250,6 +252,7 @@ class _ClassSyncScreenState extends ConsumerState<ClassSyncScreen> {
       unawaited(_rememberAddress());
       // The teacher's subject list may have changed, and PDFs may have come.
       ref.invalidate(customSubjectsProvider);
+      ref.invalidate(offlineReadinessProvider(group.id));
       setState(() {
         if (last.ok) {
           _result = last;
@@ -380,6 +383,8 @@ class _ClassSyncScreenState extends ConsumerState<ClassSyncScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+              OfflineReadinessCard(classId: group.id),
               if (studentAsync.valueOrNull case final me?) ...[
                 const SizedBox(height: 16),
                 _MySubjectsCard(studentId: me.id, learnerName: me.name),

@@ -6,6 +6,7 @@ import '../../curriculum/curriculum_provider.dart' show CurriculumService;
 import '../../curriculum/subject_style.dart';
 import '../../db/otic_database.dart';
 import '../../features/teacher/teaching_scope.dart';
+import '../../services/audit/audit_log.dart';
 import '../sync/class_crypto.dart';
 import '../sync/device_registry.dart';
 import 'admin_records_crypto.dart';
@@ -154,6 +155,15 @@ class AdminRecords {
                   'class_uuid': e.classGroupUuid,
                   'year': e.academicYear,
                   'status': e.status,
+                },
+          ],
+          'class_teachers': [
+            for (final a in await _db.select(_db.classTeacherAssignments).get())
+              if (teacherUuid[a.teacherId] != null)
+                {
+                  'uuid': a.uuid,
+                  'teacher_uuid': teacherUuid[a.teacherId],
+                  'class_uuid': a.classGroupUuid,
                 },
           ],
           'revoked_devices': [
@@ -449,6 +459,63 @@ class AdminRecords {
         await _db.classGroupDao.assignLearner(e.key, e.value);
       }
 
+      // Class Teachers: replaced whole. Records from an older build don't
+      // carry them and leave them alone.
+      final classTeachers = r['class_teachers'];
+      if (classTeachers is List) {
+        await _db.delete(_db.classTeacherAssignments).go();
+        for (final a in _maps(classTeachers)) {
+          final uuid = a['uuid'], t = a['teacher_uuid'], c = a['class_uuid'];
+          if (uuid is! String ||
+              t is! String ||
+              c is! String ||
+              teacherId[t] == null) {
+            continue;
+          }
+          await _db
+              .into(_db.classTeacherAssignments)
+              .insert(
+                ClassTeacherAssignmentsCompanion.insert(
+                  uuid: uuid,
+                  teacherId: teacherId[t]!,
+                  classGroupUuid: c,
+                  createdAt: DateTime.now().toUtc().toIso8601String(),
+                ),
+                mode: InsertMode.insertOrIgnore,
+              );
+        }
+      }
+
+      // Learners a Class Teacher registered here: in these records means
+      // the Admin has them; otherwise they keep their enrolment until the
+      // Admin takes them.
+      final inRecords = learnerId.values.toSet();
+      final now = DateTime.now().toUtc().toIso8601String();
+      for (final reg in await (_db.select(
+        _db.learnerRegistrations,
+      )..where((t) => t.sentAt.isNull())).get()) {
+        if (inRecords.contains(reg.studentId)) {
+          await (_db.update(_db.learnerRegistrations)
+                ..where((t) => t.id.equals(reg.id)))
+              .write(LearnerRegistrationsCompanion(sentAt: Value(now)));
+          continue;
+        }
+        await _db
+            .into(_db.studentEnrolments)
+            .insert(
+              StudentEnrolmentsCompanion.insert(
+                uuid: reg.enrolmentUuid,
+                studentId: reg.studentId,
+                classGroupUuid: reg.classGroupUuid,
+                academicYear: DateTime.now().year,
+                createdAt: reg.createdAt,
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
+        final group = await _db.classGroupDao.findByUuid(reg.classGroupUuid);
+        await _db.classGroupDao.assignLearner(reg.studentId, group?.id);
+      }
+
       // What this device serves follows the new assignments.
       await TeachingScope(_db).pruneShares();
 
@@ -489,6 +556,155 @@ class AdminRecords {
     // Revoked devices lose every class this device serves them.
     await DeviceRegistry(_db).applySchoolRevocations();
     return null;
+  }
+
+  // ── Class Teachers' registrations ────────────────────────────────────
+
+  /// Learners a Class Teacher registered on this device that the Admin's
+  /// device hasn't taken yet — sent with the next request for records.
+  Future<List<Map<String, Object?>>> pendingRegistrations() async {
+    final out = <Map<String, Object?>>[];
+    for (final reg in await (_db.select(
+      _db.learnerRegistrations,
+    )..where((t) => t.sentAt.isNull())).get()) {
+      final learner = await (_db.select(
+        _db.students,
+      )..where((t) => t.id.equals(reg.studentId))).getSingleOrNull();
+      final teacher = await (_db.select(
+        _db.teacherProfiles,
+      )..where((t) => t.id.equals(reg.teacherId))).getSingleOrNull();
+      final enrolment = await (_db.select(
+        _db.studentEnrolments,
+      )..where((t) => t.uuid.equals(reg.enrolmentUuid))).getSingleOrNull();
+      if (learner?.uuid == null || teacher?.uuid == null) continue;
+      out.add({
+        'learner_uuid': learner!.uuid,
+        'name': learner.name,
+        'class_uuid': reg.classGroupUuid,
+        'enrolment_uuid': reg.enrolmentUuid,
+        'year': enrolment?.academicYear ?? DateTime.now().year,
+        'teacher_uuid': teacher!.uuid,
+        'registered_at': reg.createdAt,
+      });
+    }
+    return out;
+  }
+
+  /// The names of the teachers [registrations] say they come from, for the
+  /// Admin's Accept prompt.
+  Future<Map<String, int>> registrationsByTeacher(
+    List<Map<String, Object?>> registrations,
+  ) async {
+    final out = <String, int>{};
+    for (final r in registrations) {
+      final t = r['teacher_uuid'];
+      if (t is! String) continue;
+      final teacher = await (_db.select(
+        _db.teacherProfiles,
+      )..where((x) => x.uuid.equals(t))).getSingleOrNull();
+      final name = teacher?.name ?? 'Unknown teacher';
+      out[name] = (out[name] ?? 0) + 1;
+    }
+    return out;
+  }
+
+  /// On the Admin's device: takes learners registered by Class Teachers —
+  /// only into a class/stream the Admin gave that teacher. A learner already
+  /// here (the same uuid) is left as is, so repeating a sync adds nothing.
+  /// Returns how many were taken and refused.
+  Future<({int taken, int refused})> takeRegistrations(
+    List<Map<String, Object?>> registrations,
+  ) async {
+    if (await _admin() == null) {
+      return (taken: 0, refused: registrations.length);
+    }
+    var taken = 0, refused = 0;
+    final audit = AuditLogService(_db);
+    for (final r in registrations.take(500)) {
+      final learner = r['learner_uuid'], name = r['name'];
+      final c = r['class_uuid'], e = r['enrolment_uuid'];
+      final t = r['teacher_uuid'], year = r['year'];
+      if (learner is! String ||
+          learner.length > 64 ||
+          name is! String ||
+          name.trim().isEmpty ||
+          name.length > 80 ||
+          c is! String ||
+          e is! String ||
+          e.length > 64 ||
+          t is! String ||
+          year is! int) {
+        refused++;
+        continue;
+      }
+      final teacher = await (_db.select(
+        _db.teacherProfiles,
+      )..where((x) => x.uuid.equals(t))).getSingleOrNull();
+      final group = await _db.classGroupDao.findByUuid(c);
+      final allowed =
+          teacher != null &&
+          group != null &&
+          !group.joined &&
+          (await TeachingScope(_db).classTeacherOf(teacher.id)).contains(c);
+      if (!allowed) {
+        refused++;
+        await audit.record(
+          'device',
+          'refused.registration',
+          detail: '${teacher == null ? 'unknown teacher' : 'teacher:${teacher.id}'} $c',
+        );
+        continue;
+      }
+      final existing = await (_db.select(
+        _db.students,
+      )..where((x) => x.uuid.equals(learner))).getSingleOrNull();
+      if (existing != null) {
+        taken++;
+        continue;
+      }
+      final now = DateTime.now().toUtc().toIso8601String();
+      final id = await _db.transaction(() async {
+        final id = await _db.studentDao.createStudent(
+          StudentsCompanion.insert(name: name.trim(), uuid: Value(learner)),
+        );
+        await _db
+            .into(_db.studentEnrolments)
+            .insert(
+              StudentEnrolmentsCompanion.insert(
+                uuid: e,
+                studentId: id,
+                classGroupUuid: c,
+                academicYear: year,
+                createdAt: now,
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
+        await _db.classGroupDao.assignLearner(id, group.id);
+        await _db
+            .into(_db.learnerRegistrations)
+            .insert(
+              LearnerRegistrationsCompanion.insert(
+                studentId: id,
+                teacherId: teacher.id,
+                classGroupUuid: c,
+                enrolmentUuid: e,
+                createdAt: r['registered_at'] is String
+                    ? r['registered_at'] as String
+                    : now,
+                sentAt: Value(now),
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
+        return id;
+      });
+      taken++;
+      await audit.record(
+        'teacher:${teacher.id}',
+        'learner.registered',
+        detail: 'learner:$id $c',
+      );
+    }
+    return (taken: taken, refused: refused);
   }
 
   /// Makes this device the Admin's, from the sealed details in the last

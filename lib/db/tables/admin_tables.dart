@@ -144,3 +144,66 @@ class RemovedSubjects extends Table {
   @override
   Set<Column> get primaryKey => {subjectId};
 }
+
+/// A Class Teacher's classes/streams (schema 35): the Admin enrols the
+/// Class Teacher and picks which classes/streams they may register learners
+/// into. Registering learners is all the role allows. Part of the Admin's
+/// records; replaced whole on receipt.
+@DataClassName('ClassTeacherAssignment')
+@TableIndex(name: 'idx_class_teacher_teacher', columns: {#teacherId})
+class ClassTeacherAssignments extends Table {
+  @override
+  String get tableName => 'class_teacher_assignments';
+
+  IntColumn get id => integer().autoIncrement()();
+
+  /// Portable id, the same on every device the records reach.
+  TextColumn get uuid => text().unique()();
+
+  /// `teacher_profiles.id`.
+  IntColumn get teacherId => integer()();
+
+  /// `class_groups.group_uuid` — the class/stream.
+  TextColumn get classGroupUuid => text()();
+
+  /// ISO-8601 UTC.
+  TextColumn get createdAt => text()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {teacherId, classGroupUuid},
+  ];
+}
+
+/// A learner a Class Teacher registered (schema 35). On the Class Teacher's
+/// device it waits here until the Admin's device has taken it ([sentAt]);
+/// on the Admin's device it records who registered whom.
+@DataClassName('LearnerRegistration')
+class LearnerRegistrations extends Table {
+  @override
+  String get tableName => 'learner_registrations';
+
+  IntColumn get id => integer().autoIncrement()();
+
+  /// `students.id`.
+  IntColumn get studentId => integer()();
+
+  /// `teacher_profiles.id`.
+  IntColumn get teacherId => integer()();
+  TextColumn get classGroupUuid => text()();
+
+  /// The enrolment it created (`student_enrolments.uuid`).
+  TextColumn get enrolmentUuid => text()();
+
+  /// ISO-8601 UTC.
+  TextColumn get createdAt => text()();
+
+  /// ISO-8601 UTC: the Admin's device took it. Null until then (always set
+  /// on the Admin's device).
+  TextColumn get sentAt => text().nullable()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {studentId},
+  ];
+}

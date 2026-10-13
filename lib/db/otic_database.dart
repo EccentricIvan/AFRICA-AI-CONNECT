@@ -37,6 +37,9 @@ import 'tables/earned_badges_table.dart';
 import 'tables/failover_tables.dart';
 import 'tables/learner_subjects_table.dart';
 import 'tables/learning_paths_table.dart';
+import 'tables/audit_log_table.dart';
+import 'tables/cloud_link_table.dart';
+import 'tables/learner_support_table.dart';
 import 'tables/member_reports_table.dart';
 import 'tables/quiz_results_table.dart';
 import 'tables/device_tables.dart';
@@ -95,6 +98,11 @@ part 'otic_database.g.dart';
     SchoolDevices,
     ChannelReceipts,
     RemovedSubjects,
+    LearnerSupport,
+    CloudLink,
+    AuditLog,
+    ClassTeacherAssignments,
+    LearnerRegistrations,
   ],
   daos: [
     StudentDao,
@@ -127,7 +135,7 @@ class OticDatabase extends _$OticDatabase {
   OticDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 32;
+  int get schemaVersion => 35;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -665,6 +673,61 @@ class OticDatabase extends _$OticDatabase {
           ('cloud_outbox', () => m.createTable(cloudOutbox)),
         ]) {
           if (!await _tableExists(name)) await create();
+        }
+      }
+      if (from < 33) {
+        // "Tutor used" on assignment answers, and a teacher's extra help
+        // for one learner. Additive.
+        for (final (table, column, add) in [
+          (
+            'assignment_attempts',
+            'tutor_at',
+            () => m.addColumn(assignmentAttempts, assignmentAttempts.tutorAt),
+          ),
+          (
+            'assignment_submissions',
+            'tutor_used',
+            () => m.addColumn(
+              assignmentSubmissions,
+              assignmentSubmissions.tutorUsed,
+            ),
+          ),
+        ]) {
+          if (await _tableExists(table) &&
+              !await _columnExists(table, column)) {
+            await add();
+          }
+        }
+        if (!await _tableExists('learner_support')) {
+          await m.createTable(learnerSupport);
+        }
+        if (!await _indexExists('idx_learner_support_member')) {
+          await m.create(idxLearnerSupportMember);
+        }
+      }
+      if (from < 34) {
+        // The school cloud link and the device's signed audit log.
+        for (final (name, create) in [
+          ('cloud_link', () => m.createTable(cloudLink)),
+          ('audit_log', () => m.createTable(auditLog)),
+        ]) {
+          if (!await _tableExists(name)) await create();
+        }
+      }
+      if (from < 35) {
+        // Class Teachers: their classes/streams, and the learners they
+        // register.
+        for (final (name, create) in [
+          (
+            'class_teacher_assignments',
+            () => m.createTable(classTeacherAssignments),
+          ),
+          ('learner_registrations', () => m.createTable(learnerRegistrations)),
+        ]) {
+          if (!await _tableExists(name)) await create();
+        }
+        if (!await _indexExists('idx_class_teacher_teacher')) {
+          await m.create(idxClassTeacherTeacher);
         }
       }
     },

@@ -50,9 +50,17 @@ and sent only when a `CloudSyncAdapter` is plugged in by overriding
 `cloudSyncAdapterProvider`. Each record has a stable id (`submission:<uuid>`,
 `grade:<uuid>:<version>`), so the server must treat a repeat as a no-op. An
 outbox row names a record only; its content is read at send time, so a
-deleted record is dropped, not sent. No HTTP client exists yet: it waits
-for the hosted backend's API spec. The rules below apply to everything
-else. This means:
+deleted record is dropped, not sent.
+
+**Amended 2026-10-13 at the user's request:** this repo now has the school
+cloud's server (`backend/`, FastAPI, one database per school; contract in
+`docs/CLOUD_API.md`) and the app's HTTP adapter for it. The server is the
+cloud plug-in's backup and recovery copy, **not** a sync hub: it stays off
+by default, no feature may depend on it, and P2P stays the primary path.
+Nothing secret ships in the app; a device joins a school's cloud only with
+a one-time code. The hosted Kigali backend may differ; the adapter is the
+one place to change. Security model: `docs/SECURITY.md`. The rules below
+apply to everything else. This means:
 
 - No calls to OpenAI, Anthropic, Google, or any hosted LLM API
 - No Firebase, Supabase, or cloud sync
@@ -216,6 +224,22 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
     per uploaded file on the subject's Notes tab (never per section), and
     its card counts notes (`noteCountsProvider`). My notes and the chat's
     class-notes sheet group notes under each subject with its icon/colour.
+- **Class Teachers (schema 35, 2026-10-13).** The Admin enrols each Class
+  Teacher (their own name and PIN, signing in on Teachers like any teacher)
+  and gives them classes/streams (`class_teacher_assignments`, in the Admin's
+  records). Registering learners into those classes/streams is all the role
+  allows (`Policy` → `RegisterLearner`).
+  - It's separate from teaching subjects: one person may hold both.
+  - They register on their own device (Teacher → Register learners,
+    `ClassTeacherService`), which writes the learner, the enrolment and a
+    `learner_registrations` row.
+  - Registrations ride the next Admin sync **to** the Admin's device,
+    sealed with the code's secret. The Admin's Accept prompt names them,
+    and `AdminRecords.takeRegistrations` keeps only classes that teacher was
+    given (others are audited as refused).
+  - The records that come back mark them sent. Unsent ones keep their local
+    enrolment until the Admin takes them.
+  - The Admin sees "registered by" on each learner.
 - **Class assignments (schema 26).** A teacher adds one in Lesson
   materials; it is a `~assignment` row of a note, so it is signed and goes
   only to the classes the teacher shares it with. Learners answer on
@@ -239,6 +263,34 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
   - The start time rides the answer to the teacher (`started_at`), who
     sees started/handed-in times and "late". Times are the learner
     device's clock.
+- **Report follow-ups (schema 33, 2026-10-13).** There is no exam mode:
+  assessment is continuous, so the tutor is never switched off.
+  - **Tutor used on answers.** `assignment_submissions.tutor_used` is true
+    when the tutor replied while the learner worked on it. For a timed
+    one, that window runs from Start; for an untimed one, from when the
+    learner first saw it on Assignments (`markSeen`, an
+    `assignment_attempts` row with no draft).
+    - `recordTutorReply` stamps `assignment_attempts.tutor_at` once per
+      reply, so an attempt handed in by itself still knows.
+    - Null means unknown (never seen there, or an older build). As with
+      quizzes, there is no "without tutor" label.
+  - **Old builds and clocks.** Reports carry `sent_at` (the learner
+    device's clock), left out of `reportDigest`. A report without it is
+    shown as "last sync from an older app".
+    - Class progress and the gradebook name a clock more than 5 minutes
+      off (`clockNote`).
+    - A timed answer without `started_at` reads "older app: not timed".
+  - **Extra help for one learner** (`learner_support`,
+    `learner_support.dart`): from Class progress → Send help, a teacher
+    who teaches that subject to the class (`Policy` → `SupportLearner`)
+    sends a message, a note shared with the class and/or that topic's quiz.
+    - It rides only the reply to that learner's own progress report, never
+      a note channel, so classmates' devices never get it. Like grades, a
+      higher version wins; withdrawing bumps it.
+    - The learner sees it at the top of Assignments. Opened/done ride the
+      next report (`support`).
+    - The teacher sees the quiz score on the topic when sent → now, with
+      tutor use.
 - **Roadmap agreed 2026-10-06** (user's P2P/RBAC spec). Done: Admin role,
   teaching assignments and enrolments, one-way Admin sync, assignment
   submission and grade sync, session expiry, tutor sources, the memory
@@ -260,7 +312,8 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
   (per-teacher signing keys, one recovery passphrase per teacher),
   encrypted local storage (SQLCipher + OS secure storage), a signed audit
   log, per-learner peer authorization, archiving materials, and
-  measurements on minimum hardware. Stay P2P — never a central server.
+  measurements on minimum hardware. Stay P2P — the school cloud
+  (`backend/`) is an optional backup, never a hub every device needs.
 
 ### Teacher notes → tutor (offline knowledge base)
 

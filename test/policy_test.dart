@@ -110,6 +110,34 @@ void main() {
   });
 
   test(
+    'extra help goes only to classes the teacher teaches that subject',
+    () async {
+      final eastUuid = east.groupUuid!, westUuid = west.groupUuid!;
+      expect(
+        await policy.can(
+          TeacherActor(amina),
+          SupportLearner('maths_9', eastUuid),
+        ),
+        isTrue,
+      );
+      for (final (actor, subject, c) in [
+        (TeacherActor(amina), 'maths_9', westUuid),
+        (TeacherActor(amina), 'physics_9', eastUuid),
+        (TeacherActor(okello), 'maths_9', eastUuid),
+        (const TeacherActor(null), 'maths_9', eastUuid),
+        (AdminActor(s), 'maths_9', eastUuid),
+        (LearnerActor(learner), 'maths_9', eastUuid),
+      ]) {
+        expect(
+          await policy.can(actor, SupportLearner(subject, c)),
+          isFalse,
+          reason: '$actor $subject $c',
+        );
+      }
+    },
+  );
+
+  test(
     'only teachers change notes; only the Admin manages the school',
     () async {
       for (final actor in [

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../db/otic_database.dart';
 import '../../db/providers/db_provider.dart';
+import '../../services/audit/audit_log.dart';
 import 'teacher_pin.dart';
 
 /// Teachers who sign in on this device, each with their own PIN.
@@ -34,7 +35,12 @@ class TeacherProfileService {
       _db.teacherProfiles,
     )..where((t) => t.id.equals(teacherId))).getSingleOrNull();
     if (row == null) return null;
-    if (!await pinMatches(row.pinSalt, pin, row.pinHash)) return null;
+    if (!await pinMatches(row.pinSalt, pin, row.pinHash)) {
+      await AuditLogService(
+        _db,
+      ).record('device', 'refused.teacher_pin', detail: 'teacher:$teacherId');
+      return null;
+    }
     if (pinNeedsUpgrade(row.pinHash)) {
       await (_db.update(
         _db.teacherProfiles,

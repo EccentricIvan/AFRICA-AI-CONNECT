@@ -6,6 +6,7 @@ import '../../db/otic_database.dart';
 import '../../db/providers/db_provider.dart';
 import '../../services/assignments/class_assignments.dart';
 import '../sync/progress_report.dart' show reportDeviceKey;
+import 'cloud_link.dart' show LinkedCloudSync;
 
 /// The school cloud plug-in point.
 ///
@@ -52,6 +53,10 @@ abstract class CloudSyncAdapter {
   /// False: records stay queued and nothing is sent.
   bool get enabled;
 
+  /// Whether to send now; by default [enabled]. An adapter whose state
+  /// lives in the database checks it here, when a send starts.
+  Future<bool> ready() async => enabled;
+
   /// Sends [records]; returns the ids the server now holds (including ones
   /// it already had). Throwing leaves them all queued.
   Future<Set<String>> push(List<CloudRecord> records);
@@ -68,9 +73,11 @@ class DisabledCloudSync extends CloudSyncAdapter {
   Future<Set<String>> push(List<CloudRecord> records) async => const {};
 }
 
-/// Override to plug a school cloud in.
+/// The school cloud: sends nothing until this device enrolls in its
+/// school's cloud (`cloud_link`), then signs and sends through it. Override
+/// to plug in another server.
 final cloudSyncAdapterProvider = Provider<CloudSyncAdapter>(
-  (ref) => const DisabledCloudSync(),
+  (ref) => LinkedCloudSync(ref.watch(dbProvider)),
 );
 
 /// Queues records and sends them through the adapter.
@@ -81,6 +88,10 @@ class CloudOutboxService {
   final CloudSyncAdapter _adapter;
 
   static const batchSize = 50;
+
+  /// Why the last [flush] stopped early (unreachable, refused); null when
+  /// it didn't.
+  String? lastError;
 
   /// Queues one record. Queuing the same [recordId] twice changes nothing.
   Future<void> enqueue(String kind, String refUuid, {String? recordId}) => _db
@@ -103,7 +114,8 @@ class CloudOutboxService {
   /// Sends what is queued, oldest first. Returns how many the cloud
   /// accepted; 0 when the plug-in is off or unreachable.
   Future<int> flush() async {
-    if (!_adapter.enabled) return 0;
+    lastError = null;
+    if (!await _adapter.ready()) return 0;
     var accepted = 0;
     while (true) {
       final rows =
@@ -135,6 +147,7 @@ class CloudOutboxService {
         ok = await _adapter.push(records);
       } catch (e) {
         debugPrint('Cloud sync: kept queued ($e)');
+        lastError = '$e';
         return accepted;
       }
       final now = DateTime.now().toUtc().toIso8601String();
@@ -187,14 +200,7 @@ class CloudOutboxService {
           };
         }
         return {
-          ...SubmissionPayload(
-            uuid: s.uuid,
-            assignmentId: s.assignmentId,
-            subjectId: s.subjectId,
-            answer: s.answer,
-            createdAt: s.createdAt,
-            startedAt: s.startedAt,
-          ).toJson(),
+          ...SubmissionPayload.fromRow(s).toJson(),
           ...who,
           'name': s.learnerName,
         };

@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 
 import '../../db/otic_database.dart';
 import '../../services/assignments/class_assignments.dart';
+import '../../services/assignments/learner_support.dart';
 import '../../services/notes/quiz_scores.dart';
 import 'class_crypto.dart' show signingPublicKey;
 
@@ -31,7 +32,21 @@ class ProgressReport {
     this.enrolled = const [],
     this.submissions = const [],
     this.quizzes = const [],
+    this.support = const [],
+    this.sentAt,
   });
+
+  /// The learner device's clock when it sent the report (ISO-8601 UTC).
+  /// The teacher's device compares it with its own to see a wrong clock,
+  /// since every assignment time is the learner device's. Left out of
+  /// [reportDigest]: it changes on every sync.
+  final String? sentAt;
+
+  /// The teacher's extra help for this learner (`learner_support.dart`):
+  /// whether they opened it and marked it done, by the learner device's
+  /// clock.
+  final List<({String id, String? openedAt, String? doneAt})> support;
+  static const maxSupport = 20;
 
   /// The latest quiz round per subject and topic, most recent first: counts
   /// only, never the questions or answers. [tutorUsed] is how many answers
@@ -107,6 +122,11 @@ class ProgressReport {
             if (q.tutorUsed != null) 'a': q.tutorUsed,
           },
       ],
+    if (support.isNotEmpty)
+      'support': [
+        for (final s in support) {'id': s.id, 'o': ?s.openedAt, 'd': ?s.doneAt},
+      ],
+    if (sentAt != null) 'sent_at': sentAt,
   };
 
   /// Reads a report from another device. Null when it isn't one. Every
@@ -137,7 +157,8 @@ class ProgressReport {
         }
       }
     }
-    final last = json['last_active'];
+    final last = json['last_active'], sent = json['sent_at'];
+    String? iso(Object? v) => v is String && v.length <= 40 ? v : null;
     return ProgressReport(
       memberKey: member,
       name: _clip(name.trim()),
@@ -181,11 +202,51 @@ class ProgressReport {
                     : null,
               ),
       ],
+      support: [
+        if (json['support'] case final List items)
+          for (final s in items.take(maxSupport))
+            if (s is Map &&
+                s['id'] is String &&
+                (s['id'] as String).length <= 64)
+              (
+                id: s['id'] as String,
+                openedAt: iso(s['o']),
+                doneAt: iso(s['d']),
+              ),
+      ],
+      sentAt: iso(sent),
     );
   }
 
   static String _clip(String s) =>
       s.length > _maxText ? s.substring(0, _maxText) : s;
+
+  /// How far the learner device's clock was from the teacher's when this
+  /// report arrived at [receivedAt] (the teacher's clock): positive when
+  /// it runs fast. Null when the report has no clock (older builds).
+  Duration? clockOffset(String receivedAt) {
+    final sent = DateTime.tryParse(sentAt ?? '');
+    final got = DateTime.tryParse(receivedAt);
+    if (sent == null || got == null) return null;
+    return sent.difference(got);
+  }
+}
+
+/// A learner device's clock off by more than this is shown to the teacher,
+/// beside the assignment times it stamped.
+const kClockWarnAfter = Duration(minutes: 5);
+
+/// "device clock 2 h 05 min fast", or null within [kClockWarnAfter].
+String? clockNote(Duration? offset) {
+  if (offset == null || offset.abs() <= kClockWarnAfter) return null;
+  final d = offset.abs();
+  final h = d.inHours, m = d.inMinutes % 60;
+  final size = d.inDays >= 2
+      ? '${d.inDays} days'
+      : h == 0
+      ? '$m min'
+      : '$h h ${m.toString().padLeft(2, '0')} min';
+  return 'device clock $size ${offset.isNegative ? 'slow' : 'fast'}';
 }
 
 /// Reports for every learner on this device who is in [group] — what a
@@ -213,15 +274,20 @@ Future<List<ProgressReport>> buildProgressReports(
       );
     }
   }
-  return [for (final s in learners) await _reportFor(db, group, s, deviceKey)];
+  final sentAt = DateTime.now().toUtc().toIso8601String();
+  return [
+    for (final s in learners)
+      await _reportFor(db, group, s, deviceKey, sentAt: sentAt),
+  ];
 }
 
 Future<ProgressReport> _reportFor(
   OticDatabase db,
   ClassGroup group,
   Student s,
-  String deviceKey,
-) async {
+  String deviceKey, {
+  String? sentAt,
+}) async {
   final progress =
       await (db.select(db.topicProgress)
             ..where((t) => t.studentId.equals(s.id))
@@ -262,12 +328,18 @@ Future<ProgressReport> _reportFor(
           tutorUsed: q.lastTutorUsed,
         ),
     ],
+    support: group.groupUuid == null
+        ? const []
+        : await LearnerSupportService(db).acks(s.id, group.groupUuid!),
+    sentAt: sentAt,
   );
 }
 
 /// Identifies a report's content: equal digests, nothing new to send.
-String reportDigest(ProgressReport r) =>
-    sha256.convert(utf8.encode(jsonEncode(r.toJson()))).toString();
+/// The send time is left out, so an unchanged report keeps its digest.
+String reportDigest(ProgressReport r) => sha256
+    .convert(utf8.encode(jsonEncode(r.toJson()..remove('sent_at'))))
+    .toString();
 
 /// On the learner's device, once the teacher's reply confirms [reports]:
 /// remembers what the teacher now holds for each learner.

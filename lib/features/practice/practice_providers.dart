@@ -113,7 +113,7 @@ class ApplyNotifier extends AutoDisposeNotifier<ApplyState> {
         isEvaluating: false,
         scenariosEvaluated: newCount,
       );
-      ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+      await recordTutorReply(ref);
 
       final student = await ref.read(activeStudentProvider.future);
       if (student != null) {

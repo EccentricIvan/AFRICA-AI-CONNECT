@@ -75,6 +75,20 @@ final class ManageClassDevices extends Request {
   final String classGroupUuid;
 }
 
+/// Send one learner of a class/stream extra help in a subject.
+final class SupportLearner extends Request {
+  const SupportLearner(this.subjectId, this.classGroupUuid);
+  final String subjectId;
+  final String classGroupUuid;
+}
+
+/// Register a new learner into one class/stream: the Admin, or a Class
+/// Teacher the Admin gave that class/stream.
+final class RegisterLearner extends Request {
+  const RegisterLearner(this.classGroupUuid);
+  final String classGroupUuid;
+}
+
 /// The school's records: teachers, classes, subjects, assignments,
 /// learners and enrolments.
 final class ManageSchool extends Request {
@@ -121,6 +135,19 @@ class Policy {
               (await _scope.assignments(
                 actor.teacherId!,
               )).any((a) => a.classGroupUuid == classGroupUuid)),
+    SupportLearner(:final subjectId, :final classGroupUuid) =>
+      actor is TeacherActor &&
+          await _scope.teaches(
+            actor.teacherId,
+            subjectId,
+            classGroupUuid: classGroupUuid,
+          ),
+    RegisterLearner(:final classGroupUuid) =>
+      actor is AdminActor ||
+          (actor is TeacherActor &&
+              (await _scope.classTeacherOf(
+                actor.teacherId,
+              )).contains(classGroupUuid)),
     ManageSchool() => actor is AdminActor,
   };
 

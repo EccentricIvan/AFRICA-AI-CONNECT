@@ -1237,7 +1237,7 @@ class _ComposerBar extends StatelessWidget {
             offset: Offset(0, 10),
           ),
           BoxShadow(
-            color: Color(0x0A1F6BE5),
+            color: Color(0x0A0057E7),
             blurRadius: 18,
             offset: Offset(0, 4),
           ),
