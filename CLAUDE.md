@@ -50,9 +50,17 @@ and sent only when a `CloudSyncAdapter` is plugged in by overriding
 `cloudSyncAdapterProvider`. Each record has a stable id (`submission:<uuid>`,
 `grade:<uuid>:<version>`), so the server must treat a repeat as a no-op. An
 outbox row names a record only; its content is read at send time, so a
-deleted record is dropped, not sent. No HTTP client exists yet: it waits
-for the hosted backend's API spec. The rules below apply to everything
-else. This means:
+deleted record is dropped, not sent.
+
+**Amended 2026-10-13 at the user's request:** this repo now has the school
+cloud's server (`backend/`, FastAPI, one database per school; contract in
+`docs/CLOUD_API.md`) and the app's HTTP adapter for it. The server is the
+cloud plug-in's backup and recovery copy, **not** a sync hub: it stays off
+by default, no feature may depend on it, and P2P stays the primary path.
+Nothing secret ships in the app; a device joins a school's cloud only with
+a one-time code. The hosted Kigali backend may differ; the adapter is the
+one place to change. Security model: `docs/SECURITY.md`. The rules below
+apply to everything else. This means:
 
 - No calls to OpenAI, Anthropic, Google, or any hosted LLM API
 - No Firebase, Supabase, or cloud sync
@@ -288,7 +296,8 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
   (per-teacher signing keys, one recovery passphrase per teacher),
   encrypted local storage (SQLCipher + OS secure storage), a signed audit
   log, per-learner peer authorization, archiving materials, and
-  measurements on minimum hardware. Stay P2P — never a central server.
+  measurements on minimum hardware. Stay P2P — the school cloud
+  (`backend/`) is an optional backup, never a hub every device needs.
 
 ### Teacher notes → tutor (offline knowledge base)
 
