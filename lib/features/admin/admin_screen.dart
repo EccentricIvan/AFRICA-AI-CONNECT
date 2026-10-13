@@ -75,7 +75,8 @@ class _SetUpState extends ConsumerState<_SetUp> {
   final _name = TextEditingController();
   final _pin = TextEditingController();
   final _again = TextEditingController();
-  String? _error;
+  // Each problem shows under the field it is about.
+  String? _nameError, _pinError, _againError, _error;
 
   @override
   void dispose() {
@@ -85,25 +86,56 @@ class _SetUpState extends ConsumerState<_SetUp> {
     super.dispose();
   }
 
+  void _clear() {
+    if (_nameError == null &&
+        _pinError == null &&
+        _againError == null &&
+        _error == null) {
+      return;
+    }
+    setState(() => _nameError = _pinError = _againError = _error = null);
+  }
+
   Future<void> _submit() async {
-    if (_pin.text != _again.text) {
-      return setState(() => _error = 'The two PINs did not match.');
+    final pin = _pin.text.trim(), again = _again.text.trim();
+    setState(() {
+      _nameError = _name.text.trim().isEmpty ? 'Enter a name.' : null;
+      _pinError = pin.isEmpty
+          ? 'Enter a PIN.'
+          : !TeacherPin.isValidFormat(pin)
+          ? 'A PIN is 4 to 8 digits.'
+          : null;
+      _againError = _pinError != null
+          ? null
+          : again.isEmpty
+          ? 'Enter the same PIN again.'
+          : again != pin
+          ? 'The two PINs did not match.'
+          : null;
+      _error = null;
+    });
+    if (_nameError != null || _pinError != null || _againError != null) {
+      return;
     }
     // With a Teachers PIN set, only someone who knows it sets up the Admin.
     final teachersPin = ref.read(teacherPinProvider);
     if (await teachersPin.isSet()) {
       if (!mounted) return;
-      final pin = await askTeacherPin(context, title: 'Teachers PIN');
-      if (pin == null || !await teachersPin.verify(pin)) {
-        return setState(() => _error = 'That PIN is not right.');
+      final entered = await askTeacherPin(context, title: 'Teachers PIN');
+      if (entered == null) return;
+      if (!await teachersPin.verify(entered)) {
+        return setState(() => _error = 'That Teachers PIN is not right.');
       }
     }
     final session = await ref
         .read(adminServiceProvider)
-        .setUp(name: _name.text, pin: _pin.text.trim());
+        .setUp(name: _name.text, pin: pin);
     if (!mounted) return;
     if (session == null) {
-      return setState(() => _error = 'Enter a name and a 4–8 digit PIN.');
+      return setState(
+        () => _error = 'This device already has an Admin, or holds another '
+            'Admin’s school records.',
+      );
     }
     ref.invalidate(adminSetUpProvider);
     ref.read(adminSessionProvider.notifier).state = session;
@@ -119,22 +151,40 @@ class _SetUpState extends ConsumerState<_SetUp> {
         const SizedBox(height: 16),
         TextField(
           controller: _name,
-          decoration: const InputDecoration(labelText: 'Name'),
+          onChanged: (_) => _clear(),
+          decoration: InputDecoration(labelText: 'Name', errorText: _nameError),
         ),
         TextField(
           controller: _pin,
           obscureText: true,
           keyboardType: TextInputType.number,
           inputFormatters: kPinInputFormatters,
-          decoration: const InputDecoration(labelText: 'PIN (4–8 digits)'),
+          onChanged: (_) => _clear(),
+          decoration: InputDecoration(
+            labelText: 'PIN (4–8 digits)',
+            errorText: _pinError,
+          ),
         ),
         TextField(
           controller: _again,
           obscureText: true,
           keyboardType: TextInputType.number,
           inputFormatters: kPinInputFormatters,
-          decoration: InputDecoration(labelText: 'PIN again', errorText: _error),
+          onChanged: (_) => _clear(),
+          onSubmitted: (_) => _submit(),
+          decoration: InputDecoration(
+            labelText: 'PIN again',
+            errorText: _againError,
+          ),
         ),
+        if (_error != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              _error!,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
         const SizedBox(height: 16),
         FilledButton(onPressed: _submit, child: const Text('Set up')),
       ],
