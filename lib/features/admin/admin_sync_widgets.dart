@@ -142,7 +142,14 @@ class _SendRecordsPageState extends ConsumerState<SendRecordsPage> {
               Card(
                 child: ListTile(
                   title: Text(r.name),
-                  subtitle: const Text('Wants the school records'),
+                  subtitle: Text(
+                    [
+                      'Wants the school records',
+                      for (final e in r.registrations.entries)
+                        'brings ${e.value} new learner'
+                            '${e.value == 1 ? '' : 's'} from ${e.key}',
+                    ].join(' · '),
+                  ),
                   trailing: Wrap(
                     spacing: 8,
                     children: [

@@ -22062,6 +22062,859 @@ class AuditLogCompanion extends UpdateCompanion<AuditEntry> {
   }
 }
 
+class $ClassTeacherAssignmentsTable extends ClassTeacherAssignments
+    with TableInfo<$ClassTeacherAssignmentsTable, ClassTeacherAssignment> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ClassTeacherAssignmentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _teacherIdMeta = const VerificationMeta(
+    'teacherId',
+  );
+  @override
+  late final GeneratedColumn<int> teacherId = GeneratedColumn<int>(
+    'teacher_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _classGroupUuidMeta = const VerificationMeta(
+    'classGroupUuid',
+  );
+  @override
+  late final GeneratedColumn<String> classGroupUuid = GeneratedColumn<String>(
+    'class_group_uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    uuid,
+    teacherId,
+    classGroupUuid,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'class_teacher_assignments';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ClassTeacherAssignment> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (data.containsKey('teacher_id')) {
+      context.handle(
+        _teacherIdMeta,
+        teacherId.isAcceptableOrUnknown(data['teacher_id']!, _teacherIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_teacherIdMeta);
+    }
+    if (data.containsKey('class_group_uuid')) {
+      context.handle(
+        _classGroupUuidMeta,
+        classGroupUuid.isAcceptableOrUnknown(
+          data['class_group_uuid']!,
+          _classGroupUuidMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_classGroupUuidMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {teacherId, classGroupUuid},
+  ];
+  @override
+  ClassTeacherAssignment map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ClassTeacherAssignment(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
+      teacherId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}teacher_id'],
+      )!,
+      classGroupUuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}class_group_uuid'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ClassTeacherAssignmentsTable createAlias(String alias) {
+    return $ClassTeacherAssignmentsTable(attachedDatabase, alias);
+  }
+}
+
+class ClassTeacherAssignment extends DataClass
+    implements Insertable<ClassTeacherAssignment> {
+  final int id;
+
+  /// Portable id, the same on every device the records reach.
+  final String uuid;
+
+  /// `teacher_profiles.id`.
+  final int teacherId;
+
+  /// `class_groups.group_uuid` — the class/stream.
+  final String classGroupUuid;
+
+  /// ISO-8601 UTC.
+  final String createdAt;
+  const ClassTeacherAssignment({
+    required this.id,
+    required this.uuid,
+    required this.teacherId,
+    required this.classGroupUuid,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['uuid'] = Variable<String>(uuid);
+    map['teacher_id'] = Variable<int>(teacherId);
+    map['class_group_uuid'] = Variable<String>(classGroupUuid);
+    map['created_at'] = Variable<String>(createdAt);
+    return map;
+  }
+
+  ClassTeacherAssignmentsCompanion toCompanion(bool nullToAbsent) {
+    return ClassTeacherAssignmentsCompanion(
+      id: Value(id),
+      uuid: Value(uuid),
+      teacherId: Value(teacherId),
+      classGroupUuid: Value(classGroupUuid),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory ClassTeacherAssignment.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ClassTeacherAssignment(
+      id: serializer.fromJson<int>(json['id']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      teacherId: serializer.fromJson<int>(json['teacherId']),
+      classGroupUuid: serializer.fromJson<String>(json['classGroupUuid']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'uuid': serializer.toJson<String>(uuid),
+      'teacherId': serializer.toJson<int>(teacherId),
+      'classGroupUuid': serializer.toJson<String>(classGroupUuid),
+      'createdAt': serializer.toJson<String>(createdAt),
+    };
+  }
+
+  ClassTeacherAssignment copyWith({
+    int? id,
+    String? uuid,
+    int? teacherId,
+    String? classGroupUuid,
+    String? createdAt,
+  }) => ClassTeacherAssignment(
+    id: id ?? this.id,
+    uuid: uuid ?? this.uuid,
+    teacherId: teacherId ?? this.teacherId,
+    classGroupUuid: classGroupUuid ?? this.classGroupUuid,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  ClassTeacherAssignment copyWithCompanion(
+    ClassTeacherAssignmentsCompanion data,
+  ) {
+    return ClassTeacherAssignment(
+      id: data.id.present ? data.id.value : this.id,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      teacherId: data.teacherId.present ? data.teacherId.value : this.teacherId,
+      classGroupUuid: data.classGroupUuid.present
+          ? data.classGroupUuid.value
+          : this.classGroupUuid,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ClassTeacherAssignment(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('teacherId: $teacherId, ')
+          ..write('classGroupUuid: $classGroupUuid, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, uuid, teacherId, classGroupUuid, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ClassTeacherAssignment &&
+          other.id == this.id &&
+          other.uuid == this.uuid &&
+          other.teacherId == this.teacherId &&
+          other.classGroupUuid == this.classGroupUuid &&
+          other.createdAt == this.createdAt);
+}
+
+class ClassTeacherAssignmentsCompanion
+    extends UpdateCompanion<ClassTeacherAssignment> {
+  final Value<int> id;
+  final Value<String> uuid;
+  final Value<int> teacherId;
+  final Value<String> classGroupUuid;
+  final Value<String> createdAt;
+  const ClassTeacherAssignmentsCompanion({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.teacherId = const Value.absent(),
+    this.classGroupUuid = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  ClassTeacherAssignmentsCompanion.insert({
+    this.id = const Value.absent(),
+    required String uuid,
+    required int teacherId,
+    required String classGroupUuid,
+    required String createdAt,
+  }) : uuid = Value(uuid),
+       teacherId = Value(teacherId),
+       classGroupUuid = Value(classGroupUuid),
+       createdAt = Value(createdAt);
+  static Insertable<ClassTeacherAssignment> custom({
+    Expression<int>? id,
+    Expression<String>? uuid,
+    Expression<int>? teacherId,
+    Expression<String>? classGroupUuid,
+    Expression<String>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uuid != null) 'uuid': uuid,
+      if (teacherId != null) 'teacher_id': teacherId,
+      if (classGroupUuid != null) 'class_group_uuid': classGroupUuid,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  ClassTeacherAssignmentsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? uuid,
+    Value<int>? teacherId,
+    Value<String>? classGroupUuid,
+    Value<String>? createdAt,
+  }) {
+    return ClassTeacherAssignmentsCompanion(
+      id: id ?? this.id,
+      uuid: uuid ?? this.uuid,
+      teacherId: teacherId ?? this.teacherId,
+      classGroupUuid: classGroupUuid ?? this.classGroupUuid,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (teacherId.present) {
+      map['teacher_id'] = Variable<int>(teacherId.value);
+    }
+    if (classGroupUuid.present) {
+      map['class_group_uuid'] = Variable<String>(classGroupUuid.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ClassTeacherAssignmentsCompanion(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('teacherId: $teacherId, ')
+          ..write('classGroupUuid: $classGroupUuid, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LearnerRegistrationsTable extends LearnerRegistrations
+    with TableInfo<$LearnerRegistrationsTable, LearnerRegistration> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LearnerRegistrationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _studentIdMeta = const VerificationMeta(
+    'studentId',
+  );
+  @override
+  late final GeneratedColumn<int> studentId = GeneratedColumn<int>(
+    'student_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _teacherIdMeta = const VerificationMeta(
+    'teacherId',
+  );
+  @override
+  late final GeneratedColumn<int> teacherId = GeneratedColumn<int>(
+    'teacher_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _classGroupUuidMeta = const VerificationMeta(
+    'classGroupUuid',
+  );
+  @override
+  late final GeneratedColumn<String> classGroupUuid = GeneratedColumn<String>(
+    'class_group_uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _enrolmentUuidMeta = const VerificationMeta(
+    'enrolmentUuid',
+  );
+  @override
+  late final GeneratedColumn<String> enrolmentUuid = GeneratedColumn<String>(
+    'enrolment_uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sentAtMeta = const VerificationMeta('sentAt');
+  @override
+  late final GeneratedColumn<String> sentAt = GeneratedColumn<String>(
+    'sent_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    studentId,
+    teacherId,
+    classGroupUuid,
+    enrolmentUuid,
+    createdAt,
+    sentAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'learner_registrations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LearnerRegistration> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(
+        _studentIdMeta,
+        studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('teacher_id')) {
+      context.handle(
+        _teacherIdMeta,
+        teacherId.isAcceptableOrUnknown(data['teacher_id']!, _teacherIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_teacherIdMeta);
+    }
+    if (data.containsKey('class_group_uuid')) {
+      context.handle(
+        _classGroupUuidMeta,
+        classGroupUuid.isAcceptableOrUnknown(
+          data['class_group_uuid']!,
+          _classGroupUuidMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_classGroupUuidMeta);
+    }
+    if (data.containsKey('enrolment_uuid')) {
+      context.handle(
+        _enrolmentUuidMeta,
+        enrolmentUuid.isAcceptableOrUnknown(
+          data['enrolment_uuid']!,
+          _enrolmentUuidMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_enrolmentUuidMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('sent_at')) {
+      context.handle(
+        _sentAtMeta,
+        sentAt.isAcceptableOrUnknown(data['sent_at']!, _sentAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {studentId},
+  ];
+  @override
+  LearnerRegistration map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LearnerRegistration(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      studentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}student_id'],
+      )!,
+      teacherId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}teacher_id'],
+      )!,
+      classGroupUuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}class_group_uuid'],
+      )!,
+      enrolmentUuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}enrolment_uuid'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      sentAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sent_at'],
+      ),
+    );
+  }
+
+  @override
+  $LearnerRegistrationsTable createAlias(String alias) {
+    return $LearnerRegistrationsTable(attachedDatabase, alias);
+  }
+}
+
+class LearnerRegistration extends DataClass
+    implements Insertable<LearnerRegistration> {
+  final int id;
+
+  /// `students.id`.
+  final int studentId;
+
+  /// `teacher_profiles.id`.
+  final int teacherId;
+  final String classGroupUuid;
+
+  /// The enrolment it created (`student_enrolments.uuid`).
+  final String enrolmentUuid;
+
+  /// ISO-8601 UTC.
+  final String createdAt;
+
+  /// ISO-8601 UTC: the Admin's device took it. Null until then (always set
+  /// on the Admin's device).
+  final String? sentAt;
+  const LearnerRegistration({
+    required this.id,
+    required this.studentId,
+    required this.teacherId,
+    required this.classGroupUuid,
+    required this.enrolmentUuid,
+    required this.createdAt,
+    this.sentAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['student_id'] = Variable<int>(studentId);
+    map['teacher_id'] = Variable<int>(teacherId);
+    map['class_group_uuid'] = Variable<String>(classGroupUuid);
+    map['enrolment_uuid'] = Variable<String>(enrolmentUuid);
+    map['created_at'] = Variable<String>(createdAt);
+    if (!nullToAbsent || sentAt != null) {
+      map['sent_at'] = Variable<String>(sentAt);
+    }
+    return map;
+  }
+
+  LearnerRegistrationsCompanion toCompanion(bool nullToAbsent) {
+    return LearnerRegistrationsCompanion(
+      id: Value(id),
+      studentId: Value(studentId),
+      teacherId: Value(teacherId),
+      classGroupUuid: Value(classGroupUuid),
+      enrolmentUuid: Value(enrolmentUuid),
+      createdAt: Value(createdAt),
+      sentAt: sentAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sentAt),
+    );
+  }
+
+  factory LearnerRegistration.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LearnerRegistration(
+      id: serializer.fromJson<int>(json['id']),
+      studentId: serializer.fromJson<int>(json['studentId']),
+      teacherId: serializer.fromJson<int>(json['teacherId']),
+      classGroupUuid: serializer.fromJson<String>(json['classGroupUuid']),
+      enrolmentUuid: serializer.fromJson<String>(json['enrolmentUuid']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      sentAt: serializer.fromJson<String?>(json['sentAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'studentId': serializer.toJson<int>(studentId),
+      'teacherId': serializer.toJson<int>(teacherId),
+      'classGroupUuid': serializer.toJson<String>(classGroupUuid),
+      'enrolmentUuid': serializer.toJson<String>(enrolmentUuid),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'sentAt': serializer.toJson<String?>(sentAt),
+    };
+  }
+
+  LearnerRegistration copyWith({
+    int? id,
+    int? studentId,
+    int? teacherId,
+    String? classGroupUuid,
+    String? enrolmentUuid,
+    String? createdAt,
+    Value<String?> sentAt = const Value.absent(),
+  }) => LearnerRegistration(
+    id: id ?? this.id,
+    studentId: studentId ?? this.studentId,
+    teacherId: teacherId ?? this.teacherId,
+    classGroupUuid: classGroupUuid ?? this.classGroupUuid,
+    enrolmentUuid: enrolmentUuid ?? this.enrolmentUuid,
+    createdAt: createdAt ?? this.createdAt,
+    sentAt: sentAt.present ? sentAt.value : this.sentAt,
+  );
+  LearnerRegistration copyWithCompanion(LearnerRegistrationsCompanion data) {
+    return LearnerRegistration(
+      id: data.id.present ? data.id.value : this.id,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      teacherId: data.teacherId.present ? data.teacherId.value : this.teacherId,
+      classGroupUuid: data.classGroupUuid.present
+          ? data.classGroupUuid.value
+          : this.classGroupUuid,
+      enrolmentUuid: data.enrolmentUuid.present
+          ? data.enrolmentUuid.value
+          : this.enrolmentUuid,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      sentAt: data.sentAt.present ? data.sentAt.value : this.sentAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LearnerRegistration(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('teacherId: $teacherId, ')
+          ..write('classGroupUuid: $classGroupUuid, ')
+          ..write('enrolmentUuid: $enrolmentUuid, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('sentAt: $sentAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    studentId,
+    teacherId,
+    classGroupUuid,
+    enrolmentUuid,
+    createdAt,
+    sentAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LearnerRegistration &&
+          other.id == this.id &&
+          other.studentId == this.studentId &&
+          other.teacherId == this.teacherId &&
+          other.classGroupUuid == this.classGroupUuid &&
+          other.enrolmentUuid == this.enrolmentUuid &&
+          other.createdAt == this.createdAt &&
+          other.sentAt == this.sentAt);
+}
+
+class LearnerRegistrationsCompanion
+    extends UpdateCompanion<LearnerRegistration> {
+  final Value<int> id;
+  final Value<int> studentId;
+  final Value<int> teacherId;
+  final Value<String> classGroupUuid;
+  final Value<String> enrolmentUuid;
+  final Value<String> createdAt;
+  final Value<String?> sentAt;
+  const LearnerRegistrationsCompanion({
+    this.id = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.teacherId = const Value.absent(),
+    this.classGroupUuid = const Value.absent(),
+    this.enrolmentUuid = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.sentAt = const Value.absent(),
+  });
+  LearnerRegistrationsCompanion.insert({
+    this.id = const Value.absent(),
+    required int studentId,
+    required int teacherId,
+    required String classGroupUuid,
+    required String enrolmentUuid,
+    required String createdAt,
+    this.sentAt = const Value.absent(),
+  }) : studentId = Value(studentId),
+       teacherId = Value(teacherId),
+       classGroupUuid = Value(classGroupUuid),
+       enrolmentUuid = Value(enrolmentUuid),
+       createdAt = Value(createdAt);
+  static Insertable<LearnerRegistration> custom({
+    Expression<int>? id,
+    Expression<int>? studentId,
+    Expression<int>? teacherId,
+    Expression<String>? classGroupUuid,
+    Expression<String>? enrolmentUuid,
+    Expression<String>? createdAt,
+    Expression<String>? sentAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (studentId != null) 'student_id': studentId,
+      if (teacherId != null) 'teacher_id': teacherId,
+      if (classGroupUuid != null) 'class_group_uuid': classGroupUuid,
+      if (enrolmentUuid != null) 'enrolment_uuid': enrolmentUuid,
+      if (createdAt != null) 'created_at': createdAt,
+      if (sentAt != null) 'sent_at': sentAt,
+    });
+  }
+
+  LearnerRegistrationsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? studentId,
+    Value<int>? teacherId,
+    Value<String>? classGroupUuid,
+    Value<String>? enrolmentUuid,
+    Value<String>? createdAt,
+    Value<String?>? sentAt,
+  }) {
+    return LearnerRegistrationsCompanion(
+      id: id ?? this.id,
+      studentId: studentId ?? this.studentId,
+      teacherId: teacherId ?? this.teacherId,
+      classGroupUuid: classGroupUuid ?? this.classGroupUuid,
+      enrolmentUuid: enrolmentUuid ?? this.enrolmentUuid,
+      createdAt: createdAt ?? this.createdAt,
+      sentAt: sentAt ?? this.sentAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<int>(studentId.value);
+    }
+    if (teacherId.present) {
+      map['teacher_id'] = Variable<int>(teacherId.value);
+    }
+    if (classGroupUuid.present) {
+      map['class_group_uuid'] = Variable<String>(classGroupUuid.value);
+    }
+    if (enrolmentUuid.present) {
+      map['enrolment_uuid'] = Variable<String>(enrolmentUuid.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (sentAt.present) {
+      map['sent_at'] = Variable<String>(sentAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LearnerRegistrationsCompanion(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('teacherId: $teacherId, ')
+          ..write('classGroupUuid: $classGroupUuid, ')
+          ..write('enrolmentUuid: $enrolmentUuid, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('sentAt: $sentAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$OticDatabase extends GeneratedDatabase {
   _$OticDatabase(QueryExecutor e) : super(e);
   $OticDatabaseManager get managers => $OticDatabaseManager(this);
@@ -22133,6 +22986,10 @@ abstract class _$OticDatabase extends GeneratedDatabase {
   late final $LearnerSupportTable learnerSupport = $LearnerSupportTable(this);
   late final $CloudLinkTable cloudLink = $CloudLinkTable(this);
   late final $AuditLogTable auditLog = $AuditLogTable(this);
+  late final $ClassTeacherAssignmentsTable classTeacherAssignments =
+      $ClassTeacherAssignmentsTable(this);
+  late final $LearnerRegistrationsTable learnerRegistrations =
+      $LearnerRegistrationsTable(this);
   late final Index idxTopicResourcesLookup = Index(
     'idx_topic_resources_lookup',
     'CREATE INDEX idx_topic_resources_lookup ON topic_resources (subject_id, topic_key)',
@@ -22213,6 +23070,10 @@ abstract class _$OticDatabase extends GeneratedDatabase {
     'idx_learner_support_member',
     'CREATE INDEX idx_learner_support_member ON learner_support (class_group_uuid, member_key)',
   );
+  late final Index idxClassTeacherTeacher = Index(
+    'idx_class_teacher_teacher',
+    'CREATE INDEX idx_class_teacher_teacher ON class_teacher_assignments (teacher_id)',
+  );
   late final StudentDao studentDao = StudentDao(this as OticDatabase);
   late final SessionDao sessionDao = SessionDao(this as OticDatabase);
   late final PathDao pathDao = PathDao(this as OticDatabase);
@@ -22286,6 +23147,8 @@ abstract class _$OticDatabase extends GeneratedDatabase {
     learnerSupport,
     cloudLink,
     auditLog,
+    classTeacherAssignments,
+    learnerRegistrations,
     idxTopicResourcesLookup,
     idxTopicResourcesTitle,
     idxCustomSubjectsSubjectId,
@@ -22306,6 +23169,7 @@ abstract class _$OticDatabase extends GeneratedDatabase {
     idxSubmissionsAssignment,
     idxClassMembersDevice,
     idxLearnerSupportMember,
+    idxClassTeacherTeacher,
   ];
 }
 
@@ -33377,6 +34241,473 @@ typedef $$AuditLogTableProcessedTableManager =
       AuditEntry,
       PrefetchHooks Function()
     >;
+typedef $$ClassTeacherAssignmentsTableCreateCompanionBuilder =
+    ClassTeacherAssignmentsCompanion Function({
+      Value<int> id,
+      required String uuid,
+      required int teacherId,
+      required String classGroupUuid,
+      required String createdAt,
+    });
+typedef $$ClassTeacherAssignmentsTableUpdateCompanionBuilder =
+    ClassTeacherAssignmentsCompanion Function({
+      Value<int> id,
+      Value<String> uuid,
+      Value<int> teacherId,
+      Value<String> classGroupUuid,
+      Value<String> createdAt,
+    });
+
+class $$ClassTeacherAssignmentsTableFilterComposer
+    extends Composer<_$OticDatabase, $ClassTeacherAssignmentsTable> {
+  $$ClassTeacherAssignmentsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get classGroupUuid => $composableBuilder(
+    column: $table.classGroupUuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ClassTeacherAssignmentsTableOrderingComposer
+    extends Composer<_$OticDatabase, $ClassTeacherAssignmentsTable> {
+  $$ClassTeacherAssignmentsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get classGroupUuid => $composableBuilder(
+    column: $table.classGroupUuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ClassTeacherAssignmentsTableAnnotationComposer
+    extends Composer<_$OticDatabase, $ClassTeacherAssignmentsTable> {
+  $$ClassTeacherAssignmentsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumn<int> get teacherId =>
+      $composableBuilder(column: $table.teacherId, builder: (column) => column);
+
+  GeneratedColumn<String> get classGroupUuid => $composableBuilder(
+    column: $table.classGroupUuid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$ClassTeacherAssignmentsTableTableManager
+    extends
+        RootTableManager<
+          _$OticDatabase,
+          $ClassTeacherAssignmentsTable,
+          ClassTeacherAssignment,
+          $$ClassTeacherAssignmentsTableFilterComposer,
+          $$ClassTeacherAssignmentsTableOrderingComposer,
+          $$ClassTeacherAssignmentsTableAnnotationComposer,
+          $$ClassTeacherAssignmentsTableCreateCompanionBuilder,
+          $$ClassTeacherAssignmentsTableUpdateCompanionBuilder,
+          (
+            ClassTeacherAssignment,
+            BaseReferences<
+              _$OticDatabase,
+              $ClassTeacherAssignmentsTable,
+              ClassTeacherAssignment
+            >,
+          ),
+          ClassTeacherAssignment,
+          PrefetchHooks Function()
+        > {
+  $$ClassTeacherAssignmentsTableTableManager(
+    _$OticDatabase db,
+    $ClassTeacherAssignmentsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ClassTeacherAssignmentsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ClassTeacherAssignmentsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ClassTeacherAssignmentsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                Value<int> teacherId = const Value.absent(),
+                Value<String> classGroupUuid = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+              }) => ClassTeacherAssignmentsCompanion(
+                id: id,
+                uuid: uuid,
+                teacherId: teacherId,
+                classGroupUuid: classGroupUuid,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String uuid,
+                required int teacherId,
+                required String classGroupUuid,
+                required String createdAt,
+              }) => ClassTeacherAssignmentsCompanion.insert(
+                id: id,
+                uuid: uuid,
+                teacherId: teacherId,
+                classGroupUuid: classGroupUuid,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ClassTeacherAssignmentsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$OticDatabase,
+      $ClassTeacherAssignmentsTable,
+      ClassTeacherAssignment,
+      $$ClassTeacherAssignmentsTableFilterComposer,
+      $$ClassTeacherAssignmentsTableOrderingComposer,
+      $$ClassTeacherAssignmentsTableAnnotationComposer,
+      $$ClassTeacherAssignmentsTableCreateCompanionBuilder,
+      $$ClassTeacherAssignmentsTableUpdateCompanionBuilder,
+      (
+        ClassTeacherAssignment,
+        BaseReferences<
+          _$OticDatabase,
+          $ClassTeacherAssignmentsTable,
+          ClassTeacherAssignment
+        >,
+      ),
+      ClassTeacherAssignment,
+      PrefetchHooks Function()
+    >;
+typedef $$LearnerRegistrationsTableCreateCompanionBuilder =
+    LearnerRegistrationsCompanion Function({
+      Value<int> id,
+      required int studentId,
+      required int teacherId,
+      required String classGroupUuid,
+      required String enrolmentUuid,
+      required String createdAt,
+      Value<String?> sentAt,
+    });
+typedef $$LearnerRegistrationsTableUpdateCompanionBuilder =
+    LearnerRegistrationsCompanion Function({
+      Value<int> id,
+      Value<int> studentId,
+      Value<int> teacherId,
+      Value<String> classGroupUuid,
+      Value<String> enrolmentUuid,
+      Value<String> createdAt,
+      Value<String?> sentAt,
+    });
+
+class $$LearnerRegistrationsTableFilterComposer
+    extends Composer<_$OticDatabase, $LearnerRegistrationsTable> {
+  $$LearnerRegistrationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get classGroupUuid => $composableBuilder(
+    column: $table.classGroupUuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get enrolmentUuid => $composableBuilder(
+    column: $table.enrolmentUuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sentAt => $composableBuilder(
+    column: $table.sentAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LearnerRegistrationsTableOrderingComposer
+    extends Composer<_$OticDatabase, $LearnerRegistrationsTable> {
+  $$LearnerRegistrationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get classGroupUuid => $composableBuilder(
+    column: $table.classGroupUuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get enrolmentUuid => $composableBuilder(
+    column: $table.enrolmentUuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sentAt => $composableBuilder(
+    column: $table.sentAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LearnerRegistrationsTableAnnotationComposer
+    extends Composer<_$OticDatabase, $LearnerRegistrationsTable> {
+  $$LearnerRegistrationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get studentId =>
+      $composableBuilder(column: $table.studentId, builder: (column) => column);
+
+  GeneratedColumn<int> get teacherId =>
+      $composableBuilder(column: $table.teacherId, builder: (column) => column);
+
+  GeneratedColumn<String> get classGroupUuid => $composableBuilder(
+    column: $table.classGroupUuid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get enrolmentUuid => $composableBuilder(
+    column: $table.enrolmentUuid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get sentAt =>
+      $composableBuilder(column: $table.sentAt, builder: (column) => column);
+}
+
+class $$LearnerRegistrationsTableTableManager
+    extends
+        RootTableManager<
+          _$OticDatabase,
+          $LearnerRegistrationsTable,
+          LearnerRegistration,
+          $$LearnerRegistrationsTableFilterComposer,
+          $$LearnerRegistrationsTableOrderingComposer,
+          $$LearnerRegistrationsTableAnnotationComposer,
+          $$LearnerRegistrationsTableCreateCompanionBuilder,
+          $$LearnerRegistrationsTableUpdateCompanionBuilder,
+          (
+            LearnerRegistration,
+            BaseReferences<
+              _$OticDatabase,
+              $LearnerRegistrationsTable,
+              LearnerRegistration
+            >,
+          ),
+          LearnerRegistration,
+          PrefetchHooks Function()
+        > {
+  $$LearnerRegistrationsTableTableManager(
+    _$OticDatabase db,
+    $LearnerRegistrationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LearnerRegistrationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LearnerRegistrationsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LearnerRegistrationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> studentId = const Value.absent(),
+                Value<int> teacherId = const Value.absent(),
+                Value<String> classGroupUuid = const Value.absent(),
+                Value<String> enrolmentUuid = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<String?> sentAt = const Value.absent(),
+              }) => LearnerRegistrationsCompanion(
+                id: id,
+                studentId: studentId,
+                teacherId: teacherId,
+                classGroupUuid: classGroupUuid,
+                enrolmentUuid: enrolmentUuid,
+                createdAt: createdAt,
+                sentAt: sentAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int studentId,
+                required int teacherId,
+                required String classGroupUuid,
+                required String enrolmentUuid,
+                required String createdAt,
+                Value<String?> sentAt = const Value.absent(),
+              }) => LearnerRegistrationsCompanion.insert(
+                id: id,
+                studentId: studentId,
+                teacherId: teacherId,
+                classGroupUuid: classGroupUuid,
+                enrolmentUuid: enrolmentUuid,
+                createdAt: createdAt,
+                sentAt: sentAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LearnerRegistrationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$OticDatabase,
+      $LearnerRegistrationsTable,
+      LearnerRegistration,
+      $$LearnerRegistrationsTableFilterComposer,
+      $$LearnerRegistrationsTableOrderingComposer,
+      $$LearnerRegistrationsTableAnnotationComposer,
+      $$LearnerRegistrationsTableCreateCompanionBuilder,
+      $$LearnerRegistrationsTableUpdateCompanionBuilder,
+      (
+        LearnerRegistration,
+        BaseReferences<
+          _$OticDatabase,
+          $LearnerRegistrationsTable,
+          LearnerRegistration
+        >,
+      ),
+      LearnerRegistration,
+      PrefetchHooks Function()
+    >;
 
 class $OticDatabaseManager {
   final _$OticDatabase _db;
@@ -33468,4 +34799,11 @@ class $OticDatabaseManager {
       $$CloudLinkTableTableManager(_db, _db.cloudLink);
   $$AuditLogTableTableManager get auditLog =>
       $$AuditLogTableTableManager(_db, _db.auditLog);
+  $$ClassTeacherAssignmentsTableTableManager get classTeacherAssignments =>
+      $$ClassTeacherAssignmentsTableTableManager(
+        _db,
+        _db.classTeacherAssignments,
+      );
+  $$LearnerRegistrationsTableTableManager get learnerRegistrations =>
+      $$LearnerRegistrationsTableTableManager(_db, _db.learnerRegistrations);
 }

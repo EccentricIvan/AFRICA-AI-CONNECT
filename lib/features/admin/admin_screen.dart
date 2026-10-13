@@ -262,6 +262,22 @@ final _enrolmentsProvider = StreamProvider<List<StudentEnrolment>>((ref) {
   return db.select(db.studentEnrolments).watch();
 });
 
+final _classTeachersProvider = StreamProvider<List<ClassTeacherAssignment>>((
+  ref,
+) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.classTeacherAssignments).watch();
+});
+
+/// Who registered each learner (`students.id` → `teacher_profiles.id`).
+final _registeredByProvider = StreamProvider<Map<int, int>>((ref) {
+  final db = ref.watch(dbProvider);
+  return db
+      .select(db.learnerRegistrations)
+      .watch()
+      .map((rows) => {for (final r in rows) r.studentId: r.teacherId});
+});
+
 /// This device's own subjects (never ones received from a class).
 final _subjectsProvider = StreamProvider<List<CustomSubject>>((ref) {
   final db = ref.watch(dbProvider);
@@ -303,6 +319,15 @@ class _Records extends ConsumerWidget {
         const <StudentEnrolment>[];
     final learners =
         ref.watch(allLearnersProvider).valueOrNull ?? const <Student>[];
+    final classTeachers =
+        ref.watch(_classTeachersProvider).valueOrNull ??
+        const <ClassTeacherAssignment>[];
+    final registeredBy =
+        ref.watch(_registeredByProvider).valueOrNull ?? const <int, int>{};
+    final classesOfTeacher = <int, List<String>>{};
+    for (final a in classTeachers) {
+      (classesOfTeacher[a.teacherId] ??= []).add(a.classGroupUuid);
+    }
 
     final teacherName = {for (final t in teachers) t.id: t.name};
     final classByUuid = {
@@ -392,6 +417,64 @@ class _Records extends ConsumerWidget {
                   'Remove': () async {
                     if (await _confirm(context, 'Remove ${t.name}?')) {
                       await run(() => admin.removeTeacher(session, t.id));
+                    }
+                  },
+                }),
+              ),
+          ],
+        ),
+
+        // ── Class teachers ─────────────────────────────────────────────
+        _Title(
+          'Class teachers',
+          onAdd: classes.isEmpty
+              ? null
+              : () => _enrolClassTeacher(context, ref, classes),
+        ),
+        _Card(
+          children: [
+            if (classesOfTeacher.isEmpty)
+              ListTile(
+                title: Text(
+                  classes.isEmpty
+                      ? 'Add a class first'
+                      : 'No class teachers',
+                ),
+              ),
+            for (final e in classesOfTeacher.entries)
+              ListTile(
+                leading: const Icon(Icons.how_to_reg_rounded),
+                title: Text(teacherName[e.key] ?? '—'),
+                subtitle: Text(
+                  '${e.value.map(classOf).join(', ')} · '
+                  '${registeredBy.values.where((t) => t == e.key).length} '
+                  'registered',
+                ),
+                trailing: _Menu({
+                  'Classes': () async {
+                    final picked = await _pickClasses(
+                      context,
+                      classes,
+                      e.value.toSet(),
+                    );
+                    if (picked == null) return;
+                    await run(
+                      () => admin.setClassTeacherClasses(session, e.key, picked),
+                    );
+                  },
+                  'Remove role': () async {
+                    if (await _confirm(
+                      context,
+                      '${teacherName[e.key]} stops registering learners. '
+                      'Learners already registered stay.',
+                    )) {
+                      await run(
+                        () => admin.setClassTeacherClasses(
+                          session,
+                          e.key,
+                          const {},
+                        ),
+                      );
                     }
                   },
                 }),
@@ -542,9 +625,13 @@ class _Records extends ConsumerWidget {
                 leading: const Icon(Icons.school_rounded),
                 title: Text(l.name),
                 subtitle: Text(
-                  activeClass[l.id] == null
-                      ? 'Not enrolled'
-                      : classOf(activeClass[l.id]!),
+                  [
+                    activeClass[l.id] == null
+                        ? 'Not enrolled'
+                        : classOf(activeClass[l.id]!),
+                    if (registeredBy[l.id] case final t?)
+                      'registered by ${teacherName[t] ?? 'a class teacher'}',
+                  ].join(' · '),
                 ),
                 trailing: _Menu({
                   if (classes.isNotEmpty)
@@ -628,6 +715,69 @@ class _Records extends ConsumerWidget {
         .addTeacher(session, name: name, pin: pin);
     messenger.showSnackBar(SnackBar(content: Text(error ?? 'Teacher added.')));
   }
+
+  /// Enrols a Class Teacher: name, PIN, and the classes/streams they
+  /// register learners into. An existing teacher can be given the role
+  /// instead, keeping their sign-in.
+  Future<void> _enrolClassTeacher(
+    BuildContext context,
+    WidgetRef ref,
+    List<ClassGroup> classes,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final teachers = await ref.read(teacherProfilesProvider.future);
+    if (!context.mounted) return;
+    // -1: a new person; otherwise an existing teacher's id; null: cancelled.
+    final choice = teachers.isEmpty
+        ? -1
+        : await _pick<int>(context, 'Class teacher', {
+            'New class teacher': -1,
+            for (final t in teachers) t.name: t.id,
+          });
+    if (choice == null || !context.mounted) return;
+    final existing = teachers.where((t) => t.id == choice).firstOrNull;
+    final picked = await _pickClasses(context, classes, const {});
+    if (picked == null || picked.isEmpty || !context.mounted) return;
+    final admin = ref.read(adminServiceProvider);
+    if (existing != null) {
+      await admin.setClassTeacherClasses(session, existing.id, picked);
+      messenger.showSnackBar(
+        SnackBar(content: Text('${existing.name} is a class teacher.')),
+      );
+      return;
+    }
+    final name = await _ask(context, 'Class teacher’s name', '');
+    if (name == null || !context.mounted) return;
+    final pin = await askTeacherPin(context, title: 'PIN for $name (4–8 digits)');
+    if (pin == null || !context.mounted) return;
+    final again = await askTeacherPin(context, title: 'PIN again');
+    if (again == null) return;
+    if (again != pin) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('The two PINs did not match.')),
+      );
+      return;
+    }
+    final error = await admin.addClassTeacher(
+      session,
+      name: name,
+      pin: pin,
+      classUuids: picked,
+    );
+    messenger.showSnackBar(
+      SnackBar(content: Text(error ?? '$name can register learners.')),
+    );
+  }
+
+  /// The classes/streams a Class Teacher registers into; null on cancel.
+  Future<Set<String>?> _pickClasses(
+    BuildContext context,
+    List<ClassGroup> classes,
+    Set<String> initial,
+  ) => showDialog<Set<String>>(
+    context: context,
+    builder: (_) => _ClassesDialog(classes: classes, initial: initial),
+  );
 
   Future<void> _editClass(
     BuildContext context,
@@ -978,6 +1128,58 @@ Future<T?> _pick<T>(
     ],
   ),
 );
+
+/// Ticks the classes/streams a Class Teacher registers learners into.
+class _ClassesDialog extends StatefulWidget {
+  const _ClassesDialog({required this.classes, required this.initial});
+
+  final List<ClassGroup> classes;
+  final Set<String> initial;
+
+  @override
+  State<_ClassesDialog> createState() => _ClassesDialogState();
+}
+
+class _ClassesDialogState extends State<_ClassesDialog> {
+  late final Set<String> _picked = {...widget.initial};
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Classes & streams'),
+      content: SizedBox(
+        width: 420,
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final c in widget.classes)
+              if (c.groupUuid case final uuid?)
+                FilterChip(
+                  label: Text(classLabel(c)),
+                  selected: _picked.contains(uuid),
+                  onSelected: (on) => setState(
+                    () => on ? _picked.add(uuid) : _picked.remove(uuid),
+                  ),
+                ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: _picked.isEmpty
+              ? null
+              : () => Navigator.pop(context, _picked),
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+}
 
 /// One text field. Owns its controller so it outlives the closing
 /// animation (disposing it when `showDialog` returned could crash).

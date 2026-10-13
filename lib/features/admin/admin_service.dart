@@ -179,10 +179,77 @@ class AdminService {
           _db.noteOwners,
         )..where((t) => t.teacherId.equals(teacherId))).go();
         await (_db.delete(
+          _db.classTeacherAssignments,
+        )..where((t) => t.teacherId.equals(teacherId))).go();
+        await (_db.delete(
           _db.teacherProfiles,
         )..where((t) => t.id.equals(teacherId))).go();
         await _prune();
       });
+  }
+
+  // ── Class Teachers ────────────────────────────────────────────────────
+
+  /// Enrols a Class Teacher: their own sign-in (name and PIN, as any
+  /// teacher's) and the classes/streams [classUuids] they may register
+  /// learners into. Null when done; else why not.
+  Future<String?> addClassTeacher(
+    AdminSession session, {
+    required String name,
+    required String pin,
+    required Set<String> classUuids,
+  }) async {
+    if (classUuids.isEmpty) return 'Pick at least one class or stream.';
+    final error = await addTeacher(session, name: name, pin: pin);
+    if (error != null) return error;
+    final teacher =
+        await (_db.select(_db.teacherProfiles)
+              ..where((t) => t.name.lower().equals(name.trim().toLowerCase())))
+            .getSingle();
+    await setClassTeacherClasses(session, teacher.id, classUuids);
+    return null;
+  }
+
+  /// Sets the classes/streams [teacherId] registers learners into, as a
+  /// Class Teacher; empty removes the role. Learners already registered
+  /// stay.
+  Future<void> setClassTeacherClasses(
+    AdminSession _,
+    int teacherId,
+    Set<String> classUuids,
+  ) async {
+    final owned = {
+      for (final c in await (_db.select(
+        _db.classGroups,
+      )..where((t) => t.joined.equals(false))).get())
+        ?c.groupUuid,
+    };
+    final keep = classUuids.intersection(owned);
+    await _db.transaction(() async {
+      await (_db.delete(_db.classTeacherAssignments)..where(
+            (t) =>
+                t.teacherId.equals(teacherId) &
+                t.classGroupUuid.isNotIn(keep),
+          ))
+          .go();
+      for (final uuid in keep) {
+        await _db
+            .into(_db.classTeacherAssignments)
+            .insert(
+              ClassTeacherAssignmentsCompanion.insert(
+                uuid: newSyncId(),
+                teacherId: teacherId,
+                classGroupUuid: uuid,
+                createdAt: DateTime.now().toUtc().toIso8601String(),
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
+      }
+    });
+    await _log(
+      keep.isEmpty ? 'class_teacher.removed' : 'class_teacher.classes_set',
+      'teacher:$teacherId ${keep.length}',
+    );
   }
 
   // ── Classes and streams ───────────────────────────────────────────────
@@ -228,6 +295,9 @@ class AdminService {
           )..where((t) => t.classGroupUuid.equals(uuid))).go();
           await (_db.delete(
             _db.studentEnrolments,
+          )..where((t) => t.classGroupUuid.equals(uuid))).go();
+          await (_db.delete(
+            _db.classTeacherAssignments,
           )..where((t) => t.classGroupUuid.equals(uuid))).go();
         }
         await _db.classGroupDao.deleteClass(group.id);

@@ -38,6 +38,18 @@ class TeachingScope {
     );
   }
 
+  /// The classes/streams [teacherId] may register learners into, as a
+  /// Class Teacher (`class_groups.group_uuid`).
+  Future<Set<String>> classTeacherOf(int? teacherId) async {
+    if (teacherId == null) return const {};
+    return {
+      for (final a in await (_db.select(
+        _db.classTeacherAssignments,
+      )..where((t) => t.teacherId.equals(teacherId))).get())
+        a.classGroupUuid,
+    };
+  }
+
   Future<int?> ownerOf(String subjectId, String documentTitle) async =>
       (await (_db.select(_db.noteOwners)
                 ..where((t) => t.subjectId.equals(subjectId))

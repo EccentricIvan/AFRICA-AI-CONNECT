@@ -101,6 +101,8 @@ part 'otic_database.g.dart';
     LearnerSupport,
     CloudLink,
     AuditLog,
+    ClassTeacherAssignments,
+    LearnerRegistrations,
   ],
   daos: [
     StudentDao,
@@ -133,7 +135,7 @@ class OticDatabase extends _$OticDatabase {
   OticDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 34;
+  int get schemaVersion => 35;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -710,6 +712,22 @@ class OticDatabase extends _$OticDatabase {
           ('audit_log', () => m.createTable(auditLog)),
         ]) {
           if (!await _tableExists(name)) await create();
+        }
+      }
+      if (from < 35) {
+        // Class Teachers: their classes/streams, and the learners they
+        // register.
+        for (final (name, create) in [
+          (
+            'class_teacher_assignments',
+            () => m.createTable(classTeacherAssignments),
+          ),
+          ('learner_registrations', () => m.createTable(learnerRegistrations)),
+        ]) {
+          if (!await _tableExists(name)) await create();
+        }
+        if (!await _indexExists('idx_class_teacher_teacher')) {
+          await m.create(idxClassTeacherTeacher);
         }
       }
     },

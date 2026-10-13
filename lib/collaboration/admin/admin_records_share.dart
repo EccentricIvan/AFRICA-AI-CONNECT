@@ -19,9 +19,13 @@ const kAdminApprovalTimeout = Duration(minutes: 2);
 
 /// A device asking for the school records, waiting for the Admin.
 class AdminRecordsRequest {
-  AdminRecordsRequest._(this.id, this.name);
+  AdminRecordsRequest._(this.id, this.name, {this.registrations = const {}});
   final int id;
   final String name;
+
+  /// New learners it brings, by the Class Teacher who registered them
+  /// (teacher name → count). Taken only if the Admin taps Accept.
+  final Map<String, int> registrations;
   final _decision = Completer<bool>();
 }
 
@@ -127,9 +131,29 @@ class AdminRecordsServer {
       return _notFound();
     }
 
+    // Learners Class Teachers registered on that device, sealed with the
+    // same code-derived secret. Unreadable or forged ones are ignored.
+    var registrations = <Map<String, Object?>>[];
+    if (body['registrations'] != null) {
+      try {
+        final opened = await openJoinBundle(
+          secret,
+          salt,
+          body['registrations'],
+        );
+        if (opened is List) {
+          registrations = [
+            for (final m in opened)
+              if (m is Map<String, Object?>) m,
+          ];
+        }
+      } catch (_) {}
+    }
+
     final r = AdminRecordsRequest._(
       _nextId++,
       name is String && name.trim().isNotEmpty ? name.trim() : 'A device',
+      registrations: await _records.registrationsByTeacher(registrations),
     );
     _pending.add(r);
     _pendingCtl.add(List.unmodifiable(_pending));
@@ -144,6 +168,10 @@ class AdminRecordsServer {
       _pendingCtl.add(List.unmodifiable(_pending));
     }
     if (!accepted) return _notFound();
+    // Before the records are made, so the reply already holds them.
+    if (registrations.isNotEmpty) {
+      await _records.takeRegistrations(registrations);
+    }
     // Known to the Admin from now on, so it can be revoked school-wide.
     final deviceKey = body['device_key'];
     if (deviceKey is String && deviceKey.isNotEmpty) {
@@ -180,6 +208,9 @@ Future<String?> receiveAdminRecords(
   if (code == null) return 'That isn’t a code — it has 8 letters and numbers';
   final salt = newNonce();
   final secret = await joinSecret(code, salt, rounds: kdfRounds);
+  // Learners Class Teachers registered here go to the Admin with the
+  // request; the records that come back include them once taken.
+  final pending = await AdminRecords(db).pendingRegistrations();
   final http.Response reply;
   try {
     reply = await http
@@ -191,6 +222,8 @@ Future<String?> receiveAdminRecords(
             'proof': await joinProof(secret, salt),
             'name': deviceName,
             'device_key': (await DeviceRegistry(db).myKeys())['device_key'],
+            if (pending.isNotEmpty)
+              'registrations': await sealJoinBundle(secret, salt, pending),
           }),
         )
         .timeout(timeout);

@@ -224,6 +224,22 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
     per uploaded file on the subject's Notes tab (never per section), and
     its card counts notes (`noteCountsProvider`). My notes and the chat's
     class-notes sheet group notes under each subject with its icon/colour.
+- **Class Teachers (schema 35, 2026-10-13).** The Admin enrols each Class
+  Teacher (their own name and PIN, signing in on Teachers like any teacher)
+  and gives them classes/streams (`class_teacher_assignments`, in the Admin's
+  records). Registering learners into those classes/streams is all the role
+  allows (`Policy` → `RegisterLearner`).
+  - It's separate from teaching subjects: one person may hold both.
+  - They register on their own device (Teacher → Register learners,
+    `ClassTeacherService`), which writes the learner, the enrolment and a
+    `learner_registrations` row.
+  - Registrations ride the next Admin sync **to** the Admin's device,
+    sealed with the code's secret. The Admin's Accept prompt names them,
+    and `AdminRecords.takeRegistrations` keeps only classes that teacher was
+    given (others are audited as refused).
+  - The records that come back mark them sent. Unsent ones keep their local
+    enrolment until the Admin takes them.
+  - The Admin sees "registered by" on each learner.
 - **Class assignments (schema 26).** A teacher adds one in Lesson
   materials; it is a `~assignment` row of a note, so it is signed and goes
   only to the classes the teacher shares it with. Learners answer on
