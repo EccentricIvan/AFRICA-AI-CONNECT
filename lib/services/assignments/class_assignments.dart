@@ -154,7 +154,19 @@ class SubmissionPayload {
     required this.answer,
     required this.createdAt,
     this.startedAt,
+    this.tutorUsed,
   });
+
+  SubmissionPayload.fromRow(AssignmentSubmission r)
+    : this(
+        uuid: r.uuid,
+        assignmentId: r.assignmentId,
+        subjectId: r.subjectId,
+        answer: r.answer,
+        createdAt: r.createdAt,
+        startedAt: r.startedAt,
+        tutorUsed: r.tutorUsed,
+      );
 
   final String uuid;
   final String assignmentId;
@@ -165,6 +177,10 @@ class SubmissionPayload {
   /// When a timed assessment was started; null when untimed.
   final String? startedAt;
 
+  /// Whether the tutor replied while the learner worked on it; null when
+  /// unknown (an older build).
+  final bool? tutorUsed;
+
   Map<String, Object?> toJson() => {
     'uuid': uuid,
     'assignment': assignmentId,
@@ -173,6 +189,7 @@ class SubmissionPayload {
     'created_at': createdAt,
     // Only when set, so an untimed answer's report reads as before.
     if (startedAt != null) 'started_at': startedAt,
+    if (tutorUsed != null) 'tutor_used': tutorUsed,
   };
 
   /// Null when [json] isn't one. Clipped, so a device can't bloat the
@@ -193,7 +210,7 @@ class SubmissionPayload {
         at.length > 40) {
       return null;
     }
-    final started = json['started_at'];
+    final started = json['started_at'], tutor = json['tutor_used'];
     return SubmissionPayload(
       uuid: uuid,
       assignmentId: a,
@@ -203,6 +220,7 @@ class SubmissionPayload {
           : answer,
       createdAt: at,
       startedAt: started is String && started.length <= 40 ? started : null,
+      tutorUsed: tutor is bool ? tutor : null,
     );
   }
 }
@@ -402,13 +420,19 @@ class ClassAssignments {
     if (text.isEmpty && !auto) return false;
     final at = now ?? DateTime.now();
     String? startedAt;
+    final attempt = await this.attempt(student.id, assignment.id);
     if (assignment.timed) {
       if (await _submitted(student.id, assignment.id)) return false;
-      final attempt = await this.attempt(student.id, assignment.id);
       // Closed and never started: nothing to hand in.
       if (attempt == null && assignment.closed(at)) return false;
       startedAt = attempt?.startedAt ?? at.toUtc().toIso8601String();
     }
+    // The tutor's first reply since the learner started (timed) or first
+    // saw it (untimed), up to the hand-in. Unknown without that record.
+    final tutorAt = DateTime.tryParse(attempt?.tutorAt ?? '');
+    final bool? tutorUsed = attempt == null
+        ? null
+        : tutorAt != null && !tutorAt.isAfter(at);
     final uuid = newSyncId();
     await _db.transaction(() async {
       await _db
@@ -426,6 +450,7 @@ class ClassAssignments {
                   : text,
               createdAt: at.toUtc().toIso8601String(),
               startedAt: Value(startedAt),
+              tutorUsed: Value(tutorUsed),
             ),
           );
       await (_db.delete(_db.assignmentAttempts)..where(
@@ -483,6 +508,30 @@ class ClassAssignments {
           mode: InsertMode.insertOrIgnore,
         );
     return attempt(studentId, assignment.id);
+  }
+
+  /// Records when [studentId] first saw each untimed assignment of
+  /// [assignments] they may still answer, so a tutor reply after that marks
+  /// their answer "Tutor used". Timed ones start with [start] instead.
+  Future<void> markSeen(
+    int studentId,
+    Iterable<ClassAssignment> assignments, {
+    DateTime? now,
+  }) async {
+    final at = (now ?? DateTime.now()).toUtc().toIso8601String();
+    for (final a in assignments) {
+      if (a.timed) continue;
+      await _db
+          .into(_db.assignmentAttempts)
+          .insert(
+            AssignmentAttemptsCompanion.insert(
+              studentId: studentId,
+              assignmentId: a.id,
+              startedAt: at,
+            ),
+            mode: InsertMode.insertOrIgnore,
+          );
+    }
   }
 
   /// Keeps what the learner has typed so far.
@@ -557,17 +606,7 @@ class ClassAssignments {
               ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
               ..limit(20))
             .get();
-    return [
-      for (final r in rows)
-        SubmissionPayload(
-          uuid: r.uuid,
-          assignmentId: r.assignmentId,
-          subjectId: r.subjectId,
-          answer: r.answer,
-          createdAt: r.createdAt,
-          startedAt: r.startedAt,
-        ),
-    ];
+    return [for (final r in rows) SubmissionPayload.fromRow(r)];
   }
 
   Future<List<ClassAssignment>> _received(String classUuid) async => [
@@ -619,6 +658,7 @@ class ClassAssignments {
                 answer: s.answer,
                 createdAt: s.createdAt,
                 startedAt: Value(s.startedAt),
+                tutorUsed: Value(s.tutorUsed),
                 receivedAt: Value(DateTime.now().toUtc().toIso8601String()),
               ),
             );

@@ -239,6 +239,34 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
   - The start time rides the answer to the teacher (`started_at`), who
     sees started/handed-in times and "late". Times are the learner
     device's clock.
+- **Report follow-ups (schema 33, 2026-10-13).** There is no exam mode:
+  assessment is continuous, so the tutor is never switched off.
+  - **Tutor used on answers.** `assignment_submissions.tutor_used` is true
+    when the tutor replied while the learner worked on it. For a timed
+    one, that window runs from Start; for an untimed one, from when the
+    learner first saw it on Assignments (`markSeen`, an
+    `assignment_attempts` row with no draft).
+    - `recordTutorReply` stamps `assignment_attempts.tutor_at` once per
+      reply, so an attempt handed in by itself still knows.
+    - Null means unknown (never seen there, or an older build). As with
+      quizzes, there is no "without tutor" label.
+  - **Old builds and clocks.** Reports carry `sent_at` (the learner
+    device's clock), left out of `reportDigest`. A report without it is
+    shown as "older app — update this device".
+    - Class progress and the gradebook name a clock more than 5 minutes
+      off (`clockNote`).
+    - A timed answer without `started_at` reads "older app: not timed".
+  - **Extra help for one learner** (`learner_support`,
+    `learner_support.dart`): from Class progress → Send help, a teacher
+    who teaches that subject to the class (`Policy` → `SupportLearner`)
+    sends a message, a note shared with the class and/or that topic's quiz.
+    - It rides only the reply to that learner's own progress report, never
+      a note channel, so classmates' devices never get it. Like grades, a
+      higher version wins; withdrawing bumps it.
+    - The learner sees it at the top of Assignments. Opened/done ride the
+      next report (`support`).
+    - The teacher sees the quiz score on the topic when sent → now, with
+      tutor use.
 - **Roadmap agreed 2026-10-06** (user's P2P/RBAC spec). Done: Admin role,
   teaching assignments and enrolments, one-way Admin sync, assignment
   submission and grade sync, session expiry, tutor sources, the memory

@@ -45,6 +45,12 @@ class AssignmentSubmissions extends Table {
   /// (schema 32).
   TextColumn get startedAt => text().nullable()();
 
+  /// Whether the tutor replied to the learner while they worked on it
+  /// (`tutor_use.dart`): during a timed attempt, or after an untimed one
+  /// was set. Records that the two happened together, never that the tutor
+  /// gave the answer. Null when unknown (older builds) (schema 33).
+  BoolColumn get tutorUsed => boolean().nullable()();
+
   /// ISO-8601 UTC: reached the teacher's device. Null until then.
   TextColumn get receivedAt => text().nullable()();
 

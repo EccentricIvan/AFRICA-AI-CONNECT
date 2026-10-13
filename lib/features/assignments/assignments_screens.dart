@@ -3,15 +3,20 @@ import 'dart:async';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../collaboration/sync/progress_report.dart' show clockNote;
 import '../../core/policy/policy.dart';
 import '../../db/otic_database.dart';
 import '../../db/providers/db_provider.dart';
 import '../../services/assignments/class_assignments.dart';
+import '../../services/assignments/learner_support.dart';
+import '../../services/custom_subject_service.dart';
 import '../../services/notes/note_pdf_store.dart';
 import '../../services/pdf/pdf_page_extractor.dart';
 import '../../shared/widgets/responsive.dart';
 import '../../shared/widgets/studio_page.dart';
+import '../learn/notes_quiz.dart';
 import '../learn/subject_notes.dart';
 import '../notes/note_pdf_screen.dart';
 import '../teacher/teacher_profiles.dart';
@@ -44,6 +49,12 @@ final _assignmentPdfProvider = FutureProvider.autoDispose
     });
 
 String _memberKey(Student s) => 'local/${s.id}';
+
+final _mySupportProvider = StreamProvider.autoDispose
+    .family<List<LearnerSupportItem>, int>(
+      (ref, studentId) =>
+          ref.watch(learnerSupportProvider).watchMine(studentId),
+    );
 
 /// "12 Oct 09:05", local time.
 String formatWhen(DateTime t) {
@@ -113,13 +124,14 @@ class _AssignmentsScreenState extends ConsumerState<AssignmentsScreen> {
     final student = await ref.read(activeStudentProvider.future);
     final assignments = await ref.read(_visibleAssignmentsProvider.future);
     if (student == null || !mounted) return;
-    await ref
-        .read(classAssignmentsProvider)
-        .submitExpired(
-          student: student,
-          assignments: assignments,
-          memberKey: _memberKey(student),
-        );
+    final service = ref.read(classAssignmentsProvider);
+    await service.submitExpired(
+      student: student,
+      assignments: assignments,
+      memberKey: _memberKey(student),
+    );
+    // From here, a tutor reply marks the learner's answer "Tutor used".
+    await service.markSeen(student.id, assignments);
     if (mounted) setState(() {});
   }
 
@@ -137,6 +149,10 @@ class _AssignmentsScreenState extends ConsumerState<AssignmentsScreen> {
         ? const <AssignmentAttempt>[]
         : ref.watch(_myAttemptsProvider(student.id)).valueOrNull ??
               const <AssignmentAttempt>[];
+    final support = student == null
+        ? const <LearnerSupportItem>[]
+        : ref.watch(_mySupportProvider(student.id)).valueOrNull ??
+              const <LearnerSupportItem>[];
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: const StudioAppBar(
@@ -146,20 +162,25 @@ class _AssignmentsScreenState extends ConsumerState<AssignmentsScreen> {
       ),
       body: MaxWidth(
         maxWidth: 800,
-        child: assignments.isEmpty
+        child: assignments.isEmpty && support.isEmpty
             ? const Center(child: Text('No assignments'))
             : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
+                  for (final i in support)
+                    _SupportCard(item: i, studentId: student!.id),
                   for (final a in assignments)
                     _AssignmentCard(
                       assignment: a,
                       latest: mine
                           .where((s) => s.assignmentId == a.id)
                           .firstOrNull,
-                      attempt: attempts
-                          .where((t) => t.assignmentId == a.id)
-                          .firstOrNull,
+                      // Untimed ones keep a row only to mark tutor use.
+                      attempt: a.timed
+                          ? attempts
+                                .where((t) => t.assignmentId == a.id)
+                                .firstOrNull
+                          : null,
                       onAnswer: student == null
                           ? null
                           : () => a.timed
@@ -256,14 +277,15 @@ class _AssignmentsScreenState extends ConsumerState<AssignmentsScreen> {
     final text = controller.text;
     controller.dispose();
     if (ok != true) return;
-    await ref
-        .read(classAssignmentsProvider)
-        .submit(
-          student: student,
-          assignment: a,
-          answer: text,
-          memberKey: _memberKey(student),
-        );
+    final service = ref.read(classAssignmentsProvider);
+    await service.submit(
+      student: student,
+      assignment: a,
+      answer: text,
+      memberKey: _memberKey(student),
+    );
+    // Answering again opens a new window.
+    await service.markSeen(student.id, [a]);
   }
 }
 
@@ -294,11 +316,14 @@ class _AssignmentCard extends ConsumerWidget {
     final String status;
     final String? action;
     if (s != null) {
-      status = s.grade != null
-          ? 'Grade ${s.grade}/${a.maxPoints}'
-          : s.receivedAt != null
-          ? 'Submitted · with your teacher'
-          : 'Submitted · sends at your next Sync';
+      status = [
+        s.grade != null
+            ? 'Grade ${s.grade}/${a.maxPoints}'
+            : s.receivedAt != null
+            ? 'Submitted · with your teacher'
+            : 'Submitted · sends at your next Sync',
+        if (s.tutorUsed == true) 'Tutor used',
+      ].join(' · ');
       action = a.timed ? null : 'Answer again';
     } else if (started != null) {
       status = deadline == null
@@ -358,6 +383,107 @@ class _AssignmentCard extends ConsumerWidget {
                     onPressed: () => openNotePdf(context, pdf),
                     icon: const Icon(Icons.picture_as_pdf_outlined),
                     label: const Text('Open PDF'),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Extra help from the learner's teacher: a message, a note to read and a
+/// quiz on one topic. Opening either is reported back at the next Sync, and
+/// so is Done.
+class _SupportCard extends ConsumerWidget {
+  const _SupportCard({required this.item, required this.studentId});
+
+  final LearnerSupportItem item;
+  final int studentId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final service = ref.read(learnerSupportProvider);
+    final subject =
+        (ref.watch(mergedSubjectsProvider).valueOrNull ?? const [])
+            .where((s) => s.id == item.subjectId)
+            .firstOrNull
+            ?.name ??
+        item.subjectId.replaceAll('_', ' ');
+    final note = item.documentTitle;
+    final pdf = note == null
+        ? null
+        : ref.watch(_assignmentPdfProvider(note)).valueOrNull;
+    final done = item.doneAt != null;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'From your teacher',
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+            Text(
+              [subject, if (item.topic.isNotEmpty) item.topic].join(' · '),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            if (item.message.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(item.message),
+              ),
+            if (done)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(
+                  'Done',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (note != null)
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      await service.markOpened(studentId, item.uuid);
+                      if (!context.mounted) return;
+                      if (pdf != null) {
+                        openNotePdf(context, pdf);
+                      } else {
+                        await context.push(
+                          '/learn/subject/${item.subjectId}?tab=0',
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.menu_book_outlined),
+                    label: const Text('Read note'),
+                  ),
+                if (item.quiz && item.topic.isNotEmpty)
+                  FilledButton.tonalIcon(
+                    onPressed: () async {
+                      await service.markOpened(studentId, item.uuid);
+                      await ref
+                          .read(subjectQuizProvider(item.subjectId).notifier)
+                          .startStored(topic: item.topic);
+                      if (!context.mounted) return;
+                      await context.push(
+                        '/learn/subject/${item.subjectId}?tab=1',
+                      );
+                    },
+                    icon: const Icon(Icons.quiz_outlined),
+                    label: const Text('Take quiz'),
+                  ),
+                if (!done)
+                  TextButton(
+                    onPressed: () => service.markDone(studentId, item.uuid),
+                    child: const Text('Done'),
                   ),
               ],
             ),
@@ -603,24 +729,44 @@ class GradeAssignmentsScreen extends ConsumerWidget {
   }
 }
 
-/// When a timed answer was started and handed in, and whether it was late
-/// by the learner's device clock. Null for untimed answers.
-String? timingLine(ClassAssignment a, AssignmentSubmission s) {
+/// What the teacher should know about an answer: when a timed one was
+/// started and handed in and whether it was late (by the learner's device
+/// clock), whether the tutor was used, a timed one sent from an older app
+/// that didn't time it, and a learner device clock that was off
+/// ([clockOffset], from their last report). Null when there is nothing.
+String? timingLine(
+  ClassAssignment a,
+  AssignmentSubmission s, {
+  Duration? clockOffset,
+}) {
   final started = s.startedAt == null ? null : DateTime.tryParse(s.startedAt!);
   final handed = DateTime.tryParse(s.createdAt);
-  if (started == null || handed == null) return null;
-  final deadline = a.deadlineFor(started);
-  final took = handed.difference(started);
-  final late =
-      deadline != null &&
-      handed.isAfter(deadline.add(const Duration(minutes: 1)));
-  return [
-    'Started ${formatWhen(started)}',
-    'handed in ${formatWhen(handed)} (${formatLeft(took)})',
-    if (late) 'late',
-    if (s.answer.isEmpty) 'not answered',
-  ].join(' · ');
+  final parts = <String>[];
+  if (started != null && handed != null) {
+    final deadline = a.deadlineFor(started);
+    final took = handed.difference(started);
+    final late =
+        deadline != null &&
+        handed.isAfter(deadline.add(const Duration(minutes: 1)));
+    parts.addAll([
+      'Started ${formatWhen(started)}',
+      'handed in ${formatWhen(handed)} (${formatLeft(took)})',
+      if (late) 'late',
+      if (s.answer.isEmpty) 'not answered',
+    ]);
+  } else if (a.timed) {
+    // Every build that times assessments sends the start time.
+    parts.add('older app: not timed');
+  }
+  if (s.tutorUsed == true) parts.add('Tutor used');
+  if (clockNote(clockOffset) case final c?) parts.add(c);
+  return parts.isEmpty ? null : parts.join(' · ');
 }
+
+/// Teacher's device: each learner's device clock offset, by member key.
+final _clockOffsetsProvider = StreamProvider.autoDispose<Map<String, Duration>>(
+  (ref) => ref.watch(dbProvider).classSyncDao.watchClockOffsets(),
+);
 
 class _Gradebook extends ConsumerWidget {
   const _Gradebook({required this.assignment});
@@ -632,6 +778,9 @@ class _Gradebook extends ConsumerWidget {
         ref.watch(_submissionsProvider(assignment.id)).valueOrNull ??
         const <AssignmentSubmission>[];
     final schedule = scheduleLine(assignment);
+    final clocks =
+        ref.watch(_clockOffsetsProvider).valueOrNull ??
+        const <String, Duration>{};
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ExpansionTile(
@@ -651,7 +800,12 @@ class _Gradebook extends ConsumerWidget {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (timingLine(assignment, s) case final t?)
+                  if (timingLine(
+                        assignment,
+                        s,
+                        clockOffset: clocks[s.memberKey],
+                      )
+                      case final t?)
                     Text(t, style: const TextStyle(fontSize: 12)),
                   Text(s.answer, maxLines: 4, overflow: TextOverflow.ellipsis),
                 ],
@@ -673,6 +827,7 @@ class _Gradebook extends ConsumerWidget {
     WidgetRef ref,
     AssignmentSubmission s,
   ) async {
+    final clock = ref.read(_clockOffsetsProvider).valueOrNull?[s.memberKey];
     final grade = TextEditingController(text: s.grade?.toString() ?? '');
     final feedback = TextEditingController(text: s.feedback ?? '');
     final ok = await showDialog<bool>(
@@ -686,7 +841,8 @@ class _Gradebook extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (timingLine(assignment, s) case final t?) Text(t),
+                if (timingLine(assignment, s, clockOffset: clock) case final t?)
+                  Text(t),
                 SelectableText(s.answer),
                 TextField(
                   controller: grade,

@@ -187,14 +187,7 @@ class CloudOutboxService {
           };
         }
         return {
-          ...SubmissionPayload(
-            uuid: s.uuid,
-            assignmentId: s.assignmentId,
-            subjectId: s.subjectId,
-            answer: s.answer,
-            createdAt: s.createdAt,
-            startedAt: s.startedAt,
-          ).toJson(),
+          ...SubmissionPayload.fromRow(s).toJson(),
           ...who,
           'name': s.learnerName,
         };

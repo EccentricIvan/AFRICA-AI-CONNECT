@@ -10,6 +10,7 @@ import '../../curriculum/curriculum_provider.dart' show CurriculumService;
 import '../../curriculum/subject_style.dart';
 import '../../db/otic_database.dart';
 import '../../services/assignments/class_assignments.dart';
+import '../../services/assignments/learner_support.dart';
 import 'class_crypto.dart';
 import 'device_keys.dart';
 import 'device_registry.dart';
@@ -24,6 +25,7 @@ import 'class_share_server.dart'
         kJoinPath,
         kMacHeader,
         kFilePath,
+        kMaxReportsPerDevice,
         kNonceHeader,
         kReportPath;
 import '../../services/notes/note_pdf_store.dart';
@@ -844,10 +846,11 @@ class SelectiveSyncManager {
     var reported = 0;
     if (answeredBy == rootKey) {
       try {
+        final deviceKey = await reportDeviceKey(_db);
         final reports = await buildProgressReports(
           _db,
           group,
-          deviceKey: await reportDeviceKey(_db),
+          deviceKey: deviceKey,
         );
         if (reports.isNotEmpty) {
           final ack = await call(
@@ -876,6 +879,19 @@ class SelectiveSyncManager {
               for (final u in received.take(500))
                 if (u is String) u,
             ]);
+          }
+          // The teacher's extra help for this device's learners.
+          if (ack['support'] case final List items) {
+            await LearnerSupportService(_db).receive(
+              group: group,
+              deviceKey: deviceKey,
+              items: [
+                for (final i in items.take(
+                  kMaxSupportPerLearner * kMaxReportsPerDevice,
+                ))
+                  ?SupportPayload.fromJson(i),
+              ],
+            );
           }
         }
       } catch (_) {}

@@ -99,6 +99,9 @@ class ClassGroupDao extends DatabaseAccessor<OticDatabase>
         'sync_state',
         'served_channels',
         'member_reports',
+        // Extra help sent to (teacher) or received by (student) its
+        // learners.
+        'learner_support',
         // Subjects its teacher offered (a student device's copy).
         'custom_subjects',
         // Co-teacher allocations for this class (root device only).

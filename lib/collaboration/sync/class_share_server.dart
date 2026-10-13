@@ -10,6 +10,7 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import '../../db/otic_database.dart';
 import '../../services/assignments/class_assignments.dart';
+import '../../services/assignments/learner_support.dart';
 import '../../services/notes/note_pdf_store.dart';
 import 'class_crypto.dart';
 import 'device_keys.dart';
@@ -1066,11 +1067,17 @@ class ClassShareServer {
         ]),
       );
     }
+    // Extra help for exactly the learners that device reported.
+    final support = await LearnerSupportService(_db).outgoing(
+      served.groupUuid,
+      [for (final r in reports) r.memberKey],
+    );
     return {
       'saved': reports.length,
       'grades': [for (final g in grades) g.toJson()],
       // Answers this device now holds, so the learner's device can say so.
       'received': received,
+      if (support.isNotEmpty) 'support': [for (final i in support) i.toJson()],
     };
   }
 

@@ -72,18 +72,22 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
 
   /// The version of each of [classUuid]'s subjects this device holds from
   /// [signer] (root's key also covers rows from before signers were kept).
-  Future<Map<String, int>> heldVersions(String classUuid, String signer) async =>
-      {
-        for (final r in await (select(syncState)
+  Future<Map<String, int>> heldVersions(
+    String classUuid,
+    String signer,
+  ) async => {
+    for (final r
+        in await (select(syncState)
               ..where((t) => t.classGroupUuid.equals(classUuid))
               ..where((t) => t.channelDigest.isNotNull())
               ..where((t) => t.channelVersion.isNotNull())
               ..where(
-                (t) => t.manifestSigner.isNull() | t.manifestSigner.equals(signer),
+                (t) =>
+                    t.manifestSigner.isNull() | t.manifestSigner.equals(signer),
               ))
             .get())
-          r.subjectId: r.channelVersion!,
-      };
+      r.subjectId: r.channelVersion!,
+  };
 
   Stream<SyncIdentityData?> watchIdentity() =>
       (select(syncIdentity)..where((t) => t.id.equals(1))).watchSingleOrNull();
@@ -181,9 +185,10 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
   /// A class this device joined through its teacher, with everything a
   /// classmate share needs (key, school, pinned teacher key). Null otherwise.
   Future<ClassGroup?> joinedByUuid(String uuid) async {
-    final g = await (select(classGroups)
-          ..where((t) => t.groupUuid.equals(uuid) & t.joined.equals(true)))
-        .getSingleOrNull();
+    final g =
+        await (select(classGroups)
+              ..where((t) => t.groupUuid.equals(uuid) & t.joined.equals(true)))
+            .getSingleOrNull();
     if (g == null ||
         g.classKey == null ||
         g.schoolId == null ||
@@ -378,18 +383,19 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
   /// classmate's old copy of it is never newer than the removal.
   Future<void> retireUnshared(String classUuid, Set<String> shared) =>
       transaction(() async {
-        final rows = await (select(servedChannels)..where(
-              (t) => t.classGroupUuid.equals(classUuid) & t.digest.isNotNull(),
-            ))
-            .get();
+        final rows =
+            await (select(servedChannels)..where(
+                  (t) =>
+                      t.classGroupUuid.equals(classUuid) & t.digest.isNotNull(),
+                ))
+                .get();
         for (final r in rows.where((r) => !shared.contains(r.subjectId))) {
-          await (update(servedChannels)..where((t) => t.id.equals(r.id)))
-              .write(
-                ServedChannelsCompanion(
-                  digest: const Value(null),
-                  version: Value(r.version + 1),
-                ),
-              );
+          await (update(servedChannels)..where((t) => t.id.equals(r.id))).write(
+            ServedChannelsCompanion(
+              digest: const Value(null),
+              version: Value(r.version + 1),
+            ),
+          );
         }
       });
 
@@ -421,7 +427,10 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
         a.subjectId,
     };
     if (taught.isEmpty) return all;
-    return [for (final s in all) if (taught.contains(s.subjectId)) s];
+    return [
+      for (final s in all)
+        if (taught.contains(s.subjectId)) s,
+    ];
   }
 
   /// Replaces the subjects [classUuid]'s teacher offers with [offered], in
@@ -433,8 +442,7 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
   ) => transaction(() async {
     final keep = {for (final s in offered) s.id};
     await (delete(customSubjects)..where(
-          (t) =>
-              t.classGroupUuid.equals(classUuid) & t.subjectId.isNotIn(keep),
+          (t) => t.classGroupUuid.equals(classUuid) & t.subjectId.isNotIn(keep),
         ))
         .go();
     final at = DateTime.now().toUtc().toIso8601String();
@@ -454,14 +462,15 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
           ),
         );
       } else if (existing.classGroupUuid == classUuid) {
-        await (update(customSubjects)..where((t) => t.id.equals(existing.id)))
-            .write(
-              CustomSubjectsCompanion(
-                name: Value(s.name),
-                icon: Value(s.icon),
-                color: Value(s.color),
-              ),
-            );
+        await (update(
+          customSubjects,
+        )..where((t) => t.id.equals(existing.id))).write(
+          CustomSubjectsCompanion(
+            name: Value(s.name),
+            icon: Value(s.icon),
+            color: Value(s.color),
+          ),
+        );
       }
     }
   });
@@ -476,33 +485,38 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
   /// Subjects whose notes [studentId] may read: those they registered for
   /// in My subjects (classes joined through a teacher), plus every subject
   /// taught to the class the Admin enrolled them in.
-  Stream<Set<String>> watchReadable(int studentId) =>
-      customSelect(
-        'SELECT subject_id FROM learner_subjects WHERE student_id = ?1 '
-        'UNION '
-        'SELECT t.subject_id FROM teaching_assignments t '
-        'JOIN student_enrolments e ON e.class_group_uuid = t.class_group_uuid '
-        "WHERE e.student_id = ?1 AND e.status = 'active'",
-        variables: [Variable.withInt(studentId)],
-        readsFrom: {
-          learnerSubjects,
-          attachedDatabase.teachingAssignments,
-          attachedDatabase.studentEnrolments,
-        },
-      ).watch().map((rows) => {for (final r in rows) r.read<String>('subject_id')});
+  Stream<Set<String>> watchReadable(int studentId) => customSelect(
+    'SELECT subject_id FROM learner_subjects WHERE student_id = ?1 '
+    'UNION '
+    'SELECT t.subject_id FROM teaching_assignments t '
+    'JOIN student_enrolments e ON e.class_group_uuid = t.class_group_uuid '
+    "WHERE e.student_id = ?1 AND e.status = 'active'",
+    variables: [Variable.withInt(studentId)],
+    readsFrom: {
+      learnerSubjects,
+      attachedDatabase.teachingAssignments,
+      attachedDatabase.studentEnrolments,
+    },
+  ).watch().map((rows) => {for (final r in rows) r.read<String>('subject_id')});
 
   Future<List<String>> enrolledSubjects(int studentId) async => [
-    for (final r in await (select(learnerSubjects)
-          ..where((t) => t.studentId.equals(studentId))
-          ..orderBy([(t) => OrderingTerm.asc(t.id)]))
-        .get())
+    for (final r
+        in await (select(learnerSubjects)
+              ..where((t) => t.studentId.equals(studentId))
+              ..orderBy([(t) => OrderingTerm.asc(t.id)]))
+            .get())
       r.subjectId,
   ];
 
-  Future<void> setEnrolled(int studentId, String subjectId, bool enrolled) async {
+  Future<void> setEnrolled(
+    int studentId,
+    String subjectId,
+    bool enrolled,
+  ) async {
     if (!enrolled) {
       await (delete(learnerSubjects)..where(
-            (t) => t.studentId.equals(studentId) & t.subjectId.equals(subjectId),
+            (t) =>
+                t.studentId.equals(studentId) & t.subjectId.equals(subjectId),
           ))
           .go();
       return;
@@ -562,6 +576,18 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
                   (report: report, receivedAt: r.receivedAt),
             ],
           );
+
+  /// Each member's device clock offset from this device's, as measured
+  /// when their latest report arrived (any class), by member key.
+  Stream<Map<String, Duration>> watchClockOffsets() =>
+      select(memberReports).watch().map(
+        (rows) => {
+          for (final r in rows)
+            if (_report(r.reportJson)?.clockOffset(r.receivedAt)
+                case final offset?)
+              r.memberKey: offset,
+        },
+      );
 
   static ProgressReport? _report(String json) {
     try {
@@ -716,12 +742,13 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
     Set<String> keepSubjects, {
     bool treatNullSignerAsThis = false,
   }) => transaction(() async {
-    final rows = await (select(syncState)..where(
+    final rows =
+        await (select(syncState)..where(
               (t) =>
                   t.classGroupUuid.equals(classUuid) &
                   t.channelDigest.isNotNull(),
             ))
-        .get();
+            .get();
     final gone = rows
         .where(
           (r) =>
@@ -807,12 +834,13 @@ class ClassSyncDao extends DatabaseAccessor<OticDatabase>
     ClassRoster roster,
     String rootPublicKey,
   ) => transaction(() async {
-    final rows = await (select(syncState)..where(
+    final rows =
+        await (select(syncState)..where(
               (t) =>
                   t.classGroupUuid.equals(classUuid) &
                   t.channelDigest.isNotNull(),
             ))
-        .get();
+            .get();
     var dropped = 0;
     for (final r in rows) {
       final currentSigner = r.manifestSigner ?? rootPublicKey;

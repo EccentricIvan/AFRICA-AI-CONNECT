@@ -884,13 +884,19 @@ class ChatNotifier extends AsyncNotifier<ChatState> {
       clearStreamingMath: true,
     ));
 
+    var replyRecorded = false;
     void pushUi(String cumulative) {
       if (!tokenCtrl.isClosed) tokenCtrl.add(cumulative);
       final cur = state.valueOrNull;
       if (cur == null || !cur.isGenerating || epoch != _epoch) return;
       state = AsyncData(cur.copyWith(streamingText: cumulative));
-      // The learner reads the reply as it streams.
+      // The learner reads the reply as it streams: in memory per token, on
+      // disk once, so a reply stopped mid-way still counts.
       ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+      if (!replyRecorded) {
+        replyRecorded = true;
+        unawaited(recordTutorReply(ref));
+      }
     }
 
     void pushMath(SchoolMathSolution partial) {
@@ -1047,7 +1053,7 @@ class ChatNotifier extends AsyncNotifier<ChatState> {
         clearError: true,
         clearStreamingMath: true,
       ));
-      ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+      unawaited(recordTutorReply(ref));
 
       final pipeline = await ref.read(tutorPipelineProvider.future);
       unawaited(_saveSessionSnapshot(
