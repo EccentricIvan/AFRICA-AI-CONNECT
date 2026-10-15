@@ -105,7 +105,7 @@ const kTranslatorLiteRt = ModelManifest(
   quantization: 'int8',
   capabilities: {ModelCapability.translate},
   languages: _afrislmLanguages,
-  sha256: 'f5a356714430f7174f970411148601118e38dc5a7b524ff920d3d0bef122579a',
+  sha256: '76af4b5e5d65cac929f24b8618dc141e9f348698b81f019bde60b05b2a720d98',
   approxBytes: 898256944,
   license: 'Apache-2.0',
 );
