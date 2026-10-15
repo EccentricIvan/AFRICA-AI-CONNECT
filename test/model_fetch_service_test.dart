@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:ai_connect_africa/ai_core/model/model_download_service.dart';
 import 'package:ai_connect_africa/ai_core/model/model_package.dart';
+import 'package:ai_connect_africa/ai_core/providers/ai_provider.dart';
 import 'package:ai_connect_africa/services/model_fetch_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:ai_connect_africa/ai_core/model/device_tier.dart';
@@ -173,6 +175,50 @@ void main() {
     expect(labels, isNotEmpty);
     expect(labels.last, 'Ready');
   });
+
+  test('finishing package fetch does not eagerly load AI engines', () async {
+    var runtimeLoads = 0;
+    final container = ProviderContainer(
+      overrides: [
+        modelFetchServiceProvider.overrideWithValue(_ReadyFetchService()),
+        dualModelRuntimeProvider.overrideWith((ref) async {
+          runtimeLoads++;
+          throw StateError('AI runtime should stay unloaded after download');
+        }),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(modelFetchControllerProvider.notifier).fetchCore();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(runtimeLoads, 0);
+    expect(
+      container.read(modelFetchControllerProvider).statusLabel,
+      'Packages installed. Restart the app to activate.',
+    );
+  });
+}
+
+class _ReadyFetchService extends ModelFetchService {
+  @override
+  Future<bool> areAllPackagesReady() async => false;
+
+  @override
+  Future<bool> isCoderReady() async => false;
+
+  @override
+  Future<ModelFetchUiState> fetchAllPackages({
+    void Function(ModelFetchUiState state)? onState,
+  }) async {
+    const ready = ModelFetchUiState(
+      phase: ModelFetchPhase.ready,
+      statusLabel: 'Ready',
+      coderReady: true,
+    );
+    onState?.call(ready);
+    return ready;
+  }
 }
 
 class _TestFetchService extends ModelFetchService {

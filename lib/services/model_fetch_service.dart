@@ -11,7 +11,6 @@ import '../ai_core/model/model_manager.dart';
 import '../ai_core/model/model_manifest.dart';
 import '../ai_core/model/model_package.dart';
 import '../ai_core/model/model_runtime_policy.dart';
-import '../ai_core/providers/ai_provider.dart';
 import '../ai_core/translate/afrislm_model_manager.dart';
 
 /// Hugging Face `resolve/main` base for classroom packages.
@@ -569,7 +568,6 @@ class ModelFetchController extends StateNotifier<ModelFetchUiState> {
         totalBytes: 1,
         coderReady: true,
       );
-      _invalidateClassroomStack();
       return;
     }
 
@@ -579,10 +577,12 @@ class ModelFetchController extends StateNotifier<ModelFetchUiState> {
       },
     );
     if (!mounted) return;
-    state = result;
-    if (result.isReady) {
-      _invalidateClassroomStack();
-    }
+    state = result.isReady
+        ? result.copyWith(
+            statusLabel: 'Packages installed. Restart the app to activate.',
+          )
+        : result;
+    if (result.isReady) _ref.invalidate(classroomPackagesReadyProvider);
   }
 
   Future<void> fetchCoder() async {
@@ -593,7 +593,6 @@ class ModelFetchController extends StateNotifier<ModelFetchUiState> {
         statusLabel: 'Ready',
         coderReady: true,
       );
-      _invalidateCoderStack();
       return;
     }
 
@@ -603,47 +602,12 @@ class ModelFetchController extends StateNotifier<ModelFetchUiState> {
       },
     );
     if (!mounted) return;
-    state = result;
-    if (result.coderReady || result.isReady) {
-      _invalidateClassroomStack();
-      _invalidateCoderStack();
-    }
-  }
-
-  void _invalidateClassroomStack() {
-    _ref.invalidate(classroomPackagesReadyProvider);
-    _ref.invalidate(modelInfoProvider);
-    _ref.invalidate(translateModelInfoProvider);
-    _ref.invalidate(programmingModelInfoProvider);
-    _ref.invalidate(dualModelRuntimeProvider);
-    _ref.invalidate(engineLoadedProvider);
-    _ref.invalidate(translateEngineLoadedProvider);
-    _ref.invalidate(translationPipelineProvider);
-    _ref.invalidate(afrislmTranslationServiceProvider);
-    _ref.invalidate(aiEngineServiceProvider);
-    _ref.invalidate(tutorPipelineProvider);
-    _ref.invalidate(qwenReasoningServiceProvider);
-    _ref.invalidate(qwenChatServiceProvider);
-    _ref.invalidate(chatInferencePipelineProvider);
-    _ref.invalidate(programmingEngineProvider);
-    _ref.invalidate(aiCoderServiceProvider);
-    // Warm tutor + AfriSLM so the first local-language Learn turn works
-    // without an English-only cold start after Install Packages.
-    unawaited(() async {
-      try {
-        await _ref.read(dualModelRuntimeProvider.future);
-        await ensureTranslationPipeline(_ref);
-        await _ref.read(chatInferencePipelineProvider.future);
-      } catch (e) {
-        debugPrint('post-fetch AI warm failed: $e');
-      }
-    }());
-  }
-
-  void _invalidateCoderStack() {
-    _ref.invalidate(programmingModelInfoProvider);
-    _ref.invalidate(programmingEngineProvider);
-    _ref.invalidate(aiCoderServiceProvider);
+    state = result.isReady
+        ? result.copyWith(
+            statusLabel: 'Packages installed. Restart the app to activate.',
+          )
+        : result;
+    if (result.isReady) _ref.invalidate(classroomPackagesReadyProvider);
   }
 
   void cancel() => _svc.cancel();

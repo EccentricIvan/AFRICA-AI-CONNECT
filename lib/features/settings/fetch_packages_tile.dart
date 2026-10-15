@@ -86,9 +86,13 @@ class FetchPackagesTile extends ConsumerWidget {
                   children: [
                     const Icon(Icons.check_circle, color: Colors.green, size: 20),
                     const SizedBox(width: 8),
-                    Text(
-                      tr(context, 'Ready'),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    Expanded(
+                      child: Text(
+                        state.statusLabel.isEmpty
+                            ? tr(context, 'Ready')
+                            : state.statusLabel,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
                     ),
                   ],
                 ),

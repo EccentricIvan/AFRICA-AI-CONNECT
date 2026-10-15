@@ -148,14 +148,16 @@ InferenceEngine createTranslatorEngine() {
 class DualModelRuntime {
   DualModelRuntime({
     required this.reasoner,
-    InferenceEngine? translator,
+    this._translator,
     this.shared = false,
+    this.translationDisabled = false,
     this.afrislmPath,
-  }) : _translator = translator;
+  });
 
   final InferenceEngine reasoner;
   InferenceEngine? _translator;
   final bool shared;
+  final bool translationDisabled;
 
   /// On-disk AfriSLM path for lazy / retry load after Install Packages.
   String? afrislmPath;
@@ -171,6 +173,7 @@ class DualModelRuntime {
   Future<InferenceEngine?> ensureTranslator() async {
     final existing = _translator;
     if (existing != null && existing.isReady) return existing;
+    if (translationDisabled) return null;
     if (shared && identical(existing, reasoner)) return existing;
 
     final inflight = _translatorLoad;
@@ -218,6 +221,9 @@ class DualModelRuntime {
       _coderService ??= AiCoderService(engine: reasoner);
 }
 
+/// Loads the brain when an AI feature first needs it. The translator remains
+/// lazy until a non-English turn requests translation; loading both large
+/// models eagerly can exhaust memory on classroom phones.
 final dualModelRuntimeProvider = FutureProvider<DualModelRuntime>((ref) async {
   Future<DualModelRuntime> demo(DemoReason reason) async {
     final mock = MockEngine(demoReason: reason);
@@ -263,38 +269,21 @@ final dualModelRuntimeProvider = FutureProvider<DualModelRuntime>((ref) async {
     }
     debugPrint('BRAIN loaded: ${reasoner.backendLabel} at $brainPath');
 
-    InferenceEngine? translator;
     const shared = false;
     final afrislmPath = plan.afrislmPath;
-    if (plan.canTranslate) {
-      if (plan.sameFile) {
-        debugPrint(
-          'TRANSLATION OFF: AfriSLM path collided with the brain. '
-          'Install the translation GGUF separately.',
-        );
-      } else {
-        // Soft-fail: never take down the brain if AfriSLM OOM / fails
-        // after Install Packages on a 4 GB phone.
-        try {
-          final engine = createTranslatorEngine();
-          await engine.loadModel(afrislmPath!);
-          translator = engine;
-          debugPrint('TRANSLATION ON: ${engine.backendLabel} at $afrislmPath');
-        } catch (e, st) {
-          debugPrint(
-            'TRANSLATION LOAD FAILED (brain stays up; retry on demand): $e\n$st',
-          );
-          translator = null;
-        }
-      }
-    } else {
-      debugPrint('TRANSLATION OFF: no AfriSLM GGUF. English-only tutor.');
+    if (plan.canTranslate && plan.sameFile) {
+      debugPrint(
+        'TRANSLATION OFF: AfriSLM path collided with the brain. '
+        'Install the translation model separately.',
+      );
+    } else if (!plan.canTranslate) {
+      debugPrint('TRANSLATION OFF: no AfriSLM model. English-only tutor.');
     }
 
     final runtime = DualModelRuntime(
       reasoner: reasoner,
-      translator: translator,
       shared: shared,
+      translationDisabled: plan.sameFile,
       afrislmPath: afrislmPath,
     );
     ref.onDispose(() async {

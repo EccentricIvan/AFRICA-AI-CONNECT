@@ -44,6 +44,16 @@ void main() {
         reason: 'one wrapper, not a new one per call');
   });
 
+  test('a detected brain/translator file collision disables translation',
+      () async {
+    final runtime = DualModelRuntime(
+      reasoner: _CountingEngine(),
+      translationDisabled: true,
+    );
+
+    expect(await runtime.ensureTranslator(), isNull);
+  });
+
   test('a build uses the brain and never disposes it', () async {
     final brain = _CountingEngine();
     final coder = DualModelRuntime(reasoner: brain).coderService;
