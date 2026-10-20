@@ -64,7 +64,7 @@ class NotRegisteredForNotes extends StatelessWidget {
           const SizedBox(height: 12),
           OutlinedButton(
             onPressed: () => context.push('/class-sync'),
-            child: Text(tr(context, 'My subjects')),
+            child: Text(tr(context, 'Join a class')),
           ),
         ],
       ),

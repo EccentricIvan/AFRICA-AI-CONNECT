@@ -112,7 +112,7 @@ class MyNotesScreen extends ConsumerWidget {
                     const SizedBox(height: 12),
                     OutlinedButton(
                       onPressed: () => context.push('/class-sync'),
-                      child: Text(tr(context, 'My subjects')),
+                      child: Text(tr(context, 'Join a class')),
                     ),
                   ],
                 ),
@@ -121,37 +121,33 @@ class MyNotesScreen extends ConsumerWidget {
                 child: ListView(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                   children: [
-                    for (final s in subjects) ...[
+                    // One collapsible section per subject.
+                    for (final s in subjects)
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 16, 0, 8),
-                        child: Row(
-                          children: [
-                            SubjectBadge(subjectId: s.id, size: 30),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                s.name,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: ac.textPrimary,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => context.push(
-                                '/learn/subject/${Uri.encodeComponent(s.id)}',
-                              ),
-                              child: Text(tr(context, 'Open')),
-                            ),
-                          ],
-                        ),
-                      ),
-                      StudioCard(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: StudioCard(
                         padding: EdgeInsets.zero,
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: Column(
+                        child: Theme(
+                          data: Theme.of(context)
+                              .copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            initiallyExpanded: true,
+                            leading: SubjectBadge(subjectId: s.id, size: 30),
+                            title: Text(
+                              s.name,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: ac.textPrimary,
+                              ),
+                            ),
+                            subtitle: Text(
+                              trFill(context, '{n} notes', {'n': '${s.pdfs.length}'}),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: ac.textSecondary,
+                              ),
+                            ),
                             children: [
                               for (final (pdf, here) in s.pdfs)
                                 ListTile(
@@ -194,11 +190,20 @@ class MyNotesScreen extends ConsumerWidget {
                                   enabled: here,
                                   onTap: () => openNotePdf(context, pdf),
                                 ),
+                              // Open the whole subject in Learn.
+                              ListTile(
+                                leading: const Icon(Icons.menu_book_outlined),
+                                title: Text(tr(context, 'Open subject')),
+                                trailing: const Icon(Icons.chevron_right_rounded),
+                                onTap: () => context.push(
+                                  '/learn/subject/${Uri.encodeComponent(s.id)}',
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
-                    ],
+                      ),
                   ],
                 ),
               ),
