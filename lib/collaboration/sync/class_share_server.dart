@@ -357,7 +357,7 @@ class ClassShareServer {
   /// classmate, a class it joined through the teacher.
   Future<String?> openJoinCode(
     ClassGroup group, {
-    Duration ttl = const Duration(minutes: 30),
+    Duration ttl = const Duration(minutes: 15),
   }) async {
     final uuid = group.groupUuid;
     if (uuid == null) return null;

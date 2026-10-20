@@ -49,12 +49,7 @@ class _TeacherSyncScreenState extends ConsumerState<TeacherSyncScreen> {
   DateTime? _codeExpires;
   List<String> _subjects = const [];
 
-  /// This device's addresses while sharing, for students whose network
-  /// blocks automatic discovery (phone hotspots, some school Wi-Fi).
-  List<String> _addresses = const [];
-  int? _port;
-
-  static const _codeLife = Duration(minutes: 30);
+  static const _codeLife = Duration(minutes: 15);
 
   bool get _running => _server?.isRunning ?? false;
 
@@ -111,7 +106,6 @@ class _TeacherSyncScreenState extends ConsumerState<TeacherSyncScreen> {
       // Additive — MdnsSyncDiscovery no-ops on Linux/web (see its doc).
       await _mdns.registerServer(className: classLabel(keyed), port: port);
       final subjects = await db.classSyncDao.sharedSubjects(keyed.groupUuid!);
-      final addresses = await localIPv4Addresses();
 
       if (!mounted) {
         await server.stop();
@@ -123,8 +117,6 @@ class _TeacherSyncScreenState extends ConsumerState<TeacherSyncScreen> {
         _server = server;
         _announcer = announcer;
         _subjects = subjects;
-        _addresses = addresses;
-        _port = port;
       });
       await _newCode(keyed);
     } catch (e) {
@@ -272,34 +264,6 @@ class _TeacherSyncScreenState extends ConsumerState<TeacherSyncScreen> {
                   server: _server!,
                   subjectName: subjectNames(ref),
                 ),
-                if (_addresses.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  StudioCard(
-                    accent: AppColors.accentCyan,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'This device’s address',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: ac.textPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        for (final a in _addresses)
-                          SelectableText(
-                            _port == kDefaultSyncPort ? a : '$a:$_port',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'monospace',
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
                 const SizedBox(height: 12),
                 StudioCard(
                   accent: _subjects.isEmpty

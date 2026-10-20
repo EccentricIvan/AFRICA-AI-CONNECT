@@ -246,6 +246,8 @@ class SubjectQuizState {
     this.answers = const {},
     this.shownAt = const [],
     this.tutorUsed = const {},
+    this.explanations = const {},
+    this.explaining = const {},
     this.error,
   });
 
@@ -270,6 +272,12 @@ class SubjectQuizState {
 
   /// Question index → chosen option.
   final Map<int, int> answers;
+
+  /// Question index → the AI's explanation, in the learner's language.
+  final Map<int, String> explanations;
+
+  /// Questions whose explanation is being generated right now.
+  final Set<int> explaining;
   final String? error;
 
   int get score => [
@@ -303,6 +311,8 @@ class SubjectQuizState {
     Map<int, int>? answers,
     List<DateTime>? shownAt,
     Set<int>? tutorUsed,
+    Map<int, String>? explanations,
+    Set<int>? explaining,
     String? error,
     bool clearError = false,
   }) => SubjectQuizState(
@@ -314,6 +324,8 @@ class SubjectQuizState {
     answers: answers ?? this.answers,
     shownAt: shownAt ?? this.shownAt,
     tutorUsed: tutorUsed ?? this.tutorUsed,
+    explanations: explanations ?? this.explanations,
+    explaining: explaining ?? this.explaining,
     error: clearError ? null : error ?? this.error,
   );
 }
@@ -421,6 +433,59 @@ class SubjectQuizNotifier extends FamilyNotifier<SubjectQuizState, String> {
     }
     // Every question answered while the round was still being written.
     if (round == _round && state.finished) unawaited(_record(state));
+  }
+
+  /// Has the AI explain the answer to question [index], in the learner's
+  /// language, shown inline. Using it marks the question as answered with
+  /// the AI (so Achievements can tell it apart from one done on their own).
+  Future<void> explain(int index) async {
+    if (state.explaining.contains(index) ||
+        state.explanations.containsKey(index) ||
+        index >= state.questions.length) {
+      return;
+    }
+    final q = state.questions[index];
+    state = state.copyWith(
+      explaining: {...state.explaining, index},
+      tutorUsed: {...state.tutorUsed, index},
+    );
+    try {
+      final engine = await ref.read(engineLoadedProvider.future);
+      final letters = [
+        for (var o = 0; o < q.options.length; o++)
+          '${String.fromCharCode(65 + o)}) ${q.options[o]}',
+      ].join('\n');
+      final prompt =
+          'You are a patient tutor. In two or three simple sentences, explain '
+          'why the correct answer is right, so a student understands it.\n\n'
+          'Question: ${q.question}\n$letters\n'
+          'Correct answer: ${String.fromCharCode(65 + q.correct)}) '
+          '${q.options[q.correct]}\n'
+          '${q.explanation.isEmpty ? '' : 'Note: ${q.explanation}\n'}'
+          'Explanation:';
+      final english = (await engine.generate(
+        prompt: prompt,
+        maxTokens: 160,
+        temperature: 0.3,
+      )).trim();
+      final text = english.isEmpty
+          ? q.explanation
+          : await localizeIncoming(ref, english);
+      state = state.copyWith(
+        explanations: {...state.explanations, index: text},
+        explaining: state.explaining.difference({index}),
+      );
+    } catch (e) {
+      debugPrint('Quiz explain failed: $e');
+      // Fall back to the stored explanation, translated.
+      final text = q.explanation.isEmpty
+          ? 'The AI could not explain this one right now.'
+          : await localizeIncoming(ref, q.explanation);
+      state = state.copyWith(
+        explanations: {...state.explanations, index: text},
+        explaining: state.explaining.difference({index}),
+      );
+    }
   }
 
   void answer(int index, int option) {

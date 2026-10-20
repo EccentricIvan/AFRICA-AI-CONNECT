@@ -370,7 +370,35 @@ class _QuestionCard extends ConsumerWidget {
                     : _OptionState.idle,
                 onTap: answered ? null : () => _choose(ref, o, o == q.correct),
               ),
-            if (answered && tutorUsed)
+            // Answer with AI: the model explains the answer, in the
+            // learner's language. Using it marks the question AI-assisted.
+            if (quiz.explaining.contains(index))
+              const Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 8),
+                    Text('Asking AI…', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              )
+            else if (!quiz.explanations.containsKey(index))
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () => ref
+                      .read(subjectQuizProvider(subjectId).notifier)
+                      .explain(index),
+                  icon: const Icon(Icons.smart_toy_outlined, size: 18),
+                  label: Text(tr(context, 'Ask AI')),
+                ),
+              ),
+            if (tutorUsed)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Row(
@@ -382,7 +410,7 @@ class _QuestionCard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      tr(context, 'Tutor used'),
+                      tr(context, 'Answered with AI'),
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.accentOrange,
@@ -391,7 +419,25 @@ class _QuestionCard extends ConsumerWidget {
                   ],
                 ),
               ),
-            if (answered && q.explanation.isNotEmpty) ...[
+            if (quiz.explanations[index] case final ai?) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.accentOrange.withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  ai,
+                  style: TextStyle(
+                    fontSize: 13,
+                    height: 1.4,
+                    color: ac.textPrimary,
+                  ),
+                ),
+              ),
+            ] else if (answered && q.explanation.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
                 q.explanation,

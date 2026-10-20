@@ -725,8 +725,18 @@ class _QuizScores extends ConsumerWidget {
                       'subject': names[s.subjectId] ?? s.subjectId,
                       'pct': '${s.bestPercent}',
                     }),
-                    if (s.lastTutorUsed case final n? when n > 0)
-                      trFill(context, 'tutor used {n}', {'n': '$n'}),
+                    // How the last round was answered: on their own, or with
+                    // the AI. Null tutorUsed is an old round (unknown).
+                    if (s.lastTutorUsed case final n?)
+                      if (n == 0)
+                        tr(context, 'on their own')
+                      else if (n >= s.lastTotal)
+                        tr(context, 'with AI')
+                      else
+                        trFill(context, '{own} on their own, {ai} with AI', {
+                          'own': '${s.lastTotal - n}',
+                          'ai': '$n',
+                        }),
                   ].join(' · '),
                   ratio: s.lastTotal == 0 ? 0 : s.lastCorrect / s.lastTotal,
                   onTap: () => GoRouter.of(context).push(

@@ -89,6 +89,13 @@ class MyNotesScreen extends ConsumerWidget {
         title: tr(context, 'My notes'),
         icon: Icons.picture_as_pdf_rounded,
         iconColor: AppColors.accentOrange,
+        actions: [
+          IconButton(
+            tooltip: tr(context, 'Sync'),
+            icon: const Icon(Icons.sync_rounded),
+            onPressed: () => context.push('/class-sync'),
+          ),
+        ],
       ),
       body: notes.when(
         loading: () => const Center(child: CircularProgressIndicator()),
