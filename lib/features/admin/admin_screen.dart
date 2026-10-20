@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../ai_core/providers/ai_provider.dart';
-import '../../collaboration/sync/device_registry.dart';
 import '../../core/theme/app_colors.dart';
 import '../../curriculum/curriculum_models.dart';
 import '../../curriculum/curriculum_provider.dart';
@@ -455,15 +454,11 @@ class _Records extends ConsumerWidget {
                 leading: const Icon(Icons.person_rounded),
                 title: Text(t.name),
                 subtitle: Text(
+                  'PIN ${t.pinPlain ?? 'not stored — reset to set'} · '
                   '${assignments.where((a) => a.teacherId == t.id).length} '
                   'assignments',
                 ),
                 trailing: _Menu({
-                  'Show PIN': () => _showPin(
-                    context,
-                    '${t.name}’s PIN',
-                    t.pinPlain,
-                  ),
                   'Reset PIN': () async {
                     final pin = await askTeacherPin(
                       context,
@@ -725,10 +720,6 @@ class _Records extends ConsumerWidget {
               ),
           ],
         ),
-
-        // ── Devices ────────────────────────────────────────────────────
-        const _Title('Devices'),
-        _DevicesCard(session: session),
 
         // ── Reset ──────────────────────────────────────────────────────
         const _Title('Reset'),
@@ -1060,73 +1051,6 @@ class _SchoolCard extends ConsumerWidget {
 
 /// Devices that took the school's records, with Revoke for the whole
 /// school; revoked ones stay listed.
-class _DevicesCard extends ConsumerWidget {
-  const _DevicesCard({required this.session});
-  final AdminSession session;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final devices =
-        ref.watch(_schoolDevicesProvider).valueOrNull ?? const <SchoolDevice>[];
-    final revoked = {
-      for (final r
-          in ref.watch(_revokedDevicesProvider).valueOrNull ??
-              const <RevokedDevice>[])
-        r.deviceKey,
-    };
-    return _Card(
-      children: [
-        if (devices.isEmpty) const ListTile(title: Text('No devices')),
-        for (final d in devices)
-          ListTile(
-            leading: Icon(
-              revoked.contains(d.deviceKey)
-                  ? Icons.block_rounded
-                  : Icons.devices_rounded,
-            ),
-            title: Text(d.name.isEmpty ? 'Device' : d.name),
-            subtitle: Text(
-              revoked.contains(d.deviceKey) ? 'Revoked' : 'Has the records',
-            ),
-            trailing: revoked.contains(d.deviceKey)
-                ? null
-                : TextButton(
-                    onPressed: () async {
-                      if (!await _confirm(
-                        context,
-                        'Revoke ${d.name.isEmpty ? 'this device' : d.name} '
-                        'for the whole school?',
-                      )) {
-                        return;
-                      }
-                      await ref
-                          .read(adminServiceProvider)
-                          .revokeDevice(session, d.deviceKey, name: d.name);
-                    },
-                    child: const Text('Revoke'),
-                  ),
-          ),
-        if (revoked.isNotEmpty)
-          ListTile(
-            dense: true,
-            title: Text(
-              'Reaches other devices with the next records you send',
-              style: TextStyle(color: AppColors.of(context).textSecondary),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-final _schoolDevicesProvider = StreamProvider.autoDispose<List<SchoolDevice>>(
-  (ref) => DeviceRegistry(ref.watch(dbProvider)).watchSchoolDevices(),
-);
-
-final _revokedDevicesProvider = StreamProvider.autoDispose<List<RevokedDevice>>(
-  (ref) => DeviceRegistry(ref.watch(dbProvider)).watchRevoked(),
-);
-
 // ── Small pieces ──────────────────────────────────────────────────────────
 
 class _Title extends StatelessWidget {
