@@ -245,8 +245,48 @@ class _SignInState extends ConsumerState<_SignIn> {
         ),
         const SizedBox(height: 16),
         FilledButton(onPressed: _submit, child: const Text('Sign in')),
+        TextButton(
+          onPressed: _recover,
+          child: const Text('Forgot PIN?'),
+        ),
       ],
     );
+  }
+
+  /// Recovery: set a new Admin PIN, keeping every record. Deliberately not
+  /// behind the old PIN — the point is that it was forgotten. These PINs
+  /// keep people apart on a shared device, not real security.
+  Future<void> _recover() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await _confirm(
+      context,
+      'Set a new Admin PIN? Everything the Admin set up — teachers, '
+      'classes, subjects — stays. Anyone at this device can do this, so '
+      'the Admin PIN is a lock for a shared device, not real security.',
+    );
+    if (!ok || !mounted) return;
+    final next = await askTeacherPin(context, title: 'New Admin PIN (4–8 digits)');
+    if (next == null || !mounted) return;
+    final again = await askTeacherPin(context, title: 'New Admin PIN again');
+    if (again == null || !mounted) return;
+    if (again != next) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('The two PINs did not match.')),
+      );
+      return;
+    }
+    final session = await ref.read(adminServiceProvider).recoverPin(next);
+    if (!mounted) return;
+    if (!session) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('No Admin set up on this device yet.')),
+      );
+      return;
+    }
+    final signedIn = await ref.read(adminServiceProvider).signIn(next);
+    if (signedIn != null) {
+      ref.read(adminSessionProvider.notifier).state = signedIn;
+    }
   }
 }
 
@@ -369,7 +409,23 @@ class _Records extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.password_rounded),
               title: const Text('My PIN'),
-              onTap: () => _changeMyPin(context, ref),
+              subtitle: const Text('Show it or change it'),
+              onTap: () async {
+                final pin = await admin.pin();
+                if (!context.mounted) return;
+                _showPin(
+                  context,
+                  'Admin PIN',
+                  pin,
+                  onChange: () => _changeMyPin(context, ref),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.groups_2_rounded),
+              title: const Text('Teachers PIN'),
+              subtitle: const Text('The shared PIN that opens the Teachers area'),
+              onTap: () => _manageTeachersPin(context, ref),
             ),
             ListTile(
               leading: const Icon(Icons.sync_rounded),
@@ -403,6 +459,11 @@ class _Records extends ConsumerWidget {
                   'assignments',
                 ),
                 trailing: _Menu({
+                  'Show PIN': () => _showPin(
+                    context,
+                    '${t.name}’s PIN',
+                    t.pinPlain,
+                  ),
                   'Reset PIN': () async {
                     final pin = await askTeacherPin(
                       context,
@@ -685,6 +746,63 @@ class _Records extends ConsumerWidget {
         ),
         const SizedBox(height: 40),
       ],
+    );
+  }
+
+  /// The shared Teachers PIN: show it, change it, or clear it (cleared,
+  /// nothing gates the Teachers area).
+  Future<void> _manageTeachersPin(BuildContext context, WidgetRef ref) async {
+    final pin = ref.read(teacherPinProvider);
+    final current = await pin.plain();
+    final isSet = await pin.isSet();
+    if (!context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Teachers PIN'),
+        content: Text(
+          !isSet
+              ? 'No Teachers PIN is set, so the Teachers area is open to '
+                    'anyone on this device.'
+              : current == null
+              ? 'A Teachers PIN is set. It was set before PINs were stored, '
+                    'so it can’t be shown — set a new one to see it.'
+              : 'The current Teachers PIN is $current.',
+        ),
+        actions: [
+          if (isSet)
+            TextButton(
+              onPressed: () async {
+                await pin.clear();
+                if (ctx.mounted) Navigator.pop(ctx);
+                messenger.showSnackBar(
+                  const SnackBar(content: Text('Teachers PIN cleared.')),
+                );
+              },
+              child: const Text('Clear'),
+            ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Close'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              final next = await askTeacherPin(
+                context,
+                title: 'New Teachers PIN (4–8 digits)',
+              );
+              if (next == null) return;
+              await pin.set(next);
+              messenger.showSnackBar(
+                const SnackBar(content: Text('Teachers PIN set.')),
+              );
+            },
+            child: Text(isSet ? 'Change' : 'Set'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1082,6 +1200,41 @@ class _Menu extends StatelessWidget {
     );
   }
 }
+
+/// Shows a stored PIN (or says it isn't stored). [onChange], when given,
+/// adds a button to change it.
+Future<void> _showPin(
+  BuildContext context,
+  String title,
+  String? pin, {
+  VoidCallback? onChange,
+}) => showDialog<void>(
+  context: context,
+  builder: (ctx) => AlertDialog(
+    title: Text(title),
+    content: Text(
+      pin == null
+          ? 'This PIN was set before PINs were stored, so it can’t be shown. '
+                'Reset it to set a new one.'
+          : 'The PIN is $pin.',
+      style: pin == null ? null : const TextStyle(fontSize: 22),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(ctx),
+        child: const Text('Close'),
+      ),
+      if (onChange != null)
+        FilledButton(
+          onPressed: () {
+            Navigator.pop(ctx);
+            onChange();
+          },
+          child: const Text('Change'),
+        ),
+    ],
+  ),
+);
 
 Future<bool> _confirm(BuildContext context, String message) async =>
     await showDialog<bool>(

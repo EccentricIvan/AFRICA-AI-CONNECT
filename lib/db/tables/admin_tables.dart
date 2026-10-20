@@ -14,9 +14,13 @@ class AdminIdentity extends Table {
   IntColumn get id => integer()();
   TextColumn get name => text()();
 
-  /// Salted SHA-256 of the Admin's PIN.
+  /// Salted hash of the Admin's PIN, used to check sign-in.
   TextColumn get pinSalt => text()();
   TextColumn get pinHash => text()();
+
+  /// The PIN in the clear, so a signed-in Admin can see and note it down.
+  /// Null for an Admin set up before this was stored.
+  TextColumn get pinPlain => text().nullable()();
 
   /// ISO-8601 UTC.
   TextColumn get createdAt => text()();
@@ -126,6 +130,27 @@ class NoteOwners extends Table {
 
   @override
   Set<Column> get primaryKey => {subjectId, documentTitle};
+}
+
+/// Subjects a teacher made for themselves in Lesson materials, so they can
+/// upload notes before the Admin assigns them a class. They let the teacher
+/// upload and change notes on this device only; sharing into a class still
+/// needs a teaching assignment. Local only, never in the Admin's records,
+/// so an Admin sync (which replaces assignments whole) leaves them alone.
+@DataClassName('TeacherSubject')
+class TeacherSubjects extends Table {
+  @override
+  String get tableName => 'teacher_subjects';
+
+  /// `teacher_profiles.id`.
+  IntColumn get teacherId => integer()();
+  TextColumn get subjectId => text()();
+
+  /// ISO-8601 UTC.
+  TextColumn get createdAt => text()();
+
+  @override
+  Set<Column> get primaryKey => {teacherId, subjectId};
 }
 
 /// Built-in subjects the school's Admin removed. They stay in the app's

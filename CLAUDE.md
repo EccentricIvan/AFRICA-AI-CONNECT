@@ -199,6 +199,14 @@ Devices are **shared**: learners take turns on one classroom PC/tablet.
     teach that subject to, and see only learners of those classes. Shares
     no assignment covers are dropped (`pruneShares`) whenever assignments
     change, so Sync stops serving them.
+  - **Teacher-made subjects (schema 36).** Lesson materials → "Upload a
+    PDF" lets a signed-in teacher pick one of their subjects or name a new
+    one, made on the spot and recorded in `teacher_subjects` (local only,
+    never in Admin records, so an Admin sync leaves it alone). It lets that
+    teacher upload and change notes there (`TeachingScope.mayUpload`);
+    sharing into a class still needs a teaching assignment. Removing the
+    teacher or deleting the subject drops the row. Students get "Take quiz"
+    on each note in My notes once it has questions.
   - Schema 24 turned the old ownership into assignments, enrolments and
     note owners, so existing teachers kept their access. Learners and
     teachers have portable `uuid`s (set by a trigger on insert).

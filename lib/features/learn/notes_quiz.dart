@@ -329,9 +329,10 @@ class SubjectQuizNotifier extends FamilyNotifier<SubjectQuizState, String> {
   static const storedRoundSize = 10;
 
   /// Shows a round of the questions written ahead from the notes' topics
-  /// (`NoteQuizBuilder`) at once — only [topic]'s when given. False when
-  /// there are none yet.
-  Future<bool> startStored({String? topic}) async {
+  /// (`NoteQuizBuilder`) at once — only [topic]'s when given, and only
+  /// [documentTitle]'s (one note, from My notes → Take quiz) when given.
+  /// False when there are none yet.
+  Future<bool> startStored({String? topic, String? documentTitle}) async {
     final round = ++_round;
     try {
       final classUuid = await ref.read(learnerClassUuidProvider.future);
@@ -339,7 +340,9 @@ class SubjectQuizNotifier extends FamilyNotifier<SubjectQuizState, String> {
         for (final q in await ref
             .read(noteQuizStoreProvider)
             .questions(arg, classUuid: classUuid))
-          if (topic == null || q.topic == topic) q,
+          if ((topic == null || q.topic == topic) &&
+              (documentTitle == null || q.documentTitle == documentTitle))
+            q,
       ];
       if (round != _round || stored.isEmpty) return false;
       stored.shuffle();

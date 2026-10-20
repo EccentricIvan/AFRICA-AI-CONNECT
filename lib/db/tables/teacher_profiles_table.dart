@@ -14,9 +14,17 @@ class TeacherProfiles extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
 
-  /// Salted SHA-256 of the teacher's PIN; the PIN itself is never stored.
+  /// Salted hash of the teacher's PIN, used to check sign-in.
   TextColumn get pinSalt => text()();
   TextColumn get pinHash => text()();
+
+  /// The PIN in the clear, so the Admin can look it up when a teacher
+  /// forgets it (Admin → Teachers → Show PIN). Null for teachers added
+  /// before this was stored — the Admin resets the PIN to set a fresh one.
+  /// These PINs keep learners and staff apart on a shared device; they are
+  /// not real security, and the Admin area that reveals them is itself
+  /// behind the Admin PIN.
+  TextColumn get pinPlain => text().nullable()();
 
   /// ISO-8601 UTC.
   TextColumn get createdAt => text()();

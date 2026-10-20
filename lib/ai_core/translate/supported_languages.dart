@@ -68,17 +68,10 @@ String languagePromptName(String code) {
   return code;
 }
 
-/// Codes offered in the onboarding/Settings language picker. AfriSLM still
-/// supports the full [supportedLanguages] list underneath (translation,
-/// voice, UI chrome all keep working for any of them), but only these show
-/// up as choices — narrowing what's *pickable* without dropping support for
-/// a code a student may already have saved.
-const _pickableLanguageCodes = {'en', 'lg', 'sw', 'rw', 'ln'};
-
-/// The subset of [supportedLanguages] to show in language pickers.
-final pickableLanguages = supportedLanguages
-    .where((lang) => _pickableLanguageCodes.contains(lang.code))
-    .toList();
+/// Languages offered in the onboarding/Settings picker. Every language
+/// AfriSLM supports is offered, so a learner can work in any of them; the
+/// tutor, translation, voice and UI chrome all run for the whole list.
+final pickableLanguages = supportedLanguages;
 
 /// True for English plus every AfriSLM pair (and Kirundi → Kinyarwanda).
 bool isSupportedLearningLanguage(String code) {

@@ -14163,6 +14163,17 @@ class $TeacherProfilesTable extends TeacherProfiles
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _pinPlainMeta = const VerificationMeta(
+    'pinPlain',
+  );
+  @override
+  late final GeneratedColumn<String> pinPlain = GeneratedColumn<String>(
+    'pin_plain',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -14189,6 +14200,7 @@ class $TeacherProfilesTable extends TeacherProfiles
     name,
     pinSalt,
     pinHash,
+    pinPlain,
     createdAt,
     uuid,
   ];
@@ -14231,6 +14243,12 @@ class $TeacherProfilesTable extends TeacherProfiles
     } else if (isInserting) {
       context.missing(_pinHashMeta);
     }
+    if (data.containsKey('pin_plain')) {
+      context.handle(
+        _pinPlainMeta,
+        pinPlain.isAcceptableOrUnknown(data['pin_plain']!, _pinPlainMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -14270,6 +14288,10 @@ class $TeacherProfilesTable extends TeacherProfiles
         DriftSqlType.string,
         data['${effectivePrefix}pin_hash'],
       )!,
+      pinPlain: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pin_plain'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}created_at'],
@@ -14291,9 +14313,17 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
   final int id;
   final String name;
 
-  /// Salted SHA-256 of the teacher's PIN; the PIN itself is never stored.
+  /// Salted hash of the teacher's PIN, used to check sign-in.
   final String pinSalt;
   final String pinHash;
+
+  /// The PIN in the clear, so the Admin can look it up when a teacher
+  /// forgets it (Admin → Teachers → Show PIN). Null for teachers added
+  /// before this was stored — the Admin resets the PIN to set a fresh one.
+  /// These PINs keep learners and staff apart on a shared device; they are
+  /// not real security, and the Admin area that reveals them is itself
+  /// behind the Admin PIN.
+  final String? pinPlain;
 
   /// ISO-8601 UTC.
   final String createdAt;
@@ -14305,6 +14335,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
     required this.name,
     required this.pinSalt,
     required this.pinHash,
+    this.pinPlain,
     required this.createdAt,
     this.uuid,
   });
@@ -14315,6 +14346,9 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
     map['name'] = Variable<String>(name);
     map['pin_salt'] = Variable<String>(pinSalt);
     map['pin_hash'] = Variable<String>(pinHash);
+    if (!nullToAbsent || pinPlain != null) {
+      map['pin_plain'] = Variable<String>(pinPlain);
+    }
     map['created_at'] = Variable<String>(createdAt);
     if (!nullToAbsent || uuid != null) {
       map['uuid'] = Variable<String>(uuid);
@@ -14328,6 +14362,9 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
       name: Value(name),
       pinSalt: Value(pinSalt),
       pinHash: Value(pinHash),
+      pinPlain: pinPlain == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pinPlain),
       createdAt: Value(createdAt),
       uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
     );
@@ -14343,6 +14380,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
       name: serializer.fromJson<String>(json['name']),
       pinSalt: serializer.fromJson<String>(json['pinSalt']),
       pinHash: serializer.fromJson<String>(json['pinHash']),
+      pinPlain: serializer.fromJson<String?>(json['pinPlain']),
       createdAt: serializer.fromJson<String>(json['createdAt']),
       uuid: serializer.fromJson<String?>(json['uuid']),
     );
@@ -14355,6 +14393,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
       'name': serializer.toJson<String>(name),
       'pinSalt': serializer.toJson<String>(pinSalt),
       'pinHash': serializer.toJson<String>(pinHash),
+      'pinPlain': serializer.toJson<String?>(pinPlain),
       'createdAt': serializer.toJson<String>(createdAt),
       'uuid': serializer.toJson<String?>(uuid),
     };
@@ -14365,6 +14404,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
     String? name,
     String? pinSalt,
     String? pinHash,
+    Value<String?> pinPlain = const Value.absent(),
     String? createdAt,
     Value<String?> uuid = const Value.absent(),
   }) => TeacherProfile(
@@ -14372,6 +14412,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
     name: name ?? this.name,
     pinSalt: pinSalt ?? this.pinSalt,
     pinHash: pinHash ?? this.pinHash,
+    pinPlain: pinPlain.present ? pinPlain.value : this.pinPlain,
     createdAt: createdAt ?? this.createdAt,
     uuid: uuid.present ? uuid.value : this.uuid,
   );
@@ -14381,6 +14422,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
       name: data.name.present ? data.name.value : this.name,
       pinSalt: data.pinSalt.present ? data.pinSalt.value : this.pinSalt,
       pinHash: data.pinHash.present ? data.pinHash.value : this.pinHash,
+      pinPlain: data.pinPlain.present ? data.pinPlain.value : this.pinPlain,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       uuid: data.uuid.present ? data.uuid.value : this.uuid,
     );
@@ -14393,6 +14435,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
           ..write('name: $name, ')
           ..write('pinSalt: $pinSalt, ')
           ..write('pinHash: $pinHash, ')
+          ..write('pinPlain: $pinPlain, ')
           ..write('createdAt: $createdAt, ')
           ..write('uuid: $uuid')
           ..write(')'))
@@ -14400,7 +14443,8 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
   }
 
   @override
-  int get hashCode => Object.hash(id, name, pinSalt, pinHash, createdAt, uuid);
+  int get hashCode =>
+      Object.hash(id, name, pinSalt, pinHash, pinPlain, createdAt, uuid);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -14409,6 +14453,7 @@ class TeacherProfile extends DataClass implements Insertable<TeacherProfile> {
           other.name == this.name &&
           other.pinSalt == this.pinSalt &&
           other.pinHash == this.pinHash &&
+          other.pinPlain == this.pinPlain &&
           other.createdAt == this.createdAt &&
           other.uuid == this.uuid);
 }
@@ -14418,6 +14463,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
   final Value<String> name;
   final Value<String> pinSalt;
   final Value<String> pinHash;
+  final Value<String?> pinPlain;
   final Value<String> createdAt;
   final Value<String?> uuid;
   const TeacherProfilesCompanion({
@@ -14425,6 +14471,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
     this.name = const Value.absent(),
     this.pinSalt = const Value.absent(),
     this.pinHash = const Value.absent(),
+    this.pinPlain = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.uuid = const Value.absent(),
   });
@@ -14433,6 +14480,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
     required String name,
     required String pinSalt,
     required String pinHash,
+    this.pinPlain = const Value.absent(),
     required String createdAt,
     this.uuid = const Value.absent(),
   }) : name = Value(name),
@@ -14444,6 +14492,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
     Expression<String>? name,
     Expression<String>? pinSalt,
     Expression<String>? pinHash,
+    Expression<String>? pinPlain,
     Expression<String>? createdAt,
     Expression<String>? uuid,
   }) {
@@ -14452,6 +14501,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
       if (name != null) 'name': name,
       if (pinSalt != null) 'pin_salt': pinSalt,
       if (pinHash != null) 'pin_hash': pinHash,
+      if (pinPlain != null) 'pin_plain': pinPlain,
       if (createdAt != null) 'created_at': createdAt,
       if (uuid != null) 'uuid': uuid,
     });
@@ -14462,6 +14512,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
     Value<String>? name,
     Value<String>? pinSalt,
     Value<String>? pinHash,
+    Value<String?>? pinPlain,
     Value<String>? createdAt,
     Value<String?>? uuid,
   }) {
@@ -14470,6 +14521,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
       name: name ?? this.name,
       pinSalt: pinSalt ?? this.pinSalt,
       pinHash: pinHash ?? this.pinHash,
+      pinPlain: pinPlain ?? this.pinPlain,
       createdAt: createdAt ?? this.createdAt,
       uuid: uuid ?? this.uuid,
     );
@@ -14490,6 +14542,9 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
     if (pinHash.present) {
       map['pin_hash'] = Variable<String>(pinHash.value);
     }
+    if (pinPlain.present) {
+      map['pin_plain'] = Variable<String>(pinPlain.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
@@ -14506,6 +14561,7 @@ class TeacherProfilesCompanion extends UpdateCompanion<TeacherProfile> {
           ..write('name: $name, ')
           ..write('pinSalt: $pinSalt, ')
           ..write('pinHash: $pinHash, ')
+          ..write('pinPlain: $pinPlain, ')
           ..write('createdAt: $createdAt, ')
           ..write('uuid: $uuid')
           ..write(')'))
@@ -14559,6 +14615,17 @@ class $AdminIdentityTable extends AdminIdentity
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _pinPlainMeta = const VerificationMeta(
+    'pinPlain',
+  );
+  @override
+  late final GeneratedColumn<String> pinPlain = GeneratedColumn<String>(
+    'pin_plain',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -14599,6 +14666,7 @@ class $AdminIdentityTable extends AdminIdentity
     name,
     pinSalt,
     pinHash,
+    pinPlain,
     createdAt,
     signingSeed,
     recordsVersion,
@@ -14641,6 +14709,12 @@ class $AdminIdentityTable extends AdminIdentity
       );
     } else if (isInserting) {
       context.missing(_pinHashMeta);
+    }
+    if (data.containsKey('pin_plain')) {
+      context.handle(
+        _pinPlainMeta,
+        pinPlain.isAcceptableOrUnknown(data['pin_plain']!, _pinPlainMeta),
+      );
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -14693,6 +14767,10 @@ class $AdminIdentityTable extends AdminIdentity
         DriftSqlType.string,
         data['${effectivePrefix}pin_hash'],
       )!,
+      pinPlain: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pin_plain'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}created_at'],
@@ -14719,9 +14797,13 @@ class AdminIdentityRow extends DataClass
   final int id;
   final String name;
 
-  /// Salted SHA-256 of the Admin's PIN.
+  /// Salted hash of the Admin's PIN, used to check sign-in.
   final String pinSalt;
   final String pinHash;
+
+  /// The PIN in the clear, so a signed-in Admin can see and note it down.
+  /// Null for an Admin set up before this was stored.
+  final String? pinPlain;
 
   /// ISO-8601 UTC.
   final String createdAt;
@@ -14737,6 +14819,7 @@ class AdminIdentityRow extends DataClass
     required this.name,
     required this.pinSalt,
     required this.pinHash,
+    this.pinPlain,
     required this.createdAt,
     this.signingSeed,
     required this.recordsVersion,
@@ -14748,6 +14831,9 @@ class AdminIdentityRow extends DataClass
     map['name'] = Variable<String>(name);
     map['pin_salt'] = Variable<String>(pinSalt);
     map['pin_hash'] = Variable<String>(pinHash);
+    if (!nullToAbsent || pinPlain != null) {
+      map['pin_plain'] = Variable<String>(pinPlain);
+    }
     map['created_at'] = Variable<String>(createdAt);
     if (!nullToAbsent || signingSeed != null) {
       map['signing_seed'] = Variable<String>(signingSeed);
@@ -14762,6 +14848,9 @@ class AdminIdentityRow extends DataClass
       name: Value(name),
       pinSalt: Value(pinSalt),
       pinHash: Value(pinHash),
+      pinPlain: pinPlain == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pinPlain),
       createdAt: Value(createdAt),
       signingSeed: signingSeed == null && nullToAbsent
           ? const Value.absent()
@@ -14780,6 +14869,7 @@ class AdminIdentityRow extends DataClass
       name: serializer.fromJson<String>(json['name']),
       pinSalt: serializer.fromJson<String>(json['pinSalt']),
       pinHash: serializer.fromJson<String>(json['pinHash']),
+      pinPlain: serializer.fromJson<String?>(json['pinPlain']),
       createdAt: serializer.fromJson<String>(json['createdAt']),
       signingSeed: serializer.fromJson<String?>(json['signingSeed']),
       recordsVersion: serializer.fromJson<int>(json['recordsVersion']),
@@ -14793,6 +14883,7 @@ class AdminIdentityRow extends DataClass
       'name': serializer.toJson<String>(name),
       'pinSalt': serializer.toJson<String>(pinSalt),
       'pinHash': serializer.toJson<String>(pinHash),
+      'pinPlain': serializer.toJson<String?>(pinPlain),
       'createdAt': serializer.toJson<String>(createdAt),
       'signingSeed': serializer.toJson<String?>(signingSeed),
       'recordsVersion': serializer.toJson<int>(recordsVersion),
@@ -14804,6 +14895,7 @@ class AdminIdentityRow extends DataClass
     String? name,
     String? pinSalt,
     String? pinHash,
+    Value<String?> pinPlain = const Value.absent(),
     String? createdAt,
     Value<String?> signingSeed = const Value.absent(),
     int? recordsVersion,
@@ -14812,6 +14904,7 @@ class AdminIdentityRow extends DataClass
     name: name ?? this.name,
     pinSalt: pinSalt ?? this.pinSalt,
     pinHash: pinHash ?? this.pinHash,
+    pinPlain: pinPlain.present ? pinPlain.value : this.pinPlain,
     createdAt: createdAt ?? this.createdAt,
     signingSeed: signingSeed.present ? signingSeed.value : this.signingSeed,
     recordsVersion: recordsVersion ?? this.recordsVersion,
@@ -14822,6 +14915,7 @@ class AdminIdentityRow extends DataClass
       name: data.name.present ? data.name.value : this.name,
       pinSalt: data.pinSalt.present ? data.pinSalt.value : this.pinSalt,
       pinHash: data.pinHash.present ? data.pinHash.value : this.pinHash,
+      pinPlain: data.pinPlain.present ? data.pinPlain.value : this.pinPlain,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       signingSeed: data.signingSeed.present
           ? data.signingSeed.value
@@ -14839,6 +14933,7 @@ class AdminIdentityRow extends DataClass
           ..write('name: $name, ')
           ..write('pinSalt: $pinSalt, ')
           ..write('pinHash: $pinHash, ')
+          ..write('pinPlain: $pinPlain, ')
           ..write('createdAt: $createdAt, ')
           ..write('signingSeed: $signingSeed, ')
           ..write('recordsVersion: $recordsVersion')
@@ -14852,6 +14947,7 @@ class AdminIdentityRow extends DataClass
     name,
     pinSalt,
     pinHash,
+    pinPlain,
     createdAt,
     signingSeed,
     recordsVersion,
@@ -14864,6 +14960,7 @@ class AdminIdentityRow extends DataClass
           other.name == this.name &&
           other.pinSalt == this.pinSalt &&
           other.pinHash == this.pinHash &&
+          other.pinPlain == this.pinPlain &&
           other.createdAt == this.createdAt &&
           other.signingSeed == this.signingSeed &&
           other.recordsVersion == this.recordsVersion);
@@ -14874,6 +14971,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
   final Value<String> name;
   final Value<String> pinSalt;
   final Value<String> pinHash;
+  final Value<String?> pinPlain;
   final Value<String> createdAt;
   final Value<String?> signingSeed;
   final Value<int> recordsVersion;
@@ -14882,6 +14980,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
     this.name = const Value.absent(),
     this.pinSalt = const Value.absent(),
     this.pinHash = const Value.absent(),
+    this.pinPlain = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.signingSeed = const Value.absent(),
     this.recordsVersion = const Value.absent(),
@@ -14891,6 +14990,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
     required String name,
     required String pinSalt,
     required String pinHash,
+    this.pinPlain = const Value.absent(),
     required String createdAt,
     this.signingSeed = const Value.absent(),
     this.recordsVersion = const Value.absent(),
@@ -14903,6 +15003,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
     Expression<String>? name,
     Expression<String>? pinSalt,
     Expression<String>? pinHash,
+    Expression<String>? pinPlain,
     Expression<String>? createdAt,
     Expression<String>? signingSeed,
     Expression<int>? recordsVersion,
@@ -14912,6 +15013,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
       if (name != null) 'name': name,
       if (pinSalt != null) 'pin_salt': pinSalt,
       if (pinHash != null) 'pin_hash': pinHash,
+      if (pinPlain != null) 'pin_plain': pinPlain,
       if (createdAt != null) 'created_at': createdAt,
       if (signingSeed != null) 'signing_seed': signingSeed,
       if (recordsVersion != null) 'records_version': recordsVersion,
@@ -14923,6 +15025,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
     Value<String>? name,
     Value<String>? pinSalt,
     Value<String>? pinHash,
+    Value<String?>? pinPlain,
     Value<String>? createdAt,
     Value<String?>? signingSeed,
     Value<int>? recordsVersion,
@@ -14932,6 +15035,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
       name: name ?? this.name,
       pinSalt: pinSalt ?? this.pinSalt,
       pinHash: pinHash ?? this.pinHash,
+      pinPlain: pinPlain ?? this.pinPlain,
       createdAt: createdAt ?? this.createdAt,
       signingSeed: signingSeed ?? this.signingSeed,
       recordsVersion: recordsVersion ?? this.recordsVersion,
@@ -14953,6 +15057,9 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
     if (pinHash.present) {
       map['pin_hash'] = Variable<String>(pinHash.value);
     }
+    if (pinPlain.present) {
+      map['pin_plain'] = Variable<String>(pinPlain.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
@@ -14972,6 +15079,7 @@ class AdminIdentityCompanion extends UpdateCompanion<AdminIdentityRow> {
           ..write('name: $name, ')
           ..write('pinSalt: $pinSalt, ')
           ..write('pinHash: $pinHash, ')
+          ..write('pinPlain: $pinPlain, ')
           ..write('createdAt: $createdAt, ')
           ..write('signingSeed: $signingSeed, ')
           ..write('recordsVersion: $recordsVersion')
@@ -22915,6 +23023,278 @@ class LearnerRegistrationsCompanion
   }
 }
 
+class $TeacherSubjectsTable extends TeacherSubjects
+    with TableInfo<$TeacherSubjectsTable, TeacherSubject> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TeacherSubjectsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _teacherIdMeta = const VerificationMeta(
+    'teacherId',
+  );
+  @override
+  late final GeneratedColumn<int> teacherId = GeneratedColumn<int>(
+    'teacher_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _subjectIdMeta = const VerificationMeta(
+    'subjectId',
+  );
+  @override
+  late final GeneratedColumn<String> subjectId = GeneratedColumn<String>(
+    'subject_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [teacherId, subjectId, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'teacher_subjects';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TeacherSubject> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('teacher_id')) {
+      context.handle(
+        _teacherIdMeta,
+        teacherId.isAcceptableOrUnknown(data['teacher_id']!, _teacherIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_teacherIdMeta);
+    }
+    if (data.containsKey('subject_id')) {
+      context.handle(
+        _subjectIdMeta,
+        subjectId.isAcceptableOrUnknown(data['subject_id']!, _subjectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_subjectIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {teacherId, subjectId};
+  @override
+  TeacherSubject map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TeacherSubject(
+      teacherId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}teacher_id'],
+      )!,
+      subjectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subject_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $TeacherSubjectsTable createAlias(String alias) {
+    return $TeacherSubjectsTable(attachedDatabase, alias);
+  }
+}
+
+class TeacherSubject extends DataClass implements Insertable<TeacherSubject> {
+  /// `teacher_profiles.id`.
+  final int teacherId;
+  final String subjectId;
+
+  /// ISO-8601 UTC.
+  final String createdAt;
+  const TeacherSubject({
+    required this.teacherId,
+    required this.subjectId,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['teacher_id'] = Variable<int>(teacherId);
+    map['subject_id'] = Variable<String>(subjectId);
+    map['created_at'] = Variable<String>(createdAt);
+    return map;
+  }
+
+  TeacherSubjectsCompanion toCompanion(bool nullToAbsent) {
+    return TeacherSubjectsCompanion(
+      teacherId: Value(teacherId),
+      subjectId: Value(subjectId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory TeacherSubject.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TeacherSubject(
+      teacherId: serializer.fromJson<int>(json['teacherId']),
+      subjectId: serializer.fromJson<String>(json['subjectId']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'teacherId': serializer.toJson<int>(teacherId),
+      'subjectId': serializer.toJson<String>(subjectId),
+      'createdAt': serializer.toJson<String>(createdAt),
+    };
+  }
+
+  TeacherSubject copyWith({
+    int? teacherId,
+    String? subjectId,
+    String? createdAt,
+  }) => TeacherSubject(
+    teacherId: teacherId ?? this.teacherId,
+    subjectId: subjectId ?? this.subjectId,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  TeacherSubject copyWithCompanion(TeacherSubjectsCompanion data) {
+    return TeacherSubject(
+      teacherId: data.teacherId.present ? data.teacherId.value : this.teacherId,
+      subjectId: data.subjectId.present ? data.subjectId.value : this.subjectId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TeacherSubject(')
+          ..write('teacherId: $teacherId, ')
+          ..write('subjectId: $subjectId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(teacherId, subjectId, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TeacherSubject &&
+          other.teacherId == this.teacherId &&
+          other.subjectId == this.subjectId &&
+          other.createdAt == this.createdAt);
+}
+
+class TeacherSubjectsCompanion extends UpdateCompanion<TeacherSubject> {
+  final Value<int> teacherId;
+  final Value<String> subjectId;
+  final Value<String> createdAt;
+  final Value<int> rowid;
+  const TeacherSubjectsCompanion({
+    this.teacherId = const Value.absent(),
+    this.subjectId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TeacherSubjectsCompanion.insert({
+    required int teacherId,
+    required String subjectId,
+    required String createdAt,
+    this.rowid = const Value.absent(),
+  }) : teacherId = Value(teacherId),
+       subjectId = Value(subjectId),
+       createdAt = Value(createdAt);
+  static Insertable<TeacherSubject> custom({
+    Expression<int>? teacherId,
+    Expression<String>? subjectId,
+    Expression<String>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (teacherId != null) 'teacher_id': teacherId,
+      if (subjectId != null) 'subject_id': subjectId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TeacherSubjectsCompanion copyWith({
+    Value<int>? teacherId,
+    Value<String>? subjectId,
+    Value<String>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return TeacherSubjectsCompanion(
+      teacherId: teacherId ?? this.teacherId,
+      subjectId: subjectId ?? this.subjectId,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (teacherId.present) {
+      map['teacher_id'] = Variable<int>(teacherId.value);
+    }
+    if (subjectId.present) {
+      map['subject_id'] = Variable<String>(subjectId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TeacherSubjectsCompanion(')
+          ..write('teacherId: $teacherId, ')
+          ..write('subjectId: $subjectId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$OticDatabase extends GeneratedDatabase {
   _$OticDatabase(QueryExecutor e) : super(e);
   $OticDatabaseManager get managers => $OticDatabaseManager(this);
@@ -22990,6 +23370,9 @@ abstract class _$OticDatabase extends GeneratedDatabase {
       $ClassTeacherAssignmentsTable(this);
   late final $LearnerRegistrationsTable learnerRegistrations =
       $LearnerRegistrationsTable(this);
+  late final $TeacherSubjectsTable teacherSubjects = $TeacherSubjectsTable(
+    this,
+  );
   late final Index idxTopicResourcesLookup = Index(
     'idx_topic_resources_lookup',
     'CREATE INDEX idx_topic_resources_lookup ON topic_resources (subject_id, topic_key)',
@@ -23149,6 +23532,7 @@ abstract class _$OticDatabase extends GeneratedDatabase {
     auditLog,
     classTeacherAssignments,
     learnerRegistrations,
+    teacherSubjects,
     idxTopicResourcesLookup,
     idxTopicResourcesTitle,
     idxCustomSubjectsSubjectId,
@@ -30115,6 +30499,7 @@ typedef $$TeacherProfilesTableCreateCompanionBuilder =
       required String name,
       required String pinSalt,
       required String pinHash,
+      Value<String?> pinPlain,
       required String createdAt,
       Value<String?> uuid,
     });
@@ -30124,6 +30509,7 @@ typedef $$TeacherProfilesTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String> pinSalt,
       Value<String> pinHash,
+      Value<String?> pinPlain,
       Value<String> createdAt,
       Value<String?> uuid,
     });
@@ -30154,6 +30540,11 @@ class $$TeacherProfilesTableFilterComposer
 
   ColumnFilters<String> get pinHash => $composableBuilder(
     column: $table.pinHash,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get pinPlain => $composableBuilder(
+    column: $table.pinPlain,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -30197,6 +30588,11 @@ class $$TeacherProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get pinPlain => $composableBuilder(
+    column: $table.pinPlain,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -30228,6 +30624,9 @@ class $$TeacherProfilesTableAnnotationComposer
 
   GeneratedColumn<String> get pinHash =>
       $composableBuilder(column: $table.pinHash, builder: (column) => column);
+
+  GeneratedColumn<String> get pinPlain =>
+      $composableBuilder(column: $table.pinPlain, builder: (column) => column);
 
   GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -30277,6 +30676,7 @@ class $$TeacherProfilesTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String> pinSalt = const Value.absent(),
                 Value<String> pinHash = const Value.absent(),
+                Value<String?> pinPlain = const Value.absent(),
                 Value<String> createdAt = const Value.absent(),
                 Value<String?> uuid = const Value.absent(),
               }) => TeacherProfilesCompanion(
@@ -30284,6 +30684,7 @@ class $$TeacherProfilesTableTableManager
                 name: name,
                 pinSalt: pinSalt,
                 pinHash: pinHash,
+                pinPlain: pinPlain,
                 createdAt: createdAt,
                 uuid: uuid,
               ),
@@ -30293,6 +30694,7 @@ class $$TeacherProfilesTableTableManager
                 required String name,
                 required String pinSalt,
                 required String pinHash,
+                Value<String?> pinPlain = const Value.absent(),
                 required String createdAt,
                 Value<String?> uuid = const Value.absent(),
               }) => TeacherProfilesCompanion.insert(
@@ -30300,6 +30702,7 @@ class $$TeacherProfilesTableTableManager
                 name: name,
                 pinSalt: pinSalt,
                 pinHash: pinHash,
+                pinPlain: pinPlain,
                 createdAt: createdAt,
                 uuid: uuid,
               ),
@@ -30334,6 +30737,7 @@ typedef $$AdminIdentityTableCreateCompanionBuilder =
       required String name,
       required String pinSalt,
       required String pinHash,
+      Value<String?> pinPlain,
       required String createdAt,
       Value<String?> signingSeed,
       Value<int> recordsVersion,
@@ -30344,6 +30748,7 @@ typedef $$AdminIdentityTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String> pinSalt,
       Value<String> pinHash,
+      Value<String?> pinPlain,
       Value<String> createdAt,
       Value<String?> signingSeed,
       Value<int> recordsVersion,
@@ -30375,6 +30780,11 @@ class $$AdminIdentityTableFilterComposer
 
   ColumnFilters<String> get pinHash => $composableBuilder(
     column: $table.pinHash,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get pinPlain => $composableBuilder(
+    column: $table.pinPlain,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -30423,6 +30833,11 @@ class $$AdminIdentityTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get pinPlain => $composableBuilder(
+    column: $table.pinPlain,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -30459,6 +30874,9 @@ class $$AdminIdentityTableAnnotationComposer
 
   GeneratedColumn<String> get pinHash =>
       $composableBuilder(column: $table.pinHash, builder: (column) => column);
+
+  GeneratedColumn<String> get pinPlain =>
+      $composableBuilder(column: $table.pinPlain, builder: (column) => column);
 
   GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -30513,6 +30931,7 @@ class $$AdminIdentityTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String> pinSalt = const Value.absent(),
                 Value<String> pinHash = const Value.absent(),
+                Value<String?> pinPlain = const Value.absent(),
                 Value<String> createdAt = const Value.absent(),
                 Value<String?> signingSeed = const Value.absent(),
                 Value<int> recordsVersion = const Value.absent(),
@@ -30521,6 +30940,7 @@ class $$AdminIdentityTableTableManager
                 name: name,
                 pinSalt: pinSalt,
                 pinHash: pinHash,
+                pinPlain: pinPlain,
                 createdAt: createdAt,
                 signingSeed: signingSeed,
                 recordsVersion: recordsVersion,
@@ -30531,6 +30951,7 @@ class $$AdminIdentityTableTableManager
                 required String name,
                 required String pinSalt,
                 required String pinHash,
+                Value<String?> pinPlain = const Value.absent(),
                 required String createdAt,
                 Value<String?> signingSeed = const Value.absent(),
                 Value<int> recordsVersion = const Value.absent(),
@@ -30539,6 +30960,7 @@ class $$AdminIdentityTableTableManager
                 name: name,
                 pinSalt: pinSalt,
                 pinHash: pinHash,
+                pinPlain: pinPlain,
                 createdAt: createdAt,
                 signingSeed: signingSeed,
                 recordsVersion: recordsVersion,
@@ -34708,6 +35130,174 @@ typedef $$LearnerRegistrationsTableProcessedTableManager =
       LearnerRegistration,
       PrefetchHooks Function()
     >;
+typedef $$TeacherSubjectsTableCreateCompanionBuilder =
+    TeacherSubjectsCompanion Function({
+      required int teacherId,
+      required String subjectId,
+      required String createdAt,
+      Value<int> rowid,
+    });
+typedef $$TeacherSubjectsTableUpdateCompanionBuilder =
+    TeacherSubjectsCompanion Function({
+      Value<int> teacherId,
+      Value<String> subjectId,
+      Value<String> createdAt,
+      Value<int> rowid,
+    });
+
+class $$TeacherSubjectsTableFilterComposer
+    extends Composer<_$OticDatabase, $TeacherSubjectsTable> {
+  $$TeacherSubjectsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subjectId => $composableBuilder(
+    column: $table.subjectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TeacherSubjectsTableOrderingComposer
+    extends Composer<_$OticDatabase, $TeacherSubjectsTable> {
+  $$TeacherSubjectsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subjectId => $composableBuilder(
+    column: $table.subjectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TeacherSubjectsTableAnnotationComposer
+    extends Composer<_$OticDatabase, $TeacherSubjectsTable> {
+  $$TeacherSubjectsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get teacherId =>
+      $composableBuilder(column: $table.teacherId, builder: (column) => column);
+
+  GeneratedColumn<String> get subjectId =>
+      $composableBuilder(column: $table.subjectId, builder: (column) => column);
+
+  GeneratedColumn<String> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$TeacherSubjectsTableTableManager
+    extends
+        RootTableManager<
+          _$OticDatabase,
+          $TeacherSubjectsTable,
+          TeacherSubject,
+          $$TeacherSubjectsTableFilterComposer,
+          $$TeacherSubjectsTableOrderingComposer,
+          $$TeacherSubjectsTableAnnotationComposer,
+          $$TeacherSubjectsTableCreateCompanionBuilder,
+          $$TeacherSubjectsTableUpdateCompanionBuilder,
+          (
+            TeacherSubject,
+            BaseReferences<
+              _$OticDatabase,
+              $TeacherSubjectsTable,
+              TeacherSubject
+            >,
+          ),
+          TeacherSubject,
+          PrefetchHooks Function()
+        > {
+  $$TeacherSubjectsTableTableManager(
+    _$OticDatabase db,
+    $TeacherSubjectsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TeacherSubjectsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TeacherSubjectsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TeacherSubjectsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> teacherId = const Value.absent(),
+                Value<String> subjectId = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TeacherSubjectsCompanion(
+                teacherId: teacherId,
+                subjectId: subjectId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int teacherId,
+                required String subjectId,
+                required String createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => TeacherSubjectsCompanion.insert(
+                teacherId: teacherId,
+                subjectId: subjectId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TeacherSubjectsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$OticDatabase,
+      $TeacherSubjectsTable,
+      TeacherSubject,
+      $$TeacherSubjectsTableFilterComposer,
+      $$TeacherSubjectsTableOrderingComposer,
+      $$TeacherSubjectsTableAnnotationComposer,
+      $$TeacherSubjectsTableCreateCompanionBuilder,
+      $$TeacherSubjectsTableUpdateCompanionBuilder,
+      (
+        TeacherSubject,
+        BaseReferences<_$OticDatabase, $TeacherSubjectsTable, TeacherSubject>,
+      ),
+      TeacherSubject,
+      PrefetchHooks Function()
+    >;
 
 class $OticDatabaseManager {
   final _$OticDatabase _db;
@@ -34806,4 +35396,6 @@ class $OticDatabaseManager {
       );
   $$LearnerRegistrationsTableTableManager get learnerRegistrations =>
       $$LearnerRegistrationsTableTableManager(_db, _db.learnerRegistrations);
+  $$TeacherSubjectsTableTableManager get teacherSubjects =>
+      $$TeacherSubjectsTableTableManager(_db, _db.teacherSubjects);
 }

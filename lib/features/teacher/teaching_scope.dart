@@ -38,6 +38,37 @@ class TeachingScope {
     );
   }
 
+  /// Whether [teacherId] may upload to [subjectId]: they teach it, or they
+  /// made it for themselves in Lesson materials ([TeacherSubjects]).
+  Future<bool> mayUpload(int? teacherId, String subjectId) async {
+    if (teacherId == null) return false;
+    return await teaches(teacherId, subjectId) ||
+        await ownsSubject(teacherId, subjectId);
+  }
+
+  Future<bool> ownsSubject(int teacherId, String subjectId) async =>
+      await (_db.select(_db.teacherSubjects)
+            ..where((t) => t.teacherId.equals(teacherId))
+            ..where((t) => t.subjectId.equals(subjectId)))
+          .getSingleOrNull() !=
+      null;
+
+  Stream<Set<String>> watchOwnSubjects(int teacherId) =>
+      (_db.select(_db.teacherSubjects)
+            ..where((t) => t.teacherId.equals(teacherId)))
+          .watch()
+          .map((rows) => {for (final r in rows) r.subjectId});
+
+  Future<void> recordOwnSubject(int teacherId, String subjectId) => _db
+      .into(_db.teacherSubjects)
+      .insertOnConflictUpdate(
+        TeacherSubjectsCompanion.insert(
+          teacherId: teacherId,
+          subjectId: subjectId,
+          createdAt: DateTime.now().toUtc().toIso8601String(),
+        ),
+      );
+
   /// The classes/streams [teacherId] may register learners into, as a
   /// Class Teacher (`class_groups.group_uuid`).
   Future<Set<String>> classTeacherOf(int? teacherId) async {
@@ -58,14 +89,14 @@ class TeachingScope {
           ?.teacherId;
 
   /// Whether [teacherId] may change or remove a note: they teach its
-  /// subject and uploaded it. A note nobody owns (its teacher was removed)
-  /// is open to whoever teaches the subject.
+  /// subject (or made it themselves) and uploaded it. A note nobody owns
+  /// (its teacher was removed) is open to whoever teaches the subject.
   Future<bool> mayChangeNote(
     int? teacherId,
     String subjectId,
     String documentTitle,
   ) async {
-    if (!await teaches(teacherId, subjectId)) return false;
+    if (!await mayUpload(teacherId, subjectId)) return false;
     final owner = await ownerOf(subjectId, documentTitle);
     return owner == null || owner == teacherId;
   }
@@ -146,6 +177,13 @@ final myAssignmentsProvider = StreamProvider<List<TeachingAssignment>>((ref) {
   final me = ref.watch(activeTeacherIdProvider);
   if (kIsWeb || me == null) return Stream.value(const []);
   return ref.watch(teachingScopeProvider).watchAssignments(me);
+});
+
+/// Subjects the signed-in teacher made for themselves, live.
+final myOwnSubjectsProvider = StreamProvider<Set<String>>((ref) {
+  final me = ref.watch(activeTeacherIdProvider);
+  if (kIsWeb || me == null) return Stream.value(const {});
+  return ref.watch(teachingScopeProvider).watchOwnSubjects(me);
 });
 
 /// Note owners of one subject, by document title.

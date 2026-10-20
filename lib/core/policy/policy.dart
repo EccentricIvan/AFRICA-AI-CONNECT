@@ -116,7 +116,8 @@ class Policy {
       final readable => readable.contains(subjectId),
     },
     UploadNote(:final subjectId) =>
-      actor is TeacherActor && await _scope.teaches(actor.teacherId, subjectId),
+      actor is TeacherActor &&
+          await _scope.mayUpload(actor.teacherId, subjectId),
     ChangeNote(:final subjectId, :final documentTitle) =>
       actor is TeacherActor &&
           await _scope.mayChangeNote(actor.teacherId, subjectId, documentTitle),

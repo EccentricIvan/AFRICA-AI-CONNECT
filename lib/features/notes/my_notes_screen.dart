@@ -5,8 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../l10n/app_locale.dart';
 import '../../services/notes/note_pdf_store.dart';
+import '../../services/notes/note_quiz_builder.dart';
+import '../../services/notes/note_quiz_store.dart';
 import '../../shared/widgets/responsive.dart';
 import '../../shared/widgets/studio_page.dart';
+import '../learn/notes_quiz.dart';
 import '../learn/subject_badge.dart';
 import '../learn/subject_notes.dart';
 import 'note_access.dart';
@@ -14,11 +17,14 @@ import 'note_pdf_screen.dart';
 
 /// One subject's PDFs in My notes, and whether each file is on the device.
 class MyNotesSubject {
-  const MyNotesSubject(this.id, this.name, this.pdfs);
+  const MyNotesSubject(this.id, this.name, this.pdfs, [this.quizzes = const {}]);
 
   final String id;
   final String name;
   final List<(NotePdf, bool)> pdfs;
+
+  /// Quiz questions written from each note so far, by document title.
+  final Map<String, int> quizzes;
 }
 
 /// The teacher's PDFs for every subject the active learner registered for
@@ -30,16 +36,45 @@ final myNotesProvider = FutureProvider.autoDispose<List<MyNotesSubject>>((
   final classUuid = await ref.watch(learnerClassUuidProvider.future);
   final subjects = await ref.watch(learnerNoteSubjectsProvider.future);
   final store = ref.watch(notePdfStoreProvider);
+  final quizStore = ref.watch(noteQuizStoreProvider);
   final pdfs = await store.visibleTo(classUuid);
   return [
     for (final (id, name) in subjects)
       if (canReadNotes(readable, id))
-        MyNotesSubject(id, name, [
-          for (final p in pdfs)
-            if (p.subjectId == id) (p, await store.has(p.sha256)),
-        ]),
+        MyNotesSubject(
+          id,
+          name,
+          [
+            for (final p in pdfs)
+              if (p.subjectId == id) (p, await store.has(p.sha256)),
+          ],
+          _countByNote(await quizStore.questions(id, classUuid: classUuid)),
+        ),
   ].where((s) => s.pdfs.isNotEmpty).toList();
 });
+
+Map<String, int> _countByNote(List<StoredQuizQuestion> questions) {
+  final counts = <String, int>{};
+  for (final q in questions) {
+    counts[q.documentTitle] = (counts[q.documentTitle] ?? 0) + 1;
+  }
+  return counts;
+}
+
+/// Opens the subject's Quiz tab on a round of [documentTitle]'s questions.
+Future<void> _takeQuiz(
+  BuildContext context,
+  WidgetRef ref,
+  String subjectId,
+  String documentTitle,
+) async {
+  await ref
+      .read(subjectQuizProvider(subjectId).notifier)
+      .startStored(documentTitle: documentTitle);
+  if (!context.mounted) return;
+  // Tab 1 is Quiz on every subject (UnitsScreen).
+  await context.push('/learn/subject/${Uri.encodeComponent(subjectId)}?tab=1');
+}
 
 class MyNotesScreen extends ConsumerWidget {
   const MyNotesScreen({super.key});
@@ -127,9 +162,28 @@ class MyNotesScreen extends ConsumerWidget {
                                           })
                                         : tr(context, 'Not downloaded yet'),
                                   ),
-                                  trailing: here
-                                      ? const Icon(Icons.chevron_right_rounded)
-                                      : null,
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if ((s.quizzes[pdf.documentTitle] ?? 0) >
+                                          0)
+                                        TextButton.icon(
+                                          onPressed: () => _takeQuiz(
+                                            context,
+                                            ref,
+                                            s.id,
+                                            pdf.documentTitle,
+                                          ),
+                                          icon: const Icon(
+                                            Icons.quiz_outlined,
+                                            size: 18,
+                                          ),
+                                          label: Text(tr(context, 'Take quiz')),
+                                        ),
+                                      if (here)
+                                        const Icon(Icons.chevron_right_rounded),
+                                    ],
+                                  ),
                                   enabled: here,
                                   onTap: () => openNotePdf(context, pdf),
                                 ),

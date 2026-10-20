@@ -45,6 +45,12 @@ class ResourceLabels {
   static const subjectRemoved = 'Subject removed';
 
   // ── Uploading ────────────────────────────────────────────────────────
+  static const quickUpload = 'Upload a PDF';
+  static const quickUploadHint =
+      'Upload a PDF or notes. Students get quizzes made from it, and the '
+      'tutor teaches from it.';
+  static const pickSubject = 'Which subject is this for?';
+  static const newSubjectOption = 'New subject…';
   static const uploadFile = 'Upload files';
   static const typeNotes = 'Type notes instead';
   static const uploadHint =

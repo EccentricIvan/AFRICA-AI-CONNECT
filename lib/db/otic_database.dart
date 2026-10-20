@@ -103,6 +103,7 @@ part 'otic_database.g.dart';
     AuditLog,
     ClassTeacherAssignments,
     LearnerRegistrations,
+    TeacherSubjects,
   ],
   daos: [
     StudentDao,
@@ -135,7 +136,7 @@ class OticDatabase extends _$OticDatabase {
   OticDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 35;
+  int get schemaVersion => 37;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -728,6 +729,33 @@ class OticDatabase extends _$OticDatabase {
         }
         if (!await _indexExists('idx_class_teacher_teacher')) {
           await m.create(idxClassTeacherTeacher);
+        }
+      }
+      if (from < 36) {
+        // Subjects a teacher made for themselves in Lesson materials.
+        if (!await _tableExists('teacher_subjects')) {
+          await m.createTable(teacherSubjects);
+        }
+      }
+      if (from < 37) {
+        // The PIN in the clear, so the Admin can look it up. Additive;
+        // teachers/Admin from before have it null until the PIN is reset.
+        for (final (table, column, add) in [
+          (
+            'teacher_profiles',
+            'pin_plain',
+            () => m.addColumn(teacherProfiles, teacherProfiles.pinPlain),
+          ),
+          (
+            'admin_identity',
+            'pin_plain',
+            () => m.addColumn(adminIdentity, adminIdentity.pinPlain),
+          ),
+        ]) {
+          if (await _tableExists(table) &&
+              !await _columnExists(table, column)) {
+            await add();
+          }
         }
       }
     },

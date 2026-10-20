@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const _hashKey = 'teacher_pin_hash';
 const _saltKey = 'teacher_pin_salt';
+const _plainKey = 'teacher_pin_plain';
 
 /// The Teachers PIN: one PIN every teacher on the device knows, guarding
 /// the Teachers area. There each teacher signs in with their own PIN
@@ -41,12 +42,23 @@ class TeacherPin {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_saltKey, salt);
     await prefs.setString(_hashKey, await hashPinStrong(salt, pin));
+    await prefs.setString(_plainKey, pin);
+  }
+
+  /// The Teachers PIN in the clear, for the Admin to look up; null when
+  /// none is set, or when it was set before this was stored.
+  Future<String?> plain() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_hashKey) == null
+        ? null
+        : prefs.getString(_plainKey);
   }
 
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_hashKey);
     await prefs.remove(_saltKey);
+    await prefs.remove(_plainKey);
   }
 
   /// True when [pin] is right — or when no PIN is set at all.

@@ -79,7 +79,7 @@ void main() {
       for (final subject in ['maths_9', 'physics_9']) {
         expect(
           await policy.can(actor, UploadNote(subject)),
-          await scope.teaches(teacher, subject),
+          await scope.mayUpload(teacher, subject),
         );
         expect(
           await policy.can(actor, ChangeNote(subject, 'Algebra')),
@@ -108,6 +108,52 @@ void main() {
       isFalse,
     );
   });
+
+  test(
+    'a subject a teacher made in Lesson materials is theirs to upload to, '
+    'but sharing it into a class still needs an assignment',
+    () async {
+      final scope = TeachingScope(db);
+      final made = await CustomSubjectService(db).create(name: 'Biology 9');
+      final biology = made.subjectId!;
+      expect(
+        await policy.can(TeacherActor(okello), UploadNote(biology)),
+        isFalse,
+      );
+
+      await scope.recordOwnSubject(okello, biology);
+      await scope.recordOwner(biology, 'Cells', okello);
+      expect(
+        await policy.can(TeacherActor(okello), UploadNote(biology)),
+        isTrue,
+      );
+      expect(
+        await policy.can(TeacherActor(okello), ChangeNote(biology, 'Cells')),
+        isTrue,
+      );
+      // Only Okello's.
+      expect(
+        await policy.can(TeacherActor(amina), UploadNote(biology)),
+        isFalse,
+      );
+      expect(
+        await policy.can(
+          TeacherActor(okello),
+          ShareNote(biology, 'Cells', east.groupUuid!),
+        ),
+        isFalse,
+      );
+
+      // Removing the teacher or the subject drops it.
+      await admin.deleteSubject(s, biology);
+      expect(await scope.ownsSubject(okello, biology), isFalse);
+      final again = (await CustomSubjectService(db).create(name: 'Art 9'))
+          .subjectId!;
+      await scope.recordOwnSubject(okello, again);
+      await admin.removeTeacher(s, okello);
+      expect(await scope.ownsSubject(okello, again), isFalse);
+    },
+  );
 
   test(
     'extra help goes only to classes the teacher teaches that subject',

@@ -31,9 +31,9 @@ import '../assignments/assignments_screens.dart';
 /// [ResourceLabels], which holds every string on this screen and is asserted
 /// against [kForbiddenTechnicalTerms] in the tests.
 ///
-/// A teacher sees the subjects the Admin assigned them, and changes only
-/// the materials they uploaded ([TeachingScope]). Subjects themselves are
-/// the Admin's.
+/// A teacher sees the subjects the Admin assigned them plus the ones they
+/// made here with "Upload a PDF", and changes only the materials they
+/// uploaded ([TeachingScope]).
 class LessonMaterialsScreen extends ConsumerWidget {
   const LessonMaterialsScreen({super.key});
 
@@ -44,6 +44,7 @@ class LessonMaterialsScreen extends ConsumerWidget {
           in ref.watch(myAssignmentsProvider).valueOrNull ??
               const <TeachingAssignment>[])
         a.subjectId,
+      ...?ref.watch(myOwnSubjectsProvider).valueOrNull,
     };
     final subjectsAsync = ref
         .watch(customSubjectsProvider)
@@ -62,6 +63,15 @@ class LessonMaterialsScreen extends ConsumerWidget {
         icon: Icons.folder_copy_rounded,
         iconColor: AppColors.accentBlue,
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _quickUpload(
+          context,
+          ref,
+          subjectsAsync.valueOrNull ?? const <CustomSubject>[],
+        ),
+        icon: const Icon(Icons.upload_file),
+        label: Text(tr(context, ResourceLabels.quickUpload)),
+      ),
       body: subjectsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
@@ -69,7 +79,7 @@ class LessonMaterialsScreen extends ConsumerWidget {
           if (subjects.isEmpty) {
             return _EmptyState(
               title: tr(context, ResourceLabels.noSubjects),
-              hint: '',
+              hint: tr(context, ResourceLabels.quickUploadHint),
             );
           }
           return ListView(
@@ -89,11 +99,120 @@ class LessonMaterialsScreen extends ConsumerWidget {
   }
 }
 
-// ── One subject, with its material ───────────────────────────────────────
+// ── Upload a PDF: pick or name the subject, then upload ─────────────────
 
-class _SubjectTile extends ConsumerWidget {
+/// Asks which subject the files are for — one this teacher already has, or
+/// a new one they name, made on the spot and kept as theirs — then runs the
+/// same upload as the subject's own Upload button.
+Future<void> _quickUpload(
+  BuildContext context,
+  WidgetRef ref,
+  List<CustomSubject> mine,
+) async {
+  final me = ref.read(activeTeacherIdProvider);
+  if (me == null) return;
+
+  // A subject of theirs, or [_newSubject]; null when dismissed.
+  final choice = mine.isEmpty
+      ? _newSubject
+      : await showDialog<Object>(
+          context: context,
+          builder: (ctx) => SimpleDialog(
+            title: Text(tr(ctx, ResourceLabels.pickSubject)),
+            children: [
+              for (final s in mine)
+                SimpleDialogOption(
+                  onPressed: () => Navigator.pop(ctx, s),
+                  child: Text(s.name),
+                ),
+              SimpleDialogOption(
+                onPressed: () => Navigator.pop(ctx, _newSubject),
+                child: Text(
+                  tr(ctx, ResourceLabels.newSubjectOption),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+        );
+  if (choice == null || !context.mounted) return;
+
+  var subject = choice is CustomSubject ? choice : null;
+  if (subject == null) {
+    final name = await _askSubjectName(context);
+    if (name == null || !context.mounted) return;
+    final created = await ref
+        .read(customSubjectServiceProvider)
+        .create(name: name);
+    if (!context.mounted) return;
+    if (!created.ok) {
+      _toast(context, tr(context, created.error ?? ''));
+      return;
+    }
+    await ref
+        .read(teachingScopeProvider)
+        .recordOwnSubject(me, created.subjectId!);
+    ref.invalidate(customSubjectsProvider);
+    ref.invalidate(mergedSubjectsProvider);
+    subject = await ref
+        .read(dbProvider)
+        .customSubjectDao
+        .bySubjectId(created.subjectId!);
+    if (subject == null || !context.mounted) return;
+    _toast(context, tr(context, ResourceLabels.subjectCreated));
+  }
+
+  await _Upload(subject)._addFromFile(context, ref);
+}
+
+/// "New subject…" in [_quickUpload]'s picker.
+const _newSubject = Object();
+
+/// [_SubjectActions] for a subject with no tile on screen yet.
+class _Upload with _SubjectActions {
+  _Upload(this.subject);
+
+  @override
+  final CustomSubject subject;
+}
+
+Future<String?> _askSubjectName(BuildContext context) async {
+  final ctl = TextEditingController();
+  final name = await showDialog<String>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(tr(ctx, ResourceLabels.newSubject)),
+      content: TextField(
+        controller: ctl,
+        autofocus: true,
+        decoration: InputDecoration(
+          labelText: tr(ctx, ResourceLabels.subjectName),
+          hintText: tr(ctx, ResourceLabels.subjectNameHint),
+        ),
+        onSubmitted: (v) => Navigator.pop(ctx, v),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx),
+          child: Text(tr(ctx, ResourceLabels.cancel)),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(ctx, ctl.text),
+          child: Text(tr(ctx, ResourceLabels.createSubject)),
+        ),
+      ],
+    ),
+  );
+  ctl.dispose();
+  final trimmed = name?.trim() ?? '';
+  return trimmed.isEmpty ? null : trimmed;
+}
+
+
+class _SubjectTile extends ConsumerWidget with _SubjectActions {
   const _SubjectTile({required this.subject, super.key});
 
+  @override
   final CustomSubject subject;
 
   @override
@@ -245,6 +364,11 @@ class _SubjectTile extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// One subject's material actions, for its tile and for "Upload a PDF".
+mixin _SubjectActions {
+  CustomSubject get subject;
 
   void _refresh(WidgetRef ref) {
     ref.invalidate(topicResourcesProvider(subject.subjectId));

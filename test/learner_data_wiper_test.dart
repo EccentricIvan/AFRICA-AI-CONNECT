@@ -519,6 +519,9 @@ void main() {
       'admin_records_state',
       'teaching_assignments',
       'note_owners',
+      // Subjects a teacher made for themselves — a teacher's, not a
+      // learner's.
+      'teacher_subjects',
       // Devices: who holds each class, who the school revoked, and which
       // devices took the Admin's records — devices, not learners.
       'class_members',

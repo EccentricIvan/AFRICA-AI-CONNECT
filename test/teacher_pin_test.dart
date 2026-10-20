@@ -17,19 +17,23 @@ void main() {
       expect(await pin.verify('anything'), isTrue);
     });
 
-    test('verifies the right PIN, rejects others, stores no plaintext',
-        () async {
+    test('verifies the right PIN, rejects others', () async {
       final pin = TeacherPin();
       await pin.set('2468');
       expect(await pin.isSet(), isTrue);
       expect(await pin.verify('2468'), isTrue);
       expect(await pin.verify('2469'), isFalse);
       expect(await pin.verify(''), isFalse);
+    });
 
-      final prefs = await SharedPreferences.getInstance();
-      for (final key in prefs.getKeys()) {
-        expect('${prefs.get(key)}', isNot(contains('2468')));
-      }
+    test('keeps the PIN so the Admin can look it up, and clears it', () async {
+      final pin = TeacherPin();
+      expect(await pin.plain(), isNull, reason: 'none set yet');
+      await pin.set('2468');
+      expect(await pin.plain(), '2468');
+      await pin.clear();
+      expect(await pin.plain(), isNull);
+      expect(await pin.isSet(), isFalse);
     });
 
     test('the same PIN hashes differently on each set (salted)', () async {

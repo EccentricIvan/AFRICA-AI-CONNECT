@@ -75,11 +75,35 @@ class AdminService {
             name: trimmed,
             pinSalt: salt,
             pinHash: await hashPinStrong(salt, pin),
+            pinPlain: Value(pin),
             createdAt: DateTime.now().toUtc().toIso8601String(),
           ),
         );
     await _log('admin.set_up', trimmed);
     return AdminSession._(trimmed);
+  }
+
+  /// The Admin's PIN in the clear, for a signed-in Admin to note down; null
+  /// for an Admin set up before it was stored.
+  Future<String?> pin() async => (await _row())?.pinPlain;
+
+  /// Sets a new Admin PIN when the current one is forgotten, keeping every
+  /// record. Recovery only — the sign-in screen offers it. False when no
+  /// Admin exists or the new PIN is malformed.
+  Future<bool> recoverPin(String next) async {
+    if (!TeacherPin.isValidFormat(next)) return false;
+    final row = await _row();
+    if (row == null) return false;
+    final salt = newPinSalt();
+    await (_db.update(_db.adminIdentity)..where((t) => t.id.equals(1))).write(
+      AdminIdentityCompanion(
+        pinSalt: Value(salt),
+        pinHash: Value(await hashPinStrong(salt, next)),
+        pinPlain: Value(next),
+      ),
+    );
+    await _log('admin.pin_recovered');
+    return true;
   }
 
   Future<AdminSession?> signIn(String pin) async {
@@ -110,6 +134,7 @@ class AdminService {
       AdminIdentityCompanion(
         pinSalt: Value(salt),
         pinHash: Value(await hashPinStrong(salt, next)),
+        pinPlain: Value(next),
       ),
     );
     await _log('admin.pin_changed');
@@ -140,6 +165,7 @@ class AdminService {
             name: trimmed,
             pinSalt: salt,
             pinHash: await hashPinStrong(salt, pin),
+            pinPlain: Value(pin),
             createdAt: DateTime.now().toUtc().toIso8601String(),
             uuid: Value(newSyncId()),
           ),
@@ -158,6 +184,7 @@ class AdminService {
       TeacherProfilesCompanion(
         pinSalt: Value(salt),
         pinHash: Value(await hashPinStrong(salt, pin)),
+        pinPlain: Value(pin),
       ),
     );
     if (n > 0) await _log('teacher.pin_reset', 'teacher:$teacherId');
@@ -180,6 +207,9 @@ class AdminService {
         )..where((t) => t.teacherId.equals(teacherId))).go();
         await (_db.delete(
           _db.classTeacherAssignments,
+        )..where((t) => t.teacherId.equals(teacherId))).go();
+        await (_db.delete(
+          _db.teacherSubjects,
         )..where((t) => t.teacherId.equals(teacherId))).go();
         await (_db.delete(
           _db.teacherProfiles,
@@ -330,6 +360,9 @@ class AdminService {
     )..where((t) => t.subjectId.equals(id))).go();
     await (_db.delete(
       _db.noteOwners,
+    )..where((t) => t.subjectId.equals(id))).go();
+    await (_db.delete(
+      _db.teacherSubjects,
     )..where((t) => t.subjectId.equals(id))).go();
     if (CustomSubjectService.reservedIds.contains(id)) {
       await _subjects.removeBuiltIn(id);
