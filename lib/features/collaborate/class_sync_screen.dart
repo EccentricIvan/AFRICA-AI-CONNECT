@@ -448,41 +448,6 @@ class _ClassSyncScreenState extends ConsumerState<ClassSyncScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            StudioCard(
-              accent: AppColors.accentCyan,
-              child: Theme(
-                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  childrenPadding: EdgeInsets.zero,
-                  initiallyExpanded: _address.text.trim().isNotEmpty,
-                  title: Text(
-                    'Enter address manually',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: ac.textPrimary,
-                    ),
-                  ),
-                  children: [
-                    TextField(
-                      controller: _address,
-                      keyboardType: TextInputType.url,
-                      decoration: InputDecoration(
-                        labelText: 'Teacher device address',
-                        hintText: '192.168.43.1',
-                        border: const OutlineInputBorder(),
-                        errorText: _addressInvalid
-                            ? 'Invalid address'
-                            : null,
-                      ),
-                      onChanged: (_) => setState(() {}),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
-              ),
-            ),
             if (_discoveryNote != null) ...[
               const SizedBox(height: 12),
               Text(

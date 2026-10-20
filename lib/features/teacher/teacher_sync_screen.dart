@@ -244,7 +244,7 @@ class _TeacherSyncScreenState extends ConsumerState<TeacherSyncScreen> {
                             : Icons.play_arrow_rounded,
                       ),
                 label: Text(
-                  _running ? 'Stop sharing' : 'Start sharing this class',
+                  _running ? 'Stop' : 'Sync to class',
                 ),
               ),
               if (_error != null) ...[

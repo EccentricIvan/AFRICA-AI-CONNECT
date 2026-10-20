@@ -18,6 +18,7 @@ import '../../features/teachers/cloud_screen.dart';
 import '../../features/teachers/teachers_screen.dart';
 import '../../features/certificates/certificates_screen.dart';
 import '../../features/collaborate/class_sync_screen.dart';
+import '../../features/collaborate/classmate_sync_screen.dart';
 import '../../features/create/create_screen.dart';
 import '../../features/app_dev_lab/app_chat_builder_screen.dart';
 import '../../features/app_dev_lab/app_dev_lab_screen.dart';
@@ -197,6 +198,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/class-sync',
             builder: (_, __) => const ClassSyncScreen(),
+          ),
+          // Student-to-student note sharing, opened from My notes.
+          GoRoute(
+            path: '/classmate-sync',
+            builder: (_, __) => const ClassmateSyncScreen(),
           ),
           // Removed: every device can teach.
           GoRoute(path: '/teacher-setup', redirect: (_, __) => '/teachers'),

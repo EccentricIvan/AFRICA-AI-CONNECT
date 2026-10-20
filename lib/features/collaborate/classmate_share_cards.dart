@@ -40,7 +40,6 @@ class _ShareWithClassmatesCardState
     extends ConsumerState<ShareWithClassmatesCard> {
   ClassShareServer? _server;
   String? _code;
-  List<String> _addresses = const [];
   String? _note;
   bool _starting = false;
 
@@ -78,7 +77,6 @@ class _ShareWithClassmatesCardState
       final server = ClassShareServer(db, role: ShareRole.classmate);
       final port = await server.start(classUuids: {uuid});
       final code = await server.openJoinCode(widget.group);
-      final addresses = await localIPv4Addresses();
       if (!mounted) {
         server.dispose();
         return;
@@ -87,9 +85,6 @@ class _ShareWithClassmatesCardState
       setState(() {
         _server = server;
         _code = code;
-        _addresses = [
-          for (final a in addresses) port == kDefaultSyncPort ? a : '$a:$port',
-        ];
       });
     } catch (e) {
       if (mounted) setState(() => _note = 'Could not start sharing: $e');
@@ -161,8 +156,7 @@ class _ShareWithClassmatesCardState
               ],
             ),
             Text(
-              'Valid 30 minutes'
-              '${_addresses.isEmpty ? '' : ' · ${_addresses.join(', ')}'}',
+              'Give this code to your classmate. Valid 15 minutes.',
               style: TextStyle(fontSize: 12, color: ac.textSecondary),
             ),
             const SizedBox(height: 10),
@@ -196,7 +190,6 @@ class GetFromClassmateCard extends ConsumerStatefulWidget {
 
 class _GetFromClassmateCardState extends ConsumerState<GetFromClassmateCard> {
   final _code = TextEditingController();
-  final _address = TextEditingController();
   bool _busy = false;
   String? _status;
   bool _statusIsError = false;
@@ -204,20 +197,10 @@ class _GetFromClassmateCardState extends ConsumerState<GetFromClassmateCard> {
   @override
   void dispose() {
     _code.dispose();
-    _address.dispose();
     super.dispose();
   }
 
   Future<void> _get() async {
-    final typed = _address.text.trim();
-    final manual = typed.isEmpty ? null : parseTeacherAddress(typed);
-    if (typed.isNotEmpty && manual == null) {
-      setState(() {
-        _status = 'That address doesn’t look right. Try 192.168.43.12';
-        _statusIsError = true;
-      });
-      return;
-    }
     setState(() {
       _busy = true;
       _status = 'Waiting for approval…';
@@ -226,7 +209,7 @@ class _GetFromClassmateCardState extends ConsumerState<GetFromClassmateCard> {
     final manager = SelectiveSyncManager(ref.read(dbProvider));
     try {
       final joined = await manager.joinClassmate(
-        classmates: [...widget.found, ?manual],
+        classmates: widget.found,
         typedCode: _code.text,
         name: widget.learnerName,
       );
@@ -289,16 +272,6 @@ class _GetFromClassmateCardState extends ConsumerState<GetFromClassmateCard> {
               border: OutlineInputBorder(),
             ),
             onChanged: (_) => setState(() {}),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _address,
-            keyboardType: TextInputType.url,
-            decoration: const InputDecoration(
-              labelText: 'Classmate’s address (optional)',
-              hintText: '192.168.43.12',
-              border: OutlineInputBorder(),
-            ),
           ),
           const SizedBox(height: 10),
           FilledButton.icon(

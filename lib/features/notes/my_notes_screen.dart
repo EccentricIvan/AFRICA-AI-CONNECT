@@ -91,9 +91,9 @@ class MyNotesScreen extends ConsumerWidget {
         iconColor: AppColors.accentOrange,
         actions: [
           IconButton(
-            tooltip: tr(context, 'Sync'),
-            icon: const Icon(Icons.sync_rounded),
-            onPressed: () => context.push('/class-sync'),
+            tooltip: tr(context, 'Share with a classmate'),
+            icon: const Icon(Icons.group_rounded),
+            onPressed: () => context.push('/classmate-sync'),
           ),
         ],
       ),
