@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../collaboration/lan_discovery.dart';
 import '../../collaboration/sync/class_share_server.dart';
 import '../../collaboration/sync/selective_sync_manager.dart';
-import '../../collaboration/sync/sync_address.dart';
 import '../../core/theme/app_colors.dart';
 import '../../db/otic_database.dart';
 import '../../db/providers/db_provider.dart';
