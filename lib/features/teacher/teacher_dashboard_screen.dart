@@ -62,10 +62,12 @@ class _TeacherDashboardScreenState
   @override
   Widget build(BuildContext context) {
     final learnersAsync = ref.watch(allLearnersProvider);
-    // The signed-in teacher's own classes; every class still labels its
-    // learners.
-    final classes =
-        ref.watch(myClassGroupsProvider).valueOrNull ?? const <ClassGroup>[];
+    // Classes this teacher may see: the subjects they teach, plus any stream
+    // they are Class Teacher of. Every class still labels its learners.
+    final classes = visibleClassGroups(
+      ref.watch(myClassGroupsProvider).valueOrNull ?? const <ClassGroup>[],
+      ref.watch(classTeacherGroupsProvider).valueOrNull ?? const <ClassGroup>[],
+    );
     final allClasses =
         ref.watch(classGroupsProvider).valueOrNull ?? const <ClassGroup>[];
     final stats =
@@ -478,10 +480,14 @@ class TeacherStudentDetailScreen extends ConsumerWidget {
     final progressAsync = ref.watch(topicProgressProvider(studentId));
     final colors = AppColors.of(context);
 
-    // Only a learner in a class this teacher teaches.
+    // Only a learner in a class this teacher may see (teaches, or is Class
+    // Teacher of).
     final mine = {
-      for (final c
-          in ref.watch(myClassGroupsProvider).valueOrNull ?? const <ClassGroup>[])
+      for (final c in visibleClassGroups(
+        ref.watch(myClassGroupsProvider).valueOrNull ?? const <ClassGroup>[],
+        ref.watch(classTeacherGroupsProvider).valueOrNull ??
+            const <ClassGroup>[],
+      ))
         c.id,
     };
     Student? student;

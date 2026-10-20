@@ -238,23 +238,16 @@ final removedSubjectsProvider = FutureProvider<Set<String>>((ref) {
   return ref.watch(customSubjectServiceProvider).removedBuiltIns();
 });
 
-/// Every subject the app can show: the bundled ones the Admin kept, then the
-/// school's own.
+/// Every subject the app can show — the school's own, created in Admin.
 ///
-/// This is the provider the browse grid watches. [allSubjectsProvider] — the
-/// bundled-only list — is left exactly as it was, so anything that genuinely
-/// wants "the shipped curriculum" still has it.
+/// The Admin's subject list is the single source of truth: learners and
+/// teachers see exactly what the Admin created, and nothing else. The bundled
+/// curriculum is never surfaced in the grid. (Until the Admin creates a
+/// subject the grid is empty by design; [allSubjectsProvider] still holds the
+/// shipped curriculum for anything that genuinely wants it.)
 final mergedSubjectsProvider = FutureProvider<List<Subject>>((ref) async {
-  final bundled = await ref.watch(allSubjectsProvider.future);
   final custom = await ref.watch(customSubjectsProvider.future);
-  final removed = await ref.watch(removedSubjectsProvider.future);
-
-  final built = [for (final row in custom) buildCustomSubject(row)];
-  return [
-    for (final s in bundled)
-      if (!removed.contains(s.id)) s,
-    ...built,
-  ];
+  return [for (final row in custom) buildCustomSubject(row)];
 });
 
 /// One subject by id, bundled or custom.

@@ -10,6 +10,7 @@ import '../../app.dart';
 import '../../db/providers/db_provider.dart';
 import '../../features/achievements/achievements_screen.dart';
 import '../../features/admin/admin_screen.dart';
+import '../../features/admin/admin_service.dart';
 import '../../features/assignments/assignments_screens.dart';
 import '../../features/notes/my_notes_screen.dart';
 import '../../features/notes/note_pdf_screen.dart';
@@ -47,19 +48,39 @@ import '../../shared/widgets/app_shell.dart';
 final _rootKey = GlobalKey<NavigatorState>();
 final _shellKey = GlobalKey<NavigatorState>();
 
+/// The screen navigated to just before this one, so the gate can tell
+/// opening Teachers/Admin afresh from the unlock flow returning to it.
+String? _lastRouterLocation;
+
 /// Provider-aware router so the redirect can read [hasProfileProvider].
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootKey,
     initialLocation: '/',
     redirect: (context, state) async {
-      if (state.matchedLocation == '/onboarding') return null;
+      final path = state.uri.path;
+      if (path == '/onboarding') return null;
 
-      final onboarding = await _onboardingRedirect(ref, state.uri.path);
+      final onboarding = await _onboardingRedirect(ref, path);
       if (onboarding != null) return onboarding;
 
+      // Opening Teachers or Admin re-asks for the PIN every time: entering
+      // from anywhere outside that area re-locks it, so a prior unlock is
+      // never reused. The unlock screen navigates back to /teachers itself,
+      // so a return from /unlock must not re-lock.
+      final prev = _lastRouterLocation;
+      _lastRouterLocation = path;
+      if (path == '/teachers' &&
+          prev != '/unlock' &&
+          (prev == null || !isTeacherRoute(prev))) {
+        ref.read(teacherUnlockedProvider.notifier).state = false;
+      }
+      if (path == '/admin' && prev != '/admin') {
+        ref.read(adminSessionProvider.notifier).state = null;
+      }
+
       // Teachers sits behind the Teachers PIN, when one is set…
-      if (!isTeacherRoute(state.uri.path)) return null;
+      if (!isTeacherRoute(path)) return null;
       final gate = teacherGateRedirect(
         state.uri,
         unlocked: ref.read(teacherUnlockedProvider),

@@ -85,6 +85,59 @@ final ownedClassesProvider = StreamProvider<List<ClassGroup>>((ref) async* {
 /// The signed-in teacher's classes/streams, alphabetical.
 final myClassGroupsProvider = ownedClassesProvider;
 
+/// Classes/streams the signed-in teacher is the **Class Teacher** of — the
+/// Admin assigned them the whole stream (`class_teacher_assignments`). A
+/// class teacher is responsible for every learner registered to that stream,
+/// across every subject, even subjects they do not personally teach.
+final classTeacherGroupsProvider = StreamProvider<List<ClassGroup>>((
+  ref,
+) async* {
+  if (kIsWeb) {
+    yield const [];
+    return;
+  }
+  final me = ref.watch(activeTeacherIdProvider);
+  if (me == null) {
+    yield const [];
+    return;
+  }
+  final db = ref.watch(dbProvider);
+  final mine = {
+    for (final a
+        in await (db.select(db.classTeacherAssignments)
+              ..where((t) => t.teacherId.equals(me)))
+            .get())
+      a.classGroupUuid,
+  };
+  yield* db.classGroupDao.watchAllClasses().map(
+    (all) => [
+      for (final c in all)
+        if (mine.contains(c.groupUuid)) c,
+    ],
+  );
+});
+
+/// The union of the classes the teacher teaches and the streams they are
+/// Class Teacher of, sorted — the scope for viewing learner progress. Kept
+/// as a plain function (not a provider) so each screen watches the two
+/// underlying providers directly and updates the moment either resolves.
+List<ClassGroup> visibleClassGroups(
+  List<ClassGroup> taught,
+  List<ClassGroup> asClassTeacher,
+) {
+  final byId = {for (final c in taught) c.id: c};
+  for (final c in asClassTeacher) {
+    byId[c.id] = c;
+  }
+  return byId.values.toList()
+    ..sort((a, b) {
+      final byClass = a.className.compareTo(b.className);
+      return byClass != 0
+          ? byClass
+          : (a.streamName ?? '').compareTo(b.streamName ?? '');
+    });
+}
+
 /// Root device: co-teachers of one class, by name.
 final coTeachersProvider =
     StreamProvider.family<List<ClassCoTeacher>, String>((ref, classUuid) {

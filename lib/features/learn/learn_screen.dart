@@ -26,7 +26,6 @@ import '../../voice/voice_provider.dart';
 import '../../voice/voice_service.dart';
 import '../../services/pdf/diagram_detector.dart';
 import '../notes/note_pdf_screen.dart';
-import 'class_notes_sheet.dart';
 import 'home_greeting.dart';
 
 class _ChatEntry {
@@ -264,7 +263,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                 StudioHeaderIconButton(
                   icon: Icons.menu_book_rounded,
                   tooltip: tr(context, 'Notes'),
-                  onTap: () => showClassNotesSheet(context),
+                  onTap: () => context.push('/my-notes'),
                 ),
                 StudioHeaderIconButton(
                   icon: Icons.refresh_rounded,
@@ -947,7 +946,7 @@ class _HomeChromeAppBar extends StatelessWidget implements PreferredSizeWidget {
             StudioHeaderIconButton(
               icon: Icons.menu_book_rounded,
               tooltip: tr(context, 'Notes'),
-              onTap: () => showClassNotesSheet(context),
+              onTap: () => context.push('/my-notes'),
             ),
             const SizedBox(width: 8),
             if (onRefresh != null) ...[
