@@ -1,0 +1,137 @@
+{
+  "biology|Transport in Animals": {
+    "asset": "assets/topic_explanations/images/biology_transport_in_animals.png",
+    "credit": "LadyofHats, Mariana Ruiz Villarreal, Public domain, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Circulatory_System_en.svg"
+  },
+  "biology|Nutrition in Mammals": {
+    "asset": "assets/topic_explanations/images/biology_nutrition_in_mammals.png",
+    "credit": "Mariana Ruiz, Jmarchn, Public domain, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Digestive_system_diagram_en.svg"
+  },
+  "biology|Gaseous Exchange": {
+    "asset": "assets/topic_explanations/images/biology_gaseous_exchange.png",
+    "credit": "LadyofHats, Jmarchn, Public domain, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Respiratory_system_complete_en.svg"
+  },
+  "biology|Nervous Coordination in Humans": {
+    "asset": "assets/topic_explanations/images/biology_nervous_coordination_in_humans.png",
+    "credit": "BruceBlaus, CC BY 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Blausen_0657_MultipolarNeuron.png"
+  },
+  "biology|Receptor Organs in Man": {
+    "asset": "assets/topic_explanations/images/biology_receptor_organs_in_man.png",
+    "credit": "Rhcastilhos. And Jmarchn., CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Schematic_diagram_of_the_human_eye_en.svg"
+  },
+  "biology|Excretion in Animals": {
+    "asset": "assets/topic_explanations/images/biology_excretion_in_animals.png",
+    "credit": "BruceBlaus. When using this image in external sources it can be cited as: Blausen.com staff (2014). \"Medical gallery of Blausen Medical 2014\". WikiJournal of Medicine 1 (2). DOI:10.15347/wjm/2014.010. ISSN 2002-4436., CC BY 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Blausen_0592_KidneyAnatomy_01.png"
+  },
+  "biology|Flowering Plants": {
+    "asset": "assets/topic_explanations/images/biology_flowering_plants.png",
+    "credit": "Mariana Ruiz LadyofHats, Public domain, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Mature_flower_diagram.svg"
+  },
+  "biology|Insects": {
+    "asset": "assets/topic_explanations/images/biology_insects.png",
+    "credit": "Piotr Jaworski, PioM, CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Insect_anatomy_diagram.svg"
+  },
+  "biology|Food Chains and Food Webs": {
+    "asset": "assets/topic_explanations/images/biology_food_chains_and_food_webs.jpg",
+    "credit": "Kestin Schulz, Mariya W. Smit, Lydie Herfort and Holly M. Simon. The image (amended) was provided courtesy of the Missouri Department of Conservation., CC BY-SA 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Aquatic_food_web.jpg"
+  },
+  "biology|Inheritance": {
+    "asset": "assets/topic_explanations/images/biology_inheritance.png",
+    "credit": "explorebiology, CC BY 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:XBio_illustration_%E2%80%93_Mendelian_Inheritance.png"
+  },
+  "biology|Viruses": {
+    "asset": "assets/topic_explanations/images/biology_viruses.png",
+    "credit": "Alexey Solodovnikov (Idea, Producer, CG, Editor), Valeria Arkhipova (Scientific Сonsultant), CC BY-SA 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Coronavirus._SARS-CoV-2.png"
+  },
+  "biology|Transport in Plants": {
+    "asset": "assets/topic_explanations/images/biology_transport_in_plants.png",
+    "credit": "Nefronus, CC BY-SA 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Xylem_and_phloem_diagram.svg"
+  },
+  "chemistry|Atomic Structure, the Periodic Table and its Trends": {
+    "asset": "assets/topic_explanations/images/chemistry_atomic_structure_the_periodic_table_and_its_trends.png",
+    "credit": "Lekritz, CC BY-SA 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Colour_18-col_PT_with_labels.svg"
+  },
+  "chemistry|States and Changes of States of Matter": {
+    "asset": "assets/topic_explanations/images/chemistry_states_and_changes_of_states_of_matter.png",
+    "credit": "ElfQrin, CC BY-SA 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Physics_matter_state_transition_1_en.svg"
+  },
+  "chemistry|Chemical Bonding and Structure": {
+    "asset": "assets/topic_explanations/images/chemistry_chemical_bonding_and_structure.png",
+    "credit": "Jacek FH, CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Covalent_bond_hydrogen.svg"
+  },
+  "physics|Heat Transfer": {
+    "asset": "assets/topic_explanations/images/physics_heat_transfer.png",
+    "credit": "The original uploader was Harroschmeling at German Wikipedia., CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Convection-snapshot.png"
+  },
+  "physics|Refraction, Dispersion, and Colour": {
+    "asset": "assets/topic_explanations/images/physics_refraction_dispersion_and_colour.png",
+    "credit": "Wikimedia Commons contributors, CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Prism_rainbow_schema.png"
+  },
+  "physics|Lenses and Optical Instruments": {
+    "asset": "assets/topic_explanations/images/physics_lenses_and_optical_instruments.png",
+    "credit": "DrBob at English Wikipedia, CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Lens1.svg"
+  },
+  "physics|Magnets and Magnetic Field": {
+    "asset": "assets/topic_explanations/images/physics_magnets_and_magnetic_field.png",
+    "credit": "Geek3, CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:VFPt_Solenoid_correct2.svg"
+  },
+  "physics|The Solar System": {
+    "asset": "assets/topic_explanations/images/physics_the_solar_system.png",
+    "credit": "Omarius257, CC BY-SA 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Solar_System_True_Color_EN.png"
+  },
+  "physics|Turning Effect of Forces, Centre of Gravity and Stability": {
+    "asset": "assets/topic_explanations/images/physics_turning_effect_of_forces_centre_of_gravity_and_stability.png",
+    "credit": "Jjw, CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Lever_Principle_3D.png"
+  },
+  "physics|Atomic Models": {
+    "asset": "assets/topic_explanations/images/physics_atomic_models.png",
+    "credit": "JabberWok at English Wikipedia, CC BY-SA 3.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Bohr_atom_model.svg"
+  },
+  "geography|The Earth and Its Movements": {
+    "asset": "assets/topic_explanations/images/geography_the_earth_and_its_movements.png",
+    "credit": "NOAA Office of Education, Public domain, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:ChangingSeasons_NH_01.png"
+  },
+  "geography|Weather and Climate": {
+    "asset": "assets/topic_explanations/images/geography_weather_and_climate.png",
+    "credit": "Hayley Corson-Dosch, Cee Nell, Rachel Volentine, Althea Archer, Ellen Bechtel, Jennifer Bruce, Nicole Felts, Tara Gross, Dianne Lopez-Trujillo, Charlotte Riggs, Emily Read, Public domain, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:USGS_WaterCycle_English_ONLINE_20221013.png"
+  },
+  "mathematics|Circle": {
+    "asset": "assets/topic_explanations/images/mathematics_circle.png",
+    "credit": "Jokes Free4Me, Public domain, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Circle-withsegments.svg"
+  },
+  "physics|States of Matter": {
+    "asset": "assets/topic_explanations/images/physics_states_of_matter.png",
+    "credit": "ElfQrin, CC BY-SA 4.0, via Wikimedia Commons",
+    "source": "https://commons.wikimedia.org/wiki/File:Physics_matter_state_transition_1_en.svg"
+  },
+  "mathematics|Trigonometry 1": {
+    "asset": "assets/curriculum/diagrams/mathematics/triangles.svg",
+    "credit": "",
+    "source": ""
+  }
+}

@@ -59,8 +59,35 @@ cloud plug-in's backup and recovery copy, **not** a sync hub: it stays off
 by default, no feature may depend on it, and P2P stays the primary path.
 Nothing secret ships in the app; a device joins a school's cloud only with
 a one-time code. The hosted Kigali backend may differ; the adapter is the
-one place to change. Security model: `docs/SECURITY.md`. The rules below
-apply to everything else. This means:
+one place to change. Security model: `docs/SECURITY.md`. **Amended 2026-10-21 at the user's request (stop-gap until the official
+curriculum database arrives):** an optional **online topic look-up**
+(`lib/curriculum/online_topic_lookup.dart`). Off by default; a teacher
+switches it on (Teachers → Look up topics online). When on and connected, a
+"What is …?" question that no bundled lesson or pack covers is answered from
+Wikipedia's introduction and lead picture, marked "not from your syllabus"
+and credited (CC BY-SA). Only the question is sent; the emotional-safety
+check runs first; non-school pages (films, songs, sport…) are refused. No
+feature depends on it. Whole-topic explanations — every curriculum lesson
+(`TopicExplanation.fromLesson`) and reviewed packs in
+`assets/topic_explanations/` — are shown as written, without waiting for the
+model. Lesson diagrams added from Wikimedia Commons are bundled
+(`assets/topic_explanations/images/`, credits in `diagrams.json`), never
+fetched at runtime.
+
+**Amended 2026-10-21 at the user's request (quality for school roll-out):**
+an optional **online AI tutor**. The school's tutor service
+(`backend/otic_cloud/tutor.py`, `uvicorn otic_cloud.tutor:app`) answers with
+Claude (`claude-opus-5-5`); the API key (`ANTHROPIC_API_KEY`) and the
+guardrail system prompt live only on that server, never in the app. The app
+side is `lib/ai_core/online/online_tutor.dart`: off by default, a teacher
+turns it on (Teachers → Online AI tutor, with the server address and an
+optional `OTIC_TUTOR_TOKEN`). Whole-topic lessons still show first and
+instantly; other English questions go to the online tutor, grounded in any
+matched lesson; any failure (offline, no key, timeout) falls back to the
+on-device model, and the service is skipped for a minute after a failure.
+Only the question, recent chat and lesson text are sent. This is the one
+exception to "no hosted LLM API" below. The rules below apply to everything
+else. This means:
 
 - No calls to OpenAI, Anthropic, Google, or any hosted LLM API
 - No Firebase, Supabase, or cloud sync

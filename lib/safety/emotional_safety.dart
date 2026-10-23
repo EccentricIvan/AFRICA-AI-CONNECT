@@ -43,6 +43,9 @@ class EmotionalSafetyEngine {
     RegExp(r'\bself[\s-]?harm', caseSensitive: false),
     RegExp(r'\bend\s+my\s+life\b', caseSensitive: false),
     RegExp(r"\bno\s+reason\s+to\s+live\b", caseSensitive: false),
+    RegExp(r"\b(don'?t|do\s+not)\s+want\s+to\s+(live|be\s+alive)\b", caseSensitive: false),
+    RegExp(r'\btake\s+my\s+(own\s+)?life\b', caseSensitive: false),
+    RegExp(r'\bbetter\s+off\s+dead\b', caseSensitive: false),
   ];
 
   static final _distressPatterns = <RegExp>[
@@ -64,13 +67,25 @@ class EmotionalSafetyEngine {
     RegExp(r'\bhate\s+(this|school|maths?|studying)\b', caseSensitive: false),
   ];
 
+  // Uganda numbers: Sauti 116 is the free 24-hour child helpline; 999 and
+  // 112 reach police and emergency services.
   static const _crisisMessage =
       "Thank you for telling me how you feel — that takes real courage. "
-      "What you're feeling matters, and you don't have to carry it alone. "
-      "Please talk to someone you trust right now: a teacher, a parent, a "
-      "school counsellor, or another adult who cares about you. They want "
-      "to help, and talking to them is the bravest next step you can take. "
-      "I'll be right here whenever you want to learn together again. 💚";
+      "What you're feeling matters, and you don't have to carry it alone.\n\n"
+      "Here are things you can do right now:\n"
+      "• Tell someone you trust today: a parent, a teacher, the school "
+      "nurse or counsellor, a religious leader, or another adult who cares "
+      "about you. You can simply say: \"I am not okay and I need help.\"\n"
+      "• Call Sauti, the free child helpline, on 116. It is free from any "
+      "phone, open day and night, and they will listen.\n"
+      "• If you are in danger now or might hurt yourself, call 999 or 112, "
+      "or go to the nearest health centre or hospital.\n"
+      "• Stay near other people, and move away from anything you could use "
+      "to hurt yourself.\n"
+      "• Breathe slowly: in for 4, hold for 4, out for 4. Do it a few times. "
+      "Strong feelings like this can pass, and help really does work.\n\n"
+      "You are important, and people want to help you. I'll be right here "
+      "whenever you want to learn together again. 💚";
 
   SafetyCheckResult check(String message) {
     for (final p in _crisisPatterns) {

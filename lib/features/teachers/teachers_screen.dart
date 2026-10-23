@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../ai_core/providers/ai_provider.dart';
+import '../../ai_core/online/online_tutor.dart';
 import '../../core/app_info_provider.dart';
+import '../../curriculum/online_topic_lookup.dart';
 import '../../core/theme/app_colors.dart';
 import '../../db/otic_database.dart';
 import '../../l10n/app_locale.dart';
@@ -282,6 +284,36 @@ class _TeacherDevicesCard extends ConsumerWidget {
                 trailing: chevron,
                 onTap: () => context.push(path),
               ),
+            SwitchListTile(
+              secondary: const Icon(Icons.travel_explore_rounded),
+              title: const Text('Look up topics online'),
+              subtitle: const Text(
+                'When connected, answer "What is…?" questions no lesson covers '
+                'from Wikipedia. Marked as not from the syllabus.',
+              ),
+              value: ref.watch(onlineTopicLookupEnabledProvider),
+              onChanged: (on) =>
+                  ref.read(onlineTopicLookupEnabledProvider.notifier).set(on),
+            ),
+            SwitchListTile(
+              secondary: const Icon(Icons.cloud_outlined),
+              title: const Text('Online AI tutor'),
+              subtitle: const Text(
+                'When the school tutor server can be reached, Claude answers '
+                'questions. Offline, the AI on this device answers.',
+              ),
+              value: ref.watch(onlineTutorSettingsProvider).enabled,
+              onChanged: (on) =>
+                  ref.read(onlineTutorSettingsProvider.notifier).update(enabled: on),
+            ),
+            if (ref.watch(onlineTutorSettingsProvider).enabled)
+              ListTile(
+                leading: const Icon(Icons.dns_outlined),
+                title: const Text('Tutor server'),
+                subtitle: Text(ref.watch(onlineTutorSettingsProvider).url),
+                trailing: chevron,
+                onTap: () => _editTutorServer(context, ref),
+              ),
             ListTile(
               leading: const Icon(Icons.password_rounded),
               title: const Text('My PIN'),
@@ -318,6 +350,54 @@ class _TeacherDevicesCard extends ConsumerWidget {
       return;
     }
     ref.read(activeTeacherProvider.notifier).state = signedIn;
+  }
+
+  /// The address of the school's tutor server, and its access token if the
+  /// server was given one (OTIC_TUTOR_TOKEN).
+  Future<void> _editTutorServer(BuildContext context, WidgetRef ref) async {
+    final s = ref.read(onlineTutorSettingsProvider);
+    final url = TextEditingController(text: s.url);
+    final token = TextEditingController(text: s.accessToken);
+    final save = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Tutor server'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: url,
+              decoration: const InputDecoration(
+                labelText: 'Address',
+                hintText: OnlineTutorSettings.defaultUrl,
+              ),
+            ),
+            TextField(
+              controller: token,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Access token (if any)'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (save == true) {
+      await ref
+          .read(onlineTutorSettingsProvider.notifier)
+          .update(url: url.text, accessToken: token.text);
+    }
+    url.dispose();
+    token.dispose();
   }
 
   Future<void> _changeMyPin(

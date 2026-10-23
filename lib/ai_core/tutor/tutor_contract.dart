@@ -54,7 +54,9 @@ const kTeacherNotesOnlyInstruction =
 
 const kOpenWorldInstruction =
     'No matching curriculum. Answer from reliable knowledge at a clear school level. '
-    'Do not invent a fake syllabus.';
+    'Do not invent a fake syllabus. '
+    "If it isn't schoolwork or learning, say in one line you only help with "
+    'school subjects and suggest one to ask about.';
 
 /// Extra contract for the 1.5B coding brain. Prose stays English for AfriSLM;
 /// code stays in fenced blocks so the translator never rewrites it.

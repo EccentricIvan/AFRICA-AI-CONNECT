@@ -84,10 +84,11 @@ void main() {
           '<body>hi</body></html>'),
       'Glow Beauty Salon',
     );
-    // salon.html ships without a <title>; the bar falls back rather than
-    // inventing a name from the page's headings.
+    // salon.html names itself with a <title>, so the bar shows the salon.
     final html = await filledSalonHtml();
-    expect(html, isNot(contains('<title>')));
-    expect(htmlDocumentTitle(html), 'index.html');
+    expect(htmlDocumentTitle(html), startsWith('Glow Beauty Salon'));
+    // A page without one falls back rather than inventing a name from its
+    // headings.
+    expect(htmlDocumentTitle('<html><body><h1>Hi</h1></body></html>'), 'index.html');
   });
 }

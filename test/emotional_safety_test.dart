@@ -39,6 +39,18 @@ void main() {
       expect(r.bypassTutor, true);
       expect(r.supportMessage, isNotNull);
       expect(r.supportMessage, contains('trust'));
+      expect(r.supportMessage, contains('116'));
+      expect(r.supportMessage, contains('999'));
+    });
+
+    test('other ways of saying it are also crisis', () {
+      for (final m in [
+        "I don't want to live anymore",
+        'I want to take my own life',
+        'everyone would be better off dead without me',
+      ]) {
+        expect(engine.check(m).concern, SafetyConcern.crisis, reason: m);
+      }
     });
 
     test('crisis detection is case-insensitive', () {

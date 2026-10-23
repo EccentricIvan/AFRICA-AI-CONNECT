@@ -69,6 +69,10 @@ class _OticAppState extends ConsumerState<OticApp> {
   /// the sweep's own disk I/O never competes with that or with the first
   /// screen's own first paint.
   Future<void> _runHousekeeping() async {
+    // Load the brain (and warm its prompt cache) now, while the learner is
+    // still looking at the home screen, so the first question doesn't wait
+    // for it. Nothing happens when no model is installed.
+    unawaited(_warmChat());
     await Future.delayed(const Duration(seconds: 8));
     if (!mounted) return;
     try {
@@ -83,9 +87,22 @@ class _OticAppState extends ConsumerState<OticApp> {
       debugPrint('StorageHousekeeper kickoff failed: $e');
     }
     // PDF pages not read yet, and quiz questions for note topics not
-    // finished last time (or written per page, before topics).
+    // finished last time (or written per page, before topics). Quiz writing
+    // uses the brain, so it starts later still: a learner's first questions
+    // after launch must not queue behind it.
     if (mounted) unawaited(ref.read(noteTextIndexerProvider).resumePending());
+    await Future.delayed(const Duration(minutes: 2));
     if (mounted) unawaited(ref.read(noteQuizBuilderProvider).resumePending());
+  }
+
+  Future<void> _warmChat() async {
+    try {
+      final info = await ref.read(modelInfoProvider.future);
+      if (!info.isReady || !mounted) return;
+      await ref.read(chatInferencePipelineProvider.future);
+    } catch (e) {
+      debugPrint('Chat warm-up failed: $e');
+    }
   }
 
   @override

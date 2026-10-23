@@ -1,0 +1,18 @@
+{
+  "triangle": {
+    "asset": "assets/curriculum/diagrams/mathematics/triangles.svg",
+    "credit": ""
+  },
+  "trigonometry": {
+    "asset": "assets/curriculum/diagrams/mathematics/triangles.svg",
+    "credit": ""
+  },
+  "pythagoras": {
+    "asset": "assets/curriculum/diagrams/mathematics/triangles.svg",
+    "credit": ""
+  },
+  "photosynthesis": {
+    "asset": "assets/curriculum/diagrams/biology/photosynthesis.svg",
+    "credit": ""
+  }
+}

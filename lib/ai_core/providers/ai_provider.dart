@@ -30,6 +30,9 @@ import '../tutor/school_math_l10n.dart';
 import '../science/science_text.dart';
 import '../../curriculum/curriculum_models.dart';
 import '../../curriculum/curriculum_provider.dart';
+import '../online/online_tutor.dart';
+import '../../curriculum/online_topic_lookup.dart';
+import '../../curriculum/topic_explanations.dart';
 import '../../l10n/app_locale.dart';
 import '../../l10n/language_provider.dart';
 import '../../db/providers/db_provider.dart';
@@ -654,10 +657,13 @@ final tutorPipelineProvider = FutureProvider<TutorPipeline>((ref) async {
   final curriculum = ref.watch(curriculumServiceProvider);
   curriculum.loadAll();
   final rag = ref.watch(offlineRagServiceProvider);
+  final explanations = ref.watch(topicExplanationServiceProvider);
+  explanations.all();
   return TutorPipeline(
     engine: engine,
     curriculum: curriculum,
     teacherNotes: (text) => rag.retrieveAcrossSubjects(text, limit: 2),
+    explanations: explanations,
   );
 });
 
@@ -754,10 +760,16 @@ class ChatMessage {
     this.lesson,
     this.recap,
     this.diagrams = const [],
+    this.suggestions = const [],
   });
 
   final String text;
   final bool isUser;
+
+  /// What the learner may want next ("Next: Convection (Heat Transfer)",
+  /// "Quiz me on Conduction"): buttons under the latest reply that send
+  /// their text.
+  final List<String> suggestions;
 
   /// Teacher-PDF pages this reply points to — see [TutorResponse.diagrams].
   final List<DiagramMarker> diagrams;
@@ -810,6 +822,7 @@ class ChatMessage {
       mathCoach: mathCoach,
       lesson: lesson ?? this.lesson,
       diagrams: diagrams,
+      suggestions: suggestions,
     );
   }
 }
@@ -895,6 +908,281 @@ class ChatNotifier extends AsyncNotifier<ChatState> {
     }
 
     final lang = await studentLanguageCode(ref);
+
+    // A whole syllabus topic ("What is photosynthesis?") is reviewed text and
+    // needs no model, so it is shown at once instead of waiting for the model
+    // to load or finish background work, in the Learn and Home chats alike.
+    // The tutor is told afterwards, for the follow-ups. Translated chats take
+    // the normal path. With no lesson on it, a teacher may have allowed an
+    // online look-up. Anything the safety check flags takes the normal path.
+    final safe = _safetyEngine.check(message);
+    if (lang == 'en' &&
+        !_programmingSubject &&
+        !safe.bypassTutor &&
+        safe.tutorNote == null) {
+      final explanations = ref.read(topicExplanationServiceProvider);
+
+      // "Connect to internet", "go online": an instruction to the device, not
+      // a topic to teach. Answered plainly, pointing back to the chat's topic.
+      if (_asksToGoOnline.hasMatch(message.trim().toLowerCase())) {
+        final earlier = _lastTopicAskedAbout(thread.take(thread.length - 1));
+        final reply = "I can't switch the internet on myself. Turn on Wi-Fi or "
+            "mobile data on this device, and I'll use the connection on my own "
+            'for pictures and look-ups.'
+            '${earlier == null ? '' : ' Then ask me about **$earlier** again.'}';
+        thread.add(ChatMessage(
+          text: reply,
+          isUser: false,
+          stage: TutorStage.answer,
+        ));
+        unawaited(_noteExchange(message, reply, epoch, topic: earlier));
+        await tokenCtrl.close();
+        if (epoch != _epoch) return;
+        state = AsyncData(state.requireValue.copyWith(
+          messages: List<ChatMessage>.from(thread),
+          isGenerating: false,
+          streamingText: '',
+          clearError: true,
+          clearStreamingMath: true,
+        ));
+        ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+        unawaited(recordTutorReply(ref));
+        return;
+      }
+
+      // "Give me a photo", "show me a picture of a frog": the model can't make
+      // pictures, so the app answers with real ones — the bundled diagram,
+      // and freely licensed photos when a teacher allows online look-ups.
+      final clipFor = clipRequestSubject(message);
+      final clipSubject = clipFor == null
+          ? null
+          : clipFor.isNotEmpty
+              ? clipFor
+              : _lastTopicAskedAbout(thread.take(thread.length - 1));
+      if (clipSubject != null) {
+        // The school hub's own clips first: they play without internet.
+        final hub = ref.read(onlineTutorProvider);
+        final online = ref.read(onlineTopicLookupEnabledProvider);
+        var clips = hub == null ? const <WebClip>[] : await hub.clips(clipSubject);
+        if (clips.isEmpty && online) {
+          clips = await ref.read(onlineTopicLookupProvider).clips(clipSubject);
+        }
+        final reply = clipsReply(
+          clipSubject,
+          clips,
+          onlineAllowed: online || hub != null,
+        );
+        thread.add(ChatMessage(
+          text: reply,
+          isUser: false,
+          stage: TutorStage.answer,
+        ));
+        unawaited(_noteExchange(message, reply, epoch, topic: clipSubject));
+        await tokenCtrl.close();
+        if (epoch != _epoch) return;
+        state = AsyncData(state.requireValue.copyWith(
+          messages: List<ChatMessage>.from(thread),
+          isGenerating: false,
+          streamingText: '',
+          clearError: true,
+          clearStreamingMath: true,
+        ));
+        ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+        unawaited(recordTutorReply(ref));
+        return;
+      }
+
+      final pictureFor = pictureRequestSubject(message);
+      final earlierTopic = pictureFor == null
+          ? null
+          : _lastTopicAskedAbout(thread.take(thread.length - 1));
+      final pictureTopic = pictureFor == null
+          ? null
+          : pictureFor.isNotEmpty
+              ? pictureFor
+              : earlierTopic;
+      if (pictureTopic != null) {
+        // "Images of its diverse cultures": try "africa diverse cultures"
+        // before "diverse cultures" on its own.
+        final candidates = pictureFor!.isEmpty
+            ? [pictureTopic]
+            : pictureSubjectCandidates(message, pictureFor, earlierTopic);
+        var pictureSubject = candidates.first;
+        TopicExplanation? local;
+        var web = const <WebPicture>[];
+        var fromHub = false;
+        final hub = ref.read(onlineTutorProvider);
+        for (final c in candidates) {
+          local ??= await explanations.localPicture(c);
+          // The school hub's own pictures first: they show without internet.
+          if (hub != null) {
+            web = await hub.pictures(c);
+            fromHub = web.isNotEmpty;
+          }
+          if (web.isEmpty && ref.read(onlineTopicLookupEnabledProvider)) {
+            web = await ref.read(onlineTopicLookupProvider).pictures(c);
+          }
+          if (web.isNotEmpty || local != null) {
+            pictureSubject = c;
+            break;
+          }
+        }
+        if (local != null) {
+          thread[thread.length - 1] =
+              thread.last.copyWith(lesson: local.asLesson());
+        }
+        final reply = picturesReply(
+          pictureSubject,
+          local: local,
+          web: web,
+          onlineAllowed: ref.read(onlineTopicLookupEnabledProvider) || hub != null,
+          from: fromHub ? 'the school library' : 'Wikipedia',
+        );
+        thread.add(ChatMessage(
+          text: reply,
+          isUser: false,
+          stage: TutorStage.answer,
+        ));
+        unawaited(_noteExchange(message, reply, epoch, topic: pictureSubject));
+        await tokenCtrl.close();
+        if (epoch != _epoch) return;
+        state = AsyncData(state.requireValue.copyWith(
+          messages: List<ChatMessage>.from(thread),
+          isGenerating: false,
+          streamingText: '',
+          clearError: true,
+          clearStreamingMath: true,
+        ));
+        ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+        unawaited(recordTutorReply(ref));
+        return;
+      }
+
+      // "Who is the president of Uganda?": people and office-holders change
+      // and the on-device model only guesses, so they are looked up, and
+      // when that can't be done the learner is told so plainly.
+      final asksWho = whoTopic(message) != null;
+      final who = asksWho && ref.read(onlineTopicLookupEnabledProvider)
+          ? await ref.read(onlineTopicLookupProvider).lookUp(message)
+          : null;
+      if (asksWho && who == null) {
+        const reply = "I can't check facts about people right now — that needs "
+            'the online look-up, and the device may be offline. Ask your '
+            'teacher, or try again when you are connected. I can help with any '
+            'school subject in the meantime.';
+        thread.add(const ChatMessage(
+          text: reply,
+          isUser: false,
+          stage: TutorStage.answer,
+        ));
+        unawaited(_noteExchange(message, reply, epoch, topic: whoTopic(message)));
+        await tokenCtrl.close();
+        if (epoch != _epoch) return;
+        state = AsyncData(state.requireValue.copyWith(
+          messages: List<ChatMessage>.from(thread),
+          isGenerating: false,
+          streamingText: '',
+          clearError: true,
+          clearStreamingMath: true,
+        ));
+        ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+        unawaited(recordTutorReply(ref));
+        return;
+      }
+      final named = who != null ? null : await explanations.match(message);
+      // A topic no lesson is named after ("triangles") still grounds the
+      // answer in the lesson that covers it.
+      final local =
+          who != null ? null : named ?? await explanations.covering(message);
+      // The online tutor first, when a teacher has switched it on and it can
+      // be reached, grounded in any lesson that matched: it answers far
+      // better than the on-device model, and a school hub teaches a whole
+      // topic part by part ("Teach me heat transfer"), with suggestions.
+      // The lessons on this device below are the fallback.
+      final online = who == null ? ref.read(onlineTutorProvider) : null;
+      final reply = online == null
+          ? null
+          : await online.answer(
+              message,
+              history: [
+                for (final m in thread.take(thread.length - 1))
+                  if (!m.isError && !m.isRecap) (isUser: m.isUser, text: m.text),
+              ],
+              lesson: local?.groundingNotes(message, max: 3000),
+            );
+      if (reply != null) {
+        thread.add(ChatMessage(
+          text: reply.text,
+          isUser: false,
+          stage: TutorStage.answer,
+          suggestions: reply.suggestions,
+        ));
+        await tokenCtrl.close();
+        if (epoch != _epoch) return;
+        state = AsyncData(state.requireValue.copyWith(
+          messages: List<ChatMessage>.from(thread),
+          isGenerating: false,
+          streamingText: '',
+          clearError: true,
+          clearStreamingMath: true,
+        ));
+        ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+        unawaited(recordTutorReply(ref));
+        unawaited(_saveOnlineTurn(message, reply.text, epoch));
+        return;
+      }
+      var topic = who ??
+          (local != null && asksForWholeTopic(message, local.wholeTopicNames)
+              ? local
+              : null);
+      // "Teach me about triangles": no lesson is called that, so the topic is
+      // put together from every lesson that teaches it, with a picture —
+      // the online look-up's, when allowed and this has none.
+      if (topic == null && named == null) {
+        topic = await explanations.compose(message);
+        if (topic != null &&
+            topic.diagram == null &&
+            ref.read(onlineTopicLookupEnabledProvider)) {
+          final web =
+              await ref.read(onlineTopicLookupProvider).lookUp(message);
+          if (web != null) topic = topic.withOnline(web);
+        }
+      }
+      if (topic == null &&
+          local == null &&
+          ref.read(onlineTopicLookupEnabledProvider)) {
+        topic = await ref.read(onlineTopicLookupProvider).lookUp(message);
+      }
+      if (topic != null) {
+        thread[thread.length - 1] =
+            thread.last.copyWith(lesson: topic.asLesson());
+        final name = topic.title.isEmpty ? 'this topic' : topic.title;
+        thread.add(ChatMessage(
+          text: topic.fullText(),
+          isUser: false,
+          stage: TutorStage.answer,
+          suggestions: [
+            'Give me an example of $name',
+            'Explain $name more simply',
+            'Quiz me on $name',
+          ],
+        ));
+        await tokenCtrl.close();
+        if (epoch != _epoch) return;
+        state = AsyncData(state.requireValue.copyWith(
+          messages: List<ChatMessage>.from(thread),
+          isGenerating: false,
+          streamingText: '',
+          clearError: true,
+          clearStreamingMath: true,
+        ));
+        ref.read(tutorLastReplyProvider.notifier).state = DateTime.now();
+        unawaited(recordTutorReply(ref));
+        unawaited(_handOverExplanation(topic, message, epoch));
+        return;
+      }
+    }
+
     if (lang != 'en') {
       await ensureTranslationPipeline(ref);
     }
@@ -1070,6 +1358,99 @@ class ChatNotifier extends AsyncNotifier<ChatState> {
         streamingText: '',
         errorMessage: friendly,
       ));
+    }
+  }
+
+  /// "Connect to internet", "please go online", "turn on wifi" — an order to
+  /// the device. "How do I connect to the internet?" is a question, and is
+  /// taught as usual.
+  static final _asksToGoOnline = RegExp(
+    r'^(please |pls |can you |could you )?'
+    r'(connect( me)?( to)?( the)? (internet|wi-?fi|network|online)|'
+    r'go online|get online|(turn|switch) on( the)? (internet|wi-?fi|data))'
+    r'( please| now)?[.!?]*$',
+  );
+
+  /// The topic the learner last asked about ("what is a frog" → "frog"),
+  /// newest first, for a picture request that names none.
+  static String? _lastTopicAskedAbout(Iterable<ChatMessage> earlier) {
+    for (final m in earlier.toList().reversed) {
+      if (!m.isUser) continue;
+      final picture = pictureRequestSubject(m.text) ?? clipRequestSubject(m.text);
+      if (picture != null && picture.isNotEmpty) return picture;
+      final asked = askedTopic(m.text);
+      if (asked != null) return asked;
+    }
+    return null;
+  }
+
+  /// Tells the tutor about a turn the chat answered itself (a picture, a
+  /// clip, a look-up), so the next message follows on from it.
+  Future<void> _noteExchange(
+    String message,
+    String reply,
+    int epoch, {
+    String? topic,
+  }) async {
+    try {
+      final pipeline = await ref.read(tutorPipelineProvider.future);
+      if (epoch != _epoch) return;
+      pipeline.noteExchange(message, reply, topic: topic);
+    } catch (e) {
+      debugPrint('Turn not noted for the tutor: $e');
+    }
+  }
+
+  /// Saves a turn the online tutor answered, as after any other turn.
+  Future<void> _saveOnlineTurn(String message, String reply, int epoch) async {
+    try {
+      final pipeline = await ref.read(tutorPipelineProvider.future);
+      if (epoch != _epoch) return;
+      // The on-device tutor takes over when the connection drops; it must
+      // know what was said so far.
+      pipeline.noteExchange(message, reply);
+      final response = TutorResponse(
+        stage: TutorStage.answer,
+        text: reply,
+        followUpPrompt: '',
+        topic: pipeline.currentTopic,
+      );
+      final count = state.valueOrNull?.messages.length ?? 0;
+      unawaited(_saveSessionSnapshot(pipeline, response, count));
+      unawaited(_persistSession(
+        pipeline: pipeline,
+        studentMessage: message,
+        reply: reply,
+        response: response,
+        epoch: epoch,
+      ));
+    } catch (e) {
+      debugPrint('Online tutor turn not saved: $e');
+    }
+  }
+
+  /// Gives the tutor a whole-topic explanation [send] showed without it, then
+  /// saves the chat as after any other turn.
+  Future<void> _handOverExplanation(
+    TopicExplanation topic,
+    String message,
+    int epoch,
+  ) async {
+    try {
+      final pipeline = await ref.read(tutorPipelineProvider.future);
+      if (epoch != _epoch) return;
+      final response = await pipeline.adoptExplanation(topic, message);
+      final count = state.valueOrNull?.messages.length ?? 0;
+      unawaited(_saveSessionSnapshot(pipeline, response, count));
+      unawaited(_persistSession(
+        pipeline: pipeline,
+        studentMessage: message,
+        reply: response.text,
+        response: response,
+        epoch: epoch,
+      ));
+    } catch (e) {
+      debugPrint('Topic explanation hand-over failed: $e');
     }
   }
 

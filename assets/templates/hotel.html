@@ -1,75 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{hotel_name}} — {{tagline}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#0f3d3e">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{hotel_name}} — {{tagline}}">
+<meta property="og:description" content="{{description}}">
 <style>
-*{margin:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;color:#1a202c}
-header{background:linear-gradient(135deg,#09090b,#18181b);color:white;text-align:center;padding:64px 20px}
-header h1{font-size:36px;letter-spacing:3px;font-weight:300;margin-bottom:8px}
-header .line{width:60px;height:2px;background:#c9a227;margin:16px auto}
-header p{font-size:16px;color:#94a3b8;font-style:italic}
-nav{background:#09090b;display:flex;justify-content:center;gap:24px;padding:14px;border-bottom:1px solid #c9a227}
-nav a{color:#c9a227;text-decoration:none;font-size:13px;letter-spacing:2px;text-transform:uppercase}
-.hero{background:#fafaf9;padding:48px 20px;text-align:center}
-.hero h2{color:#92400e;font-size:24px;margin-bottom:12px;font-weight:300;letter-spacing:1px}
-.hero p{color:#78350f;max-width:500px;margin:0 auto;line-height:1.7}
-.rooms{padding:40px 20px;max-width:700px;margin:0 auto}
-.rooms h2{text-align:center;color:#09090b;font-weight:300;letter-spacing:2px;margin-bottom:28px;font-size:22px}
-.room{background:white;border-radius:16px;padding:24px;margin-bottom:16px;border:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
-.room h3{font-size:17px;color:#09090b}
-.room p{font-size:13px;color:#64748b;margin-top:4px}
-.room .price{font-size:20px;font-weight:700;color:#c9a227}
-.room .per{font-size:11px;color:#94a3b8}
-.amenities{background:#09090b;color:white;padding:48px 20px;text-align:center}
-.amenities h2{font-weight:300;letter-spacing:2px;margin-bottom:24px}
-.amenity-grid{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;max-width:600px;margin:0 auto}
-.amenity{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:12px;padding:20px;min-width:120px;text-align:center}
-.amenity .icon{font-size:28px;margin-bottom:8px}
-.amenity .text{font-size:13px;color:#c9a227}
-.contact{padding:48px 20px;text-align:center;background:#fafaf9}
-.contact h2{color:#09090b;font-weight:300;letter-spacing:2px;margin-bottom:20px}
-.contact p{color:#64748b;margin-bottom:8px;font-size:15px}
-.btn{display:inline-block;background:#c9a227;color:#09090b;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:1px;margin-top:16px}
-footer{background:#09090b;color:#64748b;text-align:center;padding:20px;font-size:12px;border-top:1px solid #c9a227}
+:root{--primary:#0f3d3e;--primary-dark:#082f30;--accent:#c2410c;--soft:#ccfbf1;
+--ink:#0f172a;--body:#334155;--muted:#64748b;--line:#e2e8f0;--bg:#ffffff;--surface:#f8fafc;
+--radius:16px;--shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.08);
+--max:1120px;--font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;font-family:var(--font);color:var(--body);background:var(--bg);line-height:1.6;font-size:1rem}
+img{max-width:100%;display:block}
+h1,h2,h3{color:var(--ink);line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,5vw,3.25rem);letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.2vw,2.25rem);letter-spacing:-.01em}
+h3{font-size:1.125rem}
+p{margin:0 0 1em}
+a{color:var(--primary-dark)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;color:var(--ink);padding:10px 16px;border-radius:8px;z-index:100;font-weight:600}
+.skip:focus{left:8px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+.section{padding:clamp(56px,8vw,96px) 0}
+.section.alt{background:var(--surface)}
+.eyebrow{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary-dark);background:var(--soft);padding:6px 12px;border-radius:999px;margin-bottom:14px}
+.section-head{max-width:640px;margin:0 auto 40px;text-align:center}
+.section-head p{color:var(--muted);font-size:1.05rem}
+
+/* Header */
+header{position:sticky;top:0;z-index:50;background:var(--primary);color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.12)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:68px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;font-size:1.15rem}
+.brand .mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.16);font-size:1.2rem}
+nav{background:transparent}
+nav ul{list-style:none;margin:0;padding:0;display:flex;gap:6px;align-items:center}
+nav a{color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:8px 12px;border-radius:10px;opacity:.92}
+nav a:hover{background:rgba(255,255,255,.14);opacity:1}
+nav .cta{background:#fff;color:var(--primary-dark);opacity:1}
+.menu-toggle{display:none;background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}
+@media (max-width:820px){
+ .menu-toggle{display:inline-flex}
+ nav{position:absolute;left:0;right:0;top:100%;background:var(--primary-dark);display:none;padding:12px 20px 20px}
+ nav.open{display:block}
+ nav ul{flex-direction:column;align-items:stretch}
+ nav a{display:block;padding:12px}
+}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;padding:clamp(64px,10vw,120px) 0;position:relative;overflow:hidden}
+.hero .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.hero h1,.hero h2{color:#fff}
+.hero .lead{font-size:clamp(1.05rem,2vw,1.25rem);opacity:.92;max-width:560px}
+.hero .eyebrow{background:rgba(255,255,255,.16);color:#fff}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:14px 24px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.ghost{display:inline-flex;align-items:center;gap:8px;border:2px solid rgba(255,255,255,.6);color:#fff;border-radius:12px;padding:12px 22px;font-weight:700;text-decoration:none}
+.ghost:hover{background:rgba(255,255,255,.12)}
+/* The builder may paint .btn and the hero the same theme colour; the ring keeps buttons visible. */
+.hero .btn,.band .btn{box-shadow:inset 0 0 0 2px rgba(255,255,255,.85)}
+.panel-card{background:#fff;color:var(--body);border-radius:20px;padding:28px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.panel-card h3{margin-bottom:14px}
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.facts li{display:flex;gap:12px;align-items:flex-start}
+.facts .ico{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--soft);font-size:1.1rem}
+.facts b{display:block;color:var(--ink)}
+.facts span{color:var(--muted);font-size:.92rem}
+@media (max-width:820px){.hero .grid{grid-template-columns:1fr}}
+
+/* Cards and grids */
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(15,23,42,.06),0 16px 36px rgba(15,23,42,.12)}
+.card .ico{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:var(--soft);font-size:1.5rem;margin-bottom:16px}
+.card p{color:var(--muted);margin:0}
+.price-tag{display:inline-block;margin-top:14px;font-weight:800;color:var(--primary-dark);background:var(--soft);padding:6px 14px;border-radius:999px}
+
+/* Stats */
+.stats{background:var(--ink);color:#fff;padding:48px 0}
+.stats .grid-3{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));text-align:center}
+.stat .num{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:#fff;line-height:1.1}
+.stat .lbl{color:#cbd5e1;font-size:.95rem}
+
+/* Pricing / plans */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;align-items:stretch}
+.plan{background:#fff;border:1px solid var(--line);border-radius:20px;padding:32px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.plan.featured{border:2px solid var(--primary);position:relative}
+.plan.featured::before{content:"Most popular";position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:999px}
+.plan .amount{font-size:2rem;font-weight:800;color:var(--ink);margin:8px 0 16px}
+.plan ul{list-style:none;padding:0;margin:0 0 24px;display:grid;gap:10px;flex:1}
+.plan li::before{content:"✓";color:var(--primary);font-weight:800;margin-right:10px}
+.plan .btn{justify-content:center}
+
+/* Menu / list rows */
+.rows{display:grid;gap:14px;max-width:820px;margin:0 auto}
+.row{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.row p{margin:0;color:var(--muted);font-size:.95rem}
+.row .price-tag{margin:0;white-space:nowrap}
+
+/* Split feature */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.visual{aspect-ratio:4/3;border-radius:24px;background:linear-gradient(135deg,var(--soft),#fff);border:1px solid var(--line);display:grid;place-items:center;font-size:5rem;box-shadow:var(--shadow)}
+.checks{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:12px}
+.checks li::before{content:"✓";display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--soft);color:var(--primary-dark);font-weight:800;margin-right:10px;font-size:.85rem}
+@media (max-width:820px){.split{grid-template-columns:1fr}}
+
+/* Gallery */
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.tile{aspect-ratio:1;border-radius:18px;display:flex;align-items:flex-end;padding:16px;color:#fff;font-weight:700;font-size:1.05rem;background:linear-gradient(160deg,var(--accent),var(--primary-dark));position:relative;overflow:hidden}
+.tile span{position:relative;z-index:1}
+.tile::after{content:attr(data-icon);position:absolute;top:14px;right:16px;font-size:2.4rem;opacity:.85}
+
+/* Testimonials */
+blockquote{margin:0}
+.quote{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.quote p{font-size:1.02rem;color:var(--ink)}
+.quote p::before{content:"“";display:block;font-size:3rem;line-height:.6;color:var(--primary);font-family:Georgia,serif;margin-bottom:8px}
+.quote footer{background:none;color:var(--muted);padding:0;text-align:left;font-size:.92rem;font-weight:600}
+.stars{color:#f59e0b;letter-spacing:2px;margin-bottom:8px}
+
+/* FAQ */
+.faq{max-width:760px;margin:0 auto;display:grid;gap:12px}
+details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+summary{cursor:pointer;font-weight:700;color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--primary)}
+details[open] summary::after{content:"−"}
+details p{margin:12px 0 0;color:var(--muted)}
+
+/* CTA band */
+.band{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;border-radius:24px;padding:clamp(32px,5vw,56px);display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
+.band h2{color:#fff;margin:0}
+.band p{margin:6px 0 0;opacity:.9}
+
+/* Contact */
+.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:start}
+.details{list-style:none;padding:0;margin:0;display:grid;gap:16px}
+.details li{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.details .ico{font-size:1.3rem}
+.details b{display:block;color:var(--ink)}
+.details a{color:var(--body);text-decoration:none}
+.details a:hover{color:var(--primary-dark);text-decoration:underline}
+form{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow);display:grid;gap:16px}
+label{font-weight:600;color:var(--ink);font-size:.95rem;display:grid;gap:6px}
+input,textarea,select{font:inherit;color:var(--ink);border:1px solid #cbd5e1;border-radius:10px;padding:12px 14px;background:#fff;width:100%}
+input:focus,textarea:focus,select:focus{outline:3px solid var(--soft);border-color:var(--primary)}
+textarea{min-height:120px;resize:vertical}
+.form-note{color:var(--muted);font-size:.85rem;margin:0}
+@media (max-width:820px){.contact-grid{grid-template-columns:1fr}}
+
+/* Footer */
+footer.site{background:#0b1220;color:#94a3b8;padding:56px 0 28px;font-size:.95rem}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px}
+.foot h3{color:#fff;font-size:1rem}
+.foot ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.foot a{color:#cbd5e1;text-decoration:none}
+.foot a:hover{color:#fff;text-decoration:underline}
+.legal{border-top:1px solid #1e293b;margin-top:32px;padding-top:20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:.85rem}
+@media (max-width:820px){.foot{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
 <header>
-<h1>{{hotel_name}}</h1>
-<div class="line"></div>
-<p>{{tagline}}</p>
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="{{hotel_name}} home"><span class="mark" aria-hidden="true">🏨</span>{{hotel_name}}</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" aria-label="Main">
+      <ul><li><a href="#rooms">Rooms</a></li><li><a href="#amenities">Amenities</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#faq">FAQ</a></li><li><a class="cta" href="#contact">Book a room</a></li></ul>
+    </nav>
+  </div>
 </header>
-<nav><a href="#rooms">Rooms</a><a href="#amenities">Amenities</a><a href="#contact">Contact</a></nav>
-<div class="hero">
-<h2>Welcome to {{hotel_name}}</h2>
-<p>{{description}}</p>
-<a href="#rooms" class="btn">View Rooms</a>
-</div>
-<div class="rooms" id="rooms">
-<h2>✦ Our Rooms ✦</h2>
-<div class="room"><div><h3>Standard Room</h3><p>Comfortable room with city view, free WiFi, and breakfast</p></div><div class="price">{{price_standard}}<br><span class="per">per night</span></div></div>
-<div class="room"><div><h3>Deluxe Suite</h3><p>Spacious suite with king bed, balcony, and minibar</p></div><div class="price">{{price_deluxe}}<br><span class="per">per night</span></div></div>
-<div class="room"><div><h3>Presidential Suite</h3><p>Luxury suite with living room, dining area, and panoramic views</p></div><div class="price">{{price_presidential}}<br><span class="per">per night</span></div></div>
-</div>
-<div class="amenities" id="amenities">
-<h2>✦ Amenities ✦</h2>
-<div class="amenity-grid">
-<div class="amenity"><div class="icon">🏊</div><div class="text">Swimming Pool</div></div>
-<div class="amenity"><div class="icon">🍽️</div><div class="text">Restaurant</div></div>
-<div class="amenity"><div class="icon">💆</div><div class="text">Spa & Wellness</div></div>
-<div class="amenity"><div class="icon">📶</div><div class="text">Free WiFi</div></div>
-<div class="amenity"><div class="icon">🅿️</div><div class="text">Free Parking</div></div>
-<div class="amenity"><div class="icon">🏋️</div><div class="text">Fitness Center</div></div>
-</div>
-</div>
-<div class="contact" id="contact">
-<h2>✦ Contact Us ✦</h2>
-<p>📍 {{address}}</p>
-<p>📞 {{phone}}</p>
-<p>✉️ {{email}}</p>
-<a href="mailto:{{email}}" class="btn">Book Now</a>
-</div>
-<footer>&copy; 2024 {{hotel_name}} — Built with AI Connect Africa</footer>
+<main id="main">
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap grid">
+    <div>
+      <span class="eyebrow">Welcome</span>
+      <h1 id="hero-title">{{tagline}}</h1>
+      <p class="lead">{{description}}</p>
+      <div class="actions">
+        <a class="btn" href="#rooms">View rooms</a>
+        <a class="ghost" href="#contact">Check availability</a>
+      </div>
+    </div>
+    <aside class="panel-card" aria-label="At a glance">
+      <h3>Your stay includes</h3>
+      <ul class="facts">
+        <li><span class="ico" aria-hidden="true">🍳</span><div><b>Breakfast included</b><span>Freshly prepared every morning</span></div></li>
+        <li><span class="ico" aria-hidden="true">📶</span><div><b>Free fast Wi-Fi</b><span>In every room and the lobby</span></div></li>
+        <li><span class="ico" aria-hidden="true">🚗</span><div><b>Airport transfers</b><span>Arranged on request</span></div></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+<section class="section" id="rooms" aria-labelledby="rooms-title">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">Rooms</span><h2 id="rooms-title">Rooms and suites</h2><p>Every room is cleaned daily and comes with air conditioning and a flat-screen TV.</p></div>
+    <div class="plans">
+      <article class="plan"><h3>Standard</h3><div class="amount">{{price_standard}}<small style="font-size:.9rem;font-weight:600;color:var(--muted)"> / night</small></div><ul><li>Queen bed</li><li>En-suite bathroom</li><li>Breakfast for one</li></ul><a class="btn" href="#contact">Choose Standard</a></article>
+      <article class="plan featured"><h3>Deluxe</h3><div class="amount">{{price_deluxe}}<small style="font-size:.9rem;font-weight:600;color:var(--muted)"> / night</small></div><ul><li>King bed and city view</li><li>Breakfast for two</li><li>Mini bar and work desk</li></ul><a class="btn" href="#contact">Choose Deluxe</a></article>
+      <article class="plan"><h3>Presidential</h3><div class="amount">{{price_presidential}}<small style="font-size:.9rem;font-weight:600;color:var(--muted)"> / night</small></div><ul><li>Private suite and lounge</li><li>Butler service</li><li>Airport pick-up</li></ul><a class="btn" href="#contact">Choose Presidential</a></article>
+    </div>
+  </div>
+</section>
+<section class="section alt" id="amenities" aria-labelledby="amenities-title">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">Amenities</span><h2 id="amenities-title">Everything for a comfortable stay</h2></div>
+    <div class="grid-3">
+      <article class="card"><div class="ico" aria-hidden="true">🏊</div><h3>Swimming pool</h3><p>Heated outdoor pool, open from 6 AM to 10 PM.</p></article>
+      <article class="card"><div class="ico" aria-hidden="true">🍽️</div><h3>Restaurant & bar</h3><p>Local and international dishes, all day.</p></article>
+      <article class="card"><div class="ico" aria-hidden="true">💆</div><h3>Spa & wellness</h3><p>Massages and treatments by appointment.</p></article>
+      <article class="card"><div class="ico" aria-hidden="true">🏢</div><h3>Conference hall</h3><p>Meetings and events for up to 200 guests.</p></article>
+    </div>
+  </div>
+</section>
+<section class="section" id="reviews" aria-labelledby="reviews-title">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">Reviews</span><h2 id="reviews-title">Guests love staying with us</h2></div>
+    <div class="grid-3">
+      <blockquote class="quote"><div class="stars" aria-label="5 out of 5">★★★★★</div><p>Spotless rooms, delicious breakfast and the friendliest staff we have met.</p><footer>— Amina, Nairobi</footer></blockquote>
+      <blockquote class="quote"><div class="stars" aria-label="5 out of 5">★★★★★</div><p>Perfect for business trips: quiet, fast Wi-Fi and close to town.</p><footer>— James O.</footer></blockquote>
+      <blockquote class="quote"><div class="stars" aria-label="5 out of 5">★★★★★</div><p>We held our wedding reception here. Everything was handled beautifully.</p><footer>— The Ssekandi family</footer></blockquote>
+    </div>
+  </div>
+</section>
+<section class="section alt" id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">FAQ</span><h2 id="faq-title">Good to know before you arrive</h2></div>
+    <div class="faq">
+      <details><summary>What time are check-in and check-out?</summary><p>Check-in is from 2:00 PM and check-out is by 11:00 AM. Ask about early check-in.</p></details>
+      <details><summary>Is parking available?</summary><p>Yes, secure parking is free for guests.</p></details>
+      <details><summary>How do I pay?</summary><p>We accept cash, cards and mobile money.</p></details>
+    </div>
+  </div>
+</section>
+<section class="section alt" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">Contact</span><h2 id="contact-title">Book your stay</h2><p>Tell us your dates and we will confirm availability within the hour.</p></div>
+    <div class="contact-grid">
+      <ul class="details">
+        <li><span class="ico" aria-hidden="true">📍</span><div><b>Visit</b>{{address}}</div></li>
+        <li><span class="ico" aria-hidden="true">📞</span><div><b>Call or WhatsApp</b><a href="tel:{{phone}}">{{phone}}</a></div></li>
+        <li><span class="ico" aria-hidden="true">✉️</span><div><b>Email</b><a href="mailto:{{email}}">{{email}}</a></div></li>
+      </ul>
+      <form data-mailto="{{email}}" data-subject="Room booking" aria-label="Contact form">
+        <h3>Reservation request</h3>
+        <label>Your name<input name="name" autocomplete="name" required></label>
+        <label>Phone or email<input name="contact" autocomplete="email" required></label>
+        <label>Message<textarea name="message" required>Arrival date:
+Departure date:
+Number of guests:
+Room type:</textarea></label>
+        <button class="btn" type="submit">Request booking</button>
+        <p class="form-note">This opens your email app with the message ready to send.</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <div class="foot">
+      <div><h3>{{hotel_name}}</h3><p>{{tagline}}</p></div>
+      <div><h3>Explore</h3><ul><li><a href="#rooms">Rooms</a></li><li><a href="#amenities">Amenities</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h3>Get in touch</h3><ul><li><a href="tel:{{phone}}">{{phone}}</a></li><li><a href="mailto:{{email}}">{{email}}</a></li><li>{{address}}</li></ul></div>
+    </div>
+    <div class="legal"><span>&copy; <span data-year>2026</span> {{hotel_name}}. All rights reserved.</span><span>Built with AI Connect Africa</span></div>
+  </div>
+</footer>
+<script>
+(function(){
+  var t=document.querySelector('.menu-toggle'),n=document.getElementById('site-nav');
+  if(t&&n){t.addEventListener('click',function(){var o=n.classList.toggle('open');t.setAttribute('aria-expanded',o?'true':'false');});
+    n.addEventListener('click',function(e){if(e.target.tagName==='A'){n.classList.remove('open');t.setAttribute('aria-expanded','false');}});}
+  var y=document.querySelectorAll('[data-year]');for(var i=0;i<y.length;i++)y[i].textContent=new Date().getFullYear();
+  var f=document.querySelector('form[data-mailto]');
+  if(f){f.addEventListener('submit',function(e){e.preventDefault();var d=new FormData(f),b='';d.forEach(function(v,k){b+=k+': '+v+'\n';});
+    location.href='mailto:'+f.getAttribute('data-mailto')+'?subject='+encodeURIComponent(f.getAttribute('data-subject')||'Website enquiry')+'&body='+encodeURIComponent(b);});}
+})();</script>
 </body>
 </html>

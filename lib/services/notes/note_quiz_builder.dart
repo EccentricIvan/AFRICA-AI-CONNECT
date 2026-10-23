@@ -14,6 +14,7 @@ import '../../features/learn/subject_notes.dart';
 import '../custom_subject_service.dart';
 import '../offline_storage_service.dart';
 import '../pdf/diagram_detector.dart';
+import '../learning/tutor_use.dart';
 import 'note_quiz_store.dart';
 import 'note_text_indexer.dart';
 
@@ -230,15 +231,24 @@ class NoteQuizBuilder {
     return row != null;
   }
 
-  /// Returns once the chat has not been answering for a few seconds.
+  /// How long the chat must have been quiet before a question is written.
+  /// One question holds the brain for a while on a laptop CPU, so a learner
+  /// still chatting would wait behind it; this keeps quiz writing to the
+  /// pauses between lessons.
+  static const chatQuietFor = Duration(minutes: 2);
+
+  /// Returns once the chat has not been answering for [chatQuietFor].
   Future<void> _chatIdle() async {
     DateTime? busyAt;
     while (true) {
       final busy = _ref.read(chatProvider).valueOrNull?.isGenerating ?? false;
-      if (busy) {
-        busyAt = DateTime.now();
-      } else if (busyAt == null ||
-          DateTime.now().difference(busyAt) >= const Duration(seconds: 3)) {
+      final lastReply = _ref.read(tutorLastReplyProvider);
+      if (busy) busyAt = DateTime.now();
+      final last = [busyAt, lastReply].whereType<DateTime>().fold<DateTime?>(
+        null,
+        (a, b) => a == null || b.isAfter(a) ? b : a,
+      );
+      if (last == null || DateTime.now().difference(last) >= chatQuietFor) {
         return;
       }
       await Future<void>.delayed(const Duration(seconds: 1));

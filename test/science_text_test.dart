@@ -2,6 +2,16 @@ import 'package:ai_connect_africa/ai_core/science/science_text.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('class levels S1–S6 are not turned into sulfur subscripts', () {
+    expect(
+      applyChemistryUnicode('Taught in Cells (S1); Ecology (S4, S6).'),
+      'Taught in Cells (S1); Ecology (S4, S6).',
+    );
+    expect(applyChemistryUnicode('Goat (Agriculture, S1, S2, S3)'), 'Goat (Agriculture, S1, S2, S3)');
+    // Real formulas still are.
+    expect(applyChemistryUnicode('H2SO4 and SO2 and CO2'), 'H₂SO₄ and SO₂ and CO₂');
+  });
+
   test('protectMathIslands keeps Kinyarwanda commands for AfriSLM', () {
     final islands = protectMathIslands('Shaka agaciro ka 4x - 15');
     expect(islands.isPureMath, isFalse);

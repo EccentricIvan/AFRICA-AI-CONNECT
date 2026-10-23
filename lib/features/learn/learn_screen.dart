@@ -41,10 +41,12 @@ class _ChatEntry {
     this.translationFailure,
     this.recap,
     this.diagrams = const [],
+    this.suggestions = const [],
   });
   final String text;
   final bool isUser;
   final List<DiagramMarker> diagrams;
+  final List<String> suggestions;
 
   /// Set on the single entry that opens a reopened chat.
   final SessionRecall? recap;
@@ -320,6 +322,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                       translationFailure: msg.translationFailure,
                       recap: msg.recap,
                       diagrams: msg.diagrams,
+                      suggestions: msg.suggestions,
                     ));
                     if (msg.isUser && msg.lesson != null) {
                       allItems.add(_ChatEntry(text: '', isUser: false, lesson: msg.lesson));
@@ -396,6 +399,11 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                             entry.text.contains('```'),
                         translationFailure: entry.translationFailure,
                         diagrams: entry.diagrams,
+                        // Only under the latest reply: older ones would lead
+                        // back to where the learner has already been.
+                        suggestions: i == allItems.length - 1 && !showGenerating
+                            ? entry.suggestions
+                            : const [],
                         onChip: _onCoachChip,
                         onReadAloud: _speakable(entry).isNotEmpty
                             ? () => _readAloud(_speakable(entry))
@@ -643,11 +651,15 @@ class _TutorBubble extends StatelessWidget {
     this.translationFailure,
     this.isStreaming = false,
     this.diagrams = const [],
+    this.suggestions = const [],
   });
 
   final String text;
   final TutorStage? stage;
   final List<DiagramMarker> diagrams;
+
+  /// Next steps offered as buttons ("Next: Convection (Heat Transfer)").
+  final List<String> suggestions;
   final SchoolMathSolution? math;
   final bool mathCoach;
   final bool codingCoach;
@@ -785,6 +797,26 @@ class _TutorBubble extends StatelessWidget {
             ),
           ),
           if (diagrams.isNotEmpty) DiagramPageButtons(diagrams: diagrams),
+          if (onChip != null && suggestions.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4, left: 2),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 6,
+                children: [
+                  for (final (i, s) in suggestions.indexed)
+                    ActionChip(
+                      visualDensity: VisualDensity.compact,
+                      // The first suggestion is the way on ("Next: …").
+                      avatar: i == 0
+                          ? Icon(Icons.arrow_forward_rounded, size: 16, color: cs.primary)
+                          : null,
+                      label: Text(s),
+                      onPressed: () => onChip!(s),
+                    ),
+                ],
+              ),
+            ),
           if (onChip != null && mathCoach)
             Padding(
               padding: const EdgeInsets.only(bottom: 4, left: 2),

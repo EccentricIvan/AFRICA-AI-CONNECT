@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{school_name}} — {{motto}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#2f5fe0">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{school_name}} — {{motto}}">
+<meta property="og:description" content="{{description}}">
 <style>
 :root{
   --blue:#2f5fe0; --indigo:#4433c4; --sky:#e8effe; --ink:#131a2b;
@@ -83,9 +90,20 @@ tr:last-child td{border-bottom:none}
 .contact p{color:#aab3c6;font-size:13px;margin-bottom:6px}
 
 footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+
+/* Standards: keyboard focus, skip link, reduced motion, small screens */
+:focus-visible{outline:3px solid #f59e0b;outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;color:#0f172a;padding:10px 16px;border-radius:8px;z-index:100;font-weight:600}
+.skip:focus{left:8px}
+img{max-width:100%}
+a[href^="tel:"],a[href^="mailto:"]{color:inherit}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+@media (max-width:640px){nav,.links{flex-wrap:wrap}}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <div class="topbar">
   <div class="brand"><span class="mark">🎓</span> {{school_name}}</div>
@@ -97,7 +115,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
   </nav>
 </div>
 
-<div class="wrap">
+<div class="wrap" id="main">
   <div class="welcome" id="overview">
     <div>
       <h1>{{motto}}</h1>
@@ -172,12 +190,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
   <div class="contact" id="contact">
     <h2>Visit or call us</h2>
     <p>📍 {{address}}</p>
-    <p>📞 {{phone}}</p>
-    <p>✉️ {{email}}</p>
+    <p>📞 <a href="tel:{{phone}}">{{phone}}</a></p>
+    <p>✉️ <a href="mailto:{{email}}">{{email}}</a></p>
   </div>
 </div>
 
-<footer>&copy; 2026 {{school_name}} — Built with AI Connect Africa</footer>
+<footer>&copy; <span data-year>2026</span> {{school_name}} — Built with AI Connect Africa</footer>
 
+<script>document.querySelectorAll("[data-year]").forEach(function(e){e.textContent=new Date().getFullYear()});</script>
 </body>
 </html>

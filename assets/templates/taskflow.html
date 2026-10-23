@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{company_name}} — {{tagline}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#10121a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{company_name}} — {{tagline}}">
+<meta property="og:description" content="{{description}}">
 <style>
 :root{
   --ink:#10121a; --slate:#1c2030; --yellow:#f6e651;
@@ -96,9 +103,20 @@ nav{
 .contact p{color:#a7adbe;font-size:13px;margin-bottom:6px}
 
 footer{background:#0b0d14;color:#767c8d;text-align:center;padding:18px;font-size:12px}
+
+/* Standards: keyboard focus, skip link, reduced motion, small screens */
+:focus-visible{outline:3px solid #f59e0b;outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;color:#0f172a;padding:10px 16px;border-radius:8px;z-index:100;font-weight:600}
+.skip:focus{left:8px}
+img{max-width:100%}
+a[href^="tel:"],a[href^="mailto:"]{color:inherit}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+@media (max-width:640px){nav,.links{flex-wrap:wrap}}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <nav>
   <div class="brand"><span class="mark">◆</span> {{company_name}}</div>
@@ -110,7 +128,7 @@ footer{background:#0b0d14;color:#767c8d;text-align:center;padding:18px;font-size
   <button class="nav-cta" type="button">Get Started</button>
 </nav>
 
-<div class="hero" id="product">
+<div class="hero" id="main" id="product">
   <div>
     <span class="tagpill"><span class="dot"></span> {{pill_text}}</span>
     <h1><em>{{tagline}}</em></h1>
@@ -158,11 +176,12 @@ footer{background:#0b0d14;color:#767c8d;text-align:center;padding:18px;font-size
 
 <div class="contact" id="contact">
   <h2>Talk to us</h2>
-  <p>✉️ {{email}}</p>
-  <p>📞 {{phone}}</p>
+  <p>✉️ <a href="mailto:{{email}}">{{email}}</a></p>
+  <p>📞 <a href="tel:{{phone}}">{{phone}}</a></p>
 </div>
 
-<footer>&copy; 2026 {{company_name}} — Built with AI Connect Africa</footer>
+<footer>&copy; <span data-year>2026</span> {{company_name}} — Built with AI Connect Africa</footer>
 
+<script>document.querySelectorAll("[data-year]").forEach(function(e){e.textContent=new Date().getFullYear()});</script>
 </body>
 </html>

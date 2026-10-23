@@ -8,6 +8,7 @@ import '../inference/decode_profile.dart';
 import '../inference/inference_engine.dart';
 import '../inference/runtime_config.dart';
 import '../../curriculum/curriculum_provider.dart';
+import '../../curriculum/topic_explanations.dart';
 import 'conversation_memory.dart';
 import 'programming_topic.dart';
 import 'school_math.dart';
@@ -33,6 +34,7 @@ class TutorPipeline {
     this.maxTokens = kMaxNewTokens,
     this.codingCoach = false,
     this.teacherNotes,
+    this.explanations,
   })  : _engine = engine,
         _curriculum = curriculum;
 
@@ -45,6 +47,13 @@ class TutorPipeline {
   /// Teacher material search. Null in tests and anywhere without a database;
   /// the tutor then behaves exactly as it did before teacher notes existed.
   final TeacherNotesLookup? teacherNotes;
+
+  /// Reviewed full explanations of syllabus topics. Null in tests and for the
+  /// coding coach; the tutor then answers every question with the model.
+  final TopicExplanationService? explanations;
+
+  /// The topic explanation this conversation is on, which grounds follow-ups.
+  TopicExplanation? _activeExplanation;
 
   CurriculumService? get curriculum => _curriculum;
   TutorStage _nextStage = TutorStage.answer;
@@ -78,17 +87,34 @@ class TutorPipeline {
     if (_memory.isCorrection(studentMessage, languageCode: languageCode)) {
       _memory.noteCorrection();
     }
-    final continuing =
+    // A follow-up about the explanation under way stays on it, even when a
+    // word of it ("light") belongs to another subject's keywords. A new
+    // "What is …?" about something else ("What is love?") leaves it and
+    // starts afresh, so the old topic can't leak into the answer.
+    final memoryContinuing =
         _memory.isContinuing(studentMessage, languageCode: languageCode);
+    final active = _activeExplanation;
+    final aboutActive = active != null &&
+        (active.mentions(studentMessage) ||
+            _refersBack.hasMatch(studentMessage.toLowerCase()));
+    // Also with no explanation under way: "can you teach me about triangles"
+    // after a greeting starts afresh, or the small model copies its last reply.
+    final askedNew = !aboutActive &&
+        !_memory.isEmpty &&
+        askedTopic(studentMessage) != null &&
+        !_refersBack.hasMatch(studentMessage.toLowerCase());
+    final continuing = !askedNew && (memoryContinuing || aboutActive);
     final topic = continuing ? _currentTopic : _detectTopic(studentMessage);
-    final switched = !continuing &&
-        topic.isNotEmpty &&
-        _currentTopic.isNotEmpty &&
-        topic != _currentTopic;
+    final switched = askedNew ||
+        (!continuing &&
+            topic.isNotEmpty &&
+            _currentTopic.isNotEmpty &&
+            topic != _currentTopic);
     if (switched) {
       _currentTopic = topic;
       _nextStage = TutorStage.answer;
       _activeMatch = null;
+      _activeExplanation = null;
       _memory.clear();
       _shownDiagrams.clear();
     _shownSources.clear();
@@ -131,7 +157,20 @@ class TutorPipeline {
       return mathReply;
     }
 
-    final notes = useCurriculum && _activeMatch != null
+    // Lessons teach in the open chat too, where the rest of the curriculum
+    // is bypassed: a learner asking about a syllabus topic is taught it.
+    final explanation = await _explanationFor(
+      studentMessage,
+      keepActive: aboutActive,
+    );
+    if (explanation != null &&
+        asksForWholeTopic(studentMessage, explanation.wholeTopicNames)) {
+      return _explainWholeTopic(explanation, studentMessage, stage, onToken);
+    }
+
+    final notes = explanation != null
+        ? explanation.groundingNotes(studentMessage)
+        : useCurriculum && _activeMatch != null
         ? (codingCoach ||
                 isProgrammingSubjectName(_activeMatch?.subjectName)
             ? _curriculum?.buildProgrammingTutorNotes(_activeMatch!)
@@ -144,7 +183,7 @@ class TutorPipeline {
       safetyNote: safetyNote,
       curriculumNotes: notes,
       teacherNotes: classNotes,
-      useCurriculum: useCurriculum,
+      useCurriculum: useCurriculum || explanation != null,
       languageCode: languageCode,
     );
 
@@ -207,6 +246,105 @@ class TutorPipeline {
       topic: _currentTopic,
       lesson: _activeMatch?.lesson,
       diagrams: diagrams,
+    );
+  }
+
+  /// "Why does it…", "What about that…": a follow-up pointing back at the
+  /// topic under way.
+  static final _refersBack = RegExp(r'\b(it|its|this|that|they|them|these|those|he|she|him|his|her)\b');
+
+  /// The topic explanation for this turn: the one [studentMessage] names, or
+  /// the one already under way when [keepActive] (the learner is following up
+  /// on it). Anything else — a greeting, another subject — drops it.
+  Future<TopicExplanation?> _explanationFor(
+    String studentMessage, {
+    required bool keepActive,
+  }) async {
+    final service = explanations;
+    if (service == null || codingCoach) {
+      _activeExplanation = null;
+      return null;
+    }
+    TopicExplanation? named;
+    try {
+      named = await service.match(studentMessage) ??
+          await service.covering(studentMessage);
+    } catch (e) {
+      debugPrint('Topic explanation lookup failed: $e');
+    }
+    if (named != null) {
+      _activeExplanation = named;
+    } else if (!keepActive) {
+      _activeExplanation = null;
+    }
+    return _activeExplanation;
+  }
+
+  /// Records [topic] as explained, for a whole-topic explanation the chat
+  /// showed without waiting for the model to load, so follow-ups are grounded
+  /// in it exactly as if [respond] had given it.
+  Future<TutorResponse> adoptExplanation(
+    TopicExplanation topic,
+    String studentMessage,
+  ) async {
+    final detected = _detectTopic(studentMessage);
+    if (detected.isNotEmpty && detected != _currentTopic) {
+      if (_currentTopic.isNotEmpty) {
+        _nextStage = TutorStage.answer;
+        _activeMatch = null;
+        _memory.clear();
+        _shownDiagrams.clear();
+        _shownSources.clear();
+        await _engine.resetSession();
+      }
+      _currentTopic = detected;
+    }
+    _activeExplanation = topic;
+    return _explainWholeTopic(topic, studentMessage, _nextStage, null);
+  }
+
+  /// Records an exchange the chat answered without the tutor (pictures,
+  /// clips, "who is" look-ups, the online tutor), so the next turn follows
+  /// on from it instead of starting cold. [topic] is what it was about.
+  void noteExchange(String studentMessage, String reply, {String? topic}) {
+    _memory.remember(
+      student: studentMessage,
+      tutor: reply,
+      topic: topic ?? _activeMatch?.lesson.title ?? _currentTopic.replaceAll('_', ' '),
+    );
+  }
+
+  /// The whole reviewed explanation of [topic], shown as written: it is
+  /// checked and at the learner's level, which a long answer from the model
+  /// can't promise. The model takes over for the follow-ups, grounded in it.
+  Future<TutorResponse> _explainWholeTopic(
+    TopicExplanation topic,
+    String studentMessage,
+    TutorStage stage,
+    TokenCallback? onToken,
+  ) async {
+    final text = topic.fullText();
+    // Paragraph by paragraph, so a translated reply can start on the first
+    // one while the rest arrive.
+    final paragraphs = text.split('\n\n');
+    for (var i = 0; i < paragraphs.length; i++) {
+      await emitToken(onToken, i == 0 ? paragraphs[i] : '\n\n${paragraphs[i]}');
+    }
+    // The summary, not the whole text, so the memory slot stays small.
+    _remember(
+      studentMessage,
+      topic.summary,
+      verified: [
+        for (final e in topic.keyTerms.entries.take(4)) '${e.key}: ${e.value}',
+      ],
+    );
+    _advanceStage();
+    return TutorResponse(
+      stage: stage,
+      text: text,
+      followUpPrompt: '',
+      topic: _currentTopic,
+      lesson: topic.asLesson(),
     );
   }
 
@@ -519,6 +657,7 @@ WEAKNESS: <one short phrase describing something the student is struggling with,
     await _engine.resetSession();
     _memory.clear();
     _activeMatch = null;
+    _activeExplanation = null;
     _clearMath();
     _shownDiagrams.clear();
     _shownSources.clear();
@@ -531,6 +670,7 @@ WEAKNESS: <one short phrase describing something the student is struggling with,
     _nextStage = TutorStage.answer;
     _currentTopic = '';
     _activeMatch = null;
+    _activeExplanation = null;
     _memory.clear();
     _activeMath = null;
     _awaitingMath = null;

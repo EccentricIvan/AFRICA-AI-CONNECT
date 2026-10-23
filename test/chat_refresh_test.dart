@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ai_connect_africa/ai_core/inference/inference_engine.dart';
 import 'package:ai_connect_africa/ai_core/providers/ai_provider.dart';
 import 'package:ai_connect_africa/ai_core/tutor/tutor_pipeline.dart';
+import 'package:ai_connect_africa/curriculum/online_topic_lookup.dart';
 import 'package:ai_connect_africa/db/providers/db_provider.dart';
 import 'package:ai_connect_africa/services/chat_inference_pipeline.dart';
 import 'package:ai_connect_africa/services/qwen_chat_service.dart';
@@ -63,6 +64,10 @@ void main() {
         chatInferencePipelineProvider.overrideWith((ref) async => pipeline),
         tutorPipelineProvider.overrideWith((ref) async => tutor),
         engineLoadedProvider.overrideWith((ref) async => engine),
+        // No internet look-ups: the turn under test goes to the engine.
+        onlineTopicLookupEnabledProvider.overrideWith(
+          (ref) => OnlineTopicLookupSetting.fixed(false),
+        ),
       ],
     );
     addTearDown(container.dispose);

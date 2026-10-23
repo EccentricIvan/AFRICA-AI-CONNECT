@@ -61,6 +61,30 @@ void main() {
     }
   });
 
+  test('every site template meets the web standards students learn from', () {
+    for (final id in siteTemplates) {
+      final html = read('assets/templates/$id.html');
+      final label = 'site/$id';
+      expect(html, contains('<html lang="en">'), reason: '$label: language');
+      expect(html, contains('<meta charset="utf-8">'), reason: '$label: charset');
+      expect(html, contains('name="viewport"'), reason: '$label: mobile viewport');
+      expect(RegExp(r'<title>[^<]+</title>').hasMatch(html), isTrue, reason: '$label: title');
+      expect(html, contains('name="description"'), reason: '$label: SEO description');
+      expect(html, contains('property="og:title"'), reason: '$label: share preview');
+      expect(html, contains('href="#main"'), reason: '$label: skip link');
+      expect(html, contains('id="main"'), reason: '$label: skip-link target');
+      expect(html, contains(':focus-visible'), reason: '$label: keyboard focus');
+      expect(html, contains('prefers-reduced-motion'), reason: '$label: reduced motion');
+      expect(html, isNot(contains('&copy; 2024')), reason: '$label: stale year');
+      if (html.contains('{{phone}}')) {
+        expect(html, contains('href="tel:{{phone}}"'), reason: '$label: tap to call');
+      }
+      if (html.contains('{{email}}')) {
+        expect(html, contains('href="mailto:{{email}}"'), reason: '$label: tap to email');
+      }
+    }
+  });
+
   test('every app template is a complete, token-bearing document', () {
     for (final id in appTemplates) {
       checkDocument(read('assets/templates/apps/$id.html'), 'app/$id');

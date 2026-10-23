@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../ai_core/science/science_text.dart';
+import 'clip_player.dart';
 
 /// Inline science renderer for streamed tutor / student text.
 ///
@@ -73,11 +74,38 @@ class _ScienceRichTextState extends State<ScienceRichText> {
               // conversion is meant for chemistry notation, not identifiers
               // — `item_1` in a Python snippet must stay `item_1`, not
               // become `item₁`, especially since the student may copy it.
-              data: span.text.trimLeft().startsWith('```')
+              // Picture links too: "…/Frog2.jpg" must not become "Frog₂".
+              data: span.text.trimLeft().startsWith('```') ||
+                      span.text.contains('](http')
                   ? span.text
                   : formatScienceProse(span.text),
               shrinkWrap: widget.shrinkWrap,
               selectable: true,
+              // Clips in a reply ("[![still](poster)](clip.webm)") play here.
+              onTapLink: (text, href, title) {
+                if (href != null && isClipUrl(href)) {
+                  showClipPlayer(context, href, title: text);
+                }
+              },
+              // Pictures from an online look-up: decoded once at the size
+              // the bubble shows, not at the original's full size, so a
+              // chat with several of them still scrolls smoothly.
+              sizedImageBuilder: (config) {
+                final uri = config.uri;
+                if (uri.scheme != 'http' && uri.scheme != 'https') {
+                  return Image.asset(uri.toString(), fit: BoxFit.contain);
+                }
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 360),
+                  child: Image.network(
+                    uri.toString(),
+                    cacheWidth: 800,
+                    fit: BoxFit.contain,
+                    semanticLabel: config.alt,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  ),
+                );
+              },
               softLineBreak: true,
               styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
                 p: base,

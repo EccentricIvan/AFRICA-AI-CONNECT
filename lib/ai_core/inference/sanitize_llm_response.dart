@@ -98,6 +98,17 @@ String sanitizeLLMResponse(String rawText) {
     RegExp(r'^(Tutor|Assistant|AI)\s*:\s*', caseSensitive: false),
     '',
   );
+  // The small model sometimes echoes the prompt's "CURRENT: <question>" line
+  // as a heading: "**Current: Teach me about X X:** A right-angled…".
+  cleaned = cleaned
+      .replaceFirst(
+        RegExp(r'^\*\*\s*current\s*:[^\n]*?\*\*\s*', caseSensitive: false),
+        '',
+      )
+      // The echoed question on its own line, then the answer after a gap…
+      .replaceFirst(RegExp(r'^current\s*:[^\n]*\n\s*\n', caseSensitive: false), '')
+      // …or just the label in front of the answer: "Current: I'm sorry…".
+      .replaceFirst(RegExp(r'^current\s*:\s*', caseSensitive: false), '');
 
   // 3. Strip common chain-of-thought preambles before the real answer.
   final metaPatterns = [

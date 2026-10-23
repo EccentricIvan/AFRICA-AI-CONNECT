@@ -16,6 +16,16 @@ void main() {
     expect(m.resolveCurrent('yes'), isNot(equals('yes')));
   });
 
+  test('"I mean …" corrects the last ask instead of starting afresh', () {
+    final m = ConversationMemory();
+    m.remember(
+      student: 'Who is the president of Uganda?',
+      tutor: 'The President of Uganda is the head of state.',
+    );
+    expect(m.isContinuing('i mean show me his picture'), isTrue);
+    expect(m.isContinuing('I meant the vice president'), isTrue);
+  });
+
   test('THREAD keeps both sides of the last exchange', () {
     final m = ConversationMemory();
     m.remember(

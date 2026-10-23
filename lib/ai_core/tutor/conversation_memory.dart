@@ -256,6 +256,11 @@ class ConversationMemory {
         t.startsWith('and then') ||
         t.startsWith('tell me more') ||
         t.startsWith('explain') ||
+        // "I mean the president of Uganda": a correction of the last ask.
+        t.startsWith('i mean') ||
+        t.startsWith('i meant') ||
+        t.startsWith('no i mean') ||
+        t.startsWith('what i mean') ||
         t.startsWith("i don't understand") ||
         t.startsWith('i dont understand')) {
       return true;

@@ -42,6 +42,9 @@ final _chemFormula = RegExp(
   '$_elements(?:\\d+$_elements?)+',
 );
 
+/// A secondary class level, S1 to S6.
+final _classLevel = RegExp(r'^S[1-6]$');
+
 final _latexChem = RegExp(
   '$_elements(?:_\\{?\\d+\\}?)+$_elements?',
 );
@@ -371,6 +374,13 @@ int _minPositive(int a, int b) {
 String applyChemistryUnicode(String text) {
   var out = text.replaceAllMapped(_chemFormula, (m) {
     final raw = m.group(0)!;
+    // "S1"–"S6" standing alone is a class (Senior 1), not sulfur: S₁ would
+    // read as nonsense in "taught in S1".
+    if (_classLevel.hasMatch(raw) &&
+        (m.start == 0 || !RegExp(r'[A-Za-z0-9]').hasMatch(text[m.start - 1])) &&
+        (m.end == text.length || !RegExp(r'[A-Za-z0-9]').hasMatch(text[m.end]))) {
+      return raw;
+    }
     final buf = StringBuffer();
     for (var i = 0; i < raw.length; i++) {
       final ch = raw[i];

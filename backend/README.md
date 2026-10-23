@@ -22,6 +22,25 @@ $env:OTIC_ALLOW_HTTP = "1"                 # local testing only
 
 On Linux use `.venv/bin/python` and `export`.
 
+## Online AI tutor (Claude)
+
+A separate service in the same package: it answers learners' questions with
+Claude when a device can reach it. It holds no school records. The API key
+stays here, never in the app.
+
+```powershell
+$env:ANTHROPIC_API_KEY = "sk-ant-..."     # from console.anthropic.com
+$env:OTIC_TUTOR_TOKEN = "choose-a-secret"  # optional; enter the same in the app
+.venv\Scripts\python -m uvicorn otic_cloud.tutor:app --host 127.0.0.1 --port 8787
+```
+
+Check it with `GET /v1/tutor/health` (`"configured": true` once the key is
+set). Without a key it answers 503 and the app answers on the device. In the
+app: Teachers → Online AI tutor → on, and set Tutor server to this address
+(`http://127.0.0.1:8787` on the same computer; for other devices, the
+computer's address on the school network, `--host 0.0.0.0`, and a token).
+The guardrails are the system prompt in `otic_cloud/tutor.py`.
+
 ## Onboard a school
 
 1. The school registers (`POST /v1/schools/register`), or the operator

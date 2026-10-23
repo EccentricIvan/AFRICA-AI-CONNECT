@@ -3,6 +3,28 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('sanitizeLLMResponse', () {
+    test('drops an echoed CURRENT: prompt line', () {
+      expect(
+        sanitizeLLMResponse(
+          '**Current: Teach me about Right Angled Triangles Right Angled Triangles:** '
+          'A right-angled triangle has one 90° angle.',
+        ),
+        'A right-angled triangle has one 90° angle.',
+      );
+      expect(
+        sanitizeLLMResponse('Current: what is a cell\n\nA cell is the basic unit of life.'),
+        'A cell is the basic unit of life.',
+      );
+      expect(
+        sanitizeLLMResponse("Current: I'm sorry, but I don't have a photo of a frog."),
+        "I'm sorry, but I don't have a photo of a frog.",
+      );
+      expect(
+        sanitizeLLMResponse('Current affairs in Uganda are discussed in Social Studies.'),
+        'Current affairs in Uganda are discussed in Social Studies.',
+      );
+    });
+
     test('passes a normal tutor reply through', () {
       expect(
         sanitizeLLMResponse('Photosynthesis is how plants make food.'),
