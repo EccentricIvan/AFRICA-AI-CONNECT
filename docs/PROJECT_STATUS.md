@@ -7,7 +7,7 @@ Reviewed: 26 October 2026 (Africa/Kampala).
 - Repository: https://github.com/EccentricIvan/AI-CONNECT-AFRICA
 - Source version: `1.4.0+5`; Drift database schema: `37`.
 - Main: `a813f54` (20 October 2026).
-- Latest reviewed feature: `19716cb` (23 October 2026), on
+- Latest reviewed feature baseline: `19716cb` (23 October 2026), on
   `feature/full-topic-explanations`, one commit ahead of main at review time.
 - Commit dates describe the code history; they are not a complete push-event log.
 - Implementation and automated tests do not establish classroom readiness.
@@ -70,7 +70,7 @@ server. Without a configured/reachable service the app falls back locally.
 
 - [x] Flutter analysis and app tests pass on the reviewed source (informational lints remain).
 - [x] Fresh Windows release builds and launches. Core UI flows still require a visual/manual check.
-- [ ] Latest teaching feature is integrated into main after validation.
+- [x] Latest teaching feature and validation fix integrated into local main by fast-forward. GitHub main has not been pushed.
 - [ ] Android release builds and signatures are verified with the intended signing key.
 - [ ] Physical Android and Windows devices run actual reasoning and translation models.
 - [ ] Switching learners keeps histories, languages and permissions isolated.
@@ -102,3 +102,5 @@ Android validation is blocked on this machine: `ANDROID_HOME` points to
 `D:\dev\android-sdk`, which does not exist. The usual C: SDK locations were
 also absent, and no physical Android device is connected. No Android signing
 or device-validation result is claimed.
+
+Local integration: validation commit `591a292` and feature commit `19716cb` are on local `main`. The working tree was clean after integration; remote publication remains outstanding.
