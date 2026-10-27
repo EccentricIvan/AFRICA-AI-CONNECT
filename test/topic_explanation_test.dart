@@ -254,6 +254,17 @@ void main() {
     expect(pictureRequestSubject('give me images'), '');
     expect(pictureRequestSubject('can I have an image?'), '');
     expect(pictureRequestSubject('show me a picture of a frog'), 'frog');
+    expect(pictureRequestSubject('show me a frog'), 'frog');
+    expect(pictureRequestSubject('draw a frog'), 'frog');
+    expect(pictureRequestSubject('please sketch me a flower'), 'flower');
+    expect(pictureRequestSubject('can you show me a triangle?'), 'triangle');
+    expect(pictureRequestSubject('draw a diagram of a frog'), 'frog');
+    expect(pictureRequestSubject('draw it'), '');
+    expect(pictureRequestSubject('show me how to solve this'), isNull);
+    expect(pictureRequestSubject('show me my progress'), isNull);
+    expect(pictureRequestSubject('show me an example of fractions'), isNull);
+    expect(pictureRequestSubject('show me a video of a frog'), isNull);
+
     expect(pictureRequestSubject('what does a frog look like'), 'frog');
     expect(pictureRequestSubject('diagram of the heart please'), 'heart');
     expect(pictureRequestSubject('what is a frog'), isNull);

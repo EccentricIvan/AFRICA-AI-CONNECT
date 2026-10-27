@@ -464,7 +464,7 @@ final _pictureWords = RegExp(
 
 const _pictureFiller = {
   'give', 'me', 'show', 'send', 'can', 'could', 'would', 'you', 'i', 'have',
-  'want', 'need', 'see', 'let', 'display', 'a', 'an', 'the', 'some', 'any',
+  'draw', 'sketch', 'illustrate', 'want', 'need', 'see', 'let', 'display', 'a', 'an', 'the', 'some', 'any',
   'more', 'please', 'of', 'it', 'this', 'that', 'them', 'these', 'those', 'do',
   'get', 'us', 'there', 'is', 'are', 'what', 'how', 'does', 'did', 'look',
   'looks', 'like', 'for', 'showing', 'with', 'one', 'another', 'other', 'real',
@@ -518,11 +518,27 @@ List<String> pictureSubjectCandidates(String message, String subject, String? ea
 String? pictureRequestSubject(String message) {
   final m = normalizeTopicText(message);
   // "Explain the diagram on page 14" is about a teacher's PDF, not a request.
-  if (!_pictureWords.hasMatch(m) || m.split(' ').length > 14 || m.contains('page')) {
+  if (m.split(' ').length > 14 || RegExp(r'\bpage\b').hasMatch(m)) {
     return null;
   }
+  var subject = m;
+  if (!_pictureWords.hasMatch(m)) {
+    final command = RegExp(
+      r'^(please )?((can|could|would) you )?'
+      r'(show|draw|sketch|illustrate|display)( me| us| for me)?\s+(.+)$',
+    ).firstMatch(m);
+    if (command == null) return null;
+    subject = command.group(6)!;
+    // Keep requests for explanations, solutions and app navigation on their
+    // normal paths. A bare visual command names an object, not a workflow.
+    if (RegExp(r'\b(how|why|steps|working|solution|solutions|answer|answers|'
+        r'proof|code|example|examples|progress|assignments|notes|settings|'
+        r'video|videos|clip|clips)\b').hasMatch(subject)) {
+      return null;
+    }
+  }
   final rest = [
-    for (final w in m.replaceAll(_pictureWords, ' ').split(' '))
+    for (final w in subject.replaceAll(_pictureWords, ' ').split(' '))
       if (w.isNotEmpty && !_pictureFiller.contains(w)) w,
   ];
   return rest.join(' ');
