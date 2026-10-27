@@ -51,7 +51,17 @@ class OnlineTopicLookup {
   /// The topic explanation for [message], or null when it asks for no topic,
   /// the topic isn't schoolwork, or the look-up fails.
   Future<TopicExplanation?> lookUp(String message) async {
-    final topic = askedTopic(message);
+    var topic = askedTopic(message);
+    // For questions such as "How do volcanoes form?", search the subject
+    // phrase when there is no literal "What is ..." topic name.
+    final question = normalizeTopicText(message);
+    if (topic == null && RegExp(r'^(how|why|when|where|what|which)\b').hasMatch(question)) {
+      final words = question.replaceAll(
+        RegExp(r'\b(how|why|when|where|what|which|does|do|did|is|are|was|were|'
+            r'can|could|would|should|the|a|an|please)\b'), ' ',
+      ).replaceAll(RegExp(r'\s+'), ' ').trim();
+      if (words.isNotEmpty) topic = words;
+    }
     // "Where is it?": the chat's own topic, not a page called "It".
     if (topic == null || _onlyPointsBack.hasMatch(topic)) return null;
     if (_cache.containsKey(topic)) return _cache[topic];

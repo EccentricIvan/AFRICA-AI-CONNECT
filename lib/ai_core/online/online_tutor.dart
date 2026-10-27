@@ -77,6 +77,11 @@ class OnlineTutor {
             }),
           )
           .timeout(timeout);
+      // The hub is healthy but has no content for this question.
+      if (res.statusCode == 204) {
+        _failedAt = null;
+        return null;
+      }
       if (res.statusCode != 200) {
         debugPrint('Online tutor unavailable (${res.statusCode}): ${res.body}');
         _failedAt = DateTime.now();

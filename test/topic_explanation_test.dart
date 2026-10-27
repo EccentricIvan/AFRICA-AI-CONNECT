@@ -426,6 +426,13 @@ void main() {
           );
         });
 
+    test('how and why questions can get credited internet explanations', () async {
+      final lookup = OnlineTopicLookup(client: wikipedia());
+      expect((await lookup.lookUp('How do lakes form?'))?.fullText(), contains('CC BY-SA'));
+      expect((await lookup.lookUp('Why are lakes important?'))?.fullText(), contains('not from your syllabus'));
+      expect(await lookup.lookUp('hello'), isNull);
+    });
+
     test('a topic question gets the introduction, marked and credited', () async {
       final t = await OnlineTopicLookup(client: wikipedia()).lookUp('What is Lake Victoria?');
       expect(t, isNotNull);

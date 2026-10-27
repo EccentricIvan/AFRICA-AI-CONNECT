@@ -1,5 +1,15 @@
 # Changelog
 
+## Internet explanation fallback - 2026-10-27
+
+- A school hub with no matching pack or app lesson returns a content miss;
+  the app then tries a credited online explanation instead of a model guess.
+- Content misses do not disable the hub for later questions. Internet lookup
+  also accepts how/why/when/which questions, and offline fallback is preserved.
+- 69 backend tests and 40 focused app tests pass; a live uncovered-topic
+  check retrieved a credited Tardigrade explanation. Windows release rebuilt.
+
+
 ## Physics hub content pack - 2026-10-27
 
 ### Fixed

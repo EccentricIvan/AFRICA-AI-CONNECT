@@ -375,6 +375,10 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
             return _teach(step, req, str(request.base_url))
         earlier = next((t.content for t in reversed(req.history) if t.role == "user"), "")
         passages = library.search(req.message, context=earlier)
+        # A content miss lets the app try credited internet explanations.
+        # It is not an outage and must not trigger the client's retry cooldown.
+        if not passages and not (req.lesson or '').strip():
+            return Response(status_code=204)
         body: dict[str, Any] = {
             "messages": _hub_messages(req, passages),
             "max_tokens": 700,

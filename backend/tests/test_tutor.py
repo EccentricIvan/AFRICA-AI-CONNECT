@@ -185,12 +185,24 @@ def test_the_hub_keeps_the_chat_and_drops_thinking(library):
     assert "FACTS:" in hub.calls[0][1]["messages"][-1]["content"]
 
 
-def test_without_matching_facts_the_question_goes_alone(library):
-    hub = FakeHub(reply="Photosynthesis makes food.")
+def test_content_miss_allows_internet_fallback_without_model_guessing(library):
+    hub = FakeHub()
     c = _hub_client(hub, library)
     r = c.post("/v1/tutor/answer", json={"message": "What is photosynthesis?"})
+    assert r.status_code == 204
+    assert hub.calls == []
+    assert c.get("/v1/tutor/health").json()["configured"] is True
+
+
+def test_matching_app_lesson_can_ground_an_answer_without_hub_pack(library):
+    hub = FakeHub(reply="Photosynthesis makes food.")
+    c = _hub_client(hub, library)
+    r = c.post("/v1/tutor/answer", json={
+        "message": "What is photosynthesis?",
+        "lesson": "Photosynthesis uses light to make glucose.",
+    })
+    assert r.status_code == 200
     assert r.json()["text"] == "Photosynthesis makes food."
-    assert hub.calls[0][1]["messages"][-1]["content"] == "QUESTION:\nWhat is photosynthesis?"
 
 
 def test_a_hub_that_is_down_lets_the_app_answer_offline(library):

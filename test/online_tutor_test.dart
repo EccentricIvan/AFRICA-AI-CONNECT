@@ -64,6 +64,22 @@ void main() {
     expect(calls, 1);
   });
 
+  test('a hub content miss allows lookup without disabling the next hub request', () async {
+    var calls = 0;
+    final tutor = OnlineTutor(
+      baseUrl: 'http://hub',
+      client: MockClient((_) async {
+        calls++;
+        return calls == 1
+            ? http.Response('', 204)
+            : http.Response('{"text":"Covered lesson","suggestions":[]}', 200);
+      }),
+    );
+    expect(await tutor.answer('What is quantum entanglement?'), isNull);
+    expect((await tutor.answer('What is convection?'))?.text, 'Covered lesson');
+    expect(calls, 2);
+  });
+
   test('only the last 12 messages are sent', () async {
     late Map<String, dynamic> sent;
     final tutor = OnlineTutor(
