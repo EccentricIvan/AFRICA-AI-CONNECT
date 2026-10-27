@@ -1,5 +1,23 @@
 # Changelog
 
+## Current branch - rollout validation
+
+### Added
+- Full topic explanations and diagrams, optional online topic lookup and tutor,
+  school-hub content packs, guided course teaching, and updated website templates.
+- `docs/PROJECT_STATUS.md` records the current source baseline, system scope,
+  validation evidence, and remaining rollout gates; older entrypoint docs link to it.
+
+### Fixed
+- Translation model discovery tests use isolated fixtures instead of selecting
+  models already installed on the developer's machine. Default production model
+  lookup is unchanged; existing model files are not rewritten by the tests.
+
+### Validation
+- 64 backend tests and 883 Flutter tests pass.
+- Flutter analysis passes with zero errors/warnings and 46 informational suggestions.
+- Windows release builds successfully. Android SDK/device and visual UI checks remain outstanding.
+
 All notable changes to AI Connect Africa are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),

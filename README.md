@@ -1,8 +1,14 @@
 # AI Connect Africa
 
+> **Current project status (26 October 2026):** source version 1.4.0+5,
+> database schema 37. This document contains historical descriptions that may
+> predate school sync, roles, current models, and optional connected services.
+> Start with [the current status and rollout checklist](docs/PROJECT_STATUS.md).
+
+
 **Offline AI-Powered Learning Operating System**
 
-[![Release](https://img.shields.io/badge/release-v1.1.0-4F46E5)](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/latest)
+[![Release](https://img.shields.io/badge/release-v1.1.0-4F46E5)](https://github.com/EccentricIvan/AI-CONNECT-AFRICA/releases/latest)
 [![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Windows-informational)](#downloads)
 [![Offline](https://img.shields.io/badge/network-100%25%20offline-10B981)](#core-constraint-offline-first)
 [![Built with Flutter](https://img.shields.io/badge/built%20with-Flutter-02569B)](https://flutter.dev)
@@ -17,7 +23,7 @@ The AI model (Gemma 3 1B) is bundled and runs locally: LiteRT-LM on Android, lla
 
 ## Downloads
 
-Get the latest build from the [**Releases page**](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/latest).
+Get the latest build from the [**Releases page**](https://github.com/EccentricIvan/AI-CONNECT-AFRICA/releases/latest).
 
 ### Android — one APK with everything (recommended)
 
@@ -40,9 +46,9 @@ After publish, the direct link is:
 
 Install that APK → first launch unpacks the bundled chat + translation models → app works offline. No separate USB model step.
 
-Rolling CI builds on `latest-build` stay **slim** by default. To publish a fat rolling APK, run the **Build Release Artifacts** workflow with **bundle_models** after uploading a one-time [`model-pack`](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases) release that contains `chat-model.litertlm` and `translate-afrislm.gguf`. Then use:
+Rolling CI builds on `latest-build` stay **slim** by default. To publish a fat rolling APK, run the **Build Release Artifacts** workflow with **bundle_models** after uploading a one-time [`model-pack`](https://github.com/EccentricIvan/AI-CONNECT-AFRICA/releases) release that contains `chat-model.litertlm` and `translate-afrislm.gguf`. Then use:
 
-[**Download Android APK (with models)**](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/download/latest-build/ai-connect-africa-latest-with-models.apk)
+[**Download Android APK (with models)**](https://github.com/EccentricIvan/AI-CONNECT-AFRICA/releases/download/latest-build/ai-connect-africa-latest-with-models.apk)
 
 | Download | Platform | How to install |
 |---|---|---|

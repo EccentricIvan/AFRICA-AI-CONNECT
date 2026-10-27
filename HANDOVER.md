@@ -1,5 +1,11 @@
 # Project Handover — AI Connect Africa
 
+> **Current project status (26 October 2026):** source version 1.4.0+5,
+> database schema 37. This document contains historical descriptions that may
+> predate school sync, roles, current models, and optional connected services.
+> Start with [the current status and rollout checklist](docs/PROJECT_STATUS.md).
+
+
 This document is for the team taking over maintenance of AI Connect Africa. It lists
 everything needed to build, change, release, and maintain the app, and points to
 the deeper docs for each topic. If you read one file first, read this one.
@@ -7,7 +13,7 @@ the deeper docs for each topic. If you read one file first, read this one.
 **Current status:** v1.1.0 is shipped and live. The rolling **AI Connect Africa Latest
 Build** release is rebuilt automatically from `main` and publishes the full
 Android APK plus the full Windows zip on the
-[Releases page](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/tag/latest-build).
+[Releases page](https://github.com/EccentricIvan/AI-CONNECT-AFRICA/releases/tag/latest-build).
 The latest branding update changes only logos/icons/splash assets; it does not
 change the offline app behavior, student data, AI model flow, or lightweight
 runtime design.
@@ -60,7 +66,7 @@ To give the new maintainers control, the current owner does **one** of:
 After that, maintainers clone and work normally:
 
 ```bash
-git clone https://github.com/malinzijeremiah01-lab/Otic-Studio.git
+git clone https://github.com/EccentricIvan/AI-CONNECT-AFRICA.git
 ```
 
 ---

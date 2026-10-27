@@ -1,5 +1,11 @@
 # Contributing / Developer Setup
 
+> **Current project status (26 October 2026):** source version 1.4.0+5,
+> database schema 37. This document contains historical descriptions that may
+> predate school sync, roles, current models, and optional connected services.
+> Start with [the current status and rollout checklist](docs/PROJECT_STATUS.md).
+
+
 How to get AI Connect Africa running on a fresh machine and make changes correctly.
 The app is **fully offline by design** — do not add any dependency or API that
 requires network access at runtime. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
@@ -32,7 +38,7 @@ Resolve anything that isn't a green check for the platforms you intend to build.
 ## 2. Clone and install
 
 ```powershell
-git clone https://github.com/malinzijeremiah01-lab/Otic-Studio.git
+git clone https://github.com/EccentricIvan/AI-CONNECT-AFRICA.git
 cd Otic-Studio
 flutter pub get
 ```

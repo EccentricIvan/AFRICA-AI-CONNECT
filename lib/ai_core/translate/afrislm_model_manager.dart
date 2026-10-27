@@ -18,6 +18,11 @@ import '../model/model_verifier.dart';
 ///   `.github/workflows/convert-afrislm-litertlm.yml`).
 /// - Windows / Linux → the Q4 GGUF on llama.cpp.
 class AfriSlmModelManager {
+  AfriSlmModelManager({Future<List<String>> Function(String)? candidateFiles})
+    : _candidateFiles = candidateFiles ?? modelCandidateFiles;
+
+  final Future<List<String>> Function(String) _candidateFiles;
+
   /// Canonical desktop file — matches Hugging Face Install Packages
   /// (`ModelFetchFiles.translate`) and `assets/models/` tooling.
   static const ggufFileName = 'afrislm-0.8b-q4_k_m.gguf';
@@ -65,12 +70,12 @@ class AfriSlmModelManager {
   /// zip (exe + models/translate-afrislm.gguf) is picked up automatically.
   Future<List<String>> _candidatePathsFor(String fileName) async {
     if (defaultTargetPlatform != TargetPlatform.android) {
-      return modelCandidateFiles(fileName);
+      return _candidateFiles(fileName);
     }
 
     final paths = <String>[
       await canonicalModelInstallPath(fileName),
-      ...await modelCandidateFiles(fileName),
+      ...await _candidateFiles(fileName),
     ];
     try {
       final ext = await getExternalStorageDirectory();

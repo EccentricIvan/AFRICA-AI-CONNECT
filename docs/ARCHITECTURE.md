@@ -1,5 +1,7 @@
 # Architecture
 
+> Historical architecture notes. For the current runtimes, school sync, optional services, and schema, see [PROJECT_STATUS.md](PROJECT_STATUS.md).
+
 This document describes how AI Connect Africa is put together: the offline AI layer,
 the tutor pipeline, data storage, and how a student request flows through the app.
 
