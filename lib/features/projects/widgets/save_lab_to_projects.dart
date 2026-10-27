@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_locale.dart';
 import '../../../services/projects/project_providers.dart';
+import 'project_saved_notice.dart';
 
 /// "Save to Projects" for the code labs: asks for a name the first time,
 /// then keeps saving into the same folder. Returns the saved project's id
@@ -65,13 +66,11 @@ Future<({String id, String title})?> saveLabToProjects(
           content: Text(tr(context, 'Create a learner profile to save projects.'))));
       return null;
     }
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(trFill(context, 'Saved “{name}” to Projects', {'name': saved.breadcrumb})),
-      action: SnackBarAction(
-        label: tr(context, 'Open'),
-        onPressed: () => context.push('/projects'),
-      ),
-    ));
+    showProjectSavedNotice(
+      context,
+      name: saved.breadcrumb,
+      onOpen: () => context.push('/projects'),
+    );
     return result;
   } catch (e) {
     debugPrint('lab save failed: $e');

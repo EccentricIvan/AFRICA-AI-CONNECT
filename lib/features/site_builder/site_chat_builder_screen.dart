@@ -19,6 +19,7 @@ import '../create/dev_l10n.dart';
 import '../projects/scaffold/project_scaffold.dart';
 import '../projects/widgets/image_instruction_runner.dart';
 import '../projects/widgets/project_tools_bar.dart';
+import '../projects/widgets/project_saved_notice.dart';
 import '../settings/coder_package_prompt.dart';
 import 'site_build_coder.dart';
 import 'site_template_catalog.dart';
@@ -605,18 +606,10 @@ class _SiteChatBuilderScreenState extends ConsumerState<SiteChatBuilderScreen> {
         _savedLabel = saved.breadcrumb;
       });
       if (!quiet) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              trFill(context, 'Saved “{name}” to Projects', {
-                'name': saved.breadcrumb,
-              }),
-            ),
-            action: SnackBarAction(
-              label: tr(context, 'Open'),
-              onPressed: () => context.push('/projects'),
-            ),
-          ),
+        showProjectSavedNotice(
+          context,
+          name: saved.breadcrumb,
+          onOpen: () => context.push('/projects'),
         );
       }
       return saved.folder;

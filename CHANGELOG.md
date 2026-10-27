@@ -1,5 +1,15 @@
 # Changelog
 
+## Save notification dismissal - 2026-10-27
+
+- Website, app-builder and code-lab save notices now expire after four seconds,
+  include a close button, and replace queued notices on repeated saves.
+- The Open action remains available. Explicitly disable Flutter's default
+  persistence for snackbars with an action.
+- Five widget regressions pass, including accessibility mode, manual dismissal,
+  repeated saves, and opening the saved project. Focused analysis is clean.
+
+
 ## Internet explanation fallback - 2026-10-27
 
 - A school hub with no matching pack or app lesson returns a content miss;
