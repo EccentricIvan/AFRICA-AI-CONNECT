@@ -253,5 +253,46 @@
       ["Rectifiers", "Rectifier"],
       ["Transistors", "Transistor"]
     ]
+  },
+  "clip_selection_note": "Only explicitly selected demonstration filenames are eligible. Selection checks relevance, not teacher approval; the pack remains draft.",
+  "clip_allowlist": {
+    "States of Matter": [
+      "Brownian Motion.ogv"
+    ],
+    "The Effects of Forces": [
+      "Heat by friction.webm",
+      "Surface tension experimental demonstration.ogv"
+    ],
+    "Heat Transfer": [
+      "Formation-of-convection-cells.webm"
+    ],
+    "Magnets and Magnetic Field": [
+      "Magnet bar.ogv",
+      "Neodymium magnet repels a Toothpick.webm"
+    ],
+    "Electrostatics": [
+      "Static electricity demonstration.webm",
+      "Bubbles to balloon static electricity.webm"
+    ],
+    "The Solar System": [
+      "Earth's axial tilt and seasons.webm"
+    ]
+  },
+  "excluded_media_sources": {
+    "physics.s1.temperature-measurements.thermometers|https://commons.wikimedia.org/wiki/File:Very_slippy-weather.jpg": "Unrelated street cartoon, not thermometer instruction",
+    "physics.s1.nature-of-light-reflection-at-plane-surf.the-periscope|https://commons.wikimedia.org/wiki/File:XV426_(32195090654).jpg": "Aircraft photo offers no clear periscope explanation",
+    "physics.s2.the-solar-system.day-and-night|https://commons.wikimedia.org/wiki/File:The_Mysterious_Case_of_the_Disappearing_Dust.jpg": "Planet-forming dust disk is unrelated to day and night",
+    "physics.s2.the-solar-system.day-and-night|https://commons.wikimedia.org/wiki/File:Solar_system.jpg": "Planet montage does not explain day and night",
+    "physics.s3.linear-and-non-linear-motion.newton-s-laws-of-motion|https://commons.wikimedia.org/wiki/File:NewtonsPrincipia.jpg": "Book photograph does not illustrate Newton laws",
+    "physics.s3.linear-and-non-linear-motion.newton-s-laws-of-motion|https://commons.wikimedia.org/wiki/File:Newton%27s_reflecting_telescope.jpg": "Reflecting telescope is not a Newton laws demonstration",
+    "physics.s3.lenses-and-optical-instruments.the-microscope|https://commons.wikimedia.org/wiki/File:Stelluti_bees1630.jpg": "Historical insect drawing does not explain a microscope",
+    "physics.s3.heat-quantities-and-vapours.specific-heat-capacity|https://commons.wikimedia.org/wiki/File:Carnot_heat_engine_2.svg": "Carnot engine does not illustrate latent heat",
+    "physics.s3.heat-quantities-and-vapours.latent-heat|https://commons.wikimedia.org/wiki/File:Carnot_heat_engine_2.svg": "Carnot engine does not illustrate latent heat",
+    "physics.s3.heat-quantities-and-vapours.refrigeration|https://commons.wikimedia.org/wiki/File:Servel_Electrolux_Gas_Refrigerator_ad,_1941.jpg": "Historical refrigerator advertisement, not a teaching diagram",
+    "physics.s3.stars-and-galaxies.constellations|https://commons.wikimedia.org/wiki/File:Orion_constellation_-_Prodromus_astronomiae_1690_(5590584).jpg": "Historical mythological artwork; retain star charts instead",
+    "physics.s4.introduction-to-current-electricity.cells-and-batteries|https://commons.wikimedia.org/wiki/File:La_pile_de_Volta_(Le_Petit_journal).jpg": "Historical painting; retain battery apparatus instead",
+    "physics.s4.voltage-resistance-and-ohm-s-law.voltage|https://commons.wikimedia.org/wiki/File:US_Navy_110315-N-0278E-002_High-voltage_electricians_from_Naval_Facilities_Engineering_Command_(NAVFAC)_Hawaii_reconfigure_electrical_circuitry_and.jpg": "Electrical workplace photograph does not explain voltage",
+    "physics.s4.voltage-resistance-and-ohm-s-law.resistance|https://commons.wikimedia.org/wiki/File:VFPt_Solenoid_correct2.svg": "Solenoid magnetic-field diagram mismatched to electrical resistance",
+    "physics.s4.digital-electronics.transistors|https://commons.wikimedia.org/wiki/File:Transistor_on_portuguese_pavement.jpg": "Pavement mosaic; retain transistor components and circuit symbol"
   }
 }

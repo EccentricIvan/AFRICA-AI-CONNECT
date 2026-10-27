@@ -68,7 +68,7 @@ _UNSUITABLE = re.compile(
 #: Not about the topic, even when named after it.
 _OFF_TOPIC = re.compile(
     r"(signature|autograph|portrait|stamp|postage|coin|banknote|memorial|grave|statue|"
-    r"bust_of|bust of|headshot|plaque|book cover|cover of)",
+    r"bust_of|bust of|headshot|plaque|book cover|cover of|lever[-_ ]soleil|salvia[-_ ])",
     re.I,
 )
 _COMMON = {
@@ -100,7 +100,7 @@ def key_words(*texts: str) -> set[str]:
 
 def names_all(text: str, words: set[str]) -> bool:
     text = text.lower()
-    return bool(words) and all(w in text for w in words)
+    return bool(words) and words <= key_words(text)
 
 
 def names_any(text: str, words: set[str]) -> bool:
@@ -268,9 +268,11 @@ def article_pictures(f: Fetcher, title: str, label: str) -> list[dict]:
     return out
 
 
-def article_clips(f: Fetcher, title: str) -> list[dict]:
-    """The videos the article itself shows: chosen by its editors, so on
-    topic."""
+def article_clips(f: Fetcher, title: str, label: str = "") -> list[dict]:
+    """Require a clip to name the sub-topic, not merely appear in its article."""
+    require = key_words(title, label)
+    if not require:
+        return []
     names = [
         p["title"] for p in _article_files(f, title)
         if (p.get("imageinfo") or [{}])[0].get("mime", "").startswith(("video/", "application/ogg"))
@@ -281,7 +283,7 @@ def article_clips(f: Fetcher, title: str) -> list[dict]:
         "action": "query", "titles": "|".join(names[:20]),
         "prop": "videoinfo", "viprop": "url|mime|size|extmetadata|derivatives", "viurlwidth": "640",
     })
-    return _clips_of(data.get("query", {}).get("pages", []), require=set())
+    return _clips_of(data.get("query", {}).get("pages", []), require=require)
 
 
 def commons_clips(f: Fetcher, query: str, label: str = "") -> list[dict]:
@@ -302,7 +304,7 @@ def _clips_of(pages: list[dict], require: set[str]) -> list[dict]:
     for page in pages:
         name = page.get("title", "").removeprefix("File:")
         info = (page.get("videoinfo") or [None])[0]
-        if not info or _UNSUITABLE.search(name) or _OFF_TOPIC.search(name):
+        if not info or info.get("mime", "").startswith("audio/") or _UNSUITABLE.search(name) or _OFF_TOPIC.search(name):
             continue
         if require and not names_all(name.replace("_", " "), require):
             continue
@@ -338,6 +340,14 @@ def _clips_of(pages: list[dict], require: set[str]) -> list[dict]:
             "source": info.get("descriptionurl", ""),
         })
     return out
+
+
+def selected_clips(source: dict, topic: str, candidates: list[dict]) -> list[dict]:
+    """A curated subject never silently admits new search results on rebuild."""
+    if 'clip_allowlist' not in source:
+        return candidates
+    allowed = set(source['clip_allowlist'].get(topic, []))
+    return [c for c in candidates if c['name'] in allowed]
 
 
 def lesson_text(lesson: dict) -> str:
@@ -400,6 +410,8 @@ def build(subject_id: str, assets: Path, out: Path) -> dict:
                 eid = f"{tid}.{slug(label, 40)}"
                 entry_media = []
                 for n, pic in enumerate(article_pictures(f, resolved, label)[:PICTURES_PER_SUBTOPIC], 1):
+                    if f"{eid}|{pic['source']}" in source.get("excluded_media_sources", {}):
+                        continue
                     rel = folder / f"{slug(label, 30)}-{short_hash(pic['name'])}{ext_of(pic['url'], 'png')}"
                     if not f.download(pic["url"], out / rel, MAX_PICTURE_BYTES):
                         continue
@@ -424,13 +436,26 @@ def build(subject_id: str, assets: Path, out: Path) -> dict:
                 topic["media"].extend(entry_media)
                 print(f"  + {label}: {len(text)} chars, {len(entry_media)} pictures", flush=True)
 
-            # The articles' own videos first (their editors chose them), then
-            # Commons files named after a sub-topic.
-            resolved_titles = {e["subtopic"]: e["source"]["title"].removeprefix("Wikipedia: ")
-                               for e in entries if e.get("topic") == tid and e["kind"] == "reference"}
-            candidates = [c for label, _ in subs if label in resolved_titles
-                          for c in article_clips(f, resolved_titles[label])]
-            candidates += [c for label, article in subs for c in commons_clips(f, article, label)]
+            # Curated subjects query only named files, never broad searches.
+            if 'clip_allowlist' in source:
+                approved = source['clip_allowlist'].get(title, [])
+                candidates = []
+                if approved:
+                    data = f.json(COMMONS, {
+                        'action': 'query', 'titles': '|'.join('File:' + n for n in approved),
+                        'prop': 'videoinfo', 'viprop': 'url|mime|size|extmetadata|derivatives',
+                        'viurlwidth': '640',
+                    })
+                    candidates = _clips_of(data.get('query', {}).get('pages', []), require=set())
+            else:
+                # The articles' own videos first (their editors chose them), then
+                # Commons files named after a sub-topic.
+                resolved_titles = {e["subtopic"]: e["source"]["title"].removeprefix("Wikipedia: ")
+                                   for e in entries if e.get("topic") == tid and e["kind"] == "reference"}
+                candidates = [c for label, _ in subs if label in resolved_titles
+                              for c in article_clips(f, resolved_titles[label], label)]
+                candidates += [c for label, article in subs for c in commons_clips(f, article, label)]
+            candidates = selected_clips(source, title, candidates)
             clips, seen = [], set()
             for clip in candidates:
                 if len(clips) >= CLIPS_PER_TOPIC:
@@ -528,11 +553,13 @@ def main(argv: list[str]) -> int:
     (out / "pack.json").write_text(json.dumps(pack, ensure_ascii=False, indent=1), encoding="utf-8")
     (out / "CREDITS.md").write_text(credits(pack), encoding="utf-8")
     (out / "README.txt").write_text(readme(pack), encoding="utf-8")
-    # Files from an earlier build that the pack no longer uses.
+    # Preserve unused downloads outside the served media tree for audit/recovery.
     used = {m["file"] for m in pack["media"]} | {m["poster"] for m in pack["media"] if m.get("poster")}
     for path in (out / "media").rglob("*") if (out / "media").exists() else []:
         if path.is_file() and path.relative_to(out).as_posix() not in used:
-            path.unlink()
+            archived = out / "_unused-media" / path.relative_to(out / "media")
+            archived.parent.mkdir(parents=True, exist_ok=True)
+            path.replace(archived)
     size = sum(p.stat().st_size for p in (out / "media").rglob("*") if p.is_file()) if (out / "media").exists() else 0
     kinds = {k: sum(m["kind"] == k for m in pack["media"]) for k in ("image", "animation", "clip")}
     print(

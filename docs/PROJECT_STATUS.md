@@ -104,3 +104,19 @@ also absent, and no physical Android device is connected. No Android signing
 or device-validation result is claimed.
 
 Local integration: validation commit `591a292` and feature commit `19716cb` are on local `main`. The working tree was clean after integration; remote publication remains outstanding.
+
+
+## External Physics hub pack - 27 October 2026
+
+The external disk's `D:\data packets\physics` pack is complete as a draft:
+31 topics, 219 entries (31 lessons + 188 references), 452 pictures,
+14 animations and 9 shortlisted clips. Active media including posters is
+91.1 MiB. Every topic, reference, media link and course-plan lookup passed
+validation; all image files decoded. Fifteen mismatched/unhelpful image
+placements were excluded after visual review, with context-specific source
+exclusions and a reproducible clip shortlist in `pack_sources/physics.json`.
+
+The pack contains README.txt, CREDITS.md, SHA256SUMS.txt and VALIDATION.md.
+Original downloads are retained under `_unused-media`; review decisions and
+validation counts are under `_review`. Teacher content approval and complete
+clip playback are still required. This work did not start the model or hub.

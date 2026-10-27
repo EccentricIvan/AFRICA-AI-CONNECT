@@ -1,5 +1,20 @@
 # Changelog
 
+## Physics hub content pack - 2026-10-27
+
+### Fixed
+- Physics clip selection uses an explicit source-file shortlist instead of broad
+  searches; audio-only files and unrelated article videos are excluded.
+- Image exclusions are scoped to subtopic and source, preserving valid reuse.
+- Unused downloads are archived outside the active media folder for recovery.
+
+### Completed locally
+- External Physics pack at `D:\data packets\physics`: 31 topics (S1-S4),
+  219 entries, 452 pictures, 14 animations and 9 clips, with credits and checksums.
+- Hub loading, all topic course plans, media references and sample retrieval
+  validated. Teacher approval and full clip playback remain outstanding.
+
+
 ## Current branch - rollout validation
 
 ### Added
