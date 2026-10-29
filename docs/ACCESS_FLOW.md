@@ -34,3 +34,5 @@ Validation: the full Flutter suite passes (911 tests). The new role screen was
 rendered at desktop size and checked at phone size. Live Windows UI automation
 was unavailable because its Node runtime could not start; role interactions
 were verified through widget tests instead.
+
+For the full operational walkthrough, see [Admin, Teacher and Student guide](ROLES_AND_CONNECTION_GUIDE.md). My notes now keeps a permanent Sync class notes toolbar button for first joins and later syncs.
