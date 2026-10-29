@@ -1,5 +1,16 @@
 # Changelog
 
+## Streamed hub answers - 2026-10-29
+
+- Show hub answers as they are generated, preserving final sources, media,
+  course plans and suggestions. Existing JSON endpoints remain compatible.
+- Interrupted streams clear partial text; content misses still allow internet
+  explanations without disabling the hub.
+- Local first-text samples: 1.1 and 6.4 seconds, compared with a 19.5-second
+  buffered response. See docs/HUB_PERFORMANCE.md for timings and limitations.
+- 894 app tests and 74 backend tests pass.
+
+
 ## Save notification dismissal - 2026-10-27
 
 - Website, app-builder and code-lab save notices now expire after four seconds,

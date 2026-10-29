@@ -1109,6 +1109,7 @@ class ChatNotifier extends AsyncNotifier<ChatState> {
                   if (!m.isError && !m.isRecap) (isUser: m.isUser, text: m.text),
               ],
               lesson: local?.groundingNotes(message, max: 3000),
+              onText: pushUi,
             );
       if (reply != null) {
         thread.add(ChatMessage(

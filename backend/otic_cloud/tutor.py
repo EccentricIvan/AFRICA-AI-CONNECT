@@ -23,18 +23,19 @@ text that matches the question, under the same rules. See start-hub.bat.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import re
 import secrets
-from typing import Any, Callable, Literal, Optional
+from typing import Any, Callable, Iterator, Literal, Optional
 
 from urllib.parse import quote
 
 import anthropic
 import httpx
 from fastapi import FastAPI, Header, Request
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel, Field
 
 from . import course
@@ -102,6 +103,7 @@ HUB_ANSWER_PICTURES = 2
 HUB_ANSWER_CLIPS = 1
 
 HubPost = Callable[[str, dict, float], dict]
+HubStream = Callable[[str, dict, float], Iterator[dict]]
 
 
 class Turn(BaseModel):
@@ -202,6 +204,28 @@ def _default_hub_post(url: str, body: dict, timeout: float) -> dict:
     return r.json()
 
 
+def _default_hub_stream(url: str, body: dict, timeout: float) -> Iterator[dict]:
+    with httpx.stream("POST", url, json=body, timeout=httpx.Timeout(timeout, connect=10.0)) as response:
+        response.raise_for_status()
+        for line in response.iter_lines():
+            if not line.startswith("data:"):
+                continue
+            payload = line[5:].strip()
+            if payload == "[DONE]":
+                break
+            yield json.loads(payload)
+
+
+def _visible_stream_text(text: str) -> str:
+    # Suppress reasoning even when its opening tag spans multiple network chunks.
+    visible = re.sub(r"<think>.*?(?:</think>|$)", "", text, flags=re.S)
+    for prefix in ("<think", "<thin", "<thi", "<th", "<t", "<"):
+        if visible.endswith(prefix):
+            visible = visible[:-len(prefix)]
+            break
+    return visible.lstrip()
+
+
 def _strip_thinking(text: str) -> str:
     return re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()
 
@@ -238,6 +262,7 @@ def create_tutor_app(
     hub_url: Optional[str] = None,
     packs: Optional[PackLibrary] = None,
     hub_post: Optional[HubPost] = None,
+    hub_stream: Optional[HubStream] = None,
 ) -> FastAPI:
     """[client_factory] builds the Claude client (tests pass a fake);
     [access_token], when set, must arrive as the X-Otic-Tutor-Token header.
@@ -250,7 +275,7 @@ def create_tutor_app(
     if hub:
         library = packs if packs is not None else PackLibrary.load(os.environ.get("OTIC_PACKS_DIR"))
         log.info("School hub mode: %s, %d pack entries", hub, len(library.entries))
-        return _hub_app(app, token, hub, library, hub_post or _default_hub_post)
+        return _hub_app(app, token, hub, library, hub_post or _default_hub_post, hub_stream or _default_hub_stream)
 
     def make_client() -> anthropic.Anthropic:
         if client_factory is not None:
@@ -311,7 +336,7 @@ def create_tutor_app(
     return app
 
 
-def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: HubPost) -> FastAPI:
+def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: HubPost, stream_post: HubStream) -> FastAPI:
     """The tutor endpoints answered by the school hub's local model."""
 
     @app.get("/v1/tutor/health")
@@ -394,16 +419,19 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
             return JSONResponse({"error": "offline"}, status_code=502)
         if not text:
             return JSONResponse({"error": "empty"}, status_code=502)
+        return _finish_answer(text, str(data.get("model") or "school-hub"), passages, str(request.base_url))
+
+    def _finish_answer(text: str, model: str, passages: list[Passage], base: str):
         if passages:
             shown = library.media_for(passages, clips=False)[:HUB_ANSWER_PICTURES]
             shown += library.media_for(passages, clips=True)[:HUB_ANSWER_CLIPS]
             if shown:
-                text += "\n\n" + _media_markdown(str(request.base_url), shown)
+                text += "\n\n" + _media_markdown(base, shown)
             names = "; ".join(dict.fromkeys(p.entry.title for p in passages))
             text += f"\n\n*Source: school content pack — {names}*"
         return TutorAnswer(
             text=text,
-            model=str(data.get("model") or "school-hub"),
+            model=model,
             suggestions=course.answer_suggestions(passages[0].entry, library) if passages else [],
         )
 
@@ -424,6 +452,9 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
             return JSONResponse({"error": "offline"}, status_code=502)
         if not taught:
             return JSONResponse({"error": "empty"}, status_code=502)
+        return _finish_course(taught, str(data.get("model") or "school-hub"), step, facts, base)
+
+    def _finish_course(taught: str, model: str, step: course.Step, facts: list[tuple[str, str]], base: str):
         t = step.topic
         parts = []
         if step.show_plan:
@@ -442,9 +473,63 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
         parts.append(f"*Source: school content pack — {'; '.join(title for title, _ in facts)}*")
         return TutorAnswer(
             text="\n\n".join(parts),
-            model=str(data.get("model") or "school-hub"),
+            model=model,
             suggestions=course.suggestions(step, library),
         )
+
+    @app.post("/v1/tutor/answer/stream")
+    def answer_stream(req: TutorRequest, request: Request,
+                      x_otic_tutor_token: Optional[str] = Header(default=None)):
+        if token and not secrets.compare_digest(x_otic_tutor_token or "", token):
+            return JSONResponse({"error": "unauthorized"}, status_code=401)
+        replies = [t.content for t in req.history if t.role == "assistant"]
+        step = course.plan_step(library, req.message, replies)
+        earlier = next((t.content for t in reversed(req.history) if t.role == "user"), "")
+        passages = library.search(req.message, context=earlier) if step is None else []
+        if step is None and not passages and not (req.lesson or '').strip():
+            return Response(status_code=204)
+        facts = course.facts_for(library, step) if step is not None else []
+        body = {
+            "messages": _course_messages(req, step, facts) if step is not None else _hub_messages(req, passages),
+            "max_tokens": 900 if step is not None else 700,
+            "temperature": 0.3,
+            "stream": True,
+            "chat_template_kwargs": {"enable_thinking": False},
+        }
+        base = str(request.base_url)
+
+        def event(data):
+            return "data: " + json.dumps(data, ensure_ascii=False) + "\n\n"
+
+        def events():
+            text, model, finished, previous = "", "school-hub", False, ""
+            try:
+                for chunk in stream_post(f"{hub}/v1/chat/completions", body, 150.0):
+                    model = str(chunk.get("model") or model)
+                    choices = chunk.get("choices") or []
+                    if not choices:
+                        continue
+                    choice = choices[0]
+                    piece = (choice.get("delta") or {}).get("content") or ""
+                    text += piece
+                    visible = _visible_stream_text(text)
+                    if visible and visible != previous:
+                        previous = visible
+                        yield event({"text": visible})
+                    if choice.get("finish_reason") is not None:
+                        finished = True
+                if not finished or not _visible_stream_text(text).strip():
+                    yield event({"error": "incomplete"})
+                    return
+                answer = (_finish_course(_visible_stream_text(text).strip(), model, step, facts, base)
+                          if step is not None else _finish_answer(_visible_stream_text(text).strip(), model, passages, base))
+                yield event({"done": answer.model_dump()})
+            except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as error:
+                log.error("School hub stream unavailable: %s", error)
+                yield event({"error": "offline"})
+
+        return StreamingResponse(events(), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
     return app
 

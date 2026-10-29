@@ -49,6 +49,7 @@ class OnlineTutor {
     String message, {
     List<TutorTurn> history = const [],
     String? lesson,
+    void Function(String)? onText,
   }) async {
     final failed = _failedAt;
     if (failed != null && DateTime.now().difference(failed) < retryAfter) {
@@ -63,6 +64,15 @@ class OnlineTutor {
           },
     ];
     try {
+      if (onText != null) {
+        final streamed = await _streamAnswer({
+          'message': _clip(message, 2000),
+          'history': turns.length > 12 ? turns.sublist(turns.length - 12) : turns,
+          if (lesson != null && lesson.trim().isNotEmpty) 'lesson': _clip(lesson, 6000),
+        }, onText);
+        if (streamed.supported) return streamed.reply;
+        // Older hub/provider servers keep working through their JSON endpoint.
+      }
       final res = await _client
           .post(
             Uri.parse('${baseUrl.replaceFirst(RegExp(r'/+$'), '')}/v1/tutor/answer'),
@@ -100,9 +110,59 @@ class OnlineTutor {
       );
     } catch (e) {
       debugPrint('Online tutor unreachable: $e');
+      onText?.call('');
       _failedAt = DateTime.now();
       return null;
     }
+  }
+
+  Future<({bool supported, OnlineReply? reply})> _streamAnswer(
+    Map<String, dynamic> body,
+    void Function(String) onText,
+  ) async {
+    final request = http.Request('POST',
+      Uri.parse('${baseUrl.replaceFirst(RegExp(r'/+$'), '')}/v1/tutor/answer/stream'))
+      ..headers.addAll({
+        'Content-Type': 'application/json',
+        'Accept': 'text/event-stream',
+        if (accessToken.isNotEmpty) 'X-Otic-Tutor-Token': accessToken,
+      })
+      ..body = jsonEncode(body);
+    final response = await _client.send(request).timeout(timeout);
+    if (response.statusCode == 404 || response.statusCode == 405) {
+      await response.stream.drain<void>();
+      return (supported: false, reply: null);
+    }
+    if (response.statusCode == 204) {
+      await response.stream.drain<void>();
+      _failedAt = null;
+      return (supported: true, reply: null);
+    }
+    if (response.statusCode != 200) {
+      await response.stream.drain<void>();
+      _failedAt = DateTime.now();
+      return (supported: true, reply: null);
+    }
+    await for (final line in response.stream.timeout(timeout)
+        .transform(utf8.decoder).transform(const LineSplitter())) {
+      if (!line.startsWith('data:')) continue;
+      final event = jsonDecode(line.substring(5).trim()) as Map<String, dynamic>;
+      if (event['error'] != null) throw const FormatException('Hub stream interrupted');
+      if (event['text'] case final String text) onText(text);
+      if (event['done'] case final Map<String, dynamic> completed) {
+        final text = completed['text'] as String?;
+        if (text == null || text.trim().isEmpty) throw const FormatException('Empty hub answer');
+        final suggestions = completed['suggestions'];
+        _failedAt = null;
+        return (supported: true, reply: (
+          text: text.trim(),
+          suggestions: suggestions is List
+              ? [for (final s in suggestions.whereType<String>().take(5)) if (s.trim().isNotEmpty) s.trim()]
+              : const <String>[],
+        ));
+      }
+    }
+    throw const FormatException('Hub stream ended before completion');
   }
 
   /// Pictures of [query] from the school hub's content packs; empty when the

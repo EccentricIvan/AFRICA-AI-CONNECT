@@ -279,3 +279,72 @@ def test_the_hub_checks_the_access_token(library):
         create_tutor_app(access_token="s3cret", hub_url="http://hub", packs=library, hub_post=FakeHub())
     )
     assert c.post("/v1/tutor/answer", json={"message": "hi"}).status_code == 401
+
+
+def _stream_client(library, pieces, *, complete=True, fail=False, token=""):
+    calls = []
+    def stream(url, body, timeout):
+        calls.append(body)
+        for text in pieces:
+            yield {"model": "qwen3-4b", "choices": [{"delta": {"content": text}, "finish_reason": None}]}
+        if fail:
+            raise httpx.ReadError("connection lost")
+        if complete:
+            yield {"choices": [{"delta": {}, "finish_reason": "stop"}]}
+    return TestClient(create_tutor_app(access_token=token, hub_url="http://hub",
+                                      packs=library, hub_stream=stream)), calls
+
+
+def _events(response):
+    return [json.loads(line[5:].strip()) for line in response.text.splitlines() if line.startswith("data:")]
+
+
+def test_stream_exposes_text_before_final_sources_and_preserves_media(tmp_path):
+    lib = subject_pack(tmp_path)
+    client, calls = _stream_client(lib, ["<thi", "nk>private reasoning", "</think>Convection", " moves heat."])
+    response = client.post("/v1/tutor/answer/stream", json={"message": "What is convection?"})
+    assert response.headers["content-type"].startswith("text/event-stream")
+    events = _events(response)
+    assert [e["text"] for e in events if "text" in e] == ["Convection", "Convection moves heat."]
+    final = events[-1]["done"]
+    assert "Source: school content pack" in final["text"]
+    assert "![Convection currents]" in final["text"]
+    assert final["suggestions"]
+    assert "private reasoning" not in response.text
+    assert calls[0]["stream"] is True
+    assert calls[0]["chat_template_kwargs"] == {"enable_thinking": False}
+
+
+def test_stream_content_miss_and_access_checks_happen_before_model(library):
+    client, calls = _stream_client(library, ["unused"])
+    assert client.post("/v1/tutor/answer/stream", json={"message": "What is a tardigrade?"}).status_code == 204
+    assert calls == []
+    protected, calls = _stream_client(library, ["unused"], token="secret")
+    assert protected.post("/v1/tutor/answer/stream", json={"message": "Where is Africa?"}).status_code == 401
+    assert calls == []
+
+
+def test_interrupted_or_incomplete_stream_is_never_a_completed_answer(library):
+    for fail in (False, True):
+        client, _ = _stream_client(library, ["Partial answer"], complete=False, fail=fail)
+        events = _events(client.post("/v1/tutor/answer/stream", json={"message": "Where is Africa?"}))
+        assert events[0] == {"text": "Partial answer"}
+        assert "error" in events[-1]
+        assert not any("done" in e for e in events)
+
+
+def test_streamed_course_keeps_plan_media_and_next_steps(tmp_path):
+    lib = subject_pack(tmp_path)
+    client, _ = _stream_client(lib, ["Conduction transfers heat."])
+    response = client.post("/v1/tutor/answer/stream", json={"message": "Teach me heat transfer"})
+    final = _events(response)[-1]["done"]
+    assert "Heat Transfer" in final["text"]
+    assert "Conduction transfers heat." in final["text"]
+    assert final["suggestions"]
+
+
+def test_unclosed_reasoning_is_not_exposed_as_a_completed_stream(library):
+    client, _ = _stream_client(library, ["<think>unfinished private reasoning"])
+    response = client.post("/v1/tutor/answer/stream", json={"message": "Where is Africa?"})
+    assert _events(response) == [{"error": "incomplete"}]
+    assert "private reasoning" not in response.text

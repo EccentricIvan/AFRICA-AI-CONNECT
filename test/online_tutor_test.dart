@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -155,4 +156,75 @@ void main() {
     );
     expect(await down.clips('frog'), isEmpty);
   });
+  test('streamed text is visible before completion, with split UTF-8 preserved', () async {
+    final wire = StreamController<List<int>>();
+    final tutor = OnlineTutor(baseUrl: 'http://hub', client: _WireClient((request) async {
+      expect(request.url.path, '/v1/tutor/answer/stream');
+      return http.StreamedResponse(wire.stream, 200, headers: {'content-type': 'text/event-stream'});
+    }));
+    final seen = <String>[];
+    var completed = false;
+    final pending = tutor.answer('q', onText: seen.add).then((value) {
+      completed = true;
+      return value;
+    });
+    await pumpEventQueue();
+    final bytes = utf8.encode('data: ' + jsonEncode({'text': 'Caf\u00e9'}) + '\n\n');
+    final split = bytes.indexOf(0xc3) + 1;
+    wire.add(bytes.sublist(0, split));
+    await pumpEventQueue();
+    expect(seen, isEmpty);
+    wire.add(bytes.sublist(split));
+    await pumpEventQueue();
+    expect(seen, ['Caf\u00e9']);
+    expect(completed, false);
+    wire.add(utf8.encode('data: ' + jsonEncode({'done': {
+      'text': 'Final answer with source', 'suggestions': ['Next topic'],
+    }}) + '\n\n'));
+    await wire.close();
+    final answer = await pending;
+    expect(answer?.text, 'Final answer with source');
+    expect(answer?.suggestions, ['Next topic']);
+  });
+
+  test('older servers use the JSON endpoint when streaming is absent', () async {
+    final paths = <String>[];
+    final tutor = OnlineTutor(baseUrl: 'http://old', client: MockClient((request) async {
+      paths.add(request.url.path);
+      return request.url.path.endsWith('/stream')
+          ? http.Response('', 404)
+          : http.Response('{"text":"Legacy answer"}', 200);
+    }));
+    expect((await tutor.answer('q', onText: (_) {}))?.text, 'Legacy answer');
+    expect(paths, ['/v1/tutor/answer/stream', '/v1/tutor/answer']);
+  });
+
+  test('interrupted streams clear partial text and allow normal fallback', () async {
+    final seen = <String>[];
+    final tutor = OnlineTutor(baseUrl: 'http://hub', client: MockClient((_) async =>
+      http.Response('data: {"text":"Partial"}\n\ndata: {"error":"offline"}\n\n', 200)));
+    expect(await tutor.answer('q', onText: seen.add), isNull);
+    expect(seen, ['Partial', '']);
+  });
+
+  test('stream content miss does not block the next covered answer', () async {
+    var calls = 0;
+    final tutor = OnlineTutor(baseUrl: 'http://hub', client: MockClient((_) async {
+      calls++;
+      return calls == 1 ? http.Response('', 204) :
+        http.Response('data: {"done":{"text":"Covered answer"}}\n\n', 200);
+    }));
+    expect(await tutor.answer('unknown', onText: (_) {}), isNull);
+    expect((await tutor.answer('covered', onText: (_) {}))?.text, 'Covered answer');
+    expect(calls, 2);
+  });
+
+}
+
+
+class _WireClient extends http.BaseClient {
+  _WireClient(this.handler);
+  final Future<http.StreamedResponse> Function(http.BaseRequest) handler;
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) => handler(request);
 }
