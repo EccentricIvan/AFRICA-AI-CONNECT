@@ -1,0 +1,456 @@
+{
+  "id": "economics",
+  "name": "Economics",
+  "icon": "account_balance",
+  "color": "#F59E0B",
+  "units": [
+    {
+      "title": "S5",
+      "lessons": [
+        {
+          "title": "Introduction to Economics",
+          "content": "What is economics, and what fundamental problem does every economy face? Economics is the study of how individuals, businesses, and societies choose to use limited (scarce) resources to satisfy unlimited human wants — the fundamental economic problem is scarcity: resources (land, labour, capital) are limited, but human wants for goods and services are effectively unlimited, forcing every economy to make choices about what to produce, how to produce it, and for whom. What is opportunity cost, and why is it central to economic decision-making? Opportunity cost is the value of the next best alternative given up when a choice is made — since resources are scarce, choosing to use them for one purpose always means giving up the opportunity to use them for something else, making opportunity cost a central concept in evaluating any economic decision, from an individual's spending to a government's budget. What is the Production Possibility Frontier (PPF), and what does it illustrate? The PPF is a graph showing the maximum possible combinations of two goods an economy can produce with its existing resources and technology, assuming full and efficient use of those resources — points on the curve represent efficient production, points inside the curve represent underused resources (inefficiency), and points outside the curve are currently unattainable without more resources or improved technology; the PPF's outward bend (concave shape) reflects increasing opportunity cost as more resources are shifted toward producing one good. What are the three main types of economic systems, and how does each answer the basic economic questions of what, how, and for whom to produce? A capitalist (market) economy relies on the price mechanism and private ownership to answer these questions, driven by supply and demand; a socialist (planned) economy relies on central government planning and public ownership to allocate resources; a mixed economy combines elements of both, with markets handling much production while government intervenes in specific areas (like public services or regulation) — most real-world economies, including Uganda's, are mixed to varying degrees. Why is understanding the basic economic problem and opportunity cost valuable beyond formal economic analysis? These concepts apply directly to everyday personal and national decision-making, helping individuals and governments make more informed choices by explicitly recognising the true cost (in terms of alternatives foregone) of any decision to use scarce resources in a particular way.",
+          "examples": [
+            "A student has 2 hours of free time and could either study or work a part-time job earning UGX 10,000. If they choose to study, identify the opportunity cost.\nStep 1: Recall opportunity cost is the value of the next best alternative given up\nStep 2: Identify the alternative that was given up: the UGX 10,000 from working\nAnswer: The opportunity cost of studying is the UGX 10,000 they could have earned working",
+            "A point lies inside a country's Production Possibility Frontier. Interpret what this indicates about the economy.\nStep 1: Recall points inside the PPF represent inefficient or underused resources\nAnswer: The economy is not using its resources fully or efficiently, since it could produce more of both goods by moving toward the curve",
+            "A point lies outside a country's current PPF. Explain what would be needed to reach that point.\nStep 1: Recall points outside the current PPF are unattainable with existing resources/technology\nAnswer: The country would need more resources or improved technology to shift its entire PPF outward and make that point attainable",
+            "Classify an economy where the government owns all major industries and centrally plans all production as a specific type of economic system.\nStep 1: Recall the three main economic systems and their characteristics\nAnswer: A socialist (planned) economy",
+            "Explain why Uganda's economy, like most real-world economies, is generally classified as a mixed economy.\nStep 1: Recall a mixed economy combines market mechanisms with government intervention\nAnswer: Uganda's economy relies significantly on markets and private ownership to allocate many resources, while the government also intervenes in certain areas like public services and regulation, combining elements of both capitalist and socialist systems, making it a mixed economy"
+          ],
+          "keyTerms": {
+            "scarcity": "The fundamental economic problem: resources are limited while human wants are unlimited",
+            "opportunity cost": "The value of the next best alternative given up when a choice is made",
+            "Production Possibility Frontier (PPF)": "A graph showing the maximum combinations of two goods an economy can produce with existing resources",
+            "mixed economy": "An economic system combining market mechanisms with government intervention"
+          },
+          "quiz": [
+            {
+              "question": "The fundamental economic problem is best described as:",
+              "options": [
+                "Unlimited resources and limited wants",
+                "Limited resources and unlimited human wants",
+                "No resources existing at all",
+                "Wants and resources both being unlimited"
+              ],
+              "correct": 1,
+              "explanation": "Scarcity arises from limited resources facing effectively unlimited human wants."
+            },
+            {
+              "question": "Opportunity cost refers to:",
+              "options": [
+                "The total cost of a purchase in money",
+                "The value of the next best alternative given up",
+                "A cost that never actually matters",
+                "Only costs measured in cash"
+              ],
+              "correct": 1,
+              "explanation": "Opportunity cost measures the foregone alternative, not just monetary cost."
+            },
+            {
+              "question": "A point inside a country's PPF indicates:",
+              "options": [
+                "Perfectly efficient resource use",
+                "Underused or inefficient resources",
+                "A point that is currently impossible to reach",
+                "No resources are available at all"
+              ],
+              "correct": 1,
+              "explanation": "Points inside the curve show the economy isn't using resources to their full potential."
+            },
+            {
+              "question": "Which economic system relies primarily on the price mechanism and private ownership?",
+              "options": [
+                "Socialist (planned) economy",
+                "Capitalist (market) economy",
+                "A barter economy only",
+                "None of these systems use pricing"
+              ],
+              "correct": 1,
+              "explanation": "Capitalist economies rely on market forces and private ownership to allocate resources."
+            },
+            {
+              "question": "The PPF's concave (outward-bending) shape reflects:",
+              "options": [
+                "Constant opportunity cost",
+                "Increasing opportunity cost as production shifts toward one good",
+                "Decreasing opportunity cost always",
+                "No relationship to opportunity cost"
+              ],
+              "correct": 1,
+              "explanation": "The curve's shape reflects rising opportunity cost as resources become less suited to producing more of one good."
+            }
+          ]
+        },
+        {
+          "title": "Demand and Supply",
+          "content": "What is demand, and what is the law of demand? Demand is the quantity of a good or service that consumers are willing and able to buy at a given price, over a given period — the law of demand states that, all else being equal (ceteris paribus), as the price of a good rises, the quantity demanded falls, and as price falls, quantity demanded rises, producing a downward-sloping demand curve, largely because of the substitution effect (buyers switch to cheaper alternatives) and income effect (a price rise reduces real purchasing power). What factors, other than price, can cause the entire demand curve to shift? Changes in income (more income generally increases demand for normal goods); changes in the price of related goods (substitutes and complements); changes in consumer tastes and preferences; changes in population or the number of buyers; and expectations about future prices — any of these shifts the whole demand curve left (decrease) or right (increase), distinct from a movement along the curve caused by a price change alone. What is supply, and what is the law of supply? Supply is the quantity of a good or service that producers are willing and able to sell at a given price, over a given period — the law of supply states that, all else being equal, as price rises, quantity supplied rises, producing an upward-sloping supply curve, since higher prices make production more profitable and encourage producers to supply more. What factors, other than price, can shift the entire supply curve? Changes in production costs (like input prices or wages); changes in technology (improving efficiency); changes in the number of producers/sellers; government taxes or subsidies; and expectations about future prices — these shift the whole supply curve, distinct from a price-driven movement along it. What is market equilibrium, and how is it determined? Market equilibrium is the price and quantity at which the quantity demanded exactly equals the quantity supplied — graphically, this is the point where the demand and supply curves intersect; at this equilibrium price, there is no inherent tendency for the price to change, since buyers and sellers' quantities are matched exactly.",
+          "examples": [
+            "Explain, using the law of demand, what happens to quantity demanded when the price of a good rises, all else being equal.\nStep 1: Recall the law of demand\nAnswer: Quantity demanded falls as price rises, since buyers substitute toward cheaper alternatives and their real purchasing power decreases",
+            "A rise in consumer income increases the demand for a normal good. Describe what happens to the demand curve.\nStep 1: Recall an income change shifts the entire demand curve, not just a movement along it\nAnswer: The entire demand curve shifts to the right (an increase in demand), meaning more is demanded at every price level",
+            "An improvement in production technology lowers a firm's production costs. Describe what happens to the supply curve.\nStep 1: Recall lower production costs make supplying more profitable at each price\nAnswer: The entire supply curve shifts to the right (an increase in supply), meaning more is supplied at every price level",
+            "At a price of UGX 2,000, quantity demanded is 500 units and quantity supplied is 300 units. Identify whether this price is above or below equilibrium, and explain the likely pressure on price.\nStep 1: Recall equilibrium requires quantity demanded to equal quantity supplied\nStep 2: Compare: demand (500) exceeds supply (300), a shortage\nAnswer: The price is below equilibrium, creating a shortage; this shortage creates upward pressure on the price until it rises to the equilibrium level",
+            "At a price of UGX 5,000, quantity supplied is 800 units and quantity demanded is 400 units. Identify the market condition and the likely pressure on price.\nStep 1: Compare supply (800) to demand (400): supply exceeds demand, a surplus\nAnswer: This creates a surplus, putting downward pressure on the price until it falls toward the equilibrium level"
+          ],
+          "keyTerms": {
+            "law of demand": "As price rises, quantity demanded falls, and vice versa, all else being equal",
+            "law of supply": "As price rises, quantity supplied rises, and vice versa, all else being equal",
+            "market equilibrium": "The price and quantity at which quantity demanded exactly equals quantity supplied",
+            "ceteris paribus": "A Latin phrase meaning 'all else being equal', used to isolate the effect of one variable"
+          },
+          "quiz": [
+            {
+              "question": "According to the law of demand, when price rises, quantity demanded:",
+              "options": [
+                "Also rises",
+                "Falls",
+                "Stays exactly the same",
+                "Becomes unpredictable"
+              ],
+              "correct": 1,
+              "explanation": "The law of demand describes an inverse relationship between price and quantity demanded."
+            },
+            {
+              "question": "A rise in consumer income for a normal good causes the demand curve to:",
+              "options": [
+                "Shift left (decrease)",
+                "Shift right (increase)",
+                "Stay in exactly the same position",
+                "Disappear entirely"
+              ],
+              "correct": 1,
+              "explanation": "Higher income typically increases demand for normal goods, shifting the curve rightward."
+            },
+            {
+              "question": "According to the law of supply, when price rises, quantity supplied:",
+              "options": [
+                "Falls",
+                "Rises",
+                "Stays the same",
+                "Becomes zero"
+              ],
+              "correct": 1,
+              "explanation": "Higher prices make production more profitable, encouraging greater supply."
+            },
+            {
+              "question": "Market equilibrium occurs where:",
+              "options": [
+                "Quantity demanded is much greater than quantity supplied",
+                "Quantity demanded exactly equals quantity supplied",
+                "Quantity supplied is always zero",
+                "Price is always at its highest possible level"
+              ],
+              "correct": 1,
+              "explanation": "Equilibrium is the point where demand and supply curves intersect, balancing quantities."
+            },
+            {
+              "question": "If quantity supplied exceeds quantity demanded at a given price, this creates a:",
+              "options": [
+                "Shortage",
+                "Surplus, putting downward pressure on price",
+                "No change in market conditions",
+                "Permanent price increase"
+              ],
+              "correct": 1,
+              "explanation": "Excess supply over demand is a surplus, which pushes prices down toward equilibrium."
+            }
+          ]
+        },
+        {
+          "title": "Price Elasticity and Market Equilibrium",
+          "content": "What is price elasticity of demand, and how is it calculated? Price elasticity of demand (PED) measures how responsive quantity demanded is to a change in price, calculated as the percentage change in quantity demanded divided by the percentage change in price — demand is described as elastic if PED is greater than 1 (quantity demanded changes proportionally more than price), inelastic if PED is less than 1 (quantity demanded changes proportionally less than price), and unitary if PED equals exactly 1. What factors influence whether a good's demand is elastic or inelastic? Availability of substitutes (goods with many close substitutes tend to have more elastic demand, since buyers can easily switch); whether the good is a necessity or luxury (necessities tend to be more inelastic); the proportion of income spent on the good (a higher proportion tends to mean more elastic demand); and time (demand tends to become more elastic over a longer time period, as buyers have more time to find alternatives). Why does price elasticity of demand matter for a business or government's pricing and tax decisions? A business selling a good with inelastic demand can raise prices without losing much sales volume, increasing total revenue; a government considering a tax on a good with inelastic demand (like cigarettes) can expect the tax to raise significant revenue with relatively little reduction in quantity consumed, since demand doesn't fall much even as price rises. What is price elasticity of supply, and what factors influence it? Price elasticity of supply (PES) measures how responsive quantity supplied is to a change in price, calculated similarly to PED — supply tends to be more elastic when producers can easily increase production (more available capacity, more time to respond, or easily storable goods), and more inelastic when production cannot be quickly increased (like agricultural goods dependent on a growing season, or goods requiring specialised, hard-to-expand production facilities). How does the concept of elasticity help explain why agricultural prices can be so volatile? Since many agricultural goods have relatively inelastic supply in the short term (a farmer cannot instantly grow more crops in response to a price change) combined with often inelastic demand (food is a necessity), even small shifts in supply (like a poor harvest) can cause large price swings, since neither side of the market adjusts its quantity much in response.",
+          "examples": [
+            "A 10% price increase leads to a 20% decrease in quantity demanded. Calculate the price elasticity of demand and classify it.\nStep 1: Use PED = %change in quantity demanded ÷ %change in price\nStep 2: Substitute: 20% ÷ 10%\nStep 3: Calculate: 2\nAnswer: PED = 2 (ignoring sign), which is elastic demand, since it is greater than 1",
+            "A 10% price increase leads to only a 2% decrease in quantity demanded. Calculate the PED and classify it.\nStep 1: Use PED = %change in quantity demanded ÷ %change in price\nStep 2: Substitute: 2% ÷ 10%\nStep 3: Calculate: 0.2\nAnswer: PED = 0.2, which is inelastic demand, since it is less than 1",
+            "Explain why a government might expect a tax on cigarettes to raise significant revenue with only a small drop in quantity sold.\nStep 1: Recall cigarettes typically have inelastic demand (few substitutes, addictive)\nAnswer: Since cigarette demand is inelastic, quantity demanded falls only a little even as the tax raises the price, so the government collects substantial tax revenue on the large remaining quantity still sold",
+            "Explain why agricultural crop prices can be highly volatile even after a relatively small change in harvest supply.\nStep 1: Recall agricultural supply and food demand are both often inelastic in the short term\nAnswer: Since farmers cannot quickly adjust supply, and demand for food (a necessity) doesn't change much either, even a small shift in harvest supply requires a large price change to bring the market back to equilibrium",
+            "State one factor that would make a good's demand more elastic.\nStep 1: Recall factors influencing elasticity\nAnswer: Any one of: having many available substitutes, being a luxury (not necessity), taking up a large proportion of income, or being considered over a longer time period"
+          ],
+          "keyTerms": {
+            "price elasticity of demand (PED)": "A measure of how responsive quantity demanded is to a change in price",
+            "elastic demand": "Demand where quantity demanded changes proportionally more than price (PED > 1)",
+            "inelastic demand": "Demand where quantity demanded changes proportionally less than price (PED < 1)",
+            "price elasticity of supply (PES)": "A measure of how responsive quantity supplied is to a change in price"
+          },
+          "quiz": [
+            {
+              "question": "If PED is greater than 1, demand is classified as:",
+              "options": [
+                "Inelastic",
+                "Elastic",
+                "Perfectly inelastic",
+                "Unrelated to price"
+              ],
+              "correct": 1,
+              "explanation": "A PED value greater than 1 indicates elastic demand."
+            },
+            {
+              "question": "A 5% price rise causes a 1% fall in quantity demanded. What is the PED, and how is demand classified?",
+              "options": [
+                "PED=5, elastic",
+                "PED=0.2, inelastic",
+                "PED=1, unitary",
+                "PED=0, perfectly elastic"
+              ],
+              "correct": 1,
+              "explanation": "PED = 1%/5% = 0.2, which is inelastic (less than 1)."
+            },
+            {
+              "question": "Goods with many available substitutes tend to have:",
+              "options": [
+                "More inelastic demand",
+                "More elastic demand",
+                "No price elasticity at all",
+                "Perfectly fixed demand"
+              ],
+              "correct": 1,
+              "explanation": "Easy substitution makes buyers more responsive to price changes, increasing elasticity."
+            },
+            {
+              "question": "Why can agricultural prices be highly volatile?",
+              "options": [
+                "Supply and demand are both highly elastic",
+                "Supply and demand are often both inelastic in the short term",
+                "Farmers can instantly adjust production",
+                "Food demand changes drastically with price"
+              ],
+              "correct": 1,
+              "explanation": "Inelastic supply and demand mean small supply shifts require large price changes to reach equilibrium."
+            },
+            {
+              "question": "A government taxing a good with inelastic demand can expect:",
+              "options": [
+                "A large drop in quantity sold and little tax revenue",
+                "Significant tax revenue with only a small drop in quantity sold",
+                "No revenue at all",
+                "Quantity demanded to increase after the tax"
+              ],
+              "correct": 1,
+              "explanation": "Inelastic demand means consumers keep buying similar quantities even as price (including tax) rises."
+            }
+          ]
+        },
+        {
+          "title": "Theory of Production and Costs",
+          "content": "What is production, and what are the factors of production used to produce goods and services? Production is the process of combining resources to create goods and services that satisfy human wants — the factors of production are land (natural resources), labour (human effort, physical and mental), capital (man-made resources like machinery and buildings), and entrepreneurship (organising the other factors and bearing business risk), each earning a corresponding reward (rent, wages, interest, and profit respectively). What is the law of diminishing marginal returns, and why does it apply in the short run? The law states that as more units of a variable factor (like labour) are added to a fixed factor (like land or capital), the additional (marginal) output produced by each extra unit will eventually decrease — this happens because the fixed factor becomes increasingly crowded or over-used relative to the growing variable factor, reducing each additional worker's individual productivity contribution. What is the difference between fixed costs and variable costs, and how do they combine to form total cost? Fixed costs do not change with the level of output (like rent or loan repayments, which must be paid even if output is zero); variable costs change directly with the level of output (like raw materials or hourly wages, increasing as more is produced) — total cost is the sum of fixed cost and variable cost at any given output level. What is the difference between average cost and marginal cost, and how are they calculated? Average cost is total cost divided by the quantity produced (the cost per unit); marginal cost is the additional cost of producing one more unit of output — marginal cost typically first falls, then rises as diminishing returns set in, and the marginal cost curve crosses the average cost curve at the average cost curve's minimum point. Why is understanding cost theory important for a firm's production and pricing decisions? Understanding how costs behave at different output levels helps a firm decide the most efficient scale of production, set prices that at least cover costs, and identify the output level that maximises profit (where marginal cost equals marginal revenue).",
+          "examples": [
+            "State the four factors of production and the reward each earns.\nStep 1: Recall the four factors and their corresponding rewards\nAnswer: Land (rent), labour (wages), capital (interest), and entrepreneurship (profit)",
+            "A firm has fixed costs of UGX 500,000 and variable costs of UGX 300,000 at a given output level. Find the total cost.\nStep 1: Use Total cost = Fixed cost + Variable cost\nStep 2: Substitute: 500,000 + 300,000\nAnswer: Total cost = UGX 800,000",
+            "A firm produces 200 units at a total cost of UGX 800,000. Find the average cost per unit.\nStep 1: Use Average cost = Total cost ÷ Quantity\nStep 2: Substitute: 800,000 ÷ 200\nAnswer: Average cost = UGX 4,000 per unit",
+            "Explain why adding more workers to a fixed-size factory eventually leads to a smaller increase in output per additional worker.\nStep 1: Recall the law of diminishing marginal returns\nAnswer: As more workers are added to the fixed factory space and equipment, the fixed factor becomes increasingly crowded relative to the growing workforce, reducing each additional worker's individual contribution to output",
+            "Explain why a firm needs to understand both its fixed and variable costs when deciding how much to produce.\nStep 1: Recall fixed costs don't change with output, variable costs do\nAnswer: Understanding which costs are fixed (unavoidable regardless of output) and which are variable (changing with production level) helps the firm calculate its total costs at different output levels and identify the most efficient, profitable level of production"
+          ],
+          "keyTerms": {
+            "factors of production": "Land, labour, capital, and entrepreneurship — the resources needed to produce goods and services",
+            "law of diminishing marginal returns": "As more of a variable factor is added to a fixed factor, the additional output eventually decreases",
+            "fixed cost": "A cost that does not change with the level of output",
+            "variable cost": "A cost that changes directly with the level of output"
+          },
+          "quiz": [
+            {
+              "question": "Which factor of production earns wages as its reward?",
+              "options": [
+                "Land",
+                "Labour",
+                "Capital",
+                "Entrepreneurship"
+              ],
+              "correct": 1,
+              "explanation": "Labour earns wages; land earns rent, capital earns interest, entrepreneurship earns profit."
+            },
+            {
+              "question": "A firm has fixed costs of UGX 200,000 and variable costs of UGX 150,000. Find total cost.",
+              "options": [
+                "UGX 50,000",
+                "UGX 350,000",
+                "UGX 200,000",
+                "UGX 150,000"
+              ],
+              "correct": 1,
+              "explanation": "Total cost = 200,000 + 150,000 = 350,000."
+            },
+            {
+              "question": "The law of diminishing marginal returns states that adding more of a variable factor to a fixed factor eventually causes:",
+              "options": [
+                "Constantly increasing marginal output",
+                "Decreasing marginal output per additional unit",
+                "No change in output at all",
+                "Output to become negative immediately"
+              ],
+              "correct": 1,
+              "explanation": "Marginal output eventually falls as the fixed factor becomes relatively overcrowded."
+            },
+            {
+              "question": "A cost that does not change regardless of output level is called a:",
+              "options": [
+                "Variable cost",
+                "Fixed cost",
+                "Marginal cost",
+                "Average cost"
+              ],
+              "correct": 1,
+              "explanation": "Fixed costs remain constant regardless of how much is produced."
+            },
+            {
+              "question": "A firm produces 100 units at a total cost of UGX 500,000. Find the average cost per unit.",
+              "options": [
+                "UGX 5,000",
+                "UGX 50,000",
+                "UGX 500",
+                "UGX 500,000"
+              ],
+              "correct": 0,
+              "explanation": "Average cost = Total cost ÷ Quantity = 500,000 ÷ 100 = 5,000."
+            }
+          ]
+        },
+        {
+          "title": "Market Structures",
+          "content": "What is a market structure, and what are the main types studied in economics? A market structure describes the competitive environment in which firms operate, determined largely by the number of firms, the nature of the product, and barriers to entry — the main types are perfect competition, monopolistic competition, oligopoly, and monopoly, ranging from the most to the least competitive. What are the key characteristics of perfect competition? Many small firms, all selling an identical (homogeneous) product, with no single firm able to influence the market price (each is a 'price taker'), free entry and exit for new firms, and perfect information available to all buyers and sellers — this is a theoretical ideal rarely fully achieved in the real world, but useful as a benchmark for comparison. What are the key characteristics of monopoly, and why can a monopolist influence price? A monopoly exists when a single firm is the sole seller of a good or service with no close substitutes, typically protected by significant barriers to entry (like legal restrictions, control of essential resources, or very high startup costs) — since there is no competition, the monopolist can influence the market price by controlling the quantity it chooses to supply, unlike a price-taking firm in perfect competition. What are oligopoly and monopolistic competition, and how do they differ from the two extremes of perfect competition and monopoly? An oligopoly involves a small number of large firms dominating a market (like mobile network providers), often with significant interdependence between firms' pricing and output decisions (each firm must consider how rivals will react); monopolistic competition involves many firms selling similar but not identical (differentiated) products (like different restaurants), giving each firm some, but limited, ability to set its own price based on its product's unique features. Why does market structure matter for consumers, prices, and overall economic efficiency? More competitive market structures (like perfect competition) generally tend to produce lower prices and greater efficiency for consumers, while less competitive structures (like monopoly) can lead to higher prices and reduced output, which is why governments often regulate monopolies and highly concentrated oligopolies to protect consumer interests.",
+          "examples": [
+            "Classify a market with many small firms selling an identical product, none able to influence price, as a specific market structure.\nStep 1: Recall the characteristics of perfect competition\nAnswer: Perfect competition",
+            "Classify a market with a single firm as the sole seller of electricity in a region, protected by high barriers to entry, as a specific market structure.\nStep 1: Recall the characteristics of monopoly\nAnswer: Monopoly",
+            "Classify a market with a small number of large mobile network providers, whose pricing decisions depend on each other's likely reactions, as a specific market structure.\nStep 1: Recall the characteristics of oligopoly\nAnswer: Oligopoly",
+            "Explain why a monopolist, unlike a firm in perfect competition, can influence the market price of its product.\nStep 1: Recall perfect competition firms are 'price takers', monopolies face no competition\nAnswer: Since a monopolist is the sole seller with no close substitutes and no competing firms, it can influence the market price by controlling how much it chooses to supply, unlike a price-taking firm in perfect competition which must accept the market price",
+            "Explain why governments often regulate monopolies and highly concentrated oligopolies.\nStep 1: Recall less competitive structures can lead to higher prices and reduced output for consumers\nAnswer: Governments regulate monopolies and concentrated oligopolies to protect consumers from higher prices and reduced output that can result from a lack of competition, aiming to promote fairer prices and greater economic efficiency"
+          ],
+          "keyTerms": {
+            "perfect competition": "A market structure with many firms selling an identical product, none able to influence price",
+            "monopoly": "A market structure where a single firm is the sole seller with no close substitutes",
+            "oligopoly": "A market structure dominated by a small number of large, interdependent firms",
+            "monopolistic competition": "A market structure with many firms selling similar but differentiated products"
+          },
+          "quiz": [
+            {
+              "question": "In perfect competition, individual firms are described as:",
+              "options": [
+                "Price makers, setting the market price",
+                "Price takers, unable to influence the market price",
+                "Monopolists",
+                "Government-controlled entities"
+              ],
+              "correct": 1,
+              "explanation": "In perfect competition, no single firm can influence price; all accept the market price."
+            },
+            {
+              "question": "A monopoly is characterised by:",
+              "options": [
+                "Many firms selling identical products",
+                "A single firm as the sole seller with no close substitutes",
+                "Free entry and exit for all firms",
+                "Perfect information for all buyers and sellers"
+              ],
+              "correct": 1,
+              "explanation": "A monopoly involves one dominant firm with significant barriers to entry."
+            },
+            {
+              "question": "An oligopoly is best described as a market with:",
+              "options": [
+                "Countless tiny firms",
+                "A small number of large, interdependent firms",
+                "Only one firm",
+                "No firms operating at all"
+              ],
+              "correct": 1,
+              "explanation": "Oligopolies involve a few large firms whose decisions depend on each other."
+            },
+            {
+              "question": "Monopolistic competition differs from perfect competition mainly because firms:",
+              "options": [
+                "Sell identical products with no differences",
+                "Sell similar but differentiated products, giving some pricing power",
+                "Cannot enter or exit the market",
+                "Have absolutely no competitors"
+              ],
+              "correct": 1,
+              "explanation": "Product differentiation gives firms limited pricing power in monopolistic competition."
+            },
+            {
+              "question": "Why do governments often regulate monopolies?",
+              "options": [
+                "To increase prices for consumers",
+                "To protect consumers from higher prices and reduced output",
+                "Monopolies never need any regulation",
+                "To eliminate all competition entirely"
+              ],
+              "correct": 1,
+              "explanation": "Regulation aims to counter the negative effects of reduced competition on consumers."
+            }
+          ]
+        },
+        {
+          "title": "National Income",
+          "content": "What is national income, and why is it measured? National income refers to the total value of goods and services produced by a country's economy over a specific period, usually one year — measuring it allows comparison of an economy's size and performance over time, comparison between different countries, and informs government economic policy decisions. What is Gross Domestic Product (GDP), and how does it differ from Gross National Product (GNP)? GDP is the total value of all final goods and services produced WITHIN a country's borders in a given period, regardless of who owns the producing resources (citizens or foreigners); GNP is the total value of goods and services produced by a country's OWN citizens and businesses, regardless of whether production occurs domestically or abroad — GNP includes income earned by citizens working abroad but excludes income earned by foreigners working within the country, the reverse of GDP's scope. What are the three main methods used to calculate national income, and what does each measure? The output (product) method sums the value added by every industry in the economy; the income method sums all incomes earned by factors of production (wages, rent, interest, profit); the expenditure method sums all spending on final goods and services (consumption, investment, government spending, and net exports) — in theory, all three methods should produce the same total figure, since one person's spending is another's income, which in turn reflects the value of output produced. Why is GDP per capita often used instead of total GDP when comparing living standards between countries? GDP per capita (total GDP divided by population) accounts for population size, giving a better indication of the average output and income per person — a country with a very large population might have a higher total GDP than a smaller country, yet a much lower GDP per capita, indicating a lower average standard of living. What are some important limitations of using GDP as a measure of a country's overall wellbeing or standard of living? GDP does not directly measure income distribution (a high GDP could still involve extreme inequality), does not account for unpaid or informal economic activity (like subsistence farming or household work, both significant in Uganda), does not measure environmental degradation or resource depletion, and does not directly capture broader quality-of-life factors like health, education, happiness, or leisure time.",
+          "examples": [
+            "Distinguish between GDP and GNP.\nStep 1: Recall GDP measures production within a country's borders, GNP measures production by a country's own citizens\nAnswer: GDP is the value of goods and services produced within a country's borders regardless of ownership, while GNP is the value produced by a country's own citizens and businesses, regardless of where in the world that production occurs",
+            "State the three main methods used to calculate national income.\nStep 1: Recall the three calculation methods\nAnswer: The output (product) method, the income method, and the expenditure method",
+            "A country has a total GDP of UGX 50 trillion and a population of 40 million. Calculate its GDP per capita.\nStep 1: Use GDP per capita = Total GDP ÷ Population\nStep 2: Substitute: 50,000,000,000,000 ÷ 40,000,000\nAnswer: GDP per capita = UGX 1,250,000",
+            "Explain why a country with a large population might have a high total GDP but a low GDP per capita.\nStep 1: Recall GDP per capita accounts for population size\nAnswer: A large population spreads the total GDP across many more people, so even a large total GDP figure can result in a relatively low average output/income per person once divided by that large population",
+            "Explain one limitation of using GDP alone to measure Uganda's overall standard of living.\nStep 1: Recall GDP's limitations, such as excluding informal economic activity\nAnswer: GDP does not account for significant unpaid or informal economic activity, like subsistence farming, which is common in Uganda, meaning official GDP figures may understate the true scale of economic activity and wellbeing"
+          ],
+          "keyTerms": {
+            "Gross Domestic Product (GDP)": "The total value of goods and services produced within a country's borders in a given period",
+            "Gross National Product (GNP)": "The total value of goods and services produced by a country's own citizens, regardless of location",
+            "GDP per capita": "Total GDP divided by population, indicating average output/income per person"
+          },
+          "quiz": [
+            {
+              "question": "GDP measures production:",
+              "options": [
+                "By a country's citizens anywhere in the world",
+                "Within a country's borders, regardless of ownership",
+                "Only by foreign-owned companies",
+                "Only in the informal sector"
+              ],
+              "correct": 1,
+              "explanation": "GDP is based on location of production, not ownership/nationality."
+            },
+            {
+              "question": "Which method of calculating national income sums all wages, rent, interest, and profit?",
+              "options": [
+                "The output method",
+                "The income method",
+                "The expenditure method",
+                "None of these methods"
+              ],
+              "correct": 1,
+              "explanation": "The income method totals earnings across all factors of production."
+            },
+            {
+              "question": "A country has GDP of UGX 20 trillion and population of 10 million. Find GDP per capita.",
+              "options": [
+                "UGX 200,000",
+                "UGX 2,000,000",
+                "UGX 20,000",
+                "UGX 2,000"
+              ],
+              "correct": 1,
+              "explanation": "GDP per capita = 20,000,000,000,000 ÷ 10,000,000 = 2,000,000."
+            },
+            {
+              "question": "Why is GDP per capita often more useful than total GDP for comparing living standards?",
+              "options": [
+                "It ignores population entirely",
+                "It accounts for population size, showing average output per person",
+                "It always shows the same value as total GDP",
+                "It has no relevance to living standards"
+              ],
+              "correct": 1,
+              "explanation": "Dividing by population gives a clearer picture of average individual output/income."
+            },
+            {
+              "question": "A key limitation of GDP as a wellbeing measure is that it:",
+              "options": [
+                "Perfectly captures income distribution and quality of life",
+                "Does not account for informal economic activity or income distribution",
+                "Always accurately reflects environmental health",
+                "Has no limitations whatsoever"
+              ],
+              "correct": 1,
+              "explanation": "GDP omits important factors like informal activity, inequality, and broader wellbeing measures."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

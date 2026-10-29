@@ -1,10 +1,10 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
-project(otic_connect LANGUAGES CXX)
+project(ai_connect_africa LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "otic_connect")
+set(BINARY_NAME "ai_connect_africa")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
@@ -106,3 +106,26 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
 install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
   COMPONENT Runtime)
+
+# The Vulkan loader, fetched by tools/fetch_vulkan_loader.ps1.
+#
+# Not a GPU feature: translation runs CPU-only (nGpuLayers: 0). llm_llamacpp's
+# prebuilt Windows bundle links its ggml backends statically, so ggml.dll has a
+# load-time import on ggml-vulkan.dll, which imports vulkan-1.dll:
+#
+#     vulkan-1.dll <- ggml-vulkan.dll <- ggml.dll <- llama.dll
+#
+# vulkan-1.dll arrives with GPU drivers. Without it — generic or old display
+# drivers, common on the low-end laptops this project targets — every DLL above
+# fails to load with error 126, llm_llamacpp's helper isolate dies during
+# backend init, and translation stops working with no visible error.
+set(VULKAN_LOADER_DLL "${CMAKE_CURRENT_SOURCE_DIR}/third_party/vulkan/vulkan-1.dll")
+if(EXISTS "${VULKAN_LOADER_DLL}")
+  install(FILES "${VULKAN_LOADER_DLL}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+    COMPONENT Runtime)
+else()
+  message(WARNING
+    "vulkan-1.dll not found at ${VULKAN_LOADER_DLL}. This build will fail to "
+    "translate on any machine without a Vulkan-capable display driver. "
+    "Run tools/fetch_vulkan_loader.ps1 before building.")
+endif()

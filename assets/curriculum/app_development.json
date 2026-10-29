@@ -1,0 +1,1470 @@
+{
+    "id":  "app_development",
+    "name":  "App Development",
+    "icon":  "phone_android",
+    "color":  "#6366F1",
+    "units":  [
+                  {
+                      "title":  "App Concepts",
+                      "lessons":  [
+                                      {
+                                          "title":  "What Are Mobile Apps",
+                                          "content":  "A mobile app is software for smartphones and tablets. Native apps are built for one platform (Android: Kotlin/Java, iOS: Swift) — fast with full device access. Cross-platform apps (Flutter, React Native) use one codebase for both — faster to develop. Web apps run in browsers. Progressive Web Apps (PWAs) can be installed and work offline. Choose based on: target audience, budget, features needed, and timeline.",
+                                          "examples":  [
+                                                           "Instagram is native — separate code for Android and iOS",
+                                                           "Flutter: one Dart codebase runs on Android, iOS, Windows, and web",
+                                                           "Twitter\u0027s PWA can be installed from the browser"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "native app":  "Built for one platform using its native language",
+                                                           "cross-platform":  "One codebase for multiple platforms",
+                                                           "PWA":  "Progressive Web App — installable web app with offline support",
+                                                           "SDK":  "Software Development Kit — tools and libraries for building apps"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Main advantage of cross-platform:",
+                                                           "options":  [
+                                                                           "Smaller size",
+                                                                           "Faster performance",
+                                                                           "More device features",
+                                                                           "One codebase for multiple platforms"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Write once, deploy everywhere."
+                                                       },
+                                                       {
+                                                           "question":  "Native Android language:",
+                                                           "options":  [
+                                                                           "Swift",
+                                                                           "Kotlin",
+                                                                           "Python",
+                                                                           "Ruby"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Kotlin (and Java) for Android."
+                                                       },
+                                                       {
+                                                           "question":  "PWA differs from regular website by:",
+                                                           "options":  [
+                                                                           "Uses different language",
+                                                                           "Only works on phones",
+                                                                           "Requires app store download",
+                                                                           "Can be installed and works offline"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "PWAs cache content for offline use and can be installed."
+                                                       },
+                                                       {
+                                                           "question":  "Flutter uses which language?",
+                                                           "options":  [
+                                                                           "Java",
+                                                                           "JavaScript",
+                                                                           "Swift",
+                                                                           "Dart"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Flutter apps are written in Dart."
+                                                       },
+                                                       {
+                                                           "question":  "When to choose native over cross-platform:",
+                                                           "options":  [
+                                                                           "When targeting both platforms equally",
+                                                                           "When budget is limited",
+                                                                           "When you need maximum performance and full platform features",
+                                                                           "When speed of development is priority"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Native gives best performance and full access to platform-specific features."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "UI/UX Design Principles",
+                                          "content":  "UI (User Interface) is how the app looks — buttons, colors, text. UX (User Experience) is how it feels to use. Principles: consistency (same patterns throughout), feedback (app responds to every action), simplicity, accessibility (usable by people with disabilities). Use established patterns: bottom nav bars, pull to refresh, swipe gestures. Material Design (Android) and Human Interface Guidelines (iOS) provide platform-specific design standards. Always test with real users.",
+                                          "examples":  [
+                                                           "Loading spinner gives feedback — user knows something is happening",
+                                                           "Bottom nav (Home, Search, Profile) — a pattern users already know",
+                                                           "High contrast text ensures readability for all users"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "UI":  "User Interface — visual design elements",
+                                                           "UX":  "User Experience — ease and pleasantness of use",
+                                                           "accessibility":  "Usable by people with disabilities",
+                                                           "Material Design":  "Google\u0027s design system for Android apps",
+                                                           "wireframe":  "A low-fidelity sketch of an app\u0027s layout before coding"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "UI vs UX:",
+                                                           "options":  [
+                                                                           "Same thing",
+                                                                           "UI is looks, UX is feel",
+                                                                           "UI is backend, UX is frontend",
+                                                                           "UI is mobile, UX is web"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "UI = visual design, UX = overall experience."
+                                                       },
+                                                       {
+                                                           "question":  "Consistency is important because:",
+                                                           "options":  [
+                                                                           "Makes app boring",
+                                                                           "Users learn patterns once and apply everywhere",
+                                                                           "Reduces screens",
+                                                                           "Uses less memory"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Consistent design reduces cognitive load."
+                                                       },
+                                                       {
+                                                           "question":  "Accessibility means:",
+                                                           "options":  [
+                                                                           "Available in many countries",
+                                                                           "Usable by people with disabilities",
+                                                                           "Free to download",
+                                                                           "Works without internet"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Everyone should be able to use the app."
+                                                       },
+                                                       {
+                                                           "question":  "A wireframe is:",
+                                                           "options":  [
+                                                                           "The final design",
+                                                                           "A low-fidelity sketch of app layout",
+                                                                           "Source code",
+                                                                           "A testing tool"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Wireframes plan layout before investing in full design."
+                                                       },
+                                                       {
+                                                           "question":  "Material Design is:",
+                                                           "options":  [
+                                                                           "A database",
+                                                                           "Apple\u0027s design system",
+                                                                           "A programming language",
+                                                                           "Google\u0027s design system for Android"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Material Design provides components, patterns, and guidelines for Android apps."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "App Architecture Patterns",
+                                          "content":  "Architecture organizes app code. MVC: Model (data), View (display), Controller (logic). MVVM: ViewModel prepares data for View and handles actions — popular in modern apps. Clean Architecture separates: presentation (UI), domain (business logic), data (databases, APIs). State management tracks what the app shows. Good architecture means easier testing, debugging, and extending. Separation of concerns: each part does one job.",
+                                          "examples":  [
+                                                           "View: login screen with fields and button",
+                                                           "Model: User object with name, email, photo",
+                                                           "ViewModel: validates input, calls API, tells View the result"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "MVC":  "Model-View-Controller pattern",
+                                                           "state management":  "Tracking what the app displays at any moment",
+                                                           "separation of concerns":  "Each module handles one responsibility",
+                                                           "MVVM":  "Model-View-ViewModel — modern pattern for reactive UI updates"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "In MVC, View does:",
+                                                           "options":  [
+                                                                           "Displays data to user",
+                                                                           "Stores data",
+                                                                           "Handles logic",
+                                                                           "Connects to database"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "View is the UI layer."
+                                                       },
+                                                       {
+                                                           "question":  "State management matters because:",
+                                                           "options":  [
+                                                                           "Reduces file size",
+                                                                           "Makes app faster",
+                                                                           "It tracks what the app should display",
+                                                                           "Handles networking"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "UI must always reflect current data and user actions."
+                                                       },
+                                                       {
+                                                           "question":  "Separation of concerns means:",
+                                                           "options":  [
+                                                                           "Separating teams",
+                                                                           "All code in one file",
+                                                                           "Each part handles one responsibility",
+                                                                           "Using multiple languages"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Each module does one job — UI doesn\u0027t mix with data logic."
+                                                       },
+                                                       {
+                                                           "question":  "MVVM is popular because:",
+                                                           "options":  [
+                                                                           "It doesn\u0027t need a model",
+                                                                           "It\u0027s the simplest pattern",
+                                                                           "ViewModel automatically updates the View when data changes",
+                                                                           "It only works on iOS"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "MVVM enables reactive UI — View observes ViewModel and updates automatically."
+                                                       },
+                                                       {
+                                                           "question":  "Clean Architecture layers are:",
+                                                           "options":  [
+                                                                           "Client, Server, Database",
+                                                                           "HTML, CSS, JS",
+                                                                           "Presentation, Domain, Data",
+                                                                           "Input, Process, Output"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Presentation (UI) → Domain (business logic) → Data (storage/network)."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Development Environment Setup",
+                                          "content":  "Before building apps, you need the right tools. For Flutter: install Flutter SDK, Android Studio (or VS Code with Flutter extension), and set up an Android emulator or connect a physical device. For React Native: install Node.js, a code editor, and Expo (simplifies setup). Android development requires the Android SDK and JDK. iOS development requires a Mac with Xcode. Version control: install Git from day one. Use a code editor with good extensions: syntax highlighting, code completion, linting, and debugging tools. Hot reload (Flutter, React Native) lets you see changes instantly without restarting the app — dramatically speeds up development.",
+                                          "examples":  [
+                                                           "Flutter setup: download SDK → add to PATH → run \u0027flutter doctor\u0027 to check everything is ready",
+                                                           "Android Studio provides: code editor, emulator, debugger, and SDK management all in one",
+                                                           "Hot reload: change a button color → save → see the change on your phone in under 1 second"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "SDK":  "Software Development Kit — tools and libraries needed to build apps",
+                                                           "emulator":  "A virtual device that simulates a phone on your computer",
+                                                           "hot reload":  "Instantly see code changes in the running app without restarting",
+                                                           "IDE":  "Integrated Development Environment — code editor with built-in tools"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Flutter\u0027s \u0027flutter doctor\u0027 command:",
+                                                           "options":  [
+                                                                           "Fixes bugs in your code",
+                                                                           "Checks if your development environment is properly set up",
+                                                                           "Creates a new project",
+                                                                           "Publishes your app"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "flutter doctor diagnoses your setup — reporting missing tools or configuration."
+                                                       },
+                                                       {
+                                                           "question":  "Hot reload is useful because:",
+                                                           "options":  [
+                                                                           "It\u0027s required by Flutter",
+                                                                           "It fixes bugs automatically",
+                                                                           "It publishes the app",
+                                                                           "See changes instantly without restarting the app"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Hot reload drastically speeds up development — tweak UI and see results in under a second."
+                                                       },
+                                                       {
+                                                           "question":  "iOS development requires:",
+                                                           "options":  [
+                                                                           "Linux only",
+                                                                           "Just a Windows PC",
+                                                                           "Only an iPhone",
+                                                                           "A Mac with Xcode"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Apple requires Xcode (Mac only) to build and submit iOS apps."
+                                                       },
+                                                       {
+                                                           "question":  "An emulator is:",
+                                                           "options":  [
+                                                                           "A code editor",
+                                                                           "A real phone",
+                                                                           "A virtual device simulating a phone on your computer",
+                                                                           "A database"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Emulators let you test apps without a physical device."
+                                                       },
+                                                       {
+                                                           "question":  "Why install Git on day one?",
+                                                           "options":  [
+                                                                           "Git is required to run apps",
+                                                                           "Track all code changes from the start — undo mistakes, collaborate, backup",
+                                                                           "It makes code faster",
+                                                                           "It\u0027s a programming language"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Version control from day one means you can always go back if something breaks."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Planning Your First App",
+                                          "content":  "Before writing code, plan your app. Define the problem: what specific problem does your app solve? Who are your users? List features and prioritize: MVP (Minimum Viable Product) includes only essential features — launch fast, get feedback, then improve. Create user stories: \u0027As a student, I want to track my homework so I don\u0027t forget assignments.\u0027 Design screens: sketch wireframes on paper first — it\u0027s faster than coding. Define the data model: what information does the app store? (users, tasks, settings). Choose your tech stack: framework, database, backend. Plan navigation: how do users move between screens? Start simple — a working simple app is better than an unfinished complex one.",
+                                          "examples":  [
+                                                           "MVP for a todo app: add tasks, mark complete, delete — that\u0027s it. Sorting, categories, and reminders come later",
+                                                           "User story: \u0027As a farmer, I want to photograph my crop and get disease diagnosis so I can treat it early\u0027",
+                                                           "Data model for a school app: Students(name, grade), Assignments(title, due_date, subject), Scores(student_id, assignment_id, score)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "MVP":  "Minimum Viable Product — the simplest version with only core features",
+                                                           "user story":  "A description of a feature from the user\u0027s perspective",
+                                                           "wireframe":  "A simple sketch of the app\u0027s screens and layout",
+                                                           "tech stack":  "The combination of technologies used to build the app"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "An MVP should include:",
+                                                           "options":  [
+                                                                           "Only the design, no functionality",
+                                                                           "Every possible feature",
+                                                                           "Only essential core features — launch fast, improve later",
+                                                                           "As many features as competitors"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "MVP = minimum features to solve the core problem. Get feedback, then add more."
+                                                       },
+                                                       {
+                                                           "question":  "User stories are written from:",
+                                                           "options":  [
+                                                                           "The developer\u0027s perspective",
+                                                                           "The user\u0027s perspective",
+                                                                           "The designer\u0027s perspective",
+                                                                           "The investor\u0027s perspective"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "\u0027As a [user], I want [feature] so that [benefit]\u0027 — always user-focused."
+                                                       },
+                                                       {
+                                                           "question":  "Why sketch wireframes before coding?",
+                                                           "options":  [
+                                                                           "Changing a sketch is faster and cheaper than changing code",
+                                                                           "Sketches are the final product",
+                                                                           "Code isn\u0027t needed after wireframes",
+                                                                           "Clients prefer sketches"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Paper prototyping catches design problems early — before investing hours in code."
+                                                       },
+                                                       {
+                                                           "question":  "A data model defines:",
+                                                           "options":  [
+                                                                           "The app\u0027s visual design",
+                                                                           "What information the app stores and how it\u0027s structured",
+                                                                           "The marketing plan",
+                                                                           "The team structure"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Data models plan the entities (users, posts, messages) and their relationships."
+                                                       },
+                                                       {
+                                                           "question":  "Starting simple is better because:",
+                                                           "options":  [
+                                                                           "A working simple app beats an unfinished complex one",
+                                                                           "Complex apps always fail",
+                                                                           "Users prefer fewer features",
+                                                                           "It\u0027s required by app stores"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Ship something working, get real user feedback, then iterate and improve."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Building Blocks",
+                      "lessons":  [
+                                      {
+                                          "title":  "Widgets and Components",
+                                          "content":  "Everything on screen is a widget (Flutter) or component (React Native). Widgets are reusable UI blocks — buttons, text, images, cards. They nest to build complex layouts: Screen → Column → Card → Text + Image. Stateless widgets display fixed content. Stateful widgets change based on interaction. Build apps by composing small widgets into larger ones — like LEGO.",
+                                          "examples":  [
+                                                           "Text(\u0027Hello World\u0027) — displays text",
+                                                           "Column(children: [Text(\u0027Title\u0027), Text(\u0027Subtitle\u0027)]) — vertical layout",
+                                                           "ElevatedButton(onPressed: login, child: Text(\u0027Log In\u0027)) — clickable button"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "widget":  "Reusable UI building block",
+                                                           "stateless":  "Fixed content — doesn\u0027t change",
+                                                           "stateful":  "Can change based on user interaction",
+                                                           "composition":  "Building complex UI by nesting smaller widgets together"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "A widget is:",
+                                                           "options":  [
+                                                                           "A database",
+                                                                           "A reusable UI building block",
+                                                                           "A server",
+                                                                           "A language"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Widgets are the fundamental UI elements."
+                                                       },
+                                                       {
+                                                           "question":  "Use stateful widget when:",
+                                                           "options":  [
+                                                                           "UI needs to change based on user action",
+                                                                           "Showing static text",
+                                                                           "Displaying an image",
+                                                                           "Creating a constant"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Stateful rebuilds when state changes."
+                                                       },
+                                                       {
+                                                           "question":  "Complex layouts are built by:",
+                                                           "options":  [
+                                                                           "Using only text",
+                                                                           "Using one large widget",
+                                                                           "Writing raw pixels",
+                                                                           "Nesting widgets inside each other"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Compose smaller widgets into larger structures."
+                                                       },
+                                                       {
+                                                           "question":  "A StatelessWidget in Flutter:",
+                                                           "options":  [
+                                                                           "Is always invisible",
+                                                                           "Changes constantly",
+                                                                           "Has a setState method",
+                                                                           "Never changes once built — no internal state"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Stateless = immutable. For dynamic content, use StatefulWidget."
+                                                       },
+                                                       {
+                                                           "question":  "The build() method:",
+                                                           "options":  [
+                                                                           "Runs the app",
+                                                                           "Describes what the widget looks like",
+                                                                           "Saves data",
+                                                                           "Connects to internet"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "build() returns the widget tree describing this component\u0027s UI."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Layouts and Navigation",
+                                          "content":  "Row arranges horizontally, Column vertically, Stack layers on top. ListView creates scrollable lists, GridView creates grids. Navigation moves between screens. Patterns: bottom nav bar (3-5 tabs), drawer (hamburger menu), stack navigation (push/pop screens). Deep linking opens specific screens from URLs or notifications. Use named routes for clean navigation: Navigator.pushNamed(context, \u0027/details\u0027).",
+                                          "examples":  [
+                                                           "Row(children: [Icon(star), Text(\u0027Favorite\u0027)])",
+                                                           "Navigator.push(context, MaterialPageRoute(builder: (_) =\u003e DetailScreen()))",
+                                                           "BottomNavigationBar with Home, Search, Profile tabs"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "Row":  "Horizontal layout",
+                                                           "Column":  "Vertical layout",
+                                                           "navigation":  "Moving between screens",
+                                                           "deep linking":  "Opening specific screens from external URLs or notifications",
+                                                           "route":  "A named path to a screen in the app"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Column arranges items:",
+                                                           "options":  [
+                                                                           "Horizontally",
+                                                                           "Vertically",
+                                                                           "In layers",
+                                                                           "In grid"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Column = top to bottom."
+                                                       },
+                                                       {
+                                                           "question":  "Bottom nav bar is for:",
+                                                           "options":  [
+                                                                           "Settings only",
+                                                                           "Showing ads",
+                                                                           "Notifications",
+                                                                           "Switching between main sections"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Quick access to 3-5 main sections."
+                                                       },
+                                                       {
+                                                           "question":  "Stack navigation works like:",
+                                                           "options":  [
+                                                                           "Search bar",
+                                                                           "Horizontal scroll",
+                                                                           "Dropdown",
+                                                                           "Deck of cards — push new, pop to go back"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Push adds screen on top; pop reveals previous."
+                                                       },
+                                                       {
+                                                           "question":  "ListView is used when:",
+                                                           "options":  [
+                                                                           "Content is fixed size",
+                                                                           "There are only 2 items",
+                                                                           "Items need to overlap",
+                                                                           "Content is too long to fit on screen and needs scrolling"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "ListView handles scrollable lists of any length efficiently."
+                                                       },
+                                                       {
+                                                           "question":  "Deep linking allows:",
+                                                           "options":  [
+                                                                           "Going deeper into code",
+                                                                           "Opening a specific screen from a URL or notification",
+                                                                           "Creating links to websites",
+                                                                           "Downloading files"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Users can jump directly to specific content within the app."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Handling User Input",
+                                          "content":  "Text fields collect typed text — validate input (valid email? strong password?). Buttons trigger actions. Gesture detectors handle swipes, long presses, drags. Forms group inputs and validate together before submitting. Show feedback: loading indicators, success messages, error states. Handle keyboard: show/hide appropriately, don\u0027t let it cover inputs. Debounce search inputs — wait until user stops typing before searching.",
+                                          "examples":  [
+                                                           "TextField with validation: if email doesn\u0027t contain @, show error",
+                                                           "SnackBar after saving: \u0027Profile updated!\u0027",
+                                                           "Debounce: search triggers 300ms after user stops typing, not on every keystroke"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "validation":  "Checking input meets requirements",
+                                                           "gesture":  "Touch interaction: tap, swipe, long press",
+                                                           "form":  "Grouped inputs validated together",
+                                                           "debounce":  "Delaying an action until user stops performing it (typing, scrolling)"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Validate input to:",
+                                                           "options":  [
+                                                                           "Make UI prettier",
+                                                                           "Slow down the app",
+                                                                           "Ensure data is correct before processing",
+                                                                           "Use more memory"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Catch errors early, ensure data quality."
+                                                       },
+                                                       {
+                                                           "question":  "A gesture is:",
+                                                           "options":  [
+                                                                           "Voice command",
+                                                                           "Touch interaction like tap or swipe",
+                                                                           "Keyboard shortcut",
+                                                                           "Network request"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Touch-based: tap, swipe, long press, pinch."
+                                                       },
+                                                       {
+                                                           "question":  "While data is loading, show:",
+                                                           "options":  [
+                                                                           "Nothing",
+                                                                           "A loading indicator",
+                                                                           "An error",
+                                                                           "Previous screen"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Users need feedback that something is happening."
+                                                       },
+                                                       {
+                                                           "question":  "Debouncing search means:",
+                                                           "options":  [
+                                                                           "Waiting until user stops typing before searching",
+                                                                           "Searching on every keystroke",
+                                                                           "Disabling search",
+                                                                           "Searching only once"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Debounce reduces unnecessary API calls — only search when typing pauses."
+                                                       },
+                                                       {
+                                                           "question":  "Form validation should happen:",
+                                                           "options":  [
+                                                                           "Only for passwords",
+                                                                           "After data is sent to server only",
+                                                                           "Never",
+                                                                           "Before submitting — show errors inline next to fields"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Client-side validation gives instant feedback — server-side is also needed for security."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Lists and Dynamic Content",
+                                          "content":  "Most apps display lists of data: messages, products, contacts, feeds. In Flutter, ListView.builder creates lists efficiently — it only builds visible items (lazy loading). Each item needs a unique key for efficient updates. Pull-to-refresh lets users reload data by pulling down. Pagination loads data in chunks: load 20 items, when user scrolls near the bottom, load 20 more. Empty states: when a list has no data, show a helpful message (\u0027No messages yet — start a conversation!\u0027). Loading states: show skeletons or shimmer effects while data loads. Error states: show a retry button if loading fails.",
+                                          "examples":  [
+                                                           "ListView.builder(itemCount: items.length, itemBuilder: (ctx, i) =\u003e ListTile(title: Text(items[i].name)))",
+                                                           "Pull-to-refresh: RefreshIndicator(onRefresh: loadData, child: ListView(...))",
+                                                           "Empty state: if (items.isEmpty) return Center(child: Text(\u0027No items yet\u0027))"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "lazy loading":  "Only building/loading items that are currently visible on screen",
+                                                           "pagination":  "Loading data in chunks as the user scrolls through",
+                                                           "empty state":  "UI shown when a list has no data — guides the user on what to do",
+                                                           "skeleton screen":  "A placeholder loading UI showing the shape of content before data arrives"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "ListView.builder is efficient because:",
+                                                           "options":  [
+                                                                           "It uses less code",
+                                                                           "It loads everything at once",
+                                                                           "It only builds items currently visible on screen",
+                                                                           "It\u0027s faster than any alternative"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Lazy building means only visible items consume memory and processing."
+                                                       },
+                                                       {
+                                                           "question":  "Why does each list item need a unique key?",
+                                                           "options":  [
+                                                                           "For styling",
+                                                                           "For efficient updates — framework knows which items changed",
+                                                                           "Keys are optional",
+                                                                           "For database storage"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Keys help the framework identify, update, and reorder items efficiently."
+                                                       },
+                                                       {
+                                                           "question":  "Pagination improves performance by:",
+                                                           "options":  [
+                                                                           "Caching all data",
+                                                                           "Making the server faster",
+                                                                           "Reducing item count permanently",
+                                                                           "Loading data in small chunks instead of everything at once"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Loading 20 items at a time is much faster than loading 10,000."
+                                                       },
+                                                       {
+                                                           "question":  "An empty state should:",
+                                                           "options":  [
+                                                                           "Show an error",
+                                                                           "Guide the user on what to do next",
+                                                                           "Be blank",
+                                                                           "Crash the app"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Empty states help users: \u0027No projects yet — tap + to create one.\u0027"
+                                                       },
+                                                       {
+                                                           "question":  "Skeleton screens are:",
+                                                           "options":  [
+                                                                           "Error messages",
+                                                                           "Placeholder shapes shown while real content loads",
+                                                                           "Navigation menus",
+                                                                           "Database schemas"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Skeletons show the layout shape with gray placeholders — feels faster than a spinner."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Responsive and Adaptive UI",
+                                          "content":  "Apps run on many screen sizes: small phones, large phones, tablets, and desktops. Responsive UI adapts layout to screen size. Use MediaQuery to get screen dimensions. LayoutBuilder provides parent constraints. Flexible and Expanded widgets distribute space proportionally. For different layouts: use breakpoints — phone shows single column, tablet shows two columns, desktop shows sidebar + content. Platform-adaptive means adjusting to the platform\u0027s conventions: Android uses Material Design (bottom nav, FABs), iOS uses Cupertino (tab bars, sliding panels). Consider orientation: portrait vs landscape may need different layouts.",
+                                          "examples":  [
+                                                           "if (MediaQuery.of(context).size.width \u003e 600) showSidebar() else showBottomNav()",
+                                                           "Flexible(flex: 2, child: mainContent), Flexible(flex: 1, child: sidebar) — 2:1 ratio",
+                                                           "OrientationBuilder detects portrait/landscape and adjusts layout accordingly"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "responsive":  "UI that adapts its layout to different screen sizes",
+                                                           "adaptive":  "UI that adjusts to platform conventions (Material on Android, Cupertino on iOS)",
+                                                           "breakpoint":  "A screen width threshold where the layout changes",
+                                                           "MediaQuery":  "Flutter tool providing screen size, orientation, and other device info"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Responsive design means:",
+                                                           "options":  [
+                                                                           "Layout adapts to different screen sizes",
+                                                                           "Fixed layout on all devices",
+                                                                           "Only works on phones",
+                                                                           "Only works on tablets"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Responsive UIs rearrange content to fit any screen size optimally."
+                                                       },
+                                                       {
+                                                           "question":  "A breakpoint is:",
+                                                           "options":  [
+                                                                           "A debugging tool",
+                                                                           "Where the app crashes",
+                                                                           "A screen width where the layout changes",
+                                                                           "A type of error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Below 600px → phone layout. Above 600px → tablet layout. These thresholds are breakpoints."
+                                                       },
+                                                       {
+                                                           "question":  "Platform-adaptive means:",
+                                                           "options":  [
+                                                                           "Only supporting one platform",
+                                                                           "Same design everywhere",
+                                                                           "Following each platform\u0027s design conventions",
+                                                                           "Ignoring platform differences"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Android users expect Material Design; iOS users expect Cupertino style."
+                                                       },
+                                                       {
+                                                           "question":  "Expanded widget:",
+                                                           "options":  [
+                                                                           "Expands the screen",
+                                                                           "Makes text bigger",
+                                                                           "Takes up remaining available space in a Row/Column",
+                                                                           "Creates a popup"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Expanded fills whatever space is left after fixed-size siblings are placed."
+                                                       },
+                                                       {
+                                                           "question":  "Why consider landscape orientation?",
+                                                           "options":  [
+                                                                           "Landscape doesn\u0027t exist on phones",
+                                                                           "Users may rotate their device — layout should still work well",
+                                                                           "It only matters for tablets",
+                                                                           "Apps can prevent rotation"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Content that works in portrait may need rearranging for the wider landscape layout."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Data and Logic",
+                      "lessons":  [
+                                      {
+                                          "title":  "Local Data Storage",
+                                          "content":  "SharedPreferences for simple key-value pairs (settings). SQLite for structured data (profiles, records). File storage for large files (images, exports). Choose the right tool: settings → key-value, records → SQLite, files → file system. Handle first-launch (no data yet). Don\u0027t store large files in SQLite.",
+                                          "examples":  [
+                                                           "SharedPreferences: isDarkMode = true",
+                                                           "SQLite: student profiles with name, age, grade, history",
+                                                           "File storage: save PDF certificate to documents"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "SharedPreferences":  "Simple key-value storage for settings",
+                                                           "SQLite":  "Lightweight local database for structured data",
+                                                           "local storage":  "Storing data on device, available offline",
+                                                           "CRUD":  "Create, Read, Update, Delete — the four basic data operations"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Store theme preference in:",
+                                                           "options":  [
+                                                                           "Internet",
+                                                                           "SQLite",
+                                                                           "Text file",
+                                                                           "SharedPreferences"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Simple settings → key-value storage."
+                                                       },
+                                                       {
+                                                           "question":  "Use SQLite for:",
+                                                           "options":  [
+                                                                           "A single setting",
+                                                                           "Structured data with multiple records",
+                                                                           "Large video files",
+                                                                           "Real-time chat"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "SQLite handles tables, rows, queries."
+                                                       },
+                                                       {
+                                                           "question":  "Local storage importance:",
+                                                           "options":  [
+                                                                           "App works offline",
+                                                                           "It\u0027s free",
+                                                                           "All of the above",
+                                                                           "It\u0027s faster than cloud"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Offline, fast, and no server costs."
+                                                       },
+                                                       {
+                                                           "question":  "CRUD stands for:",
+                                                           "options":  [
+                                                                           "Copy, Run, Undo, Debug",
+                                                                           "Create, Read, Update, Delete",
+                                                                           "Connect, Retrieve, Upload, Download",
+                                                                           "Code, Review, Unit-test, Deploy"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "The four fundamental database operations."
+                                                       },
+                                                       {
+                                                           "question":  "First-launch handling means:",
+                                                           "options":  [
+                                                                           "Requiring internet",
+                                                                           "Crashing gracefully",
+                                                                           "Showing onboarding or defaults when there\u0027s no saved data yet",
+                                                                           "Skipping the splash screen"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "First-time users have no saved data — show setup/onboarding instead of empty screens."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "State Management",
+                                          "content":  "State is the app\u0027s current data — which screen, logged-in user, cart items. Local state: one widget (text field value). Global state: shared across app (user profile, theme). Solutions: setState (simple), Provider/Riverpod (recommended), BLoC (enterprise). Key principle: state changes → UI rebuilds automatically. One-way data flow: action → state update → UI rebuild.",
+                                          "examples":  [
+                                                           "Local: counter tracks its own count",
+                                                           "Global: logged-in user available on every screen",
+                                                           "Cart icon badge updates across app when item added"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "state":  "Current data and conditions of the app",
+                                                           "Provider":  "State management making data available throughout widget tree",
+                                                           "reactive":  "UI automatically updates when state changes",
+                                                           "one-way data flow":  "Actions update state, state drives UI — predictable and debuggable"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "State is:",
+                                                           "options":  [
+                                                                           "Programming language",
+                                                                           "Current data the app is using",
+                                                                           "File size",
+                                                                           "Screen resolution"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Everything the app currently knows and displays."
+                                                       },
+                                                       {
+                                                           "question":  "Use global state when:",
+                                                           "options":  [
+                                                                           "Always",
+                                                                           "Data needed across multiple screens",
+                                                                           "Never",
+                                                                           "Only for settings"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "User profile, theme, cart — needed in many places."
+                                                       },
+                                                       {
+                                                           "question":  "Reactive state means:",
+                                                           "options":  [
+                                                                           "Manual refresh needed",
+                                                                           "Nothing happens",
+                                                                           "UI rebuilds automatically when state changes",
+                                                                           "App restarts"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Change state → UI updates without manual intervention."
+                                                       },
+                                                       {
+                                                           "question":  "setState is best for:",
+                                                           "options":  [
+                                                                           "Database operations",
+                                                                           "Complex app-wide state",
+                                                                           "Simple local state within a single widget",
+                                                                           "Network requests"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "setState works for simple cases; Provider/Riverpod for shared state."
+                                                       },
+                                                       {
+                                                           "question":  "One-way data flow means:",
+                                                           "options":  [
+                                                                           "UI changes state directly",
+                                                                           "Actions → State update → UI rebuild (predictable)",
+                                                                           "Data flows in all directions",
+                                                                           "No data flow"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Unidirectional flow makes state changes predictable and debuggable."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Working with APIs",
+                                          "content":  "APIs let apps communicate with servers. REST uses HTTP: GET (retrieve), POST (send), PUT (update), DELETE (remove). Data in JSON. Make requests: send URL + parameters, wait for response, parse JSON. Handle errors: no internet, server down, invalid data. Show loading states. Cache responses for offline use. Use environment variables for API URLs — don\u0027t hardcode them.",
+                                          "examples":  [
+                                                           "GET weather data → display temperature",
+                                                           "POST login with email/password → receive auth token",
+                                                           "Parse JSON: {\u0027name\u0027: \u0027Alice\u0027, \u0027score\u0027: 95} → create Student object"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "API":  "Interface for apps to communicate with servers",
+                                                           "REST":  "API style using HTTP methods",
+                                                           "JSON":  "Standard structured data format",
+                                                           "authentication":  "Verifying user identity — usually with tokens"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "GET retrieves:",
+                                                           "options":  [
+                                                                           "Data from server",
+                                                                           "Sends new data",
+                                                                           "Deletes data",
+                                                                           "Updates data"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "GET = retrieve without modifying."
+                                                       },
+                                                       {
+                                                           "question":  "API data format:",
+                                                           "options":  [
+                                                                           "CSS",
+                                                                           "HTML",
+                                                                           "JSON",
+                                                                           "PDF"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "JSON is the standard for APIs."
+                                                       },
+                                                       {
+                                                           "question":  "Cache API responses to:",
+                                                           "options":  [
+                                                                           "Make API faster",
+                                                                           "Work when offline",
+                                                                           "Save server money",
+                                                                           "Encrypt data"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Cached data is available without internet."
+                                                       },
+                                                       {
+                                                           "question":  "Authentication tokens should be:",
+                                                           "options":  [
+                                                                           "Stored securely, never in plain text or source code",
+                                                                           "Shared publicly",
+                                                                           "Hardcoded in the app",
+                                                                           "Posted on social media"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Tokens are credentials — expose them and anyone can access user data."
+                                                       },
+                                                       {
+                                                           "question":  "When an API call fails, the app should:",
+                                                           "options":  [
+                                                                           "Crash",
+                                                                           "Show an error message with a retry option",
+                                                                           "Show nothing",
+                                                                           "Delete user data"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Graceful error handling: inform the user and offer a way to retry."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Push Notifications",
+                                          "content":  "Push notifications alert users even when the app isn\u0027t open. They drive engagement: reminders, messages, updates, promotions. Implementation: Firebase Cloud Messaging (FCM) for both Android and iOS. Notification types: data (processed silently by the app) and display (shown to user with title, body, icon). Users must grant permission. Don\u0027t spam — respect user attention. Personalize: send relevant notifications based on user preferences and behavior. Schedule local notifications for reminders without a server. Handle notification taps — deep link to the relevant screen.",
+                                          "examples":  [
+                                                           "\u0027You have a new lesson available: Introduction to Fractions\u0027 — tapping opens the lesson",
+                                                           "Local notification: \u0027Time to study! You haven\u0027t practiced in 2 days\u0027 — scheduled on device",
+                                                           "Silent data notification: sync new curriculum content in the background"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "push notification":  "Message sent to a user\u0027s device even when the app isn\u0027t open",
+                                                           "FCM":  "Firebase Cloud Messaging — Google\u0027s service for sending push notifications",
+                                                           "deep linking":  "Notification tap opens a specific screen within the app",
+                                                           "local notification":  "Notification scheduled on the device without needing a server"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Push notifications work when:",
+                                                           "options":  [
+                                                                           "The app isn\u0027t open — they arrive at the system level",
+                                                                           "Only when app is open",
+                                                                           "Only on WiFi",
+                                                                           "Only on iPhones"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Push notifications reach users even when the app is closed or in background."
+                                                       },
+                                                       {
+                                                           "question":  "FCM stands for:",
+                                                           "options":  [
+                                                                           "File Copy Manager",
+                                                                           "Fast Communication Method",
+                                                                           "Firebase Cloud Messaging",
+                                                                           "Flutter Component Model"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "FCM is Google\u0027s cross-platform notification service."
+                                                       },
+                                                       {
+                                                           "question":  "Too many notifications will:",
+                                                           "options":  [
+                                                                           "Make the app faster",
+                                                                           "Increase engagement always",
+                                                                           "Have no effect",
+                                                                           "Annoy users and they\u0027ll disable them or uninstall"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Respect user attention — send only relevant, valuable notifications."
+                                                       },
+                                                       {
+                                                           "question":  "Local notifications differ from push because:",
+                                                           "options":  [
+                                                                           "They require internet",
+                                                                           "They\u0027re scheduled on the device without a server",
+                                                                           "They only work on Android",
+                                                                           "They can\u0027t show text"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Local notifications are set by the app itself — no server or internet needed."
+                                                       },
+                                                       {
+                                                           "question":  "When a user taps a notification, the app should:",
+                                                           "options":  [
+                                                                           "Open the relevant screen (deep link)",
+                                                                           "Open the home screen always",
+                                                                           "Do nothing",
+                                                                           "Show an error"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Deep linking to the relevant content gives users what they expected from the notification."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Offline-First Architecture",
+                                          "content":  "Offline-first means the app works without internet and syncs when connection returns. This is critical in areas with unreliable connectivity. Strategy: store all data locally first, then sync to server when online. Use a local database (SQLite, Hive) as the primary data source. Queue changes made offline and replay them when online. Handle conflicts: what if the same data was changed offline by two devices? Strategies include \u0027last write wins\u0027 or manual conflict resolution. Show connectivity status to users. Cache API responses. Prefetch content users will likely need. The best offline apps feel the same whether connected or not.",
+                                          "examples":  [
+                                                           "A note-taking app: create notes offline → they sync to cloud when WiFi returns",
+                                                           "AI Connect Africa: curriculum content is bundled in the app — works without any internet",
+                                                           "Conflict resolution: user edited a document on phone and laptop offline → show both versions and let user choose"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "offline-first":  "Designing apps to work fully without internet, syncing when connected",
+                                                           "sync":  "Transferring local changes to a server and vice versa when online",
+                                                           "conflict resolution":  "Handling cases where the same data was changed in different places",
+                                                           "queue":  "Storing pending operations to be executed when connection returns"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Offline-first means:",
+                                                           "options":  [
+                                                                           "App is slow",
+                                                                           "App only works offline",
+                                                                           "App requires internet always",
+                                                                           "App works without internet, syncs when connected"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "The app functions fully offline — internet is used for syncing, not for basic operation."
+                                                       },
+                                                       {
+                                                           "question":  "Why is offline-first important in developing countries?",
+                                                           "options":  [
+                                                                           "People don\u0027t want internet",
+                                                                           "Internet connectivity is often unreliable or unavailable",
+                                                                           "Offline apps are cheaper to build",
+                                                                           "It\u0027s required by law"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Many users have intermittent or no connectivity — apps must work without it."
+                                                       },
+                                                       {
+                                                           "question":  "When offline changes sync, conflicts can occur when:",
+                                                           "options":  [
+                                                                           "No changes were made",
+                                                                           "Only one device exists",
+                                                                           "The same data was modified on multiple devices",
+                                                                           "The server was never offline"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Two devices editing the same record offline creates a conflict when both sync."
+                                                       },
+                                                       {
+                                                           "question":  "Queuing offline changes means:",
+                                                           "options":  [
+                                                                           "Preventing any changes",
+                                                                           "Deleting unsaved work",
+                                                                           "Storing operations to replay when internet returns",
+                                                                           "Only allowing reads"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Changes are saved locally and sent to the server in order when connection is restored."
+                                                       },
+                                                       {
+                                                           "question":  "The best offline apps:",
+                                                           "options":  [
+                                                                           "Require restart when going online",
+                                                                           "Show constant error messages",
+                                                                           "Disable most features",
+                                                                           "Feel the same whether connected or not"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Users shouldn\u0027t notice the difference — offline/online transitions should be seamless."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Publishing",
+                      "lessons":  [
+                                      {
+                                          "title":  "Testing Your App",
+                                          "content":  "Unit tests check individual functions. Widget tests verify UI components. Integration tests check complete flows. Test on real devices — emulators miss touch and performance issues. Test edge cases: empty input, no internet, long text, rapid tapping. Beta testing: give to real users before launch. Automated testing saves time — run tests with every code change.",
+                                          "examples":  [
+                                                           "expect(add(2, 3), equals(5)) — unit test",
+                                                           "Tap button → verify dialog appears — widget test",
+                                                           "Give 20 users the app for a week → collect feedback"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "unit test":  "Testing a single function",
+                                                           "integration test":  "Testing complete user flows",
+                                                           "beta testing":  "Pre-release testing with real users",
+                                                           "test coverage":  "Percentage of code covered by automated tests"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Unit tests check:",
+                                                           "options":  [
+                                                                           "Entire app flow",
+                                                                           "Single function correctness",
+                                                                           "UI appearance",
+                                                                           "Internet connectivity"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Unit tests verify individual functions."
+                                                       },
+                                                       {
+                                                           "question":  "Test on real devices because:",
+                                                           "options":  [
+                                                                           "Real devices are faster",
+                                                                           "Emulators miss touch and performance issues",
+                                                                           "Emulators don\u0027t run code",
+                                                                           "Real devices are free"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Real devices show actual performance."
+                                                       },
+                                                       {
+                                                           "question":  "Beta testing is:",
+                                                           "options":  [
+                                                                           "Automated scripts",
+                                                                           "Testing backend",
+                                                                           "Pre-release to real users for feedback",
+                                                                           "Code style checking"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Real users find bugs you missed."
+                                                       },
+                                                       {
+                                                           "question":  "Test coverage of 80% means:",
+                                                           "options":  [
+                                                                           "80% of users are satisfied",
+                                                                           "The app is 80% complete",
+                                                                           "80% of bugs are found",
+                                                                           "80% of code is tested by automated tests"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Coverage measures how much code your tests exercise — aim for 70-90%."
+                                                       },
+                                                       {
+                                                           "question":  "Regression testing means:",
+                                                           "options":  [
+                                                                           "Checking that new changes didn\u0027t break existing features",
+                                                                           "Going backwards in development",
+                                                                           "Removing tests",
+                                                                           "Testing old code only"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "After every change, verify nothing that used to work is now broken."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "App Store Publishing",
+                                          "content":  "Google Play: developer account ($25 one-time), prepare assets (icon, screenshots, description), build signed release, fill store listing, submit for review. Apple App Store: Apple Developer ($99/year), Mac with Xcode required. Version numbering: 1.0.0 (first release), 1.1.0 (features), 1.0.1 (bug fix). Privacy policy required. App Store Optimization (ASO): keywords in title and description help users find your app.",
+                                          "examples":  [
+                                                           "Play Store needs: 512x512 icon, 2+ screenshots, descriptions",
+                                                           "Version: major.minor.patch — 1.0.0 → 1.1.0 → 1.1.1",
+                                                           "Privacy policy: explain what data you collect and how"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "APK":  "Android Package file format",
+                                                           "App Bundle":  "Modern Android format optimizing delivery",
+                                                           "store listing":  "App store page with screenshots and description",
+                                                           "ASO":  "App Store Optimization — making your app discoverable in search"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Google Play dev account costs:",
+                                                           "options":  [
+                                                                           "Free",
+                                                                           "$99/year",
+                                                                           "$25 one-time",
+                                                                           "$299/year"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "One-time $25 fee."
+                                                       },
+                                                       {
+                                                           "question":  "App Bundle is:",
+                                                           "options":  [
+                                                                           "Backup file",
+                                                                           "Collection of apps",
+                                                                           "Optimized format delivering only what each device needs",
+                                                                           "Test package"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Google generates optimized APKs per device."
+                                                       },
+                                                       {
+                                                           "question":  "iOS publishing needs:",
+                                                           "options":  [
+                                                                           "Apple Developer account and Mac",
+                                                                           "Just iPhone",
+                                                                           "Google account",
+                                                                           "Website only"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Mac + Xcode + Apple Developer account."
+                                                       },
+                                                       {
+                                                           "question":  "ASO helps with:",
+                                                           "options":  [
+                                                                           "Reducing app size",
+                                                                           "Making the app run faster",
+                                                                           "Making your app easier to find in the store",
+                                                                           "Fixing bugs"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Keywords, good screenshots, and clear descriptions improve discoverability."
+                                                       },
+                                                       {
+                                                           "question":  "Semantic versioning 2.3.1 means:",
+                                                           "options":  [
+                                                                           "2 features, 3 bugs, 1 update",
+                                                                           "Major version 2, minor 3, patch 1",
+                                                                           "Version 2.31",
+                                                                           "Released on Feb 3, year 1"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Major (breaking changes), minor (new features), patch (bug fixes)."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "App Maintenance and Updates",
+                                          "content":  "Publishing isn\u0027t the end. Monitor crashes (Firebase Crashlytics). Read reviews and respond. Fix bugs promptly. Plan regular updates: performance, features, OS compatibility. Use analytics to understand usage. A/B testing compares feature versions. Monitor app size — keep it lean. Deprecation: remove old features gracefully with user notice.",
+                                          "examples":  [
+                                                           "Crashlytics: 50 users crashed on login — null pointer line 42",
+                                                           "Analytics: 80% never open Settings — move options elsewhere",
+                                                           "A/B test: blue vs green button — green gets 15% more clicks"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "crash reporting":  "Automatic logging of app crashes",
+                                                           "analytics":  "Tracking user behavior for decisions",
+                                                           "A/B testing":  "Comparing two versions to find which performs better",
+                                                           "deprecation":  "Phasing out old features with advance notice to users"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Monitor crashes to:",
+                                                           "options":  [
+                                                                           "Find and fix bugs users experience",
+                                                                           "Make app slower",
+                                                                           "Collect user data",
+                                                                           "Delete the app"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Fix issues before more users are affected."
+                                                       },
+                                                       {
+                                                           "question":  "A/B testing is:",
+                                                           "options":  [
+                                                                           "Testing Android and iOS",
+                                                                           "Comparing two versions for better performance",
+                                                                           "Alpha and Beta testing",
+                                                                           "Testing APIs"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Show different versions, measure which works better."
+                                                       },
+                                                       {
+                                                           "question":  "Keep updating because:",
+                                                           "options":  [
+                                                                           "Reset user data",
+                                                                           "Increase file size",
+                                                                           "Fix bugs, add features, stay compatible",
+                                                                           "Required by law"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Regular updates maintain quality and compatibility."
+                                                       },
+                                                       {
+                                                           "question":  "App analytics help you:",
+                                                           "options":  [
+                                                                           "Understand how users actually use the app and make data-driven decisions",
+                                                                           "Spy on users",
+                                                                           "Make the app slower",
+                                                                           "Reduce features"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Analytics reveal what features are popular and where users struggle."
+                                                       },
+                                                       {
+                                                           "question":  "When deprecating a feature:",
+                                                           "options":  [
+                                                                           "Only remove it for new users",
+                                                                           "Remove it without warning",
+                                                                           "Never remove features",
+                                                                           "Give users advance notice and time to adjust"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Warn users before removing features — give time to migrate or adapt."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "App Security",
+                                          "content":  "Security protects user data and prevents attacks. Store sensitive data encrypted — never in plain text. Use HTTPS for all network communication. Authenticate users with secure tokens (JWT), not by sending passwords with each request. Validate all input — prevent injection attacks. Obfuscate your code in release builds to make reverse engineering harder. Don\u0027t store API keys or secrets in source code — use environment variables. Implement certificate pinning to prevent man-in-the-middle attacks. Follow the principle of least privilege: request only the permissions your app actually needs. Regular security audits identify vulnerabilities before attackers do.",
+                                          "examples":  [
+                                                           "Bad: storing password as plain text in SharedPreferences. Good: storing a hashed token",
+                                                           "HTTPS encrypts data in transit — even on public WiFi, attackers can\u0027t read it",
+                                                           "Obfuscation: release build changes meaningful names (getUserData) to meaningless ones (a.b()) — harder to reverse engineer"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "encryption":  "Converting data into unreadable format that can only be decoded with a key",
+                                                           "HTTPS":  "Secure HTTP — encrypts communication between app and server",
+                                                           "JWT":  "JSON Web Token — a secure token for authenticating API requests",
+                                                           "obfuscation":  "Making code harder to understand if decompiled — protects intellectual property"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Sensitive data should be stored:",
+                                                           "options":  [
+                                                                           "In plain text for easy access",
+                                                                           "Encrypted, never in plain text",
+                                                                           "In the source code",
+                                                                           "On the login screen"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Plain text data can be read by anyone who accesses the device or database."
+                                                       },
+                                                       {
+                                                           "question":  "HTTPS protects against:",
+                                                           "options":  [
+                                                                           "Bad UI design",
+                                                                           "Slow internet",
+                                                                           "App crashes",
+                                                                           "Data being read during transmission (man-in-the-middle attacks)"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "HTTPS encrypts the connection — attackers on the same network can\u0027t read the data."
+                                                       },
+                                                       {
+                                                           "question":  "API keys should be:",
+                                                           "options":  [
+                                                                           "In the app\u0027s description",
+                                                                           "Hardcoded in the app",
+                                                                           "Shared on GitHub",
+                                                                           "In environment variables, not in source code"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Keys in source code are visible to anyone who decompiles the app."
+                                                       },
+                                                       {
+                                                           "question":  "Principle of least privilege means:",
+                                                           "options":  [
+                                                                           "Use no permissions at all",
+                                                                           "Request all possible permissions",
+                                                                           "Give users admin access",
+                                                                           "Only request permissions the app actually needs"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Don\u0027t ask for camera, location, and contacts if you only need storage."
+                                                       },
+                                                       {
+                                                           "question":  "Code obfuscation:",
+                                                           "options":  [
+                                                                           "Reduces app size",
+                                                                           "Makes the app faster",
+                                                                           "Makes decompiled code harder to understand",
+                                                                           "Fixes security bugs"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Obfuscation renames variables and methods to meaningless names — harder to reverse engineer."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Monetization and Growth",
+                                          "content":  "How to make money from your app: freemium (basic free, premium paid), subscriptions (monthly/yearly recurring), in-app purchases (unlock features, content), advertising (show ads — use AdMob), paid apps (one-time purchase), and sponsorships. Choose based on your users and content type. Growth strategies: App Store Optimization (ASO), social media marketing, content marketing (blog/YouTube), referral programs (\u0027invite a friend, both get premium\u0027), and partnerships. Measure key metrics: DAU/MAU (daily/monthly active users), retention rate (% who return), LTV (lifetime value per user), and CAC (cost to acquire a customer). Retention is more important than acquisition — keeping existing users costs less than getting new ones.",
+                                          "examples":  [
+                                                           "Freemium: basic learning free, advanced courses require premium ($4.99/month)",
+                                                           "Referral: \u0027Share AI Connect Africa with a friend — you both get 1 month of premium free!\u0027",
+                                                           "Retention metric: 40% of users return after 7 days = good for educational apps"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "freemium":  "Basic features free, premium features require payment",
+                                                           "retention rate":  "Percentage of users who continue using the app over time",
+                                                           "LTV":  "Lifetime Value — total revenue a user generates over their entire time using the app",
+                                                           "ASO":  "App Store Optimization — improving visibility in app store search results"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Freemium means:",
+                                                           "options":  [
+                                                                           "Free trial only",
+                                                                           "Everything free",
+                                                                           "Everything paid",
+                                                                           "Basic free, premium features paid"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Users get value for free; those who want more pay for premium features."
+                                                       },
+                                                       {
+                                                           "question":  "Retention is more important than acquisition because:",
+                                                           "options":  [
+                                                                           "Retention doesn\u0027t matter",
+                                                                           "New users are worthless",
+                                                                           "Acquisition is impossible",
+                                                                           "Keeping existing users is cheaper than getting new ones"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "It costs 5-7x more to acquire a new user than to retain an existing one."
+                                                       },
+                                                       {
+                                                           "question":  "DAU/MAU measures:",
+                                                           "options":  [
+                                                                           "App size",
+                                                                           "App download count",
+                                                                           "Revenue per user",
+                                                                           "How many users actively use the app daily/monthly"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Daily/Monthly Active Users shows real engagement, not just downloads."
+                                                       },
+                                                       {
+                                                           "question":  "Best monetization for an educational app:",
+                                                           "options":  [
+                                                                           "Freemium or subscription — users try before paying",
+                                                                           "Only paid upfront",
+                                                                           "Only ads",
+                                                                           "No monetization"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Let students experience value first, then offer premium for advanced content."
+                                                       },
+                                                       {
+                                                           "question":  "A referral program works by:",
+                                                           "options":  [
+                                                                           "Paying for ads",
+                                                                           "Rewarding users who invite friends — both benefit",
+                                                                           "Cold calling users",
+                                                                           "Sending spam emails"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Word of mouth is the most trusted marketing — incentivize users to share."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ]
+}

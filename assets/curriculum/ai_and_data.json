@@ -1,0 +1,1471 @@
+{
+    "id":  "ai_and_data",
+    "name":  "AI \u0026 Data Science",
+    "icon":  "psychology",
+    "color":  "#7C3AED",
+    "units":  [
+                  {
+                      "title":  "What is AI",
+                      "lessons":  [
+                                      {
+                                          "title":  "Introduction to Artificial Intelligence",
+                                          "content":  "AI is the science of making machines that can think, learn, and decide. It\u0027s everywhere: voice assistants, recommendation systems, spam filters, self-driving cars. Narrow AI handles one task (chess, face recognition). General AI (human-level across all tasks) doesn\u0027t exist yet. AI works by processing large data and finding patterns humans might miss.",
+                                          "examples":  [
+                                                           "Spotify recommends songs based on listening patterns",
+                                                           "Google Translate handles 100+ languages",
+                                                           "Self-driving cars detect pedestrians and signs"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "artificial intelligence":  "Machines that learn, reason, and decide from data",
+                                                           "narrow AI":  "AI for one specific task",
+                                                           "general AI":  "Hypothetical human-level AI across all tasks",
+                                                           "intelligent agent":  "A system that perceives its environment and takes actions to achieve goals"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Example of narrow AI:",
+                                                           "options":  [
+                                                                           "Robot doing everything",
+                                                                           "Spam filter",
+                                                                           "Calculator",
+                                                                           "Lightbulb"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Spam filter is trained for one task."
+                                                       },
+                                                       {
+                                                           "question":  "General AI exists:",
+                                                           "options":  [
+                                                                           "Since 1990s",
+                                                                           "Yes in phones",
+                                                                           "Yes in cars",
+                                                                           "No — still theoretical"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "AGI remains a research goal."
+                                                       },
+                                                       {
+                                                           "question":  "AI learns by:",
+                                                           "options":  [
+                                                                           "Processing data and finding patterns",
+                                                                           "Being programmed with every answer",
+                                                                           "Copying brains exactly",
+                                                                           "Internet only"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "AI discovers patterns in data."
+                                                       },
+                                                       {
+                                                           "question":  "Which is NOT an AI application:",
+                                                           "options":  [
+                                                                           "A simple calculator doing arithmetic",
+                                                                           "Voice assistant understanding speech",
+                                                                           "Self-driving car navigating traffic",
+                                                                           "Email spam detection"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Calculators follow fixed rules — no learning or pattern recognition."
+                                                       },
+                                                       {
+                                                           "question":  "AI differs from traditional programming because:",
+                                                           "options":  [
+                                                                           "AI only works on phones",
+                                                                           "AI uses different computers",
+                                                                           "AI doesn\u0027t use electricity",
+                                                                           "AI learns from data instead of following only explicit rules"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Traditional: programmer writes rules. AI: system learns rules from data."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "History and Types of AI",
+                                          "content":  "AI began in the 1950s with Turing\u0027s \u0027Can machines think?\u0027 Early AI used human-written rules. Modern AI took off ~2012 with deep learning on GPUs. Types: rule-based (if-then logic), machine learning (learns from data), deep learning (multi-layer neural networks), reinforcement learning (trial and error). Key milestones: Deep Blue (chess, 1997), AlphaGo (Go, 2016), GPT/Gemma language models (2020s).",
+                                          "examples":  [
+                                                           "1997: Deep Blue beat chess champion",
+                                                           "2012: AlexNet improved image recognition dramatically",
+                                                           "2023: Language models write essays, code, answer questions"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "deep learning":  "Multi-layer neural networks learning complex patterns",
+                                                           "neural network":  "Computing system inspired by the brain",
+                                                           "machine learning":  "AI improving by learning from data",
+                                                           "reinforcement learning":  "Learning through trial, error, rewards and penalties"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "AI field began:",
+                                                           "options":  [
+                                                                           "2000s",
+                                                                           "2010s",
+                                                                           "1800s",
+                                                                           "1950s"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Turing\u0027s foundational work in the 1950s."
+                                                       },
+                                                       {
+                                                           "question":  "Modern AI revolution ~2012 was powered by:",
+                                                           "options":  [
+                                                                           "New languages",
+                                                                           "Faster internet",
+                                                                           "Smaller phones",
+                                                                           "Deep learning with GPUs and large datasets"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Deep learning + massive data + GPU computing."
+                                                       },
+                                                       {
+                                                           "question":  "Reinforcement learning:",
+                                                           "options":  [
+                                                                           "Copying humans exactly",
+                                                                           "Memorizing answers",
+                                                                           "Learning by trial and error with rewards",
+                                                                           "Reading textbooks"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Actions → rewards/penalties → learns optimal strategy."
+                                                       },
+                                                       {
+                                                           "question":  "AlphaGo\u0027s significance:",
+                                                           "options":  [
+                                                                           "First computer",
+                                                                           "Beat world champion at Go — a game thought too complex for AI",
+                                                                           "Invented the internet",
+                                                                           "First mobile app"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Go has more possible positions than atoms in the universe — AI mastered it."
+                                                       },
+                                                       {
+                                                           "question":  "An \u0027AI winter\u0027 refers to:",
+                                                           "options":  [
+                                                                           "AI working in cold weather",
+                                                                           "A period when AI research funding and interest declined",
+                                                                           "A winter-themed AI project",
+                                                                           "When AI was banned"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "AI winters were periods of reduced funding due to unmet expectations."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "AI Applications Today",
+                                          "content":  "AI transforms every industry. Healthcare: detecting cancer from scans. Agriculture: drones monitoring crop health. Education: adaptive tutoring (like AI Connect Africa!). Finance: fraud detection. Transportation: self-driving vehicles. NLP lets computers understand language — chatbots, translation. Computer vision lets AI \u0027see\u0027 — facial recognition, quality inspection. Generative AI creates text, images, code, and music.",
+                                          "examples":  [
+                                                           "AI detects diabetic eye disease with 90%+ accuracy",
+                                                           "Farmers identify crop diseases from phone photos",
+                                                           "Banks flag suspicious transactions in real-time"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "NLP":  "Natural Language Processing — understanding human language",
+                                                           "computer vision":  "AI interpreting images and video",
+                                                           "generative AI":  "AI that creates new content — text, images, code, music",
+                                                           "chatbot":  "AI conversing in natural language"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "NLP stands for:",
+                                                           "options":  [
+                                                                           "Neural Logic Processing",
+                                                                           "New Learning Program",
+                                                                           "Natural Language Processing",
+                                                                           "Network Layer Protocol"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "NLP = computers understanding human language."
+                                                       },
+                                                       {
+                                                           "question":  "AI in agriculture:",
+                                                           "options":  [
+                                                                           "Monitoring crop health and predicting yields",
+                                                                           "Planting manually",
+                                                                           "Watering plants",
+                                                                           "Selling produce"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "AI analyzes images for crop health."
+                                                       },
+                                                       {
+                                                           "question":  "Computer vision allows:",
+                                                           "options":  [
+                                                                           "Playing music",
+                                                                           "Writing code",
+                                                                           "Understanding images and video",
+                                                                           "Sending emails"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Visual data processing — faces, objects, text."
+                                                       },
+                                                       {
+                                                           "question":  "Generative AI can:",
+                                                           "options":  [
+                                                                           "Only analyze existing data",
+                                                                           "Create new text, images, code, and music",
+                                                                           "Only work with numbers",
+                                                                           "Only understand language"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Generative models produce original content, not just analyze."
+                                                       },
+                                                       {
+                                                           "question":  "AI in education examples:",
+                                                           "options":  [
+                                                                           "Only taking attendance",
+                                                                           "Replacing all teachers",
+                                                                           "Only grading papers",
+                                                                           "Personalized tutoring adapting to each student\u0027s pace"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "AI tutors adapt explanations and difficulty to individual student needs."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "How AI Models Work",
+                                          "content":  "AI models are mathematical functions that take inputs and produce outputs. They learn by adjusting internal parameters during training. Think of it like tuning radio dials until you get the clearest signal. Training process: feed the model thousands or millions of examples, it makes predictions, checks against the correct answers (loss/error), and adjusts parameters to reduce errors (gradient descent). After training, the model can make predictions on new, unseen data (inference). Models are only as good as their training data — biased or limited data produces biased or limited models. Larger models with more parameters can learn more complex patterns but need more data and computing power.",
+                                          "examples":  [
+                                                           "Image classifier: trained on 1 million labeled photos → can identify cats, dogs, cars in new photos",
+                                                           "Language model: trained on billions of text tokens → can generate coherent paragraphs and answer questions",
+                                                           "Recommendation model: trained on user behavior → predicts what you\u0027ll want to watch next"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "training":  "The process of teaching a model by showing it examples and adjusting parameters",
+                                                           "inference":  "Using a trained model to make predictions on new data",
+                                                           "parameters":  "The internal values a model adjusts during training to improve accuracy",
+                                                           "gradient descent":  "An optimization algorithm that minimizes prediction errors step by step"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "AI models learn by:",
+                                                           "options":  [
+                                                                           "Adjusting parameters to reduce prediction errors on training data",
+                                                                           "Being programmed with every answer manually",
+                                                                           "Connecting to the internet during use",
+                                                                           "Random guessing that never improves"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Models iteratively adjust internal parameters to minimize the difference between predictions and correct answers."
+                                                       },
+                                                       {
+                                                           "question":  "Inference means:",
+                                                           "options":  [
+                                                                           "Building hardware",
+                                                                           "Training the model",
+                                                                           "Collecting data",
+                                                                           "Using a trained model to make predictions on new data"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "After training is complete, using the model on new inputs is called inference."
+                                                       },
+                                                       {
+                                                           "question":  "More parameters means:",
+                                                           "options":  [
+                                                                           "Model is always faster",
+                                                                           "Model is always better",
+                                                                           "Model can learn more complex patterns but needs more data and compute",
+                                                                           "Model uses less memory"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Larger models are more capable but require proportionally more training resources."
+                                                       },
+                                                       {
+                                                           "question":  "Gradient descent is:",
+                                                           "options":  [
+                                                                           "A mountain hiking technique",
+                                                                           "An optimization method that minimizes errors step by step",
+                                                                           "A data collection method",
+                                                                           "A type of neural network"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Gradient descent adjusts parameters in the direction that reduces error most."
+                                                       },
+                                                       {
+                                                           "question":  "A model trained only on English text will:",
+                                                           "options":  [
+                                                                           "Work equally well in all languages",
+                                                                           "Perform poorly on other languages — it only learned English patterns",
+                                                                           "Automatically learn all languages",
+                                                                           "Refuse to process other languages"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Models only learn from their training data — limited data = limited capability."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Large Language Models",
+                                          "content":  "Large Language Models (LLMs) like GPT, Gemma, and Llama are AI systems trained on massive text datasets to understand and generate human language. They work by predicting the next word in a sequence — trained on billions of text samples from books, websites, and articles. LLMs can: answer questions, write essays and code, translate languages, summarize documents, and have conversations. They don\u0027t truly \u0027understand\u0027 — they recognize statistical patterns in language. Limitations: they can \u0027hallucinate\u0027 (generate plausible but false information), reflect biases in training data, and don\u0027t have real-time knowledge. Smaller models (1B-3B parameters) run on phones for offline use. Larger models (70B-400B) run on powerful servers. Fine-tuning adapts a general model for specific tasks.",
+                                          "examples":  [
+                                                           "Gemma 3 1B: a small model running on your phone — powers AI Connect Africa\u0027s AI tutoring",
+                                                           "GPT-4: a massive model (hundreds of billions of parameters) running on cloud servers",
+                                                           "Fine-tuning: take a general language model and train it specifically on medical texts to create a medical AI assistant"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "LLM":  "Large Language Model — AI trained on massive text to understand and generate language",
+                                                           "hallucination":  "When an AI generates plausible-sounding but factually incorrect information",
+                                                           "fine-tuning":  "Further training a general model on specific data for a specialized task",
+                                                           "token":  "A unit of text (roughly a word or part of a word) that LLMs process"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "LLMs work by:",
+                                                           "options":  [
+                                                                           "Using if/else rules written by programmers",
+                                                                           "Looking up answers in a database",
+                                                                           "Searching the internet in real-time",
+                                                                           "Predicting the most likely next word based on patterns in training data"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "LLMs are essentially very sophisticated next-word predictors trained on billions of examples."
+                                                       },
+                                                       {
+                                                           "question":  "A \u0027hallucination\u0027 in AI means:",
+                                                           "options":  [
+                                                                           "The AI seeing images",
+                                                                           "Generating false information that sounds correct",
+                                                                           "A hardware malfunction",
+                                                                           "The model dreaming"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "LLMs can produce confident-sounding but factually wrong outputs — always verify important claims."
+                                                       },
+                                                       {
+                                                           "question":  "Gemma 3 can run on a phone because:",
+                                                           "options":  [
+                                                                           "It doesn\u0027t actually do AI",
+                                                                           "Phones are as powerful as data centers",
+                                                                           "It\u0027s a small model (1-2 billion parameters) optimized for mobile",
+                                                                           "It requires internet connection"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Smaller models sacrifice some capability for the ability to run locally on limited hardware."
+                                                       },
+                                                       {
+                                                           "question":  "Fine-tuning means:",
+                                                           "options":  [
+                                                                           "Fixing bugs in the model",
+                                                                           "Making the model smaller",
+                                                                           "Training a general model further on specific data for a specialized task",
+                                                                           "Tuning audio output"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Fine-tuning adapts a pre-trained model: general model + medical data = medical AI."
+                                                       },
+                                                       {
+                                                           "question":  "LLMs do NOT:",
+                                                           "options":  [
+                                                                           "Generate text",
+                                                                           "Truly understand meaning — they recognize statistical patterns",
+                                                                           "Translate languages",
+                                                                           "Answer questions"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "LLMs are pattern matchers, not conscious understanders — they\u0027re very good at it but don\u0027t comprehend."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Data Fundamentals",
+                      "lessons":  [
+                                      {
+                                          "title":  "Collecting and Cleaning Data",
+                                          "content":  "Data is AI\u0027s fuel. Sources: surveys, sensors, websites, databases, social media. Raw data is messy: missing values, duplicates, typos, inconsistent formats. Cleaning fixes these: fill/remove missing values, remove duplicates, standardize formats. 80% of data science time is cleaning. Quality matters: garbage in, garbage out.",
+                                          "examples":  [
+                                                           "Ages: 15, 16, \u0027\u0027, 14, 999 — blank and 999 need cleaning",
+                                                           "Mixed dates: \u002712/01/2024\u0027 and \u0027Jan 12, 2024\u0027 need standardizing",
+                                                           "Duplicate entries with slightly different name spellings"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "data cleaning":  "Fixing errors and inconsistencies",
+                                                           "dataset":  "Structured collection of data",
+                                                           "missing values":  "Empty cells where data should exist",
+                                                           "data quality":  "How accurate, complete, and consistent the data is"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Data scientists spend ~80% of time:",
+                                                           "options":  [
+                                                                           "Building models",
+                                                                           "Cleaning data",
+                                                                           "Presenting results",
+                                                                           "Collecting data"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Cleaning is the most time-consuming part."
+                                                       },
+                                                       {
+                                                           "question":  "Garbage in, garbage out means:",
+                                                           "options":  [
+                                                                           "Data is always bad",
+                                                                           "AI creates garbage",
+                                                                           "Bad data produces bad AI",
+                                                                           "Computers are unreliable"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Model quality depends on data quality."
+                                                       },
+                                                       {
+                                                           "question":  "A data quality issue:",
+                                                           "options":  [
+                                                                           "Using a database",
+                                                                           "Too much data",
+                                                                           "Well-organized data",
+                                                                           "Missing values in spreadsheet"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Missing values need to be addressed."
+                                                       },
+                                                       {
+                                                           "question":  "Data standardization means:",
+                                                           "options":  [
+                                                                           "Ignoring inconsistencies",
+                                                                           "Deleting all data",
+                                                                           "Making data bigger",
+                                                                           "Converting all data to consistent formats"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "All dates in YYYY-MM-DD, all names in same case, etc."
+                                                       },
+                                                       {
+                                                           "question":  "Outliers in data are:",
+                                                           "options":  [
+                                                                           "Always errors",
+                                                                           "Values far from the normal range that may need investigation",
+                                                                           "Always correct",
+                                                                           "Impossible to detect"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Outliers could be errors OR genuine extreme values — investigate before removing."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Analyzing and Visualizing Data",
+                                          "content":  "Analysis finds patterns and insights. Descriptive stats: mean, median, mode, standard deviation. Visualizations make patterns visible: bar charts (categories), line graphs (trends), scatter plots (relationships), pie charts (proportions), histograms (distributions). Tools: Excel/Sheets for basics, Python (pandas, matplotlib) for advanced. Always ask: what story does this data tell?",
+                                          "examples":  [
+                                                           "Line graph shows warming trend over 50 years",
+                                                           "Scatter plot: more study hours → higher grades (positive correlation)",
+                                                           "Bar chart: East region has highest sales"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "data visualization":  "Representing data graphically",
+                                                           "correlation":  "Relationship between two variables",
+                                                           "descriptive statistics":  "Summary numbers: mean, median, mode, std dev",
+                                                           "distribution":  "How data values are spread across the range"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Best for trends over time:",
+                                                           "options":  [
+                                                                           "Line graph",
+                                                                           "Pie chart",
+                                                                           "Bar chart",
+                                                                           "Scatter plot"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Lines connect data points across time."
+                                                       },
+                                                       {
+                                                           "question":  "Positive correlation:",
+                                                           "options":  [
+                                                                           "One up, other down",
+                                                                           "Both variables increase together",
+                                                                           "No relationship",
+                                                                           "Equal values"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Same direction: both rise or both fall."
+                                                       },
+                                                       {
+                                                           "question":  "Beginner data analysis tool:",
+                                                           "options":  [
+                                                                           "Photoshop",
+                                                                           "Excel or Google Sheets",
+                                                                           "PowerPoint",
+                                                                           "Word"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Spreadsheets are most accessible."
+                                                       },
+                                                       {
+                                                           "question":  "Standard deviation measures:",
+                                                           "options":  [
+                                                                           "The most common value",
+                                                                           "The middle value",
+                                                                           "How spread out data is from the mean",
+                                                                           "The total sum"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Small std dev = data clustered near mean. Large = widely spread."
+                                                       },
+                                                       {
+                                                           "question":  "A histogram shows:",
+                                                           "options":  [
+                                                                           "Parts of a whole",
+                                                                           "Trends over time",
+                                                                           "Frequency distribution — how many values fall in each range",
+                                                                           "Correlation between variables"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Histograms group data into bins and show how many values are in each."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Databases and SQL",
+                                          "content":  "Databases organize large data efficiently. Relational databases (MySQL, PostgreSQL, SQLite) use tables with rows and columns. SQL queries data: SELECT name FROM students WHERE grade = \u0027A\u0027. NoSQL (MongoDB, Firebase) stores flexible documents. Cloud databases (AWS, Google Cloud) are accessible anywhere. Choose: structured data → SQL, flexible/rapid → NoSQL.",
+                                          "examples":  [
+                                                           "SELECT * FROM products WHERE price \u003c 100",
+                                                           "School DB: tables for students, teachers, classes linked by IDs",
+                                                           "Firebase: {name: \u0027Alice\u0027, age: 15, interests: [\u0027math\u0027]}"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "SQL":  "Structured Query Language for relational databases",
+                                                           "relational database":  "Data in tables with relationships",
+                                                           "NoSQL":  "Non-relational databases — flexible documents or key-value pairs",
+                                                           "query":  "A command to retrieve or manipulate data in a database"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "SQL stands for:",
+                                                           "options":  [
+                                                                           "Standard Query List",
+                                                                           "Simple Question Language",
+                                                                           "System Quality Logic",
+                                                                           "Structured Query Language"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "SQL = Structured Query Language."
+                                                       },
+                                                       {
+                                                           "question":  "Use NoSQL when:",
+                                                           "options":  [
+                                                                           "Complex joins needed",
+                                                                           "Strict structured financial data",
+                                                                           "Data structure varies or changes frequently",
+                                                                           "Small datasets only"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "NoSQL is flexible for changing schemas."
+                                                       },
+                                                       {
+                                                           "question":  "SELECT * FROM students does:",
+                                                           "options":  [
+                                                                           "Retrieves all data from students table",
+                                                                           "Deletes students",
+                                                                           "Creates table",
+                                                                           "Counts students"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "* = all columns, FROM specifies the table."
+                                                       },
+                                                       {
+                                                           "question":  "A primary key is:",
+                                                           "options":  [
+                                                                           "A password",
+                                                                           "The first column always",
+                                                                           "A unique identifier for each row in a table",
+                                                                           "The table name"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Primary keys ensure each row can be uniquely identified."
+                                                       },
+                                                       {
+                                                           "question":  "JOIN in SQL:",
+                                                           "options":  [
+                                                                           "Sorts data alphabetically",
+                                                                           "Deletes duplicate rows",
+                                                                           "Creates a new database",
+                                                                           "Combines data from multiple related tables"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "JOIN links rows from different tables based on a shared key."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Data Ethics and Privacy",
+                                          "content":  "Collecting data raises ethical concerns. Privacy: people should know what\u0027s collected and how it\u0027s used. Consent: users must agree before their data is used. GDPR (Europe), POPIA (South Africa) give people rights over their data. Data minimization: collect only what you need. Anonymization: remove identifying information. Data breaches expose personal information — companies must have security measures. Responsible data use means balancing innovation with protecting people\u0027s rights. Consider: just because you CAN collect data doesn\u0027t mean you SHOULD.",
+                                          "examples":  [
+                                                           "GDPR requires websites to ask permission before tracking with cookies",
+                                                           "Anonymization: replace names with IDs, remove addresses — data is useful but not identifiable",
+                                                           "Data breach: a company\u0027s database is hacked, exposing millions of users\u0027 emails and passwords"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "privacy":  "Right to control personal information",
+                                                           "consent":  "Getting permission before collecting/using data",
+                                                           "anonymization":  "Removing identifying information from data while keeping it useful",
+                                                           "data breach":  "Unauthorized access to sensitive data"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "GDPR is:",
+                                                           "options":  [
+                                                                           "AI model",
+                                                                           "Programming language",
+                                                                           "European data protection law",
+                                                                           "Database system"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "GDPR protects personal data rights in Europe."
+                                                       },
+                                                       {
+                                                           "question":  "Data consent means:",
+                                                           "options":  [
+                                                                           "Users agree before their data is collected",
+                                                                           "Taking data without asking",
+                                                                           "Government approval",
+                                                                           "Paying for data"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "People must choose to share their data."
+                                                       },
+                                                       {
+                                                           "question":  "Anonymization:",
+                                                           "options":  [
+                                                                           "Removes identifying info while keeping data useful",
+                                                                           "Deletes all data",
+                                                                           "Makes data public",
+                                                                           "Encrypts everything permanently"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Strip personal identifiers but keep the data for analysis."
+                                                       },
+                                                       {
+                                                           "question":  "Data minimization means:",
+                                                           "options":  [
+                                                                           "Use minimum storage",
+                                                                           "Collect everything possible",
+                                                                           "Delete all data",
+                                                                           "Collect only the data you actually need"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Don\u0027t collect birthday, address, and phone number if you only need email."
+                                                       },
+                                                       {
+                                                           "question":  "A data breach is:",
+                                                           "options":  [
+                                                                           "Backing up data",
+                                                                           "Normal data transfer",
+                                                                           "Unauthorized access to sensitive data",
+                                                                           "Sharing public data"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Breaches expose personal data — companies must prevent them with security measures."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Big Data and Data Pipelines",
+                                          "content":  "Big data refers to datasets too large or complex for traditional tools. Characterized by the 3 Vs: Volume (massive amounts — terabytes to petabytes), Velocity (data arriving at high speed — social media posts, sensor readings), and Variety (different formats — text, images, video, structured, unstructured). Data pipelines automate the flow: collect → clean → transform → store → analyze → visualize. ETL (Extract, Transform, Load) is the traditional process. Modern data lakes store raw data in any format for later analysis. Tools: Apache Spark for processing, Hadoop for distributed storage, cloud services (AWS, Google Cloud) for scalable infrastructure. Real-time processing handles streaming data (stock prices, social media feeds) as it arrives.",
+                                          "examples":  [
+                                                           "Facebook generates 4 petabytes of data per day — traditional Excel can\u0027t handle this",
+                                                           "A weather service: sensors → pipeline → clean → database → forecast model → app display",
+                                                           "Real-time: stock trading algorithms process market data and execute trades in milliseconds"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "big data":  "Datasets too large or complex for traditional tools — characterized by Volume, Velocity, Variety",
+                                                           "data pipeline":  "Automated workflow: collect → clean → transform → store → analyze",
+                                                           "ETL":  "Extract, Transform, Load — the process of preparing data for analysis",
+                                                           "data lake":  "Storage system holding raw data in any format for later processing"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "The 3 Vs of big data are:",
+                                                           "options":  [
+                                                                           "Visual, Virtual, Valid",
+                                                                           "Volume, Velocity, Variety",
+                                                                           "Verbose, Volatile, Vertical",
+                                                                           "Value, Verify, Validate"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Volume (size), Velocity (speed), Variety (different formats)."
+                                                       },
+                                                       {
+                                                           "question":  "A data pipeline:",
+                                                           "options":  [
+                                                                           "Is a physical pipe",
+                                                                           "Automates the flow from raw data to insights",
+                                                                           "Only stores data",
+                                                                           "Only visualizes data"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Pipelines automate: collect → clean → transform → store → analyze."
+                                                       },
+                                                       {
+                                                           "question":  "ETL stands for:",
+                                                           "options":  [
+                                                                           "Enter, Test, Launch",
+                                                                           "Extract, Transform, Load",
+                                                                           "Edit, Transfer, Link",
+                                                                           "Execute, Train, Learn"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "ETL: pull data out (Extract), clean/reshape it (Transform), put it in the database (Load)."
+                                                       },
+                                                       {
+                                                           "question":  "A data lake stores:",
+                                                           "options":  [
+                                                                           "Only images",
+                                                                           "Only structured tables",
+                                                                           "Raw data in any format for later processing",
+                                                                           "Only text files"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Data lakes accept any format — structured, unstructured, raw — process later as needed."
+                                                       },
+                                                       {
+                                                           "question":  "Real-time processing is needed for:",
+                                                           "options":  [
+                                                                           "Streaming data that must be acted on immediately (stock trades, fraud detection)",
+                                                                           "Historical analysis",
+                                                                           "Monthly reports",
+                                                                           "Annual surveys"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Some data (financial markets, IoT sensors) must be processed as it arrives."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Machine Learning Basics",
+                      "lessons":  [
+                                      {
+                                          "title":  "How Machines Learn",
+                                          "content":  "ML teaches computers to learn from data without explicit programming. Process: collect data → clean → split (training/test) → choose algorithm → train → evaluate → deploy. The model learns patterns. Overfitting: memorized training data but fails on new data. Underfitting: too simple to capture patterns. Cross-validation: test on different data splits for reliable evaluation.",
+                                          "examples":  [
+                                                           "Show 10,000 cat/dog photos with labels → model learns to distinguish",
+                                                           "Test on 1,000 unseen photos → measure accuracy",
+                                                           "Overfitting: 99% training accuracy, 60% test accuracy"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "training data":  "Data used to teach the model",
+                                                           "test data":  "Unseen data for evaluation",
+                                                           "overfitting":  "Works on training but fails on new data",
+                                                           "underfitting":  "Model too simple to learn the patterns",
+                                                           "cross-validation":  "Testing on multiple data splits for robust evaluation"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "First ML step:",
+                                                           "options":  [
+                                                                           "Collect and clean data",
+                                                                           "Deploy model",
+                                                                           "Write algorithm",
+                                                                           "Test model"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Everything starts with data."
+                                                       },
+                                                       {
+                                                           "question":  "Split data because:",
+                                                           "options":  [
+                                                                           "Save storage",
+                                                                           "Evaluate on unseen data to check real performance",
+                                                                           "Make training faster",
+                                                                           "Not necessary"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Test data shows if model truly learned vs memorized."
+                                                       },
+                                                       {
+                                                           "question":  "Overfitting:",
+                                                           "options":  [
+                                                                           "Perfect model",
+                                                                           "Too simple model",
+                                                                           "Needs more training",
+                                                                           "Good on training, bad on new data"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Memorizing vs learning."
+                                                       },
+                                                       {
+                                                           "question":  "Cross-validation helps by:",
+                                                           "options":  [
+                                                                           "Testing on multiple different data splits for more reliable results",
+                                                                           "Using more data for training",
+                                                                           "Making the model simpler",
+                                                                           "Speeding up training"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Multiple test splits give a more reliable estimate of model performance."
+                                                       },
+                                                       {
+                                                           "question":  "The bias-variance tradeoff:",
+                                                           "options":  [
+                                                                           "More variance is always better",
+                                                                           "More bias is always better",
+                                                                           "Simple models underfit (bias), complex models overfit (variance) — find the balance",
+                                                                           "There\u0027s no tradeoff"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "The goal is a model complex enough to learn patterns but not so complex it memorizes noise."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Supervised vs Unsupervised Learning",
+                                          "content":  "Supervised: labeled data with correct answers. Classification predicts categories (spam/not, cat/dog). Regression predicts numbers (price, temperature). Unsupervised: finds hidden patterns in unlabeled data. Clustering groups similar items (customer segments). Dimensionality reduction simplifies complex data. Semi-supervised uses small labeled + large unlabeled data.",
+                                          "examples":  [
+                                                           "Supervised: emails labeled spam/not → predicts new emails",
+                                                           "Regression: house features → predicts price",
+                                                           "Clustering: customer purchases → discovers 3 segments"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "supervised learning":  "Learning from labeled data with correct answers",
+                                                           "unsupervised learning":  "Finding patterns in unlabeled data",
+                                                           "classification":  "Predicting categories",
+                                                           "regression":  "Predicting numerical values",
+                                                           "clustering":  "Grouping similar items together without predefined labels"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Supervised learning needs:",
+                                                           "options":  [
+                                                                           "Labeled data with correct answers",
+                                                                           "No data",
+                                                                           "Only unlabeled data",
+                                                                           "Human supervision during predictions"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Labels = correct answers for learning."
+                                                       },
+                                                       {
+                                                           "question":  "Classification task:",
+                                                           "options":  [
+                                                                           "Predict temperature",
+                                                                           "Is email spam or not",
+                                                                           "Group customers",
+                                                                           "Reduce dimensions"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Classification assigns categories."
+                                                       },
+                                                       {
+                                                           "question":  "Clustering is:",
+                                                           "options":  [
+                                                                           "Reinforcement learning",
+                                                                           "Supervised learning",
+                                                                           "Unsupervised learning",
+                                                                           "Rule-based AI"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Clustering finds groups without labels."
+                                                       },
+                                                       {
+                                                           "question":  "Regression predicts:",
+                                                           "options":  [
+                                                                           "Nothing specific",
+                                                                           "A category (yes/no, cat/dog)",
+                                                                           "Clusters of data",
+                                                                           "A continuous number (price, temperature, age)"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Regression outputs a number, not a category."
+                                                       },
+                                                       {
+                                                           "question":  "Semi-supervised learning is useful when:",
+                                                           "options":  [
+                                                                           "No data is available",
+                                                                           "All data is labeled",
+                                                                           "Labeling data is expensive but you have lots of unlabeled data",
+                                                                           "The task is simple"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Labeling medical images requires expert doctors — expensive. Semi-supervised uses few labels + many unlabeled."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Neural Networks",
+                                          "content":  "Neural networks: layers of connected nodes inspired by the brain. Input layer receives data, hidden layers find patterns, output layer gives predictions. Each connection has a weight adjusted during training. Deep learning uses many hidden layers. CNNs excel at images, Transformers at text/language. Training needs lots of data and GPUs.",
+                                          "examples":  [
+                                                           "CNN: input image → edges → shapes → object identified",
+                                                           "Transformer: processes entire sentences for context",
+                                                           "Training GPT-like models needs thousands of GPUs for weeks"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "neural network":  "Connected nodes in layers learning patterns",
+                                                           "deep learning":  "Many hidden layers for complex patterns",
+                                                           "CNN":  "Convolutional Neural Network — specialized for images",
+                                                           "Transformer":  "Architecture for processing sequences — powers modern language models"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Deep learning means:",
+                                                           "options":  [
+                                                                           "Thinks deeply",
+                                                                           "Many hidden layers",
+                                                                           "Deep databases",
+                                                                           "Runs long"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Deep = many layers between input and output."
+                                                       },
+                                                       {
+                                                           "question":  "Best for images:",
+                                                           "options":  [
+                                                                           "Decision tree",
+                                                                           "RNN",
+                                                                           "Simple perceptron",
+                                                                           "CNN"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "CNNs detect edges, shapes, objects."
+                                                       },
+                                                       {
+                                                           "question":  "Weights are:",
+                                                           "options":  [
+                                                                           "Number of layers",
+                                                                           "Physical weight",
+                                                                           "Amount of data",
+                                                                           "Numbers adjusted during training to improve accuracy"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Weights determine connection influence."
+                                                       },
+                                                       {
+                                                           "question":  "Transformers are important because:",
+                                                           "options":  [
+                                                                           "They don\u0027t need training",
+                                                                           "They are the oldest architecture",
+                                                                           "They only work on images",
+                                                                           "They process all words at once, understanding context — powering modern AI"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Transformers\u0027 attention mechanism processes sequences in parallel, enabling breakthroughs in NLP."
+                                                       },
+                                                       {
+                                                           "question":  "GPUs are used for AI training because:",
+                                                           "options":  [
+                                                                           "They perform many parallel calculations simultaneously",
+                                                                           "They are cheaper than CPUs",
+                                                                           "They don\u0027t use electricity",
+                                                                           "They are only made for AI"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Neural network training involves millions of parallel math operations — GPUs excel at this."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Model Evaluation and Metrics",
+                                          "content":  "How do you know if your model is good? Accuracy alone isn\u0027t enough — if 95% of emails are NOT spam, a model that always says \u0027not spam\u0027 has 95% accuracy but catches zero spam. Better metrics: precision (of predicted positives, how many are correct?), recall (of actual positives, how many did we find?), F1 score (balance of precision and recall). For regression: MAE (average error), MSE (average squared error), R² (how well model explains the data). Confusion matrix shows: true positives, false positives, true negatives, false negatives. ROC curve plots true positive rate vs false positive rate. Always evaluate on test data, not training data.",
+                                          "examples":  [
+                                                           "Medical test: high recall is crucial — we\u0027d rather flag healthy people (false positive) than miss cancer (false negative)",
+                                                           "Spam filter: high precision is important — we don\u0027t want real emails marked as spam",
+                                                           "Confusion matrix: 90 correct spam, 5 missed spam, 3 real emails in spam, 902 correct not-spam"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "accuracy":  "Percentage of correct predictions overall",
+                                                           "precision":  "Of predicted positives, what fraction are actually positive",
+                                                           "recall":  "Of actual positives, what fraction did the model correctly identify",
+                                                           "confusion matrix":  "A table showing true positives, false positives, true negatives, false negatives"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Why is accuracy alone misleading?",
+                                                           "options":  [
+                                                                           "Accuracy is always accurate",
+                                                                           "With imbalanced data, a useless model can have high accuracy",
+                                                                           "It\u0027s too hard to calculate",
+                                                                           "It requires too much data"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "In imbalanced datasets (99% one class), predicting only that class gives 99% accuracy but is useless."
+                                                       },
+                                                       {
+                                                           "question":  "High recall is crucial when:",
+                                                           "options":  [
+                                                                           "The dataset is balanced",
+                                                                           "False alarms are expensive",
+                                                                           "Missing a positive case is dangerous (cancer detection)",
+                                                                           "Speed is most important"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "In medical screening, missing a disease (false negative) could be life-threatening."
+                                                       },
+                                                       {
+                                                           "question":  "Precision measures:",
+                                                           "options":  [
+                                                                           "Of predicted positives, how many are actually positive",
+                                                                           "Of actual positives, how many were found",
+                                                                           "Total correct predictions",
+                                                                           "Model speed"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Precision = true positives / (true positives + false positives)."
+                                                       },
+                                                       {
+                                                           "question":  "A false negative is:",
+                                                           "options":  [
+                                                                           "A correct prediction",
+                                                                           "A negative case the model missed",
+                                                                           "A positive case the model missed (predicted negative but actually positive)",
+                                                                           "A model error that crashes"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "The model said \u0027no\u0027 but the answer was \u0027yes\u0027 — a missed positive."
+                                                       },
+                                                       {
+                                                           "question":  "F1 score balances:",
+                                                           "options":  [
+                                                                           "Data and compute",
+                                                                           "Speed and accuracy",
+                                                                           "Training and testing",
+                                                                           "Precision and recall"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "F1 is the harmonic mean of precision and recall — useful when both matter."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Practical ML with Python",
+                                          "content":  "Python is the language of data science and ML. Key libraries: NumPy (numerical arrays and math), Pandas (data tables and manipulation), Matplotlib/Seaborn (visualization), Scikit-learn (machine learning algorithms), TensorFlow/PyTorch (deep learning). Typical workflow: import data (pd.read_csv), explore (df.describe(), df.head()), clean (drop nulls, convert types), visualize (plt.plot, sns.heatmap), split (train_test_split), train (model.fit), evaluate (model.score), tune (adjust hyperparameters). Jupyter Notebooks are ideal for iterative exploration — code, results, and notes in one document. Start with scikit-learn for classical ML; use TensorFlow/PyTorch for deep learning.",
+                                          "examples":  [
+                                                           "import pandas as pd; df = pd.read_csv(\u0027students.csv\u0027); print(df.describe()) — load and summarize data",
+                                                           "from sklearn.model_selection import train_test_split; X_train, X_test, y_train, y_test = train_test_split(X, y)",
+                                                           "model = DecisionTreeClassifier(); model.fit(X_train, y_train); print(model.score(X_test, y_test)) — train and evaluate"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "Pandas":  "Python library for data manipulation with DataFrames (tables)",
+                                                           "Scikit-learn":  "Python library providing machine learning algorithms and tools",
+                                                           "NumPy":  "Python library for numerical computing with arrays",
+                                                           "Jupyter Notebook":  "Interactive document combining code, output, and explanations"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Pandas is used for:",
+                                                           "options":  [
+                                                                           "Deep learning",
+                                                                           "Data manipulation with tables (DataFrames)",
+                                                                           "Web development",
+                                                                           "Game programming"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Pandas provides DataFrames — like spreadsheets in Python."
+                                                       },
+                                                       {
+                                                           "question":  "The typical ML workflow order:",
+                                                           "options":  [
+                                                                           "Deploy → Test → Train → Import",
+                                                                           "Train → Import → Clean → Deploy",
+                                                                           "Import → Explore → Clean → Split → Train → Evaluate",
+                                                                           "Evaluate → Train → Import → Clean"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Data first, then understand it, clean it, split it, train, and evaluate."
+                                                       },
+                                                       {
+                                                           "question":  "train_test_split does:",
+                                                           "options":  [
+                                                                           "Tests the database",
+                                                                           "Splits a string",
+                                                                           "Trains two models",
+                                                                           "Divides data into training and testing sets"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "It randomly splits data so you can train on some and test on the rest."
+                                                       },
+                                                       {
+                                                           "question":  "Jupyter Notebooks are useful because:",
+                                                           "options":  [
+                                                                           "They are faster than scripts",
+                                                                           "They combine code, output, and explanations in one document",
+                                                                           "They only work on Mac",
+                                                                           "They replace all other tools"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Notebooks enable iterative exploration — run code cells, see results, add notes."
+                                                       },
+                                                       {
+                                                           "question":  "For a beginner\u0027s first ML project, start with:",
+                                                           "options":  [
+                                                                           "Writing algorithms without libraries",
+                                                                           "Building a custom neural network from scratch",
+                                                                           "TensorFlow for everything",
+                                                                           "Scikit-learn — simpler API for classical ML algorithms"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Scikit-learn has a consistent, simple API — perfect for learning ML fundamentals."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "AI Ethics and Future",
+                      "lessons":  [
+                                      {
+                                          "title":  "Bias in AI",
+                                          "content":  "AI reflects training data biases. Hiring AI trained on male-dominated data may prefer men. Facial recognition works worse on darker skin if trained mostly on light faces. Bias causes real harm: unfair loans, wrongful arrests, discrimination. Fight bias: diverse data, test across demographics, diverse teams, regular audits.",
+                                          "examples":  [
+                                                           "Amazon scrapped biased hiring AI",
+                                                           "Facial recognition higher error on darker-skinned women",
+                                                           "Healthcare algorithm gave lower risk scores to Black patients"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "AI bias":  "Unfair results from biased training data or design",
+                                                           "fairness":  "Equitable treatment across demographics",
+                                                           "audit":  "Systematic check for bias and errors",
+                                                           "representation":  "Ensuring training data includes diverse populations"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "AI bias comes from:",
+                                                           "options":  [
+                                                                           "Hardware",
+                                                                           "Random chance",
+                                                                           "Programming language",
+                                                                           "Biased training data"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "AI learns from data — biased data = biased AI."
+                                                       },
+                                                       {
+                                                           "question":  "Reduce AI bias by:",
+                                                           "options":  [
+                                                                           "Diverse data and testing across demographics",
+                                                                           "Less data",
+                                                                           "Trust AI completely",
+                                                                           "Ignore it"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Diversity in data, testing, and teams."
+                                                       },
+                                                       {
+                                                           "question":  "AI bias is harmful because:",
+                                                           "options":  [
+                                                                           "Uses more electricity",
+                                                                           "Makes AI slower",
+                                                                           "It leads to unfair discrimination",
+                                                                           "Not harmful"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Biased AI can deny jobs, loans, healthcare unfairly."
+                                                       },
+                                                       {
+                                                           "question":  "Algorithmic auditing means:",
+                                                           "options":  [
+                                                                           "Auditing the company\u0027s finances",
+                                                                           "Deleting the algorithm",
+                                                                           "Making algorithms secret",
+                                                                           "Regularly checking AI systems for unfair outcomes"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Systematic testing reveals whether the AI treats all groups fairly."
+                                                       },
+                                                       {
+                                                           "question":  "The most effective way to prevent AI bias is:",
+                                                           "options":  [
+                                                                           "Address it at every stage: data collection, model design, testing, and deployment",
+                                                                           "Only fix it after deployment",
+                                                                           "Ignore small biases",
+                                                                           "Use less data"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Bias prevention must happen throughout the entire AI lifecycle, not just at the end."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Privacy and Responsible AI",
+                                          "content":  "AI needs data but collecting personal data raises concerns. Privacy: people should know what\u0027s collected. Consent: users agree before data use. GDPR gives rights to access, correct, delete data. Deepfakes create fake realistic videos/audio. Responsible AI balances innovation with rights. Transparency: explain how AI makes decisions. Accountability: someone is responsible when AI causes harm.",
+                                          "examples":  [
+                                                           "GDPR requires cookie consent on websites",
+                                                           "Deepfake politician video could influence elections",
+                                                           "Health app tracking location without telling users violates privacy"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "privacy":  "Right to control personal information",
+                                                           "consent":  "Permission before data collection",
+                                                           "deepfake":  "AI-generated fake video/audio",
+                                                           "explainable AI":  "AI systems that can explain how they reached their decisions",
+                                                           "accountability":  "Assigning responsibility for AI decisions and outcomes"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "GDPR is:",
+                                                           "options":  [
+                                                                           "Database",
+                                                                           "Programming language",
+                                                                           "AI model",
+                                                                           "European data protection law"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Protects data rights in Europe."
+                                                       },
+                                                       {
+                                                           "question":  "Deepfake:",
+                                                           "options":  [
+                                                                           "AI-generated fake video/audio",
+                                                                           "Old photograph",
+                                                                           "Malware",
+                                                                           "Social platform"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Realistic fabricated media of real people."
+                                                       },
+                                                       {
+                                                           "question":  "Data consent importance:",
+                                                           "options":  [
+                                                                           "People decide how their data is used",
+                                                                           "Makes AI accurate",
+                                                                           "Not important",
+                                                                           "Reduces costs"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Respect individual autonomy."
+                                                       },
+                                                       {
+                                                           "question":  "Explainable AI (XAI) is important because:",
+                                                           "options":  [
+                                                                           "It reduces model accuracy",
+                                                                           "It makes AI faster",
+                                                                           "It\u0027s a legal requirement everywhere",
+                                                                           "People need to understand why AI made a decision, especially in critical areas"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "If an AI denies your loan, you have a right to know why — XAI provides explanations."
+                                                       },
+                                                       {
+                                                           "question":  "AI accountability means:",
+                                                           "options":  [
+                                                                           "AI is accountable to itself",
+                                                                           "Someone is responsible when AI causes harm",
+                                                                           "Nobody is responsible",
+                                                                           "Only users are responsible"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Developers, companies, and deployers share responsibility for AI\u0027s impacts."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "The Future of AI",
+                                          "content":  "Trends: AI in healthcare (drug discovery, early detection), climate (energy optimization), education (personalized learning), creativity (art, music, text). Jobs will change: some automated, new ones emerge. AI augments humans, not replaces. Most valuable skill: working WITH AI. Concerns: job displacement, autonomous weapons, power concentration. The future depends on choices we make today.",
+                                          "examples":  [
+                                                           "AlphaFold predicted nearly every protein structure",
+                                                           "AI tutors could personalize education for every child",
+                                                           "Self-driving trucks may displace millions of drivers"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "augmentation":  "AI enhancing human abilities",
+                                                           "automation":  "Machines performing human tasks",
+                                                           "AGI":  "Artificial General Intelligence — hypothetical human-level AI",
+                                                           "AI governance":  "Rules and policies for developing and deploying AI responsibly"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Will AI replace all jobs:",
+                                                           "options":  [
+                                                                           "No jobs affected",
+                                                                           "Yes all",
+                                                                           "Only manual labor",
+                                                                           "No — it changes some and creates new ones"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Adaptation and new roles emerge."
+                                                       },
+                                                       {
+                                                           "question":  "AI augmentation means:",
+                                                           "options":  [
+                                                                           "Making AI more powerful",
+                                                                           "AI replacing humans",
+                                                                           "AI helping humans do jobs better",
+                                                                           "Removing AI"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Working alongside humans."
+                                                       },
+                                                       {
+                                                           "question":  "Most important AI-era skill:",
+                                                           "options":  [
+                                                                           "Working with AI effectively",
+                                                                           "Avoiding technology",
+                                                                           "Memorizing facts",
+                                                                           "Manual labor only"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "AI literacy across all careers."
+                                                       },
+                                                       {
+                                                           "question":  "AI governance refers to:",
+                                                           "options":  [
+                                                                           "Rules and policies for responsible AI development and deployment",
+                                                                           "AI governing humans",
+                                                                           "Government using AI",
+                                                                           "Banning all AI"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Governance ensures AI is developed safely, fairly, and transparently."
+                                                       },
+                                                       {
+                                                           "question":  "The biggest risk of AI concentration is:",
+                                                           "options":  [
+                                                                           "AI becoming conscious",
+                                                                           "A few companies controlling powerful AI, creating inequality",
+                                                                           "Running out of electricity",
+                                                                           "Too many AI researchers"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "If only a few entities control advanced AI, it could worsen power imbalances globally."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "AI for Social Good",
+                                          "content":  "AI can address humanity\u0027s biggest challenges. Healthcare: AI diagnoses diseases in regions with few doctors — a phone app can detect skin cancer from a photo. Education: personalized learning for students who can\u0027t access good schools. Environment: monitoring deforestation from satellite images, predicting natural disasters, optimizing renewable energy grids. Agriculture: identifying crop diseases early, predicting weather for planting decisions. Accessibility: AI translates sign language, generates image descriptions for blind users, provides real-time captions for deaf users. Humanitarian: AI helps locate survivors after disasters, predicts refugee flows, and detects misinformation. The key is ensuring AI reaches the people who need it most, not just those who can pay for it.",
+                                          "examples":  [
+                                                           "AI detects tuberculosis from chest X-rays in rural clinics without radiologists",
+                                                           "AI-powered translation enables communication in 100+ languages including endangered ones",
+                                                           "Satellite AI monitors illegal deforestation in the Amazon in real-time, alerting authorities"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "AI for good":  "Using AI to address social, environmental, and humanitarian challenges",
+                                                           "digital divide":  "The gap between those with and without access to technology",
+                                                           "inclusive AI":  "AI designed to benefit all people, not just privileged groups",
+                                                           "humanitarian AI":  "AI applications in disaster response, refugee support, and crisis management"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "AI helps healthcare in developing countries by:",
+                                                           "options":  [
+                                                                           "Only helping wealthy patients",
+                                                                           "Replacing all hospitals",
+                                                                           "Enabling diagnosis where there are few doctors",
+                                                                           "Making medicine more expensive"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "AI phone apps can screen for diseases in areas without specialists."
+                                                       },
+                                                       {
+                                                           "question":  "The digital divide in AI means:",
+                                                           "options":  [
+                                                                           "Benefits of AI reaching privileged groups but not everyone",
+                                                                           "AI causing internet outages",
+                                                                           "Digital vs analog AI",
+                                                                           "AI working only on computers"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "The gap between those who benefit from AI and those left behind."
+                                                       },
+                                                       {
+                                                           "question":  "AI helps environmental conservation by:",
+                                                           "options":  [
+                                                                           "Cutting down more trees",
+                                                                           "Monitoring deforestation and tracking wildlife from satellites",
+                                                                           "Increasing pollution",
+                                                                           "Only in labs"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Satellite AI can detect illegal logging and track endangered species movements."
+                                                       },
+                                                       {
+                                                           "question":  "AI accessibility examples include:",
+                                                           "options":  [
+                                                                           "Sign language translation, image descriptions for blind, captions for deaf",
+                                                                           "Making apps harder to use",
+                                                                           "Only voice assistants",
+                                                                           "Only for young people"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "AI can make technology accessible to people with various disabilities."
+                                                       },
+                                                       {
+                                                           "question":  "For AI to truly benefit humanity:",
+                                                           "options":  [
+                                                                           "It should be kept secret",
+                                                                           "Only rich countries should develop it",
+                                                                           "It must reach the people who need it most, not just those who can pay",
+                                                                           "Only tech companies should decide its use"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Inclusive AI development ensures benefits are shared widely, not concentrated."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Building Your AI Career",
+                                          "content":  "AI careers are growing rapidly across every industry. Roles: data analyst (analyze and visualize data), data scientist (build predictive models), ML engineer (deploy and maintain AI systems), AI researcher (advance the field), AI product manager (guide AI product development), AI ethicist (ensure responsible AI). Skills needed: Python programming, statistics and math, data manipulation (Pandas, SQL), machine learning (scikit-learn), deep learning (TensorFlow/PyTorch), and communication (explaining results to non-technical people). Start with: learn Python, take an online course (Coursera, Kaggle Learn, fast.ai), build projects with real data, share your work on GitHub. You don\u0027t need a PhD — many successful AI practitioners are self-taught. The most important skill is curiosity: AI changes fast, so continuous learning is essential.",
+                                          "examples":  [
+                                                           "Kaggle competitions: practice ML on real problems and compare with others worldwide",
+                                                           "Portfolio project: build a model that predicts student exam scores from study habits — shows skills to employers",
+                                                           "AI ethics role: review facial recognition deployment to ensure it works fairly across demographics"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "data scientist":  "Professional who extracts insights and builds predictive models from data",
+                                                           "ML engineer":  "Professional who deploys, scales, and maintains machine learning systems",
+                                                           "portfolio":  "A collection of projects demonstrating your skills to potential employers",
+                                                           "Kaggle":  "Platform for data science competitions and learning with real datasets"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "The first skill to learn for AI:",
+                                                           "options":  [
+                                                                           "Graphic design",
+                                                                           "Building hardware",
+                                                                           "Python programming",
+                                                                           "Public speaking"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Python is the foundation — used by virtually all data science and ML tools."
+                                                       },
+                                                       {
+                                                           "question":  "You need a PhD to work in AI:",
+                                                           "options":  [
+                                                                           "Yes always",
+                                                                           "No — many practitioners are self-taught with strong portfolios",
+                                                                           "Only for data analysis",
+                                                                           "PhDs are being eliminated"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Skills and projects matter more than degrees — many successful AI professionals are self-taught."
+                                                       },
+                                                       {
+                                                           "question":  "A portfolio project should:",
+                                                           "options":  [
+                                                                           "Solve a real problem with real data, showing your process and results",
+                                                                           "Be as complex as possible",
+                                                                           "Copy someone else\u0027s project exactly",
+                                                                           "Only use fake data"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Real projects with real data demonstrate practical skills to employers."
+                                                       },
+                                                       {
+                                                           "question":  "The most important long-term AI skill:",
+                                                           "options":  [
+                                                                           "Only knowing one framework",
+                                                                           "Memorizing algorithms",
+                                                                           "Continuous learning — AI evolves rapidly",
+                                                                           "Avoiding new technology"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "AI changes so fast that lifelong learning is more valuable than any single tool."
+                                                       },
+                                                       {
+                                                           "question":  "Kaggle is useful for:",
+                                                           "options":  [
+                                                                           "Practicing ML with real data and competitions",
+                                                                           "Building websites",
+                                                                           "Social networking",
+                                                                           "Video editing"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Kaggle provides datasets, competitions, and a community for hands-on ML learning."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ]
+}

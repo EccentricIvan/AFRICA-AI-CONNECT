@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 330" role="img" aria-label="Types of triangles, and the sides of a right-angled triangle">
+  <rect width="560" height="330" fill="#EFF6FF"/>
+  <text x="280" y="22" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#1E3A8A">Triangles</text>
+
+  <!-- Equilateral -->
+  <polygon points="20,140 110,140 65,62" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/>
+  <line x1="38" y1="99" x2="46" y2="104" stroke="#1D4ED8" stroke-width="2"/>
+  <line x1="84" y1="104" x2="92" y2="99" stroke="#1D4ED8" stroke-width="2"/>
+  <line x1="65" y1="135" x2="65" y2="145" stroke="#1D4ED8" stroke-width="2"/>
+  <text x="65" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1E3A8A">Equilateral</text>
+  <text x="65" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#1E3A8A">3 equal sides, all 60°</text>
+
+  <!-- Isosceles -->
+  <polygon points="150,140 230,140 190,50" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+  <line x1="166" y1="96" x2="174" y2="99" stroke="#15803D" stroke-width="2"/>
+  <line x1="206" y1="99" x2="214" y2="96" stroke="#15803D" stroke-width="2"/>
+  <text x="190" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#14532D">Isosceles</text>
+  <text x="190" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#14532D">2 equal sides, 2 equal angles</text>
+
+  <!-- Scalene -->
+  <polygon points="262,140 362,140 290,70" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+  <text x="312" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#78350F">Scalene</text>
+  <text x="312" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#78350F">no equal sides or angles</text>
+
+  <!-- Obtuse -->
+  <polygon points="392,140 540,140 420,105" fill="#FCE7F3" stroke="#BE185D" stroke-width="2"/>
+  <text x="466" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#831843">Obtuse-angled</text>
+  <text x="466" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#831843">one angle bigger than 90°</text>
+
+  <!-- Right-angled, sides named for angle θ -->
+  <polygon points="100,305 290,305 290,200" fill="#E0E7FF" stroke="#4338CA" stroke-width="2.5"/>
+  <polyline points="276,305 276,291 290,291" fill="none" stroke="#4338CA" stroke-width="2"/>
+  <path d="M 132 305 A 32 32 0 0 0 128 291" fill="none" stroke="#4338CA" stroke-width="2"/>
+  <text x="140" y="298" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#312E81">θ</text>
+  <text x="182" y="238" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#312E81" transform="rotate(-29 182 238)">Hypotenuse (longest side)</text>
+  <text x="296" y="256" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#312E81">Opposite θ</text>
+  <text x="195" y="322" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#312E81">Adjacent to θ</text>
+
+  <rect x="372" y="206" width="176" height="96" rx="8" fill="#FFFFFF" stroke="#4338CA" stroke-width="1.5"/>
+  <text x="460" y="224" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#312E81">Right-angled triangle</text>
+  <text x="460" y="242" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#312E81">Pythagoras: a² + b² = c²</text>
+  <text x="460" y="260" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#312E81">sin θ = opposite ÷ hypotenuse</text>
+  <text x="460" y="276" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#312E81">cos θ = adjacent ÷ hypotenuse</text>
+  <text x="460" y="292" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#312E81">tan θ = opposite ÷ adjacent</text>
+</svg>

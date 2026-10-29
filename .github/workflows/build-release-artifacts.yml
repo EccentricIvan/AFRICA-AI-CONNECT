@@ -1,0 +1,227 @@
+name: Build Release Artifacts
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      bundle_models:
+        description: 'Embed the brain + translation models into the Android APK (requires model-pack release)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  analyze-and-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.x'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      # The optional school cloud: its own tests, and an installed copy the
+      # app's cloud end-to-end test starts (it skips without one).
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: School cloud backend tests
+        working-directory: backend
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements.txt
+          .venv/bin/python -m pytest -q
+
+      - name: Test
+        run: flutter test
+
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    needs: [analyze-and-test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # GitHub's ubuntu-latest runner provides the Android SDK and the Flutter
+      # action supplies the SDK versions required by this project.
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses >/dev/null || true
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.x'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Download model pack into APK assets
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.bundle_models }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p android/app/src/main/assets/models
+          gh release download model-pack \
+            --repo "$GITHUB_REPOSITORY" \
+            --dir android/app/src/main/assets/models \
+            --pattern 'qwen2.5-coder-1.5b-instruct.gguf'             --pattern 'afrislm-0.8b-q4_k_m.gguf'
+          ls -lh android/app/src/main/assets/models
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Prepare APK
+        env:
+          BUNDLE_MODELS: ${{ github.event_name == 'workflow_dispatch' && inputs.bundle_models }}
+        run: |
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "dist/ai-connect-africa-latest.apk"
+          if [ "$BUNDLE_MODELS" = "true" ]; then
+            cp "dist/ai-connect-africa-latest.apk" "dist/ai-connect-africa-latest-with-models.apk"
+          fi
+          cd dist && zip ai-connect-africa-latest-apk.zip ai-connect-africa-latest.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI Connect Africa Latest APK
+          path: dist/
+          if-no-files-found: error
+
+  build-windows:
+    name: Build Windows EXE
+    runs-on: windows-latest
+    needs: [analyze-and-test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.x'
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # ggml.dll carries a load-time import on ggml-vulkan.dll -> vulkan-1.dll,
+      # which only ever arrives with GPU drivers. Without it llama.dll cannot
+      # load at all (error 126), llm_llamacpp's helper isolate dies during
+      # backend init, and translation stops working. See the script for detail.
+      - name: Fetch Vulkan loader
+        shell: pwsh
+        run: ./tools/fetch_vulkan_loader.ps1
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      # Windows 11 Smart App Control blocks unsigned DLLs with a "Bad Image"
+      # dialog (error 0xC0E90002), so an unsigned build cannot start on those
+      # machines at all. Signing only happens when the certificate secrets are
+      # present; without them the build stays unsigned exactly as before.
+      - name: Sign Windows binaries
+        shell: pwsh
+        env:
+          WINDOWS_CERT_PFX_BASE64: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+          WINDOWS_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        run: |
+          if (-not $env:WINDOWS_CERT_PFX_BASE64) {
+            Write-Host '::warning::No signing certificate configured - shipping an unsigned Windows build. Machines with Smart App Control enabled will fail to start it (0xC0E90002).'
+            exit 0
+          }
+          $pfx = Join-Path $env:RUNNER_TEMP 'signing.pfx'
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERT_PFX_BASE64))
+          try {
+            ./tools/sign_windows_build.ps1 `
+              -Path 'build/windows/x64/runner/Release' `
+              -PfxPath $pfx `
+              -PfxPassword $env:WINDOWS_CERT_PASSWORD
+          } finally {
+            Remove-Item $pfx -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Prepare Windows zip
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "dist\ai-connect-africa-windows-latest.zip" -Force
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI Connect Africa Windows Latest
+          path: dist/ai-connect-africa-windows-latest.zip
+          if-no-files-found: error
+
+  publish-latest:
+    name: Publish Latest Build
+    runs-on: ubuntu-latest
+    needs: [build-apk, build-windows]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Flatten artifacts
+        run: |
+          find dist -type f -maxdepth 3 -print
+          cp "dist/AI Connect Africa Latest APK/ai-connect-africa-latest.apk" "./ai-connect-africa-latest.apk"
+          cp "dist/AI Connect Africa Latest APK/ai-connect-africa-latest-apk.zip" "./ai-connect-africa-latest-apk.zip"
+          cp "dist/AI Connect Africa Windows Latest/ai-connect-africa-windows-latest.zip" "./ai-connect-africa-windows-latest.zip"
+          if [ -f "dist/AI Connect Africa Latest APK/ai-connect-africa-latest-with-models.apk" ]; then
+            cp "dist/AI Connect Africa Latest APK/ai-connect-africa-latest-with-models.apk" "./ai-connect-africa-latest-with-models.apk"
+          fi
+
+      - name: Update rolling release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view latest-build --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create latest-build \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "AI Connect Africa Latest Build" \
+              --notes "Automatically built APK and Windows zip from the latest main branch. The *-with-models.apk (when present) embeds chat + translation models for a one-tap offline install."
+          fi
+          FILES=(
+            "ai-connect-africa-latest.apk"
+            "ai-connect-africa-latest-apk.zip"
+            "ai-connect-africa-windows-latest.zip"
+          )
+          if [ -f "ai-connect-africa-latest-with-models.apk" ]; then
+            FILES+=("ai-connect-africa-latest-with-models.apk")
+          fi
+          gh release upload latest-build "${FILES[@]}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --clobber

@@ -1,0 +1,1469 @@
+{
+    "id":  "web_development",
+    "name":  "Web Development",
+    "icon":  "web",
+    "color":  "#0EA5E9",
+    "units":  [
+                  {
+                      "title":  "HTML Foundations",
+                      "lessons":  [
+                                      {
+                                          "title":  "What is HTML and Web Pages",
+                                          "content":  "HTML (HyperText Markup Language) is the language for web pages. It uses tags in angle brackets: \u003cp\u003e for paragraph, \u003ch1\u003e for heading. Most tags come in pairs: \u003cp\u003etext\u003c/p\u003e. Every page has: \u003c!DOCTYPE html\u003e, \u003chtml\u003e, \u003chead\u003e (metadata, title), \u003cbody\u003e (visible content). HTML structures content — CSS styles it, JavaScript makes it interactive.",
+                                          "examples":  [
+                                                           "\u003ch1\u003eWelcome\u003c/h1\u003e — large heading",
+                                                           "\u003cp\u003eA paragraph.\u003c/p\u003e",
+                                                           "\u003cimg src=\u0027photo.jpg\u0027 alt=\u0027Description\u0027\u003e"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "tag":  "HTML keyword in angle brackets",
+                                                           "element":  "A tag plus its content",
+                                                           "attribute":  "Extra info on a tag: src, alt, href",
+                                                           "DOCTYPE":  "Declaration telling the browser this is HTML5"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "HTML stands for:",
+                                                           "options":  [
+                                                                           "High Tech Modern Language",
+                                                                           "HyperText Markup Language",
+                                                                           "Home Tool Markup Language",
+                                                                           "HyperText Making Links"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "HTML = HyperText Markup Language."
+                                                       },
+                                                       {
+                                                           "question":  "Largest heading tag:",
+                                                           "options":  [
+                                                                           "\u003ch6\u003e",
+                                                                           "\u003ch1\u003e",
+                                                                           "\u003cp\u003e",
+                                                                           "\u003cbig\u003e"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "h1 is largest, h6 smallest."
+                                                       },
+                                                       {
+                                                           "question":  "Visible content goes in:",
+                                                           "options":  [
+                                                                           "\u003chead\u003e",
+                                                                           "\u003cbody\u003e",
+                                                                           "\u003ctitle\u003e",
+                                                                           "Outside \u003chtml\u003e"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Body contains everything visible."
+                                                       },
+                                                       {
+                                                           "question":  "HTML is:",
+                                                           "options":  [
+                                                                           "A markup language, not a programming language",
+                                                                           "A programming language",
+                                                                           "A database",
+                                                                           "An operating system"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "HTML structures content — it doesn\u0027t have logic like programming languages."
+                                                       },
+                                                       {
+                                                           "question":  "The \u003chead\u003e section contains:",
+                                                           "options":  [
+                                                                           "Metadata, title, and linked CSS/JS files",
+                                                                           "The main page content",
+                                                                           "Images only",
+                                                                           "Navigation only"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Head has metadata — title, character set, stylesheet links — not visible content."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Text, Links, and Images",
+                                          "content":  "Headings: \u003ch1\u003e to \u003ch6\u003e. Paragraphs: \u003cp\u003e. Bold: \u003cstrong\u003e. Italic: \u003cem\u003e. Links: \u003ca href=\u0027url\u0027\u003etext\u003c/a\u003e. Images: \u003cimg src=\u0027file\u0027 alt=\u0027description\u0027\u003e. Lists: \u003cul\u003e (bullets), \u003col\u003e (numbers), \u003cli\u003e for items. Line break: \u003cbr\u003e. Horizontal rule: \u003chr\u003e. Semantic tags describe meaning: \u003carticle\u003e, \u003csection\u003e, \u003cnav\u003e, \u003cheader\u003e, \u003cfooter\u003e.",
+                                          "examples":  [
+                                                           "\u003ca href=\u0027page2.html\u0027\u003eGo to page 2\u003c/a\u003e",
+                                                           "\u003cul\u003e\u003cli\u003eApples\u003c/li\u003e\u003cli\u003eBananas\u003c/li\u003e\u003c/ul\u003e",
+                                                           "\u003cstrong\u003eImportant:\u003c/strong\u003e Always add alt text"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "anchor tag":  "\u003ca\u003e creates hyperlinks",
+                                                           "href":  "Attribute specifying link destination",
+                                                           "alt text":  "Image description for accessibility",
+                                                           "semantic":  "Tags that describe their content\u0027s purpose"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Which creates a hyperlink?",
+                                                           "options":  [
+                                                                           "\u003curl\u003e",
+                                                                           "\u003clink\u003e",
+                                                                           "\u003chref\u003e",
+                                                                           "\u003ca\u003e"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "\u003ca\u003e with href creates clickable links."
+                                                       },
+                                                       {
+                                                           "question":  "Alt attribute:",
+                                                           "options":  [
+                                                                           "Links to page",
+                                                                           "Makes image bigger",
+                                                                           "Adds border",
+                                                                           "Describes image if it can\u0027t load"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Alt text is essential for accessibility and broken images."
+                                                       },
+                                                       {
+                                                           "question":  "\u003col\u003e creates:",
+                                                           "options":  [
+                                                                           "Ordered (numbered) list",
+                                                                           "Unordered (bullet) list",
+                                                                           "Definition list",
+                                                                           "No list"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "ol = ordered (1,2,3), ul = unordered (bullets)."
+                                                       },
+                                                       {
+                                                           "question":  "\u003cstrong\u003e makes text:",
+                                                           "options":  [
+                                                                           "Bold and semantically important",
+                                                                           "Italic",
+                                                                           "Underlined",
+                                                                           "Larger"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "strong = bold + indicates importance to screen readers."
+                                                       },
+                                                       {
+                                                           "question":  "Which is a semantic tag?",
+                                                           "options":  [
+                                                                           "\u003cnav\u003e",
+                                                                           "\u003cdiv\u003e",
+                                                                           "\u003cspan\u003e",
+                                                                           "\u003cb\u003e"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "nav describes navigation content; div and span are generic containers."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Forms and Input",
+                                          "content":  "Forms collect user data: \u003cform\u003e wraps inputs. Types: text, password, email, number, checkbox, radio, date, file. \u003ctextarea\u003e for multi-line. \u003cselect\u003e/\u003coption\u003e for dropdowns. \u003cbutton type=\u0027submit\u0027\u003e submits. \u003clabel\u003e describes inputs (accessibility). Required attribute prevents empty submission. Placeholder shows hint text. Form action attribute specifies where data is sent.",
+                                          "examples":  [
+                                                           "\u003cinput type=\u0027email\u0027 placeholder=\u0027you@example.com\u0027 required\u003e",
+                                                           "\u003cselect\u003e\u003coption\u003eEnglish\u003c/option\u003e\u003coption\u003eFrench\u003c/option\u003e\u003c/select\u003e",
+                                                           "\u003clabel for=\u0027name\u0027\u003eName:\u003c/label\u003e\u003cinput id=\u0027name\u0027 type=\u0027text\u0027\u003e"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "form":  "HTML element collecting user input",
+                                                           "input":  "Element for data entry",
+                                                           "placeholder":  "Hint text inside input",
+                                                           "required":  "Attribute preventing form submission if empty"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Which hides typed characters?",
+                                                           "options":  [
+                                                                           "type=\u0027password\u0027",
+                                                                           "type=\u0027hidden\u0027",
+                                                                           "type=\u0027secret\u0027",
+                                                                           "type=\u0027text\u0027"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "password shows dots/asterisks."
+                                                       },
+                                                       {
+                                                           "question":  "\u003clabel\u003e does:",
+                                                           "options":  [
+                                                                           "Describes input for accessibility",
+                                                                           "Creates list",
+                                                                           "Styles form",
+                                                                           "Submits form"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Labels describe inputs — clicking label focuses the input."
+                                                       },
+                                                       {
+                                                           "question":  "Dropdown menu tag:",
+                                                           "options":  [
+                                                                           "\u003clist\u003e",
+                                                                           "\u003cdropdown\u003e",
+                                                                           "\u003cmenu\u003e",
+                                                                           "\u003cselect\u003e"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "select with option children creates dropdowns."
+                                                       },
+                                                       {
+                                                           "question":  "required attribute:",
+                                                           "options":  [
+                                                                           "Hides the field",
+                                                                           "Makes field optional",
+                                                                           "Prevents empty form submission",
+                                                                           "Deletes the field"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Browser won\u0027t submit the form if required fields are empty."
+                                                       },
+                                                       {
+                                                           "question":  "type=\u0027email\u0027 helps by:",
+                                                           "options":  [
+                                                                           "Encrypting data",
+                                                                           "Sending emails",
+                                                                           "Creating email accounts",
+                                                                           "Validating email format automatically"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Browsers check for valid email format (must contain @) before submitting."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Tables and Multimedia",
+                                          "content":  "Tables display data in rows and columns. \u003ctable\u003e wraps everything, \u003ctr\u003e creates rows, \u003cth\u003e for header cells (bold, centered), \u003ctd\u003e for data cells. \u003cthead\u003e, \u003ctbody\u003e, \u003ctfoot\u003e organize table sections. colspan and rowspan merge cells. For multimedia: \u003cvideo\u003e embeds video with controls attribute, \u003caudio\u003e embeds sound. \u003ciframe\u003e embeds external content (YouTube, maps). \u003ccanvas\u003e creates graphics with JavaScript. Always provide alternative content for multimedia (subtitles for video, alt text for images).",
+                                          "examples":  [
+                                                           "\u003ctable\u003e\u003ctr\u003e\u003cth\u003eName\u003c/th\u003e\u003cth\u003eScore\u003c/th\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eAlice\u003c/td\u003e\u003ctd\u003e95\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                                                           "\u003cvideo src=\u0027lesson.mp4\u0027 controls width=\u0027640\u0027\u003e\u003c/video\u003e",
+                                                           "\u003caudio src=\u0027music.mp3\u0027 controls\u003e\u003c/audio\u003e"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "table":  "HTML element for displaying data in rows and columns",
+                                                           "tr":  "Table row element",
+                                                           "th":  "Table header cell — bold and centered by default",
+                                                           "td":  "Table data cell",
+                                                           "iframe":  "Inline frame — embeds external content like videos or maps"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "\u003cth\u003e creates:",
+                                                           "options":  [
+                                                                           "A regular data cell",
+                                                                           "A header cell (bold, centered)",
+                                                                           "A table row",
+                                                                           "A table border"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "th = table header, displayed bold and centered. td = regular data."
+                                                       },
+                                                       {
+                                                           "question":  "To merge two columns in a table:",
+                                                           "options":  [
+                                                                           "Delete a column",
+                                                                           "Use rowspan=\u00272\u0027",
+                                                                           "Use colspan=\u00272\u0027",
+                                                                           "Use \u003cmerge\u003e"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "colspan merges cells horizontally across columns."
+                                                       },
+                                                       {
+                                                           "question":  "The controls attribute on \u003cvideo\u003e:",
+                                                           "options":  [
+                                                                           "Hides the video",
+                                                                           "Shows play/pause/volume controls",
+                                                                           "Autoplays the video",
+                                                                           "Downloads the video"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "controls adds the standard video player interface for the user."
+                                                       },
+                                                       {
+                                                           "question":  "To embed a YouTube video:",
+                                                           "options":  [
+                                                                           "Use \u003cimg\u003e",
+                                                                           "Use \u003cvideo\u003e with YouTube URL",
+                                                                           "Use \u003ciframe\u003e with the YouTube embed URL",
+                                                                           "Use \u003ca\u003e link"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "YouTube provides iframe embed codes for embedding videos in web pages."
+                                                       },
+                                                       {
+                                                           "question":  "Why provide subtitles for videos?",
+                                                           "options":  [
+                                                                           "Required by HTML",
+                                                                           "To make videos longer",
+                                                                           "Accessibility — for deaf/hard-of-hearing users and non-native speakers",
+                                                                           "To slow down loading"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Subtitles/captions ensure video content is accessible to all users."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "HTML5 Semantic Structure",
+                                          "content":  "HTML5 introduced semantic elements that describe their content\u0027s purpose, replacing generic \u003cdiv\u003e containers. \u003cheader\u003e contains introductory content or navigation. \u003cnav\u003e wraps main navigation links. \u003cmain\u003e contains the primary page content (one per page). \u003carticle\u003e is self-contained content (blog post, news story). \u003csection\u003e groups related content within a page. \u003caside\u003e is secondary content (sidebar, related links). \u003cfooter\u003e contains closing content (copyright, contact). Using semantic HTML improves: accessibility (screen readers understand structure), SEO (search engines understand content), and code readability. Always use the most specific semantic tag available.",
+                                          "examples":  [
+                                                           "\u003cheader\u003e\u003cnav\u003e\u003ca href=\u0027/\u0027\u003eHome\u003c/a\u003e\u003ca href=\u0027/about\u0027\u003eAbout\u003c/a\u003e\u003c/nav\u003e\u003c/header\u003e",
+                                                           "\u003cmain\u003e\u003carticle\u003e\u003ch2\u003eBlog Post Title\u003c/h2\u003e\u003cp\u003eContent...\u003c/p\u003e\u003c/article\u003e\u003c/main\u003e",
+                                                           "\u003cfooter\u003e\u003cp\u003e\u0026copy; 2024 My Website\u003c/p\u003e\u003c/footer\u003e"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "semantic HTML":  "Tags that describe their content\u0027s purpose (header, nav, main, article)",
+                                                           "article":  "Self-contained content that makes sense independently",
+                                                           "section":  "A thematic grouping of content within a page",
+                                                           "aside":  "Content tangentially related to the main content (sidebars)"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "How many \u003cmain\u003e elements should a page have?",
+                                                           "options":  [
+                                                                           "None",
+                                                                           "As many as needed",
+                                                                           "One",
+                                                                           "Two — one for mobile, one for desktop"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "A page should have exactly one \u003cmain\u003e containing the primary content."
+                                                       },
+                                                       {
+                                                           "question":  "\u003carticle\u003e is best for:",
+                                                           "options":  [
+                                                                           "Self-contained content like a blog post or news story",
+                                                                           "Navigation links",
+                                                                           "Page footer",
+                                                                           "Sidebar content"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "article wraps content that makes sense on its own — could be syndicated independently."
+                                                       },
+                                                       {
+                                                           "question":  "Why use semantic HTML over \u003cdiv\u003e everywhere?",
+                                                           "options":  [
+                                                                           "Faster loading",
+                                                                           "Better accessibility, SEO, and readability",
+                                                                           "More colorful",
+                                                                           "Required by all browsers"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Semantic tags tell browsers, search engines, and screen readers what content means."
+                                                       },
+                                                       {
+                                                           "question":  "\u003caside\u003e is typically used for:",
+                                                           "options":  [
+                                                                           "Headers",
+                                                                           "Main page content",
+                                                                           "Navigation",
+                                                                           "Sidebar content or secondary information"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Aside contains content related to but not essential for the main content."
+                                                       },
+                                                       {
+                                                           "question":  "\u003cnav\u003e should contain:",
+                                                           "options":  [
+                                                                           "Major navigation links for the site",
+                                                                           "All links on the page",
+                                                                           "Only one link",
+                                                                           "Images only"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "nav wraps the main navigation — not every link on the page needs to be in nav."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "CSS Styling",
+                      "lessons":  [
+                                      {
+                                          "title":  "Introduction to CSS",
+                                          "content":  "CSS controls how HTML looks — colors, fonts, spacing, layout. Rules have selector and declarations: h1 { color: blue; font-size: 24px; }. Three ways: inline (style attribute), internal (\u003cstyle\u003e in head), external (.css file — best). Colors: named (red), hex (#FF0000), RGB (rgb(255,0,0)), HSL. Cascade: later styles override earlier; more specific selectors win. Selectors: element (p), class (.myclass), ID (#myid), descendant (div p).",
+                                          "examples":  [
+                                                           "p { color: #333; font-size: 16px; line-height: 1.6; }",
+                                                           "body { background-color: #f0f0f0; font-family: Arial; }",
+                                                           "\u003clink rel=\u0027stylesheet\u0027 href=\u0027styles.css\u0027\u003e"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "selector":  "Targets elements to style",
+                                                           "property":  "What to change (color, font-size)",
+                                                           "cascade":  "System deciding which styles win",
+                                                           "specificity":  "How specific a selector is — more specific wins"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "CSS stands for:",
+                                                           "options":  [
+                                                                           "Cascading Style Sheets",
+                                                                           "Computer Style System",
+                                                                           "Creative Site Styling",
+                                                                           "Code Style Sheets"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "CSS = Cascading Style Sheets."
+                                                       },
+                                                       {
+                                                           "question":  "Best way to add CSS:",
+                                                           "options":  [
+                                                                           "JavaScript",
+                                                                           "Inline styles",
+                                                                           "Internal \u003cstyle\u003e",
+                                                                           "External stylesheet"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "External CSS separates styling and is reusable."
+                                                       },
+                                                       {
+                                                           "question":  "#FF0000 is:",
+                                                           "options":  [
+                                                                           "White",
+                                                                           "Blue",
+                                                                           "Green",
+                                                                           "Red"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "FF red, 00 green, 00 blue = pure red."
+                                                       },
+                                                       {
+                                                           "question":  "Which selector is most specific?",
+                                                           "options":  [
+                                                                           "div",
+                                                                           ".myClass",
+                                                                           "#myId",
+                                                                           "*"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "ID selectors (#) are more specific than classes (.) which are more specific than elements."
+                                                       },
+                                                       {
+                                                           "question":  "To style all elements with class \u0027highlight\u0027:",
+                                                           "options":  [
+                                                                           "#highlight { }",
+                                                                           ".highlight { }",
+                                                                           "highlight { }",
+                                                                           "*highlight { }"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Period (.) selects by class name."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Box Model and Layout",
+                                          "content":  "Every element is a box: content + padding + border + margin. Control size: width, height. Display: block (full width: div, p, h1), inline (content width: span, a), inline-block, none (hidden). Flexbox: display: flex — arrange items in rows/columns. Grid: display: grid — 2D layouts. Box-sizing: border-box includes padding and border in width calculation.",
+                                          "examples":  [
+                                                           "div { padding: 20px; margin: 10px; border: 1px solid black; }",
+                                                           ".container { display: flex; justify-content: center; align-items: center; }",
+                                                           ".grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "box model":  "Content + padding + border + margin",
+                                                           "flexbox":  "Flexible layout in rows or columns",
+                                                           "margin":  "Space outside border",
+                                                           "padding":  "Space between content and border"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Between content and border:",
+                                                           "options":  [
+                                                                           "Width",
+                                                                           "Margin",
+                                                                           "Padding",
+                                                                           "Display"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Padding sits between content and border."
+                                                       },
+                                                       {
+                                                           "question":  "display: flex makes:",
+                                                           "options":  [
+                                                                           "Hidden element",
+                                                                           "Block element",
+                                                                           "A flex container for flexible layout",
+                                                                           "Fixed element"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Flex enables flexible child arrangement."
+                                                       },
+                                                       {
+                                                           "question":  "margin: auto on block with set width:",
+                                                           "options":  [
+                                                                           "Full width",
+                                                                           "Removes margins",
+                                                                           "Centers horizontally",
+                                                                           "Hides element"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Auto distributes remaining space equally."
+                                                       },
+                                                       {
+                                                           "question":  "box-sizing: border-box means:",
+                                                           "options":  [
+                                                                           "Width includes padding and border",
+                                                                           "Width is content only",
+                                                                           "No border allowed",
+                                                                           "Margin is included"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Border-box prevents padding/border from expanding beyond set width."
+                                                       },
+                                                       {
+                                                           "question":  "Grid is better than flexbox for:",
+                                                           "options":  [
+                                                                           "Simple row layouts",
+                                                                           "Two-dimensional layouts (rows AND columns)",
+                                                                           "Single elements",
+                                                                           "Animations"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Grid handles 2D (rows+columns); flexbox handles 1D (row or column)."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Responsive Design",
+                                          "content":  "Responsive design works on all screen sizes. Viewport meta: \u003cmeta name=\u0027viewport\u0027 content=\u0027width=device-width, initial-scale=1\u0027\u003e. Media queries: @media (max-width: 768px) { ... } targets screens ≤768px. Use relative units: %, em, rem, vw, vh instead of fixed px. Mobile-first: write mobile styles first, enhance for larger screens. Images: max-width: 100% makes them responsive. Test on real devices and browser dev tools (F12).",
+                                          "examples":  [
+                                                           "@media (max-width: 600px) { .sidebar { display: none; } }",
+                                                           "img { max-width: 100%; height: auto; }",
+                                                           ".container { width: 90%; max-width: 1200px; margin: auto; }"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "responsive design":  "Websites adapting to screen sizes",
+                                                           "media query":  "CSS applying at certain widths",
+                                                           "viewport":  "Visible area on device",
+                                                           "mobile-first":  "Write mobile styles first, enhance for larger screens"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "@media (max-width: 768px) targets:",
+                                                           "options":  [
+                                                                           "All screens",
+                                                                           "Screens larger than 768px",
+                                                                           "Screens 768px or smaller",
+                                                                           "Print only"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "max-width: 768px = styles apply when screen is 768px or narrower."
+                                                       },
+                                                       {
+                                                           "question":  "% instead of px because:",
+                                                           "options":  [
+                                                                           "Required",
+                                                                           "Faster",
+                                                                           "Elements scale with screen",
+                                                                           "Looks better"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Percentages adapt to container size."
+                                                       },
+                                                       {
+                                                           "question":  "Mobile-first means:",
+                                                           "options":  [
+                                                                           "Ignore mobile",
+                                                                           "Only support mobile",
+                                                                           "Desktop first",
+                                                                           "Write mobile styles first, add desktop later"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Start small, then use min-width queries to enhance."
+                                                       },
+                                                       {
+                                                           "question":  "rem units are relative to:",
+                                                           "options":  [
+                                                                           "Nothing",
+                                                                           "Parent element",
+                                                                           "Screen width",
+                                                                           "Root element font size"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "rem = root em, relative to the html element\u0027s font size."
+                                                       },
+                                                       {
+                                                           "question":  "To make images responsive:",
+                                                           "options":  [
+                                                                           "display: none;",
+                                                                           "width: 1000px;",
+                                                                           "max-width: 100%; height: auto;",
+                                                                           "position: fixed;"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "max-width: 100% prevents images from exceeding their container."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "CSS Animations and Transitions",
+                                          "content":  "Transitions smoothly animate property changes: transition: property duration timing-function delay. Example: button:hover { background: blue; transition: background 0.3s ease; } — the color change takes 0.3 seconds instead of instant. Timing functions: ease (default, slow start/end), linear (constant), ease-in (slow start), ease-out (slow end). Animations use @keyframes for complex multi-step sequences. Transform: rotate(), scale(), translate(), skew() — change element position/size without affecting layout. Hover effects (:hover) create interactive feedback. Keep animations subtle — too much movement is distracting and can cause accessibility issues.",
+                                          "examples":  [
+                                                           ".btn { transition: all 0.3s ease; } .btn:hover { transform: scale(1.05); background: #4F46E5; }",
+                                                           "@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } .element { animation: fadeIn 1s ease; }",
+                                                           "transform: rotate(45deg) — rotates element 45 degrees"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "transition":  "Smooth animation between two states of a property",
+                                                           "animation":  "Multi-step animation defined with @keyframes",
+                                                           "transform":  "Change element\u0027s position, rotation, or scale without affecting layout",
+                                                           "hover":  "CSS pseudo-class triggered when mouse is over an element"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "transition: color 0.5s ease means:",
+                                                           "options":  [
+                                                                           "Background disappears",
+                                                                           "Color changes instantly",
+                                                                           "Element moves 0.5 pixels",
+                                                                           "Color change takes 0.5 seconds with ease timing"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Transition smoothly animates the color property over 0.5 seconds."
+                                                       },
+                                                       {
+                                                           "question":  "@keyframes is used for:",
+                                                           "options":  [
+                                                                           "Removing styles",
+                                                                           "Creating transitions",
+                                                                           "Making elements static",
+                                                                           "Defining multi-step animations"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Keyframes define what happens at each step of a complex animation."
+                                                       },
+                                                       {
+                                                           "question":  "transform: scale(2) does:",
+                                                           "options":  [
+                                                                           "Rotates it 2 degrees",
+                                                                           "Halves the element",
+                                                                           "Moves it 2px",
+                                                                           "Doubles the element\u0027s size"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "scale(2) makes the element twice as large in both dimensions."
+                                                       },
+                                                       {
+                                                           "question":  "Too many animations can:",
+                                                           "options":  [
+                                                                           "Improve SEO",
+                                                                           "Make the site faster",
+                                                                           "Distract users and cause accessibility problems",
+                                                                           "Reduce file size"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Excessive motion can be distracting and trigger motion sickness in some users."
+                                                       },
+                                                       {
+                                                           "question":  "ease-in timing means:",
+                                                           "options":  [
+                                                                           "Constant speed",
+                                                                           "Starts fast, slows down",
+                                                                           "Starts slow, speeds up",
+                                                                           "No animation"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "ease-in accelerates: slow start, faster finish."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "CSS Variables and Modern Features",
+                                          "content":  "CSS Custom Properties (variables) store reusable values: :root { --primary: #4F46E5; --spacing: 16px; }. Use with var(): color: var(--primary). Change variables to update entire themes. CSS Grid advanced: grid-template-areas names regions for intuitive layout. Clamp() creates fluid typography: font-size: clamp(1rem, 2vw, 2rem) — minimum, preferred, maximum. Container queries (@container) style based on parent size, not screen size. Modern CSS reduces the need for JavaScript for many interactive features — accordions, tabs, and dark mode can all be done in pure CSS.",
+                                          "examples":  [
+                                                           ":root { --primary: #4F46E5; } .btn { background: var(--primary); }",
+                                                           "font-size: clamp(14px, 2vw, 22px) — fluid between 14px and 22px",
+                                                           "@media (prefers-color-scheme: dark) { :root { --bg: #0F172A; } } — automatic dark mode"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "CSS variable":  "A custom property storing a reusable value: --name: value",
+                                                           "clamp":  "A function setting min, preferred, and max values: clamp(min, preferred, max)",
+                                                           "grid-template-areas":  "Named grid regions for intuitive layout planning",
+                                                           "prefers-color-scheme":  "Media query detecting user\u0027s system dark/light mode preference"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "CSS variables are declared with:",
+                                                           "options":  [
+                                                                           "At sign: @variable",
+                                                                           "Dollar sign: $variable",
+                                                                           "Double dashes: --variable-name",
+                                                                           "Hash: #variable"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "CSS custom properties use --name syntax: --primary-color: blue;"
+                                                       },
+                                                       {
+                                                           "question":  "var(--primary) does:",
+                                                           "options":  [
+                                                                           "Uses the value stored in the --primary variable",
+                                                                           "Creates a new variable",
+                                                                           "Validates the variable",
+                                                                           "Deletes the variable"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "var() retrieves and uses a custom property\u0027s value."
+                                                       },
+                                                       {
+                                                           "question":  "clamp(1rem, 3vw, 2rem) means:",
+                                                           "options":  [
+                                                                           "Always 1rem",
+                                                                           "Always 3vw",
+                                                                           "Minimum 1rem, prefers 3vw, maximum 2rem — fluid sizing",
+                                                                           "Always 2rem"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "clamp picks the middle value but never goes below min or above max."
+                                                       },
+                                                       {
+                                                           "question":  "prefers-color-scheme: dark detects:",
+                                                           "options":  [
+                                                                           "The screen brightness is low",
+                                                                           "The website has dark CSS",
+                                                                           "It\u0027s nighttime",
+                                                                           "User\u0027s system is set to dark mode"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "This media query checks the user\u0027s OS-level dark/light mode setting."
+                                                       },
+                                                       {
+                                                           "question":  "Why use CSS variables?",
+                                                           "options":  [
+                                                                           "They are faster",
+                                                                           "Change one value to update the whole theme consistently",
+                                                                           "Required by HTML5",
+                                                                           "They replace JavaScript"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Variables make themes maintainable — change --primary once, every usage updates."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "JavaScript Basics",
+                      "lessons":  [
+                                      {
+                                          "title":  "Variables and Functions in JS",
+                                          "content":  "JavaScript makes pages interactive. Variables: let (changeable), const (fixed). Data types: strings, numbers, booleans, arrays, objects, null, undefined. Functions: function greet(name) { return \u0027Hello \u0027 + name; } or arrow: const greet = (name) =\u003e \u0027Hello \u0027 + name. Template literals: `Hello ${name}`. Console.log() for debugging.",
+                                          "examples":  [
+                                                           "let count = 0; count++;",
+                                                           "const add = (a, b) =\u003e a + b;",
+                                                           "const fruits = [\u0027apple\u0027]; fruits.push(\u0027banana\u0027);"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "let":  "Variable that can be reassigned",
+                                                           "const":  "Variable that cannot be reassigned",
+                                                           "arrow function":  "Short syntax: (params) =\u003e expression",
+                                                           "template literal":  "String with embedded expressions using backticks and ${}"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "let vs const:",
+                                                           "options":  [
+                                                                           "let for numbers, const for strings",
+                                                                           "const can be reassigned",
+                                                                           "Same thing",
+                                                                           "let can be reassigned, const cannot"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "let = mutable, const = constant."
+                                                       },
+                                                       {
+                                                           "question":  "Add to array in JS:",
+                                                           "options":  [
+                                                                           ".add()",
+                                                                           ".append()",
+                                                                           ".push()",
+                                                                           ".insert()"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "push() adds to end in JavaScript."
+                                                       },
+                                                       {
+                                                           "question":  "JavaScript runs in:",
+                                                           "options":  [
+                                                                           "Web browser (and Node.js on servers)",
+                                                                           "Only servers",
+                                                                           "Database",
+                                                                           "CSS files"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "JS runs in browsers for interactivity, also on servers via Node.js."
+                                                       },
+                                                       {
+                                                           "question":  "Template literal syntax:",
+                                                           "options":  [
+                                                                           "Single quotes with +",
+                                                                           "Backticks with ${}: `Hello ${name}`",
+                                                                           "Double quotes only",
+                                                                           "Parentheses"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Backticks allow embedding expressions with ${...}."
+                                                       },
+                                                       {
+                                                           "question":  "console.log() is used for:",
+                                                           "options":  [
+                                                                           "Sending emails",
+                                                                           "Displaying on the page",
+                                                                           "Creating files",
+                                                                           "Debugging — printing values to the console"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "console.log outputs to the browser\u0027s developer console for debugging."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "DOM Manipulation",
+                                          "content":  "DOM is the browser\u0027s HTML tree that JS can modify. Select: getElementById, querySelector, querySelectorAll. Change content: .textContent, .innerHTML. Change styles: .style.color = \u0027red\u0027. Classes: .classList.add/remove/toggle. Create elements: createElement + appendChild. The DOM lets you update pages without reloading.",
+                                          "examples":  [
+                                                           "document.getElementById(\u0027title\u0027).textContent = \u0027Welcome!\u0027",
+                                                           "document.querySelector(\u0027.btn\u0027).style.backgroundColor = \u0027#4F46E5\u0027",
+                                                           "const li = document.createElement(\u0027li\u0027); list.appendChild(li)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "DOM":  "Document Object Model — browser\u0027s HTML tree",
+                                                           "querySelector":  "Selects first element matching CSS selector",
+                                                           "innerHTML":  "Gets/sets HTML content",
+                                                           "classList":  "Interface for adding/removing CSS classes"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "DOM stands for:",
+                                                           "options":  [
+                                                                           "Document Object Model",
+                                                                           "Data Output Method",
+                                                                           "Digital Object Manager",
+                                                                           "Document Online Map"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "DOM = Document Object Model."
+                                                       },
+                                                       {
+                                                           "question":  "Select element with id=\u0027header\u0027:",
+                                                           "options":  [
+                                                                           "document.header",
+                                                                           "getElement(\u0027header\u0027)",
+                                                                           "find(\u0027header\u0027)",
+                                                                           "getElementById(\u0027header\u0027)"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "getElementById selects by unique id."
+                                                       },
+                                                       {
+                                                           "question":  ".textContent = \u0027Hello\u0027:",
+                                                           "options":  [
+                                                                           "Creates element",
+                                                                           "Changes text inside element",
+                                                                           "Deletes element",
+                                                                           "Adds class"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "textContent sets text, replacing old content."
+                                                       },
+                                                       {
+                                                           "question":  ".classList.toggle(\u0027active\u0027):",
+                                                           "options":  [
+                                                                           "Adds class if missing, removes if present",
+                                                                           "Only adds",
+                                                                           "Only removes",
+                                                                           "Does nothing"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Toggle switches a class on/off."
+                                                       },
+                                                       {
+                                                           "question":  "createElement + appendChild:",
+                                                           "options":  [
+                                                                           "Creates new element and adds it to the page",
+                                                                           "Removes an element",
+                                                                           "Styles an element",
+                                                                           "Selects an element"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Create a new DOM element, then attach it as a child of an existing element."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Events and Interactivity",
+                                          "content":  "Events are user actions: clicks, key presses, form submissions. addEventListener: button.addEventListener(\u0027click\u0027, function() { ... }). Common events: click, mouseover, keydown, submit, load, scroll. Event object: event.target (clicked element), event.key, event.preventDefault() (stop default behavior). Event delegation: attach one listener to parent, handle children via event.target — more efficient than listeners on every child.",
+                                          "examples":  [
+                                                           "btn.addEventListener(\u0027click\u0027, () =\u003e { count++; display.textContent = count; })",
+                                                           "form.addEventListener(\u0027submit\u0027, (e) =\u003e { e.preventDefault(); })",
+                                                           "input.addEventListener(\u0027keyup\u0027, () =\u003e { output.textContent = input.value.toUpperCase(); })"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "event listener":  "Code waiting for a specific event",
+                                                           "event":  "An action: click, keypress, submit, load",
+                                                           "preventDefault":  "Stops browser\u0027s default behavior",
+                                                           "event delegation":  "One listener on parent handles events from children"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "addEventListener attaches:",
+                                                           "options":  [
+                                                                           "A function to run when an event occurs",
+                                                                           "A style",
+                                                                           "A class",
+                                                                           "A new element"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "It registers a callback function for a specific event."
+                                                       },
+                                                       {
+                                                           "question":  "preventDefault() commonly used with:",
+                                                           "options":  [
+                                                                           "Forms to prevent page reload",
+                                                                           "Clicks to prevent scrolling",
+                                                                           "Images to prevent loading",
+                                                                           "Links to prevent styling"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Forms reload the page by default — preventDefault stops this."
+                                                       },
+                                                       {
+                                                           "question":  "Keydown fires when:",
+                                                           "options":  [
+                                                                           "The page loads",
+                                                                           "A button is clicked",
+                                                                           "A key is pressed",
+                                                                           "Mouse moves"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "keydown = key pressed; keyup = key released."
+                                                       },
+                                                       {
+                                                           "question":  "event.target gives:",
+                                                           "options":  [
+                                                                           "The parent element",
+                                                                           "The event type",
+                                                                           "The time of event",
+                                                                           "The element that triggered the event"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "target is the specific element the user interacted with."
+                                                       },
+                                                       {
+                                                           "question":  "Event delegation is efficient because:",
+                                                           "options":  [
+                                                                           "Events are faster",
+                                                                           "It uses less HTML",
+                                                                           "One listener handles many child elements",
+                                                                           "It prevents bugs"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Instead of 100 listeners on 100 items, one on the parent catches all."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Fetch API and Async JavaScript",
+                                          "content":  "Modern JavaScript uses the Fetch API to make HTTP requests: fetch(\u0027url\u0027).then(response =\u003e response.json()).then(data =\u003e { ... }). Async/await is cleaner: const response = await fetch(\u0027url\u0027); const data = await response.json(). Promises represent future results: pending → fulfilled or rejected. Error handling: try/catch with async/await. CORS (Cross-Origin Resource Sharing) may block requests to different domains. JSON is the standard data format. Local Storage stores data in the browser: localStorage.setItem(\u0027key\u0027, \u0027value\u0027).",
+                                          "examples":  [
+                                                           "const res = await fetch(\u0027https://api.example.com/data\u0027); const data = await res.json();",
+                                                           "try { const data = await fetchData(); } catch (err) { console.error(\u0027Failed:\u0027, err); }",
+                                                           "localStorage.setItem(\u0027theme\u0027, \u0027dark\u0027); const theme = localStorage.getItem(\u0027theme\u0027);"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "fetch":  "Modern API for making HTTP requests in JavaScript",
+                                                           "async/await":  "Syntax for writing asynchronous code that looks synchronous",
+                                                           "Promise":  "An object representing a future result — pending, fulfilled, or rejected",
+                                                           "localStorage":  "Browser storage that persists data between sessions"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "fetch() returns:",
+                                                           "options":  [
+                                                                           "The data directly",
+                                                                           "A Promise",
+                                                                           "A string",
+                                                                           "An error"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Fetch returns a Promise that resolves with the response."
+                                                       },
+                                                       {
+                                                           "question":  "await can only be used inside:",
+                                                           "options":  [
+                                                                           "Any function",
+                                                                           "An async function",
+                                                                           "A loop",
+                                                                           "An if statement"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "await pauses execution until the Promise resolves — only works in async functions."
+                                                       },
+                                                       {
+                                                           "question":  "response.json() does:",
+                                                           "options":  [
+                                                                           "Sends JSON",
+                                                                           "Converts to string",
+                                                                           "Parses JSON response body into JavaScript object",
+                                                                           "Creates a file"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  ".json() parses the response body as JSON."
+                                                       },
+                                                       {
+                                                           "question":  "localStorage data persists:",
+                                                           "options":  [
+                                                                           "Until explicitly cleared — survives page reloads and browser restarts",
+                                                                           "Only during the current session",
+                                                                           "For 24 hours",
+                                                                           "Until the tab closes"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "localStorage has no expiration — data stays until cleared by code or user."
+                                                       },
+                                                       {
+                                                           "question":  "CORS errors happen when:",
+                                                           "options":  [
+                                                                           "The server is down",
+                                                                           "Requesting data from a different domain without permission",
+                                                                           "JavaScript has a bug",
+                                                                           "The URL is wrong"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Browsers block cross-origin requests unless the server explicitly allows them."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "JavaScript Frameworks Overview",
+                                          "content":  "As web apps grow complex, frameworks provide structure. React (by Meta): component-based, virtual DOM, most popular, used by Facebook, Instagram, Netflix. Vue: progressive, easier learning curve, great documentation. Angular (by Google): full framework, TypeScript-based, enterprise apps. Svelte: compiles to vanilla JS, no virtual DOM, very fast. Next.js (React) and Nuxt.js (Vue) add server-side rendering for better SEO and performance. Node.js runs JavaScript on the server — enabling full-stack JS development. Choose based on project needs, team experience, and community support — there\u0027s no single \u0027best\u0027 framework.",
+                                          "examples":  [
+                                                           "React component: function Button() { return \u003cbutton onClick={handleClick}\u003eClick me\u003c/button\u003e }",
+                                                           "Vue template: \u003ctemplate\u003e\u003cbutton @click=\u0027count++\u0027\u003eCount: {{ count }}\u003c/button\u003e\u003c/template\u003e",
+                                                           "Node.js server: const express = require(\u0027express\u0027); app.get(\u0027/\u0027, (req, res) =\u003e res.send(\u0027Hello\u0027));"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "React":  "Component-based JavaScript library by Meta for building user interfaces",
+                                                           "Vue":  "Progressive JavaScript framework — easy to learn, great for small-to-medium projects",
+                                                           "Node.js":  "JavaScript runtime that runs on the server, enabling full-stack JS development",
+                                                           "component":  "A reusable, self-contained piece of UI with its own logic and styling"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "React is best known for:",
+                                                           "options":  [
+                                                                           "Database management",
+                                                                           "Server-side only",
+                                                                           "Component-based UI with virtual DOM",
+                                                                           "CSS styling"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "React uses components and a virtual DOM for efficient UI updates."
+                                                       },
+                                                       {
+                                                           "question":  "Node.js allows:",
+                                                           "options":  [
+                                                                           "Replacing HTML",
+                                                                           "Only running in browsers",
+                                                                           "Running JavaScript on the server",
+                                                                           "Creating databases"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Node.js takes JavaScript beyond the browser to server-side development."
+                                                       },
+                                                       {
+                                                           "question":  "Which is easiest to learn?",
+                                                           "options":  [
+                                                                           "React — moderate",
+                                                                           "Angular — complex but powerful",
+                                                                           "Vue — gentler learning curve",
+                                                                           "All equally easy"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Vue is widely regarded as the most beginner-friendly framework."
+                                                       },
+                                                       {
+                                                           "question":  "Why use a framework?",
+                                                           "options":  [
+                                                                           "Structure and efficiency for complex apps",
+                                                                           "Required for all websites",
+                                                                           "To make simple sites",
+                                                                           "To avoid JavaScript"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Frameworks provide structure, reusable components, and tools for building complex applications."
+                                                       },
+                                                       {
+                                                           "question":  "Server-side rendering (SSR) helps with:",
+                                                           "options":  [
+                                                                           "Reducing server costs",
+                                                                           "Client-side animations",
+                                                                           "Better SEO and faster initial page load",
+                                                                           "Removing JavaScript"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "SSR generates HTML on the server — search engines can read it and users see content faster."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Building Websites",
+                      "lessons":  [
+                                      {
+                                          "title":  "Project Structure",
+                                          "content":  "Good organization: root has index.html, css/ folder, js/ folder, images/ folder. Use relative paths. Naming: lowercase, hyphens. Every page needs: DOCTYPE, lang, charset, viewport meta, title, linked CSS/JS. Semantic HTML: header, nav, main, section, article, footer instead of div everywhere.",
+                                          "examples":  [
+                                                           "project/ index.html css/style.css js/app.js images/logo.png",
+                                                           "Semantic: \u003cheader\u003e\u003cnav\u003eMenu\u003c/nav\u003e\u003c/header\u003e\u003cmain\u003eContent\u003c/main\u003e\u003cfooter\u003e©\u003c/footer\u003e",
+                                                           "\u003cmeta charset=\u0027UTF-8\u0027\u003e\u003cmeta name=\u0027viewport\u0027 content=\u0027width=device-width\u0027\u003e"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "semantic HTML":  "Meaningful tags describing content purpose",
+                                                           "relative path":  "Path relative to current file",
+                                                           "index.html":  "Default homepage file",
+                                                           "meta tag":  "Information about the page in the \u003chead\u003e"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Standard homepage filename:",
+                                                           "options":  [
+                                                                           "page1.html",
+                                                                           "home.html",
+                                                                           "main.html",
+                                                                           "index.html"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Servers serve index.html by default."
+                                                       },
+                                                       {
+                                                           "question":  "Semantic tag:",
+                                                           "options":  [
+                                                                           "\u003cdiv\u003e",
+                                                                           "\u003cnav\u003e",
+                                                                           "\u003cspan\u003e",
+                                                                           "\u003cb\u003e"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "nav describes navigation content."
+                                                       },
+                                                       {
+                                                           "question":  "CSS files go in:",
+                                                           "options":  [
+                                                                           "Inside HTML",
+                                                                           "Root folder",
+                                                                           "css/ folder",
+                                                                           "images/ folder"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Organized in separate css/ folder."
+                                                       },
+                                                       {
+                                                           "question":  "The viewport meta tag is important for:",
+                                                           "options":  [
+                                                                           "SEO only",
+                                                                           "Mobile responsiveness",
+                                                                           "JavaScript",
+                                                                           "Server configuration"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Without it, mobile devices render the page at desktop width and zoom out."
+                                                       },
+                                                       {
+                                                           "question":  "File naming convention for web:",
+                                                           "options":  [
+                                                                           "Spaces allowed",
+                                                                           "lowercase with hyphens (my-page.html)",
+                                                                           "CamelCase required",
+                                                                           "Numbers only"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Lowercase with hyphens avoids URL encoding issues and is universally compatible."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Version Control with Git",
+                                          "content":  "Git tracks code changes over time. Initialize: git init. Stage: git add. Commit: git commit -m \u0027message\u0027. History: git log. GitHub stores repos online. Push: git push. Pull: git pull. Branches for features: git branch, git checkout. Merge when ready. .gitignore lists files Git should ignore (node_modules, .env, build folders).",
+                                          "examples":  [
+                                                           "git init — creates repository",
+                                                           "git add . \u0026\u0026 git commit -m \u0027Initial commit\u0027",
+                                                           "git checkout -b new-feature — creates and switches branch"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "repository":  "Folder tracked by Git",
+                                                           "commit":  "Saved snapshot in history",
+                                                           "branch":  "Parallel code version for independent development",
+                                                           "gitignore":  "File listing patterns Git should not track"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "git commit does:",
+                                                           "options":  [
+                                                                           "Downloads code",
+                                                                           "Uploads to internet",
+                                                                           "Deletes files",
+                                                                           "Saves snapshot of staged changes"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Commit saves staged files as a snapshot."
+                                                       },
+                                                       {
+                                                           "question":  "GitHub is:",
+                                                           "options":  [
+                                                                           "Online platform for Git repositories",
+                                                                           "Programming language",
+                                                                           "Web browser",
+                                                                           "Text editor"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "GitHub hosts repos for sharing and collaboration."
+                                                       },
+                                                       {
+                                                           "question":  "Branches are for:",
+                                                           "options":  [
+                                                                           "Working on features without affecting main",
+                                                                           "Deleting files",
+                                                                           "Speeding up site",
+                                                                           "Changing domain"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Branches isolate work until it\u0027s ready to merge."
+                                                       },
+                                                       {
+                                                           "question":  ".gitignore is used to:",
+                                                           "options":  [
+                                                                           "Delete files",
+                                                                           "List files Git should not track",
+                                                                           "Create branches",
+                                                                           "Push code"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Put node_modules/, .env, build/ in .gitignore to keep them out of the repo."
+                                                       },
+                                                       {
+                                                           "question":  "git pull does:",
+                                                           "options":  [
+                                                                           "Uploads local changes",
+                                                                           "Downloads and merges changes from the remote",
+                                                                           "Creates a new branch",
+                                                                           "Deletes the remote"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Pull fetches remote changes and merges them into your local branch."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Deploying Your Website",
+                                          "content":  "Deployment puts your site on the internet. Static sites host free on GitHub Pages, Netlify, Vercel. GitHub Pages: push to GitHub → Settings → Pages → select branch → live at username.github.io/repo. Custom domains: buy domain, point DNS to host. Pre-deploy: check links, images, responsiveness. Optimize: compress images, minify CSS/JS, use caching. HTTPS is essential for security — most hosts provide free SSL certificates.",
+                                          "examples":  [
+                                                           "GitHub Pages: push to main → Settings → Pages → live in minutes",
+                                                           "Netlify: drag and drop folder → deployed with HTTPS",
+                                                           "Custom domain: buy example.com → set DNS → site live"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "deployment":  "Publishing website to internet",
+                                                           "hosting":  "Service storing and serving your files",
+                                                           "domain":  "Web address (example.com)",
+                                                           "HTTPS":  "Secure version of HTTP — encrypts data between browser and server"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Free static hosting:",
+                                                           "options":  [
+                                                                           "Excel",
+                                                                           "Microsoft Word",
+                                                                           "Photoshop",
+                                                                           "GitHub Pages"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "GitHub Pages hosts static sites free."
+                                                       },
+                                                       {
+                                                           "question":  "Deployment means:",
+                                                           "options":  [
+                                                                           "Writing code",
+                                                                           "Publishing website to internet",
+                                                                           "Designing logo",
+                                                                           "Buying computer"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Making your finished site publicly accessible."
+                                                       },
+                                                       {
+                                                           "question":  "Before deploying, check:",
+                                                           "options":  [
+                                                                           "Only homepage",
+                                                                           "Links, images, responsive design",
+                                                                           "Nothing",
+                                                                           "Only desktop"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Test everything before going live."
+                                                       },
+                                                       {
+                                                           "question":  "HTTPS is important because:",
+                                                           "options":  [
+                                                                           "It\u0027s faster",
+                                                                           "It encrypts data between browser and server",
+                                                                           "It\u0027s optional",
+                                                                           "It only works on some browsers"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "HTTPS protects user data in transit — essential for security and trust."
+                                                       },
+                                                       {
+                                                           "question":  "To use a custom domain:",
+                                                           "options":  [
+                                                                           "Just type any URL",
+                                                                           "Buy the domain and point DNS records to your host",
+                                                                           "Ask Google for one",
+                                                                           "Domains are always free"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Purchase from a registrar, then configure DNS to point to your hosting provider."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Web Accessibility (a11y)",
+                                          "content":  "Accessibility ensures websites are usable by everyone, including people with disabilities. WCAG (Web Content Accessibility Guidelines) sets the standards. Key principles: Perceivable (alt text, captions, sufficient contrast), Operable (keyboard navigation, no time limits, skip links), Understandable (clear language, consistent navigation, error guidance), Robust (works with assistive technologies like screen readers). Practical steps: use semantic HTML, add alt text to all images, ensure color contrast ratio of at least 4.5:1, make forms label-able, ensure keyboard-only navigation works, use ARIA labels when needed. Testing: use screen readers, keyboard-only navigation, and tools like axe or Lighthouse.",
+                                          "examples":  [
+                                                           "Alt text: \u003cimg src=\u0027chart.png\u0027 alt=\u0027Sales chart showing 25% growth in Q3 2024\u0027\u003e",
+                                                           "Skip link: \u003ca href=\u0027#main\u0027 class=\u0027skip\u0027\u003eSkip to main content\u003c/a\u003e — lets keyboard users bypass navigation",
+                                                           "Color contrast: #333 text on #fff background = 12.6:1 ratio (well above 4.5:1 minimum)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "accessibility":  "Making websites usable by people with all abilities and disabilities",
+                                                           "WCAG":  "Web Content Accessibility Guidelines — the international standard for web accessibility",
+                                                           "ARIA":  "Accessible Rich Internet Applications — attributes that enhance accessibility for dynamic content",
+                                                           "screen reader":  "Software that reads web content aloud for visually impaired users"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "WCAG stands for:",
+                                                           "options":  [
+                                                                           "Website Creation And Governance",
+                                                                           "Web Coding And Graphics",
+                                                                           "Web Content Accessibility Guidelines",
+                                                                           "World Computer Access Group"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "WCAG sets the international standards for web accessibility."
+                                                       },
+                                                       {
+                                                           "question":  "Minimum color contrast ratio should be:",
+                                                           "options":  [
+                                                                           "4.5:1",
+                                                                           "1:1",
+                                                                           "10:1",
+                                                                           "2:1"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "WCAG requires at least 4.5:1 contrast ratio for normal text."
+                                                       },
+                                                       {
+                                                           "question":  "Alt text should:",
+                                                           "options":  [
+                                                                           "Say \u0027image\u0027 or \u0027photo\u0027",
+                                                                           "Be empty for all images",
+                                                                           "Repeat the filename",
+                                                                           "Describe the image\u0027s content and function"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Good alt text describes what the image shows and why it matters."
+                                                       },
+                                                       {
+                                                           "question":  "Why is keyboard navigation important?",
+                                                           "options":  [
+                                                                           "It\u0027s only for developers",
+                                                                           "Keyboards are faster",
+                                                                           "Mice don\u0027t work on websites",
+                                                                           "Many users can\u0027t use a mouse — motor disabilities, screen readers"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Users with motor disabilities and screen reader users navigate entirely by keyboard."
+                                                       },
+                                                       {
+                                                           "question":  "ARIA labels are used when:",
+                                                           "options":  [
+                                                                           "To replace HTML tags",
+                                                                           "Always on every element",
+                                                                           "HTML semantics alone can\u0027t convey the meaning to assistive tech",
+                                                                           "For styling purposes"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "ARIA supplements HTML semantics — use native HTML first, ARIA when needed."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Web Performance Optimization",
+                                          "content":  "Fast websites retain users — 53% of mobile users leave if a page takes over 3 seconds. Optimize images: compress (use WebP format), set dimensions, lazy-load below-the-fold images. Minimize HTTP requests: combine CSS/JS files, use CSS sprites for icons. Minify code: remove whitespace and comments from production CSS/JS. Enable browser caching: returning visitors load cached resources. Use CDN (Content Delivery Network): serves files from servers closest to the user. Core Web Vitals (Google\u0027s metrics): LCP (Largest Contentful Paint — main content loads fast), FID (First Input Delay — responds to clicks quickly), CLS (Cumulative Layout Shift — page doesn\u0027t jump around). Test with Google Lighthouse, PageSpeed Insights, or browser dev tools.",
+                                          "examples":  [
+                                                           "Lazy loading: \u003cimg src=\u0027photo.jpg\u0027 loading=\u0027lazy\u0027\u003e — only loads when scrolled into view",
+                                                           "Minified CSS: body{margin:0;font-family:Arial} vs body { margin: 0; font-family: Arial; }",
+                                                           "CDN: instead of serving images from your server in Uganda, a CDN serves them from a nearby server in Kenya"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "lazy loading":  "Loading images/resources only when they\u0027re about to be visible",
+                                                           "minification":  "Removing whitespace and comments from code to reduce file size",
+                                                           "CDN":  "Content Delivery Network — servers worldwide that serve content from the nearest location",
+                                                           "Core Web Vitals":  "Google\u0027s metrics for measuring real-world user experience"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Users leave if a page takes over:",
+                                                           "options":  [
+                                                                           "They always wait",
+                                                                           "30 seconds",
+                                                                           "1 minute",
+                                                                           "3 seconds"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "53% of mobile users abandon pages taking over 3 seconds to load."
+                                                       },
+                                                       {
+                                                           "question":  "Lazy loading means:",
+                                                           "options":  [
+                                                                           "Loading everything at once",
+                                                                           "Loading resources only when needed (as user scrolls)",
+                                                                           "Not loading anything",
+                                                                           "Loading slowly on purpose"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Images below the fold load only when the user scrolls near them."
+                                                       },
+                                                       {
+                                                           "question":  "A CDN improves speed by:",
+                                                           "options":  [
+                                                                           "Serving content from servers closest to the user",
+                                                                           "Removing all images",
+                                                                           "Using slower servers",
+                                                                           "Blocking certain users"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "CDN distributes content globally — users get it from the nearest server."
+                                                       },
+                                                       {
+                                                           "question":  "LCP measures:",
+                                                           "options":  [
+                                                                           "How fast the main content loads",
+                                                                           "Total page size",
+                                                                           "Number of images",
+                                                                           "Server location"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Largest Contentful Paint = time for the biggest visible element to render."
+                                                       },
+                                                       {
+                                                           "question":  "WebP images are preferred because:",
+                                                           "options":  [
+                                                                           "Better color",
+                                                                           "Smaller file size with same quality as JPEG/PNG",
+                                                                           "Easier to create",
+                                                                           "Work in all old browsers"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "WebP typically produces 25-35% smaller files than JPEG at equivalent quality."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ]
+}

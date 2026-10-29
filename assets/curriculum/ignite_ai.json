@@ -1,0 +1,687 @@
+{
+    "id":  "ignite_ai",
+    "name":  "Project Ignite AI",
+    "icon":  "psychology",
+    "color":  "#7C3AED",
+    "units":  [
+                  {
+                      "title":  "What is AI?",
+                      "lessons":  [
+                                      {
+                                          "title":  "AI or Not AI?",
+                                          "content":  "Artificial Intelligence (AI) is a computer that learns from examples to make decisions. AI is NOT just any computer or phone — and it\u0027s not magic. The key difference: AI learns from data and gets better over time, like how you learn from practice. Not AI just follows fixed rules — like a recipe that never changes. A calculator always gives the same answer to 2+2. But YouTube learns what YOU like and shows different videos to different people. That\u0027s AI. AI can make mistakes — it is maths and data, not a thinking brain. Humans will always be needed to check, guide, and decide.",
+                                          "examples":  [
+                                                           "Calculator: press 2+2 and it says 4. NOT AI — follows a fixed rule, never learns or changes.",
+                                                           "MoMo PIN check: type 5 numbers and it checks if they match. NOT AI — simple rule: does input A equal stored value B?",
+                                                           "MoMo fraud alert: blocks a strange withdrawal at 3AM from a new place. AI — it learned from millions of transactions what \u0027normal\u0027 looks like.",
+                                                           "YouTube next video: picks what it thinks you will like. AI — it learned from your watching habits. Every user gets different recommendations.",
+                                                           "Alarm clock: rings at exactly 7:00 AM every day. NOT AI — does exactly what you set it to, never learns your sleep patterns."
+                                                       ],
+                                          "keyTerms":  {
+                                                           "Artificial Intelligence":  "A computer that learns from examples and data to make decisions — not just a fast calculator",
+                                                           "automation":  "A machine that follows fixed rules set by a human — like a calculator or alarm clock. Not AI.",
+                                                           "learning from data":  "The key feature of AI — it looks at many examples, finds patterns, and improves over time",
+                                                           "pattern recognition":  "AI\u0027s ability to notice things in data that humans might miss — like unusual transactions or viewing habits"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "What is Artificial Intelligence (AI)?",
+                                                           "options":  [
+                                                                           "A robot that looks exactly like a human",
+                                                                           "Any phone or computer that connects to the internet",
+                                                                           "A computer that learns from examples to make decisions",
+                                                                           "A calculator that works very fast"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "AI learns from data and examples to make decisions — it\u0027s not just any computer or robot."
+                                                       },
+                                                       {
+                                                           "question":  "Which of these is TRUE about AI?",
+                                                           "options":  [
+                                                                           "AI is always correct — it never makes mistakes",
+                                                                           "AI thinks and feels just like a person",
+                                                                           "AI will replace every single job in the world",
+                                                                           "AI can make mistakes — humans will always be needed"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "AI is maths and data — it can make mistakes. Humans are needed to check, guide, and decide."
+                                                       },
+                                                       {
+                                                           "question":  "How does an AI get better at something over time?",
+                                                           "options":  [
+                                                                           "It learns by looking at many examples and finding patterns",
+                                                                           "A person updates it every single day",
+                                                                           "It reads everything on the internet by itself",
+                                                                           "It copies what other computers do"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "AI learns from data — the more examples it sees, the better it gets at finding patterns."
+                                                       },
+                                                       {
+                                                           "question":  "A calculator gives the same answer to 2+2 every time. Is it AI?",
+                                                           "options":  [
+                                                                           "Yes — it\u0027s smart",
+                                                                           "Yes — it uses numbers",
+                                                                           "No — it follows a fixed rule and never learns",
+                                                                           "No — but only because it\u0027s small"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "A calculator follows programmed rules. It doesn\u0027t learn, adapt, or improve. That\u0027s automation, not AI."
+                                                       },
+                                                       {
+                                                           "question":  "MoMo fraud alert blocks a withdrawal at 3AM from a new location. Is this AI?",
+                                                           "options":  [
+                                                                           "No — it\u0027s just a security rule",
+                                                                           "Yes — it learned what normal behaviour looks like from millions of transactions",
+                                                                           "No — someone at MoMo blocked it manually",
+                                                                           "Yes — but only because it\u0027s on a phone"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "The fraud system learned patterns from millions of transactions. A 3AM withdrawal from a new place breaks the pattern — so it flags it."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "AI in Uganda Today",
+                                          "content":  "AI is already being used across Uganda — not just in universities or tech companies, but in farming, health, banking, transport, and everyday business. Nalongo sells food in Owino Market. YouTube keeps showing her cooking videos even though she never searched for them — because an AI learned from her watching habits and suggests videos she will like. PlantVillage is an app that uses AI to scan a photo of a cassava leaf and identify crop disease. MoMo\u0027s fraud detection uses AI to block suspicious transactions. Boda-boda GPS uses AI to find the fastest route. AI is already changing how Ugandans work, farm, learn, and do business.",
+                                          "examples":  [
+                                                           "YouTube recommendations: Nalongo watches cooking videos. The AI notices this pattern and suggests more — different for every user.",
+                                                           "PlantVillage app: a farmer takes a photo of a sick cassava leaf. AI identifies the disease and suggests treatment — using pattern recognition.",
+                                                           "MoMo fraud alert: a withdrawal at 3AM from a new location gets blocked. The AI learned what \u0027normal\u0027 transactions look like.",
+                                                           "GPS navigation: guides a boda-boda rider through Kampala traffic to the fastest route — AI analyses real-time road data.",
+                                                           "Smart shop: recommends deals to customers based on what they bought before — AI spots buying patterns."
+                                                       ],
+                                          "keyTerms":  {
+                                                           "recommendation system":  "AI that suggests things based on what you\u0027ve done before — like YouTube or online shops",
+                                                           "pattern detection":  "AI that finds something unusual — like fraud or crop disease",
+                                                           "sectors using AI in Uganda":  "Farming, health, banking, transport, business, security — AI is already in everyday Ugandan life",
+                                                           "PlantVillage":  "An AI-powered app that identifies crop diseases from photos of leaves — used by farmers in Uganda"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Nalongo sells food in Owino Market. YouTube keeps showing her cooking videos she never searched for. Why?",
+                                                           "options":  [
+                                                                           "YouTube picks videos randomly for everyone",
+                                                                           "An AI learned from her watching habits and suggests videos she will like",
+                                                                           "Someone at YouTube chose the videos for her",
+                                                                           "Her phone is showing wrong videos by mistake"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "YouTube\u0027s AI learns what each user watches, likes, and skips — then recommends similar content. It\u0027s personalised for each person."
+                                                       },
+                                                       {
+                                                           "question":  "Where is AI already being used in Uganda today?",
+                                                           "options":  [
+                                                                           "Only in universities — ordinary people don\u0027t use it",
+                                                                           "AI has not reached Uganda yet",
+                                                                           "In farming, health, banking, transport and businesses",
+                                                                           "Only in technology companies in Kampala"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "AI is already in MoMo (fraud detection), agriculture (PlantVillage), transport (GPS), and business (recommendations)."
+                                                       },
+                                                       {
+                                                           "question":  "How can AI help young people in Uganda in the future?",
+                                                           "options":  [
+                                                                           "AI will do all the work so young people don\u0027t need to study",
+                                                                           "Only students who study computers can benefit from AI",
+                                                                           "AI only helps people in rich countries — not Uganda",
+                                                                           "AI will create new jobs and help people work better in health, farming and business"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "AI creates new opportunities in every sector. Young Ugandans who understand AI can use it to solve local problems and build businesses."
+                                                       },
+                                                       {
+                                                           "question":  "PlantVillage app helps farmers by:",
+                                                           "options":  [
+                                                                           "Selling their crops online",
+                                                                           "Scanning a leaf photo to identify crop disease using AI",
+                                                                           "Calling a farming expert automatically",
+                                                                           "Watering crops automatically"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "PlantVillage uses AI pattern recognition — it was trained on thousands of leaf images to identify diseases and suggest treatments."
+                                                       },
+                                                       {
+                                                           "question":  "A boda-boda GPS finding the fastest route is an example of AI that:",
+                                                           "options":  [
+                                                                           "Creates things",
+                                                                           "Suggests things",
+                                                                           "Spots patterns",
+                                                                           "Is not AI"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "GPS analyses traffic data and suggests the best route — it\u0027s recommending/guiding, which is the \u0027Suggests things\u0027 type of AI."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Three Types of AI",
+                                          "content":  "AI does three main things: it Creates, it Spots patterns, and it Suggests. CREATES things — AI that makes new text, images, or messages that didn\u0027t exist before. Example: an AI chatbot writes a WhatsApp message for an Owino Market vendor. SPOTS patterns — AI that finds something unusual or detects a problem by recognising patterns in data. Example: AI scans blood and detects malaria at a health clinic. SUGGESTS things — AI that recommends or guides you based on what it learned about you or the situation. Example: a smart shop recommends deals based on your buying habits. Understanding these three types helps you recognise AI in everyday life and think about how it could solve problems in your community.",
+                                          "examples":  [
+                                                           "CREATES: AI chatbot writes a WhatsApp message for an Owino Market vendor — Sector: Business",
+                                                           "SPOTS PATTERNS: AI scans blood smear and detects malaria at a health clinic — Sector: Health",
+                                                           "SPOTS PATTERNS: Bank AI detects a suspicious transaction and sends a fraud alert — Sector: Finance",
+                                                           "SPOTS PATTERNS: PlantVillage app scans a cassava leaf and identifies crop disease — Sector: Agriculture",
+                                                           "SUGGESTS: GPS navigation guides a boda-boda rider to the fastest route — Sector: Transport",
+                                                           "SPOTS PATTERNS: Phone recognises a student\u0027s face to unlock — Sector: Security",
+                                                           "SUGGESTS: Smart shop recommends deals based on a customer\u0027s buying habits — Sector: Business"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "Creates things":  "AI that makes new content — text, images, music, or messages that didn\u0027t exist before",
+                                                           "Spots patterns":  "AI that finds something unusual, detects a problem, or recognises features in data",
+                                                           "Suggests things":  "AI that recommends or guides you based on what it learned from your behaviour or data",
+                                                           "AI sectors in Uganda":  "Health (malaria detection), Agriculture (crop disease), Finance (fraud), Transport (GPS), Business (chatbots, recommendations), Security (face unlock)"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "AI chatbot writes a WhatsApp message for an Owino Market vendor. This AI type is:",
+                                                           "options":  [
+                                                                           "Spots patterns",
+                                                                           "Suggests things",
+                                                                           "Creates things",
+                                                                           "Not AI"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "The chatbot creates new text that didn\u0027t exist before — that\u0027s the \u0027Creates things\u0027 type of AI."
+                                                       },
+                                                       {
+                                                           "question":  "AI scans blood and detects malaria at a clinic. This AI type is:",
+                                                           "options":  [
+                                                                           "Creates things",
+                                                                           "Suggests things",
+                                                                           "Spots patterns",
+                                                                           "Not AI"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "The AI looks at blood cell images and finds the malaria pattern — that\u0027s \u0027Spots patterns.\u0027"
+                                                       },
+                                                       {
+                                                           "question":  "GPS guides a boda-boda rider to the fastest route. This AI type is:",
+                                                           "options":  [
+                                                                           "Suggests things",
+                                                                           "Spots patterns",
+                                                                           "Creates things",
+                                                                           "Not AI"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "GPS analyses traffic and recommends the best route — it\u0027s suggesting/guiding, not creating or detecting."
+                                                       },
+                                                       {
+                                                           "question":  "Phone recognises your face to unlock. This AI type is:",
+                                                           "options":  [
+                                                                           "Creates things",
+                                                                           "Spots patterns",
+                                                                           "Suggests things",
+                                                                           "Not AI"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Face unlock identifies your face pattern from stored data — it\u0027s spotting/recognising a pattern."
+                                                       },
+                                                       {
+                                                           "question":  "Which sector does PlantVillage\u0027s cassava leaf scanner belong to?",
+                                                           "options":  [
+                                                                           "Health",
+                                                                           "Finance",
+                                                                           "Agriculture",
+                                                                           "Transport"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "PlantVillage helps farmers identify crop diseases — that\u0027s the Agriculture sector."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Using AI Safely",
+                      "lessons":  [
+                                      {
+                                          "title":  "Deepfakes and Misinformation",
+                                          "content":  "Deepfakes are fake videos, images, or audio created by AI that look and sound real. They can show people saying or doing things they never actually did. Deepfakes are already common on Ugandan WhatsApp groups — shocking videos of famous people that look completely real but are fabricated. The danger: when people share deepfakes without checking, misinformation spreads rapidly and can cause real harm — ruining reputations, influencing elections, or causing panic. The rule is simple: if you see something shocking online, especially if it seems designed to make you angry or afraid, CHECK before you share. Look for the same story on trusted news sources. Ask yourself: who made this? Why would they share it? Does it seem too dramatic to be true?",
+                                          "examples":  [
+                                                           "Mukasa sees a shocking video on WhatsApp of a famous person saying something terrible. His friend says it was made by AI. Mukasa forwards it to everyone without checking. This is WRONG — he should verify first.",
+                                                           "A political deepfake video goes viral during elections, showing a candidate saying things they never said. Thousands share it before anyone checks — the damage is done even after it\u0027s debunked.",
+                                                           "A voice deepfake copies someone\u0027s voice from social media and calls their family asking for money — AI voice cloning scams are increasing across East Africa."
+                                                       ],
+                                          "keyTerms":  {
+                                                           "deepfake":  "AI-generated fake video, image, or audio that looks and sounds real but is fabricated",
+                                                           "misinformation":  "False or misleading information that spreads — whether intentionally or accidentally",
+                                                           "verify":  "Checking information with trusted sources before believing or sharing it",
+                                                           "critical thinking":  "Asking questions about what you see: Who made this? Why? Is it too good (or too shocking) to be true?"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Mukasa sees a shocking video on his family WhatsApp. His friend says it was made by AI to spread lies. What should Mukasa do?",
+                                                           "options":  [
+                                                                           "Forward it to all his groups because it is interesting",
+                                                                           "Share it but write \u0027might be fake\u0027 on top",
+                                                                           "Check trusted news sources before sharing or reacting",
+                                                                           "React with an angry emoji"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Always verify before sharing. Forwarding unverified content spreads misinformation — even writing \u0027might be fake\u0027 still spreads it."
+                                                       },
+                                                       {
+                                                           "question":  "What is a deepfake?",
+                                                           "options":  [
+                                                                           "A very old photograph",
+                                                                           "A broken video file",
+                                                                           "AI-generated fake video or audio that looks real",
+                                                                           "A type of computer virus"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Deepfakes use AI to create realistic but fabricated content — they can show people saying or doing things they never did."
+                                                       },
+                                                       {
+                                                           "question":  "Why are deepfakes dangerous?",
+                                                           "options":  [
+                                                                           "They use too much phone storage",
+                                                                           "They only affect famous people",
+                                                                           "They are always funny",
+                                                                           "They can spread misinformation and cause real harm before being debunked"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Deepfakes spread fast on WhatsApp and social media. The damage is done before the truth catches up."
+                                                       },
+                                                       {
+                                                           "question":  "Before sharing a shocking video online, you should:",
+                                                           "options":  [
+                                                                           "Share it immediately — speed is important",
+                                                                           "Check if trusted news sources are reporting the same thing",
+                                                                           "Add your own opinion and share",
+                                                                           "Ignore all videos online"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Verify first. If no trusted source is reporting it, it may be fake. A few seconds of checking can prevent misinformation."
+                                                       },
+                                                       {
+                                                           "question":  "Which question helps you spot misinformation?",
+                                                           "options":  [
+                                                                           "Who made this and why would they share it?",
+                                                                           "Is it entertaining?",
+                                                                           "How many views does it have?",
+                                                                           "Is it on WhatsApp?"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Critical thinking: ask who created it, what\u0027s their motive, and does it seem designed to make you angry or afraid."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Privacy and Personal Data",
+                                          "content":  "AI tools often ask for personal information — your name, location, school, photos, and more. But just because a tool asks for data doesn\u0027t mean you should give it. Apio finds a free health tool online. It asks for her full name, home village, school name, and a photo of her face. She enters everything to get advice. This is NOT safe. An unknown tool with no stated data policy has no accountability. Even if the health advice is useful, the data risk is not worth it. Your personal data — name, face, location, school — can be used to identify you, track you, or even steal your identity. Uganda\u0027s Data Protection and Privacy Act 2019 says tools must tell you what they do with your data. If they don\u0027t — don\u0027t use them. The rule: never give personal information to an unknown tool or app. If it asks for too much, that\u0027s a red flag.",
+                                          "examples":  [
+                                                           "Apio enters her name, village, school, and face photo into an unknown health app. WRONG — she should not give personal data to unknown tools. What if the app shares her photo or location with strangers?",
+                                                           "A quiz app asks for your phone contacts to \u0027find friends.\u0027 This is a data grab — the app doesn\u0027t need your contacts for a quiz.",
+                                                           "A legitimate app clearly states: \u0027We use your data only for...\u0027 and has a privacy policy you can read. Unknown apps with no policy are a red flag."
+                                                       ],
+                                          "keyTerms":  {
+                                                           "personal data":  "Information that can identify you — name, face, location, school, phone number, ID number",
+                                                           "data privacy":  "Your right to control what personal information is collected and how it\u0027s used",
+                                                           "red flag":  "A warning sign that something may not be safe — like an app asking for too much personal information",
+                                                           "Uganda Data Protection Act 2019":  "Ugandan law protecting personal data — tools must tell you what they do with your information"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Apio finds a free health tool online. It asks for her full name, home village, school name and a photo of her face. What should she do?",
+                                                           "options":  [
+                                                                           "Enter everything — more details means better advice",
+                                                                           "Only enter her name and skip the photo",
+                                                                           "Do not enter personal information into an unknown tool",
+                                                                           "Use a fake name so she is safe"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "An unknown tool with no data policy has no accountability. Don\u0027t give personal data to apps you don\u0027t trust."
+                                                       },
+                                                       {
+                                                           "question":  "Which of these is personal data?",
+                                                           "options":  [
+                                                                           "Today\u0027s weather",
+                                                                           "A public news article",
+                                                                           "The time right now",
+                                                                           "Your name, face photo, and home village"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Personal data is anything that can identify YOU specifically — name, photo, location, school, phone number."
+                                                       },
+                                                       {
+                                                           "question":  "A quiz app asks for access to your phone contacts. This is:",
+                                                           "options":  [
+                                                                           "Normal — all apps need contacts",
+                                                                           "Required by law",
+                                                                           "A red flag — a quiz doesn\u0027t need your contacts",
+                                                                           "Good for finding friends"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Apps that ask for data they don\u0027t need are a red flag. A quiz doesn\u0027t need your contact list."
+                                                       },
+                                                       {
+                                                           "question":  "Uganda\u0027s Data Protection Act 2019 says tools must:",
+                                                           "options":  [
+                                                                           "Give you free data bundles",
+                                                                           "Never collect any data at all",
+                                                                           "Tell you what they do with your personal information",
+                                                                           "Only work in Kampala"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "The law requires transparency — tools must explain how they collect, use, and protect your data."
+                                                       },
+                                                       {
+                                                           "question":  "The safest approach with unknown online tools is:",
+                                                           "options":  [
+                                                                           "Give all information they ask for",
+                                                                           "Use them but with a fake name",
+                                                                           "Only use them at night",
+                                                                           "Don\u0027t give personal data — if they ask too much, don\u0027t use them"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "If a tool asks for more data than it needs, that\u0027s a red flag. Protect your personal information."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Checking AI Answers",
+                                          "content":  "AI gives confident answers — but confident doesn\u0027t mean correct. AI can make mistakes, use wrong facts, or generate completely made-up information that sounds real (called \u0027hallucination\u0027). Nalongo uses Gemini to write her whole school assignment and submits it without reading it. The AI made 3 mistakes. Her teacher is very unhappy. The problem is NOT using AI — it\u0027s submitting without checking. AI is a tool, not a replacement for your own thinking. Always read what AI generates. Check facts against trusted sources. Think about whether the answer makes sense. If AI says something surprising, verify it before acting on it. The rule: always check AI output before using it. Use AI as a helper, not as the final answer.",
+                                          "examples":  [
+                                                           "Nalongo uses AI to write her assignment and submits without reading. The AI made 3 mistakes. She should ALWAYS CHECK before submitting.",
+                                                           "You ask AI a question and it gives a very confident answer. You should check with another trusted source — AI confidence does not equal accuracy.",
+                                                           "AI says a historical event happened in 1985. It actually happened in 1995. The AI sounded certain — but it was wrong. Always verify important facts."
+                                                       ],
+                                          "keyTerms":  {
+                                                           "hallucination":  "When AI generates plausible-sounding but factually incorrect information",
+                                                           "verification":  "Checking AI-generated information against trusted, reliable sources",
+                                                           "AI as a tool":  "AI helps you work — but it doesn\u0027t replace your own thinking, checking, and judgment",
+                                                           "critical review":  "Reading, questioning, and verifying AI output before accepting or sharing it"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "You ask an AI a question and it gives you a very confident answer. What should you do?",
+                                                           "options":  [
+                                                                           "Trust it completely — AI is always right",
+                                                                           "Check the answer with another trusted source first",
+                                                                           "Ignore it — AI is always wrong",
+                                                                           "Share it with everyone straight away"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "AI sounds confident even when wrong. Always verify important information with trusted sources."
+                                                       },
+                                                       {
+                                                           "question":  "Nalongo uses AI to write her whole assignment and submits without reading. What should she always do?",
+                                                           "options":  [
+                                                                           "Just submit — AI doesn\u0027t make mistakes",
+                                                                           "Always check and review AI output before submitting",
+                                                                           "Use a different AI next time",
+                                                                           "Ask the AI to check itself"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "AI makes mistakes, uses wrong facts, and doesn\u0027t know your teacher\u0027s context. Always review before submitting."
+                                                       },
+                                                       {
+                                                           "question":  "When AI generates false information that sounds real, this is called:",
+                                                           "options":  [
+                                                                           "A virus",
+                                                                           "A deepfake",
+                                                                           "A hallucination",
+                                                                           "An update"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "AI hallucination is when the model generates plausible but incorrect information — it sounds right but isn\u0027t."
+                                                       },
+                                                       {
+                                                           "question":  "Using AI for homework is:",
+                                                           "options":  [
+                                                                           "Always wrong",
+                                                                           "Fine — as long as you check and understand the output",
+                                                                           "Only for university students",
+                                                                           "Cheating in all cases"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Using AI as a tool is fine. The problem is submitting without checking or understanding what AI generated."
+                                                       },
+                                                       {
+                                                           "question":  "The best way to use AI is as:",
+                                                           "options":  [
+                                                                           "A replacement for thinking",
+                                                                           "Something to avoid completely",
+                                                                           "A helper that you always verify and review",
+                                                                           "The final authority on everything"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "AI is a powerful tool — but YOUR brain is still the boss. Check, verify, and think critically."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "AI Bias and Fairness",
+                      "lessons":  [
+                                      {
+                                          "title":  "What is AI Bias?",
+                                          "content":  "AI bias happens when AI treats some people unfairly — not because it\u0027s mean, but because it learned from unfair data. If the data used to train AI only represents one type of person, the AI will treat other types of people unfairly. It\u0027s like teaching someone about music but only playing one genre — they\u0027ll think that\u0027s all music is. AI is not being mean on purpose. It is doing exactly what it was trained to do. The problem is the data it learned from was itself unfair. This is called algorithmic bias, and it\u0027s one of the most important challenges in AI today. Biased AI can affect real decisions: who gets a loan, who gets hired, who gets medical treatment, and even who goes to prison.",
+                                          "examples":  [
+                                                           "A hiring AI trained on 10 years of data where all managers were men — it learned to prefer male candidates, even though women are equally qualified.",
+                                                           "Facial recognition trained mostly on light-skinned faces performs worse on darker-skinned people — because the training data wasn\u0027t diverse.",
+                                                           "A health algorithm gave lower risk scores to Black patients, resulting in less healthcare — it used cost as a proxy for health needs, which reflected existing inequality."
+                                                       ],
+                                          "keyTerms":  {
+                                                           "AI bias":  "When AI produces unfair results because it learned from biased or unrepresentative data",
+                                                           "training data":  "The examples an AI learns from — if the data is unfair, the AI will be unfair",
+                                                           "algorithmic bias":  "Systematic unfairness in AI decisions caused by biased data or design",
+                                                           "representation":  "Ensuring training data includes all types of people so AI works fairly for everyone"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "An AI was trained using data from only one type of person. Now it treats other people unfairly. What is this problem called?",
+                                                           "options":  [
+                                                                           "A computer virus",
+                                                                           "Bad internet connection",
+                                                                           "A software update",
+                                                                           "AI bias"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "AI bias happens when AI learns from unrepresentative data and produces unfair results for underrepresented groups."
+                                                       },
+                                                       {
+                                                           "question":  "Why does AI bias happen?",
+                                                           "options":  [
+                                                                           "AI is mean on purpose",
+                                                                           "AI is broken",
+                                                                           "AI learned from unfair or unrepresentative data",
+                                                                           "Someone programmed it to be unfair"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "AI does exactly what it was trained to do. If the training data is biased, the AI will repeat that bias."
+                                                       },
+                                                       {
+                                                           "question":  "How can we reduce AI bias?",
+                                                           "options":  [
+                                                                           "Stop using AI completely",
+                                                                           "Use diverse, representative training data and test across all groups",
+                                                                           "Trust AI to fix itself",
+                                                                           "Only let men use AI"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Diverse data + testing across demographics helps ensure AI works fairly for everyone."
+                                                       },
+                                                       {
+                                                           "question":  "AI bias can affect:",
+                                                           "options":  [
+                                                                           "Nothing important",
+                                                                           "Real decisions — loans, hiring, medical treatment, justice",
+                                                                           "Only computers",
+                                                                           "Only rich countries"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Biased AI makes unfair decisions that impact real people\u0027s lives — jobs, healthcare, loans, and criminal justice."
+                                                       },
+                                                       {
+                                                           "question":  "The AI is not being mean on purpose. So why is it still wrong?",
+                                                           "options":  [
+                                                                           "Because AI always makes mistakes",
+                                                                           "Because it learned from unfair data — so it repeats the same unfairness",
+                                                                           "Because the school gave it wrong instructions",
+                                                                           "Because AI is too old"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "The AI faithfully learned from its data. But if that data reflects 20 years of unfairness, the AI will reproduce that unfairness."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "The Perfect Prefect — Spotting Bias",
+                                          "content":  "A school got a new AI system to pick the next Head Prefect. The AI looked at 20 years of past prefects data. Here is what it found: From 2005 to 2024, every single Head Prefect was a boy, studied Sciences, and wore glasses. So the AI learned: the \u0027perfect prefect\u0027 is a boy who studies Sciences and wears glasses. Who will the AI pick next? A boy who studies Sciences and wears glasses — because that\u0027s ALL it has ever seen. Who gets left out? Girls, Arts students, and students without glasses. The AI is not being mean. It is doing exactly what it was trained to do. But the data it learned from was itself unfair — it only represented one type of student. This is algorithmic bias. The fix: collect better data that represents ALL students, or question whether AI should be making this decision at all.",
+                                          "examples":  [
+                                                           "The AI would pick: a boy who studies Sciences and wears glasses — because 100% of its training data matches this profile.",
+                                                           "The AI would reject: a girl who studies Arts and doesn\u0027t wear glasses — even if she\u0027s the best candidate. The AI never saw anyone like her succeed.",
+                                                           "The fix: include data about ALL types of students who could be good prefects — not just the ones who happened to be chosen in the past."
+                                                       ],
+                                          "keyTerms":  {
+                                                           "biased data":  "Data that only represents some people — leading AI to exclude or disadvantage others",
+                                                           "representation gap":  "When certain groups are missing or underrepresented in training data",
+                                                           "algorithmic fairness":  "Designing AI systems that treat all demographic groups equitably",
+                                                           "questioning AI":  "Asking whether AI should make certain decisions, and whether its data is fair"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "The school\u0027s AI looked at 20 years of data where all prefects were boys in Sciences with glasses. Who will it pick?",
+                                                           "options":  [
+                                                                           "A girl who studies Arts and doesn\u0027t wear glasses",
+                                                                           "The smartest student regardless of gender",
+                                                                           "Anyone — the AI picks randomly and fairly",
+                                                                           "A boy who studies Sciences and wears glasses"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "The AI only knows one pattern: boy + Sciences + glasses. It will pick the same because that\u0027s all it learned from."
+                                                       },
+                                                       {
+                                                           "question":  "Who does this AI unfairly leave out?",
+                                                           "options":  [
+                                                                           "Girls, Arts students, and students without glasses",
+                                                                           "Boys who study Sciences",
+                                                                           "Nobody — it\u0027s perfectly fair",
+                                                                           "Only teachers"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "The AI\u0027s training data didn\u0027t include girls, Arts students, or students without glasses — so they never get selected."
+                                                       },
+                                                       {
+                                                           "question":  "The AI is not being mean on purpose. So why is it still wrong?",
+                                                           "options":  [
+                                                                           "Because it learned from unfair data — so it repeats the same unfairness",
+                                                                           "Because AI always makes mistakes",
+                                                                           "Because the school gave it wrong instructions",
+                                                                           "Because computers are broken"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "The AI faithfully reproduced the bias in its training data. The data was unfair, so the AI is unfair."
+                                                       },
+                                                       {
+                                                           "question":  "How would you fix this biased AI?",
+                                                           "options":  [
+                                                                           "Turn it off and never use AI again",
+                                                                           "Only let boys use the system",
+                                                                           "Let it run longer and it will fix itself",
+                                                                           "Train it with diverse data representing ALL types of students"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Better data = fairer AI. Include examples of all types of successful students so the AI learns a broader pattern."
+                                                       },
+                                                       {
+                                                           "question":  "This activity teaches us that:",
+                                                           "options":  [
+                                                                           "AI is smarter than humans",
+                                                                           "AI decisions are only as fair as the data they learn from",
+                                                                           "We should never question AI",
+                                                                           "Bias only exists in schools"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "AI is a mirror of its data. If the data is biased, the AI will be biased. Always question whether the data is representative."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "AI for Uganda",
+                      "lessons":  [
+                                      {
+                                          "title":  "Designing AI Solutions for Local Problems",
+                                          "content":  "You are inventors! Uganda has real problems that AI could help solve. But good AI solutions must be specific, practical, and fair. A vague idea like \u0027an app that helps farmers\u0027 is not enough. A specific idea like \u0027CassavaGuard — take a photo of a sick leaf, the AI tells you the disease name and exactly what to spray, in 30 seconds\u0027 is much better. Good AI solutions answer four questions: Is it Useful — does it solve a real problem that real people have? Is it Safe — could it cause harm if it gets something wrong? Is it Fair — does it work for people without smartphones or money? Is it Practical — could someone in Uganda actually build and use it today or soon? The best ideas come from problems you\u0027ve personally experienced or seen in your community.",
+                                          "examples":  [
+                                                           "VAGUE: \u0027An app that solves crop disease.\u0027 SPECIFIC: \u0027CassavaGuard — take a photo of a sick leaf with your phone, AI tells you the disease name and exactly what to do next — in 30 seconds.\u0027",
+                                                           "VAGUE: \u0027An AI that helps students.\u0027 SPECIFIC: \u0027UNEBBot — a chatbot that gives practice questions in Luganda for S4 students preparing for UNEB exams.\u0027",
+                                                           "VAGUE: \u0027A tool that fixes health.\u0027 SPECIFIC: \u0027MalariaCheck — a village health worker scans a blood smear photo, AI detects malaria in 2 minutes instead of waiting hours for lab results.\u0027",
+                                                           "Making it fair: \u0027We would make CassavaGuard work by SMS too, so farmers without smartphones can still use it by texting a description.\u0027"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "specific problem":  "A clearly defined problem — who exactly is affected, where, and what happens when it\u0027s not solved",
+                                                           "AI solution":  "Using AI to address the problem — what data does it need, what does it do, who uses it",
+                                                           "useful":  "Does it solve a real problem that real people have? Not just \u0027interesting\u0027",
+                                                           "safe":  "Could it cause harm if it makes a mistake? Has the team thought about risks?",
+                                                           "fair":  "Does it work for people without smartphones? Without money? Without internet?",
+                                                           "practical":  "Could someone actually build this? Could someone in Uganda use it today or soon?"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Which is a SPECIFIC enough AI solution?",
+                                                           "options":  [
+                                                                           "An app that helps students",
+                                                                           "CassavaGuard — photograph a sick leaf, AI identifies the disease and treatment in 30 seconds",
+                                                                           "An AI that fixes everything",
+                                                                           "A tool for Uganda"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Specific: who uses it (farmers), what it does (identifies disease from photo), how fast (30 seconds). Vague ideas can\u0027t be built."
+                                                       },
+                                                       {
+                                                           "question":  "A good AI solution must be all of these EXCEPT:",
+                                                           "options":  [
+                                                                           "Expensive — only for rich people",
+                                                                           "Fair — works for people without smartphones too",
+                                                                           "Useful — solves a real problem",
+                                                                           "Practical — could actually be built and used"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Good AI solutions should be accessible to everyone — not just people with money or latest technology."
+                                                       },
+                                                       {
+                                                           "question":  "How can you make an AI farming app fair for farmers without smartphones?",
+                                                           "options":  [
+                                                                           "Don\u0027t worry about those farmers",
+                                                                           "Make it work by SMS so they can text a description",
+                                                                           "Only build it for rich farmers",
+                                                                           "Wait until everyone has smartphones"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "SMS-based alternatives make technology accessible to farmers who don\u0027t have smartphones — that\u0027s designing for fairness."
+                                                       },
+                                                       {
+                                                           "question":  "The best AI ideas come from:",
+                                                           "options":  [
+                                                                           "Copying what other countries do",
+                                                                           "Science fiction movies",
+                                                                           "Problems you\u0027ve personally seen in your community",
+                                                                           "The most expensive technology"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Local problems need local solutions. You understand your community better than any foreign expert."
+                                                       },
+                                                       {
+                                                           "question":  "If your AI tool could cause harm when it makes a mistake, you should:",
+                                                           "options":  [
+                                                                           "Launch it anyway — AI is always right",
+                                                                           "Ignore the risks",
+                                                                           "Only tell people about the good parts",
+                                                                           "Think about safety before building — what happens when it\u0027s wrong?"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Safe AI considers what happens when things go wrong. A medical AI that makes a wrong diagnosis could harm patients — safety must be designed in."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ]
+}

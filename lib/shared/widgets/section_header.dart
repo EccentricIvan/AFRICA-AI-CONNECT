@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
 
+import 'studio_page.dart';
+
+/// Back-compat wrapper — prefer [StudioSectionHeader].
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
     super.key,
@@ -17,34 +19,21 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: Theme.of(context).textTheme.headlineSmall),
-              if (subtitle != null) ...[
-                const SizedBox(height: 3),
-                Text(subtitle!,
-                    style: Theme.of(context).textTheme.bodyMedium),
-              ],
-            ],
-          ),
+        StudioSectionHeader(
+          title: title,
+          actionLabel: actionLabel ?? 'View all >',
+          onAction: onAction,
         ),
-        if (actionLabel != null && onAction != null)
-          TextButton(
-            onPressed: onAction,
-            child: Text(
-              actionLabel!,
-              style: const TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-            ),
+        if (subtitle != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            subtitle!,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
+        ],
       ],
     );
   }

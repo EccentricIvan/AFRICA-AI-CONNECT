@@ -1,0 +1,7 @@
+# Optional workstation tooling — not used by the Flutter app at runtime.
+# The on-device engines load GGUF / LiteRT-LM, not raw AWQ safetensors.
+autoawq>=0.2.6
+transformers>=4.44.0
+torch>=2.2.0
+accelerate>=0.33.0
+safetensors>=0.4.0

@@ -1,0 +1,2 @@
+# Placeholder. AWQ folders are written here by tools/quantize_awq.py and
+# are gitignored. Runtime models stay next to the executable / in OTIC/.

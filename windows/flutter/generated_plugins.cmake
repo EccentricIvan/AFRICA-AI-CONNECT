@@ -3,15 +3,18 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  cloud_firestore
-  connectivity_plus
-  firebase_auth
-  firebase_core
+  flutter_gemma
+  flutter_tts
+  nsd_windows
+  share_plus
+  speech_to_text_windows
   sqlite3_flutter_libs
   url_launcher_windows
+  webview_flutter_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  jni
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

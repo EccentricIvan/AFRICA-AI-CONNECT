@@ -1,0 +1,1346 @@
+{
+  "id": "chemistry",
+  "name": "Chemistry",
+  "icon": "science_outlined",
+  "color": "#F59E0B",
+  "units": [
+    {
+      "title": "S1",
+      "lessons": [
+        {
+          "title": "Chemistry and Society",
+          "content": "What is chemistry, and why does it matter to everyday life? Chemistry is the study of substances — what they are made of, how they behave, and how they change into other substances — and it underlies countless everyday products and processes, from the soap we wash with, to the fertilisers that help grow food, to the medicines that treat illness. How does chemistry contribute to Uganda's economy and daily life? Chemical industries produce fertilisers and pesticides for agriculture, process foods and beverages, manufacture soaps and detergents, refine petroleum products, and produce medicines — understanding chemistry helps people work safely and effectively in these industries and make informed decisions as consumers. What safety practices are essential when working in a chemistry laboratory? Wearing protective equipment like goggles and lab coats, never tasting or smelling chemicals directly, always adding acid to water (never water to acid, since this can cause dangerous spattering), reading chemical labels carefully before use, and knowing the location of safety equipment like the fire extinguisher and eyewash station. What do hazard symbols on chemical containers mean? Standardised warning symbols (like a flame for flammable substances, a skull and crossbones for toxic substances, or a corrosive symbol for substances that damage skin or materials) quickly communicate a chemical's specific dangers, so it can be handled with appropriate care. Why is understanding chemistry important for making informed everyday decisions? It helps people understand product labels, use household chemicals safely (like not mixing bleach and ammonia-based cleaners, which produces toxic gas), and evaluate information about chemical safety and environmental impact.",
+          "examples": [
+            "State the correct procedure for diluting a concentrated acid with water, and explain why this order matters.\nStep 1: Recall the rule 'always add acid to water, never water to acid'\nStep 2: Consider what happens if water is added to concentrated acid instead\nAnswer: Acid should always be added slowly to water, not the reverse — adding water to concentrated acid can cause a violent, spattering reaction due to the sudden release of heat",
+            "A container displays a flame symbol. Identify what hazard this warns of, and one appropriate precaution.\nStep 1: Recall the flame symbol indicates a flammable substance\nStep 2: Consider an appropriate precaution\nAnswer: The flame symbol warns the substance is flammable; it should be kept away from open flames, sparks, and other heat sources",
+            "Explain why mixing bleach and ammonia-based cleaning products at home can be dangerous.\nStep 1: Recall that combining certain chemicals produces new, often harmful substances\nStep 2: Recall this specific combination produces a toxic gas\nAnswer: Mixing bleach and ammonia-based cleaners produces toxic chloramine gas, which can cause serious breathing difficulties, so these products should never be combined",
+            "Explain why chemistry is important to Uganda's agricultural sector specifically.\nStep 1: Recall chemical industries produce fertilisers and pesticides\nStep 2: Consider how these products affect crop production\nAnswer: Chemistry provides fertilisers that improve soil nutrients and pesticides that protect crops from pests, both helping increase agricultural productivity",
+            "State two items of protective equipment that should be worn during a chemistry practical involving chemicals.\nStep 1: Recall standard laboratory safety equipment\nAnswer: Safety goggles and a lab coat (gloves are also commonly required)"
+          ],
+          "keyTerms": {
+            "chemistry": "The study of substances, their properties, and how they change into other substances",
+            "hazard symbol": "A standardised warning symbol on a chemical container indicating a specific danger",
+            "laboratory safety": "Rules and practices that protect people from injury when handling chemicals"
+          },
+          "quiz": [
+            {
+              "question": "When diluting a concentrated acid, you should:",
+              "options": [
+                "Add water to the acid",
+                "Add acid to water",
+                "Mix them at the same time from opposite sides",
+                "It doesn't matter which order"
+              ],
+              "correct": 1,
+              "explanation": "Adding acid to water (not the reverse) prevents dangerous spattering from the heat released."
+            },
+            {
+              "question": "A skull and crossbones symbol on a container indicates the substance is:",
+              "options": [
+                "Flammable",
+                "Toxic/poisonous",
+                "Harmless",
+                "A liquid"
+              ],
+              "correct": 1,
+              "explanation": "This symbol warns that the substance is toxic and dangerous if ingested, inhaled, or absorbed."
+            },
+            {
+              "question": "Mixing bleach and ammonia-based cleaners can produce:",
+              "options": [
+                "A pleasant fragrance",
+                "A toxic gas",
+                "Pure water",
+                "No reaction at all"
+              ],
+              "correct": 1,
+              "explanation": "This combination produces toxic chloramine gas, which is hazardous to breathe."
+            },
+            {
+              "question": "Chemistry contributes to agriculture mainly through:",
+              "options": [
+                "Producing fertilisers and pesticides",
+                "Growing crops directly",
+                "Replacing the need for soil",
+                "Controlling weather"
+              ],
+              "correct": 0,
+              "explanation": "Chemical products like fertilisers and pesticides support and improve agricultural productivity."
+            },
+            {
+              "question": "Why should chemicals never be tasted or smelled directly in a lab?",
+              "options": [
+                "It wastes the chemical",
+                "Many chemicals are hazardous and can cause harm",
+                "It has no real risk",
+                "It is only a matter of manners"
+              ],
+              "correct": 1,
+              "explanation": "Direct tasting or smelling can expose a person to toxic, corrosive, or otherwise harmful substances."
+            }
+          ]
+        },
+        {
+          "title": "Experimental Chemistry",
+          "content": "What is the purpose of experimental work in chemistry? Experiments allow chemists to test ideas, observe how substances behave and change, and collect reliable evidence to support (or disprove) a hypothesis — chemistry is fundamentally an evidence-based science, relying on careful observation and measurement rather than assumption. What basic laboratory apparatus should a student be able to identify and use? Test tubes and beakers (for holding and mixing small amounts of substances), a Bunsen burner (for heating), a measuring cylinder (for measuring liquid volumes), a retort stand and clamp (for holding apparatus in place), filter paper and a funnel (for separating an insoluble solid from a liquid), and an evaporating dish (for evaporating a liquid to leave a solid behind). What are common laboratory separation techniques, and when is each used? Filtration separates an insoluble solid from a liquid, using filter paper to trap solid particles while liquid passes through; evaporation separates a dissolved solid from a solution by heating off the liquid, leaving the solid behind; distillation separates a liquid from a solution (or two liquids with different boiling points) by evaporating and then condensing the liquid separately; and decantation carefully pours off a liquid from a settled solid without disturbing the solid at the bottom. How should observations be recorded during an experiment? Clearly, accurately, and immediately, noting exactly what is seen (colour changes, gas bubbles, temperature changes, precipitate formation) rather than what is assumed to be happening — good record-keeping allows conclusions to be drawn reliably and lets an experiment be repeated by someone else to check the results. Why is repeating an experiment important in chemistry? Repeating an experiment (and getting consistent results) increases confidence that the observed effect is real and reliable, rather than a one-off error or coincidence.",
+          "examples": [
+            "A student wants to separate sand from water. Identify the correct separation technique.\nStep 1: Recall sand is an insoluble solid in water\nStep 2: Recall filtration separates insoluble solids from liquids\nAnswer: Filtration",
+            "A student wants to recover dissolved salt from salty water. Identify the correct separation technique.\nStep 1: Recall salt is dissolved (not insoluble) in the water\nStep 2: Recall evaporation removes the liquid, leaving the dissolved solid behind\nAnswer: Evaporation",
+            "Identify the piece of apparatus used to accurately measure a specific volume of liquid.\nStep 1: Recall which apparatus is designed for measuring liquid volume\nAnswer: A measuring cylinder",
+            "Explain why a scientist repeats an experiment several times rather than relying on a single result.\nStep 1: Recall repeating experiments checks for consistency\nStep 2: Consider what a single result might miss (e.g. a random error)\nAnswer: Repeating the experiment helps confirm that the result is consistent and reliable, rather than being a one-off error, coincidence, or unusual event",
+            "Explain why observations should be recorded immediately during an experiment, rather than from memory afterward.\nStep 1: Recall memory can be inaccurate or incomplete after time passes\nStep 2: Consider the importance of accurate records for drawing conclusions\nAnswer: Recording observations immediately ensures they are accurate and complete, since details can be forgotten or misremembered if recorded later, which could lead to incorrect conclusions"
+          ],
+          "keyTerms": {
+            "filtration": "A technique separating an insoluble solid from a liquid using filter paper",
+            "evaporation": "A technique separating a dissolved solid from a solution by heating off the liquid",
+            "distillation": "A technique separating liquids with different boiling points by evaporation and condensation"
+          },
+          "quiz": [
+            {
+              "question": "Which technique separates sand from water?",
+              "options": [
+                "Evaporation",
+                "Filtration",
+                "Distillation",
+                "Decantation only"
+              ],
+              "correct": 1,
+              "explanation": "Filtration traps the insoluble sand while water passes through the filter paper."
+            },
+            {
+              "question": "Which technique recovers dissolved salt from salty water?",
+              "options": [
+                "Filtration",
+                "Evaporation",
+                "Using a funnel only",
+                "None of these"
+              ],
+              "correct": 1,
+              "explanation": "Evaporation removes the water, leaving the dissolved salt behind."
+            },
+            {
+              "question": "A measuring cylinder is used to:",
+              "options": [
+                "Heat substances",
+                "Measure liquid volume accurately",
+                "Filter solids",
+                "Hold a test tube"
+              ],
+              "correct": 1,
+              "explanation": "Measuring cylinders are designed specifically for accurate volume measurement."
+            },
+            {
+              "question": "Why is repeating an experiment important?",
+              "options": [
+                "It wastes materials for no reason",
+                "It checks that results are consistent and reliable",
+                "It is never necessary",
+                "It changes the expected outcome"
+              ],
+              "correct": 1,
+              "explanation": "Repetition helps confirm a result isn't just a one-off error or coincidence."
+            },
+            {
+              "question": "Distillation is best used to separate:",
+              "options": [
+                "An insoluble solid from a liquid",
+                "Liquids with different boiling points",
+                "Two identical liquids",
+                "Solid from solid"
+              ],
+              "correct": 1,
+              "explanation": "Distillation relies on differences in boiling point to separate liquids."
+            }
+          ]
+        },
+        {
+          "title": "States and Changes of States of Matter",
+          "content": "What are the three states of matter, and how does the particle (kinetic) theory explain their differences? In a solid, particles are closely packed in a fixed, orderly arrangement and can only vibrate in place, giving solids a fixed shape and volume; in a liquid, particles are close together but can move past one another, giving a fixed volume but no fixed shape; in a gas, particles are far apart and move rapidly and randomly in all directions, giving neither a fixed shape nor volume. What are the names of the transitions between states, and what causes each one? Melting (solid to liquid) and boiling/evaporation (liquid to gas) occur when heat energy is added, giving particles enough energy to overcome the forces holding them in a more ordered state; freezing (liquid to solid) and condensation (gas to liquid) occur when heat energy is removed, allowing particles to settle into a more ordered arrangement; sublimation is the direct change from solid to gas (or gas to solid) without passing through the liquid state, seen in substances like solid carbon dioxide (dry ice) and iodine. What is the difference between melting point and boiling point, and why are they useful for identifying substances? The melting point is the specific temperature at which a solid changes to a liquid, and the boiling point is the specific temperature at which a liquid changes to a gas — since every pure substance has its own characteristic melting and boiling points, measuring these values can help identify an unknown substance or check the purity of a known one (an impure substance usually melts over a range of temperatures rather than at one sharp point). What is Brownian motion, and what does it demonstrate about particles? Brownian motion is the random, jittery movement of small particles (like smoke particles or pollen grains) suspended in a fluid, caused by being constantly and unevenly bumped by the much smaller, invisible, fast-moving particles of the surrounding fluid — this provides direct visual evidence that matter is made of constantly moving particles, supporting the kinetic particle theory.",
+          "examples": [
+            "Identify the state change occurring when solid ice is heated and turns to liquid water.\nStep 1: Recall solid-to-liquid is called melting\nAnswer: Melting",
+            "Identify the state change occurring when water vapour touches a cold window and forms liquid droplets.\nStep 1: Recall gas-to-liquid is called condensation\nAnswer: Condensation",
+            "Explain why solid carbon dioxide (dry ice) 'disappears' directly into gas without forming a liquid puddle first.\nStep 1: Recall sublimation is a direct solid-to-gas change\nStep 2: Recall this skips the liquid state entirely\nAnswer: Dry ice sublimes, converting directly from solid to gas without passing through a liquid state, so no puddle ever forms",
+            "A pure substance melts sharply at exactly 80°C, but an unknown sample of the 'same' substance melts gradually between 74°C and 80°C. Explain what this suggests about the unknown sample.\nStep 1: Recall pure substances have a sharp, specific melting point\nStep 2: Recall impure substances melt over a range of temperatures\nAnswer: The unknown sample is likely impure, since it melts over a range of temperatures rather than sharply at the pure substance's known melting point",
+            "Explain what Brownian motion demonstrates about the nature of matter.\nStep 1: Recall Brownian motion is the random jittering of visible particles suspended in a fluid\nStep 2: Recall this jittering is caused by invisible, fast-moving fluid particles colliding with them\nAnswer: Brownian motion provides visible evidence that fluids are made of constantly moving, invisible particles, supporting the kinetic particle theory of matter"
+          ],
+          "keyTerms": {
+            "kinetic particle theory": "The theory that matter is made of constantly moving particles, whose energy and arrangement determine the state of matter",
+            "sublimation": "The direct change of state from solid to gas (or gas to solid), skipping the liquid state",
+            "melting point/boiling point": "The specific temperatures at which a pure substance changes state, useful for identification and purity testing",
+            "Brownian motion": "The random, jittery movement of small particles suspended in a fluid, caused by collisions with fluid particles"
+          },
+          "quiz": [
+            {
+              "question": "In which state of matter are particles most free to move and most spread apart?",
+              "options": [
+                "Solid",
+                "Liquid",
+                "Gas",
+                "All states are identical"
+              ],
+              "correct": 2,
+              "explanation": "Gas particles are far apart and move rapidly and randomly, unlike the more restricted particles in solids and liquids."
+            },
+            {
+              "question": "Sublimation is the direct change from:",
+              "options": [
+                "Liquid to gas",
+                "Solid to gas, skipping the liquid state",
+                "Gas to liquid",
+                "Solid to liquid"
+              ],
+              "correct": 1,
+              "explanation": "Sublimation converts solid directly to gas (or vice versa), without a liquid stage."
+            },
+            {
+              "question": "An impure substance typically melts:",
+              "options": [
+                "At one sharp, specific temperature",
+                "Over a range of temperatures",
+                "Only at absolute zero",
+                "It never melts"
+              ],
+              "correct": 1,
+              "explanation": "Impurities disrupt the regular structure of a solid, causing it to melt gradually over a range rather than sharply."
+            },
+            {
+              "question": "Brownian motion provides evidence for:",
+              "options": [
+                "The existence of atoms only in solids",
+                "Constantly moving particles in a fluid",
+                "The impossibility of gases",
+                "Static, non-moving matter"
+              ],
+              "correct": 1,
+              "explanation": "The random jittering of visible particles is caused by invisible fluid particles constantly colliding with them."
+            },
+            {
+              "question": "What state change is condensation?",
+              "options": [
+                "Solid to liquid",
+                "Liquid to gas",
+                "Gas to liquid",
+                "Liquid to solid"
+              ],
+              "correct": 2,
+              "explanation": "Condensation is the change from gas to liquid, as heat energy is removed."
+            }
+          ]
+        },
+        {
+          "title": "Temporary and Permanent Changes",
+          "content": "What is the difference between a physical change and a chemical change? A physical change (temporary/reversible change) alters a substance's appearance or state, but no new substance is formed and the change can usually be reversed — examples include melting, freezing, dissolving, and changes of state; a chemical change (permanent change) produces one or more entirely new substances with different properties from the starting materials, and is generally difficult or impossible to reverse by simple physical means — examples include burning, rusting, and cooking an egg. What are common signs that a chemical change (chemical reaction) has occurred? A colour change, the production of gas bubbles (effervescence), a temperature change (the reaction feels hotter or colder), the formation of a precipitate (an insoluble solid suddenly appearing in a solution), or a permanent change in smell — the appearance of any of these signs strongly suggests a new substance has formed. Why is dissolving sugar in water considered a physical change, not a chemical change? The sugar doesn't turn into a different substance — it simply spreads out between the water molecules — and can be recovered unchanged by evaporating the water away, showing no new substance was created. Why is burning wood considered a chemical change? Burning wood produces ash, smoke, and gases that are chemically completely different from the original wood, and this transformation cannot be reversed by any simple physical process — the ash cannot be turned back into wood. Why does understanding the difference between physical and chemical changes matter practically? It helps predict whether a process can be reversed (important for recycling and material recovery) and helps identify when a genuine chemical reaction — which might release energy, produce gases, or create new (possibly hazardous) substances — is taking place.",
+          "examples": [
+            "Classify melting ice as a physical or chemical change, and justify your answer.\nStep 1: Recall physical changes don't create new substances and are often reversible\nStep 2: Consider that melted ice is still water, and can be refrozen\nAnswer: Melting ice is a physical change — it is still the same substance (water), and the change can be reversed by freezing it again",
+            "Classify burning paper as a physical or chemical change, and justify your answer.\nStep 1: Recall chemical changes produce new substances and are usually irreversible\nStep 2: Consider that ash and smoke are chemically different from paper\nAnswer: Burning paper is a chemical change — it produces entirely new substances (ash, smoke, gases) that cannot be turned back into paper",
+            "A colourless solution turns cloudy and a solid appears when two liquids are mixed. Identify what sign of chemical change this represents.\nStep 1: Recall the signs of a chemical change\nStep 2: Recognise an insoluble solid appearing in solution is called a precipitate\nAnswer: The formation of a precipitate, indicating a chemical reaction has likely taken place",
+            "Explain why dissolving salt in water is a physical change rather than a chemical change.\nStep 1: Recall a physical change doesn't form a new substance\nStep 2: Consider that the salt can be recovered unchanged by evaporation\nAnswer: The salt doesn't turn into a new substance when dissolved — it simply disperses among the water particles — and it can be recovered completely unchanged by evaporating the water, showing no new substance was formed",
+            "Explain why rusting iron is considered a chemical change.\nStep 1: Recall rust (iron oxide) has different properties from iron\nStep 2: Consider whether rust can easily be turned back into pure iron\nAnswer: Rusting produces iron oxide, a new substance with different properties from iron, and this change cannot easily be reversed by simple physical means, confirming it is a chemical change"
+          ],
+          "keyTerms": {
+            "physical change": "A reversible change in appearance or state where no new substance is formed",
+            "chemical change": "A change producing one or more new substances, generally difficult to reverse",
+            "precipitate": "An insoluble solid that suddenly forms in a solution, often a sign of a chemical reaction"
+          },
+          "quiz": [
+            {
+              "question": "Which of these is a physical change?",
+              "options": [
+                "Burning wood",
+                "Rusting iron",
+                "Melting ice",
+                "Cooking an egg"
+              ],
+              "correct": 2,
+              "explanation": "Melting ice doesn't create a new substance and is reversible by freezing."
+            },
+            {
+              "question": "Which of these is a sign that a chemical change has occurred?",
+              "options": [
+                "No change at all",
+                "Formation of a precipitate",
+                "The substance stays exactly the same",
+                "Only a change in shape"
+              ],
+              "correct": 1,
+              "explanation": "A precipitate forming is a strong sign that a new, insoluble substance has been chemically produced."
+            },
+            {
+              "question": "Why is rusting considered a chemical change?",
+              "options": [
+                "Rust is identical to iron",
+                "Rust is a new substance with different properties, and the change is hard to reverse",
+                "Rusting can be reversed by simply melting the metal",
+                "Rusting is not a real chemical process"
+              ],
+              "correct": 1,
+              "explanation": "Rust (iron oxide) has entirely different properties from iron, and reversing it is not simple."
+            },
+            {
+              "question": "Dissolving sugar in water is classified as a:",
+              "options": [
+                "Chemical change, since sugar disappears",
+                "Physical change, since sugar can be recovered unchanged",
+                "Neither physical nor chemical",
+                "A permanent, irreversible change"
+              ],
+              "correct": 1,
+              "explanation": "The sugar doesn't change into a new substance and can be recovered by evaporating the water."
+            },
+            {
+              "question": "Which of these is NOT typically a sign of a chemical change?",
+              "options": [
+                "Colour change",
+                "Gas bubbles forming",
+                "Temperature change",
+                "The object simply changing shape with no other effect"
+              ],
+              "correct": 3,
+              "explanation": "A simple shape change alone (like bending metal) is usually just a physical change, not chemical."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "S2",
+      "lessons": [
+        {
+          "title": "Mixtures, Elements and Compounds",
+          "content": "What is an element? A pure substance made of only one type of atom, which cannot be broken down into any simpler substance by chemical means — elements are the fundamental building blocks of all matter, and each one is represented by a unique chemical symbol (like O for oxygen, or Fe for iron). What is a compound? A pure substance formed when two or more different elements chemically combine in a fixed ratio, creating a new substance with completely different properties from the elements that formed it — for example, sodium (a reactive metal) and chlorine (a toxic gas) combine to form sodium chloride (ordinary table salt), which is safe to eat. What is a mixture, and how is it different from a compound? A mixture consists of two or more substances (elements and/or compounds) that are physically combined but NOT chemically bonded together — unlike a compound, the substances in a mixture keep their own individual properties, are present in variable (not fixed) proportions, and can usually be separated again by physical methods (like filtration or evaporation) rather than chemical reactions. What is the difference between a mixture and a compound in terms of how they can be separated? A mixture can be separated using physical methods (filtration, evaporation, distillation) since no chemical bonds need to be broken; a compound can only be broken back down into its original elements through a chemical reaction (like electrolysis), since its atoms are chemically bonded together. What are examples of common mixtures, and what type of mixture is each? Salt water is a solution (a mixture where one substance dissolves completely in another); sand and water is a suspension (a mixture where solid particles are dispersed but don't dissolve, and will settle over time); and air is a mixture of gases (mainly nitrogen and oxygen, physically mixed together, not chemically combined).",
+          "examples": [
+            "Classify oxygen gas (O2) as an element, compound, or mixture.\nStep 1: Recall an element contains only one type of atom\nAnswer: Oxygen gas is an element, since it consists only of oxygen atoms",
+            "Classify water (H2O) as an element, compound, or mixture.\nStep 1: Recall a compound forms from two or more different elements chemically combined\nStep 2: Recognise water contains both hydrogen and oxygen chemically bonded\nAnswer: Water is a compound",
+            "Classify air as an element, compound, or mixture.\nStep 1: Recall a mixture contains substances that are physically combined, not chemically bonded\nStep 2: Recall air contains nitrogen, oxygen, and other gases simply mixed together\nAnswer: Air is a mixture",
+            "Explain why sodium chloride (table salt) has completely different properties from sodium metal and chlorine gas, the two elements that form it.\nStep 1: Recall a compound has entirely different properties from its constituent elements\nStep 2: Consider the specific properties of sodium (reactive metal) and chlorine (toxic gas) compared to safe, edible table salt\nAnswer: Once chemically combined, sodium and chlorine form an entirely new substance (sodium chloride) with its own unique properties, completely different from the reactive metal and toxic gas that formed it — this is a defining feature of a compound",
+            "Explain why the substances in a mixture can be separated using physical methods, but the elements in a compound cannot.\nStep 1: Recall mixture components are only physically combined, without chemical bonds\nStep 2: Recall compound components are chemically bonded together\nAnswer: Since the substances in a mixture aren't chemically bonded, no chemical reaction is needed to separate them — simple physical methods work; but a compound's elements are chemically bonded, so only a chemical reaction (like electrolysis) can break that bond and separate them"
+          ],
+          "keyTerms": {
+            "element": "A pure substance made of only one type of atom",
+            "compound": "A pure substance formed from two or more elements chemically combined in a fixed ratio",
+            "mixture": "Two or more substances physically combined, without chemical bonding, in variable proportions"
+          },
+          "quiz": [
+            {
+              "question": "Which of these is an element?",
+              "options": [
+                "Water",
+                "Table salt",
+                "Iron",
+                "Air"
+              ],
+              "correct": 2,
+              "explanation": "Iron consists of only one type of atom, making it an element."
+            },
+            {
+              "question": "A compound is formed when:",
+              "options": [
+                "Substances are physically mixed only",
+                "Two or more elements chemically combine in a fixed ratio",
+                "A single element is heated",
+                "Nothing changes at all"
+              ],
+              "correct": 1,
+              "explanation": "Compounds form through chemical combination of different elements in fixed proportions."
+            },
+            {
+              "question": "Which of these is a mixture?",
+              "options": [
+                "Sodium chloride",
+                "Water",
+                "Air",
+                "Oxygen gas"
+              ],
+              "correct": 2,
+              "explanation": "Air is a physical mixture of gases, not chemically bonded together."
+            },
+            {
+              "question": "How can the substances in a mixture typically be separated?",
+              "options": [
+                "Only by nuclear reactions",
+                "By physical methods like filtration or evaporation",
+                "They cannot be separated at all",
+                "Only by electrolysis"
+              ],
+              "correct": 1,
+              "explanation": "Since mixtures aren't chemically bonded, physical separation methods are sufficient."
+            },
+            {
+              "question": "Why does sodium chloride have different properties from sodium metal and chlorine gas?",
+              "options": [
+                "It doesn't — the properties are identical",
+                "Chemical combination creates a new substance with its own unique properties",
+                "Sodium chloride isn't a real compound",
+                "Properties never change during a chemical reaction"
+              ],
+              "correct": 1,
+              "explanation": "Chemical combination fundamentally changes the properties compared to the original elements."
+            }
+          ]
+        },
+        {
+          "title": "Air, Water and the Environment",
+          "content": "What is the approximate composition of clean, dry air? Approximately 78% nitrogen, 21% oxygen, and small amounts of other gases including argon and carbon dioxide (about 0.04%) — this composition is important because living organisms depend on the oxygen for respiration, and plants depend on the carbon dioxide for photosynthesis. What are the main sources and effects of air pollution? Air pollution comes mainly from burning fossil fuels (in vehicles, factories, and power generation), which release carbon monoxide (a poisonous gas), sulfur dioxide and nitrogen oxides (which contribute to acid rain), and particulate matter (fine solid particles that can damage the lungs) — air pollution harms human health (especially respiratory problems), damages buildings and vegetation, and contributes to climate change. What is the water cycle, and what are its main stages? The water cycle describes the continuous movement of water through the environment: evaporation (liquid water turning to vapour, mainly from oceans and lakes, driven by heat from the sun), condensation (water vapour cooling and forming clouds), precipitation (water falling back to Earth as rain, snow, or hail), and collection (water gathering in rivers, lakes, and groundwater, eventually returning to the ocean to begin the cycle again). Why is clean water essential, and what are common sources of water pollution? Clean water is essential for drinking, agriculture, and sanitation — water pollution can come from industrial waste discharged into rivers, agricultural runoff (containing fertilisers and pesticides), and improper sewage disposal, all of which can make water unsafe to drink and harm aquatic ecosystems. How can water be treated to make it safe for drinking? Common water treatment steps include filtration (removing solid particles and debris), sedimentation (allowing suspended particles to settle out), and chlorination or other disinfection methods (killing harmful microorganisms) — access to properly treated water is essential for preventing waterborne diseases.",
+          "examples": [
+            "State the two most abundant gases in clean, dry air, and their approximate percentages.\nStep 1: Recall the composition of air\nAnswer: Nitrogen (about 78%) and oxygen (about 21%)",
+            "Explain how burning fossil fuels in vehicles contributes to air pollution.\nStep 1: Recall fossil fuel combustion releases various pollutant gases\nStep 2: Recall specific pollutants like carbon monoxide and nitrogen oxides\nAnswer: Burning fossil fuels in vehicle engines releases pollutants like carbon monoxide, nitrogen oxides, and particulate matter into the air, harming both human health and the environment",
+            "Describe the four main stages of the water cycle, in order.\nStep 1: Recall water moves from liquid to vapour to cloud to precipitation and back\nAnswer: Evaporation, condensation, precipitation, and collection",
+            "Explain why agricultural runoff can be a source of water pollution.\nStep 1: Recall runoff can carry fertilisers and pesticides from farmland\nStep 2: Consider what happens when these chemicals enter nearby water sources\nAnswer: Rainwater can wash fertilisers and pesticides off farmland into nearby rivers and lakes, introducing excess chemicals that can harm aquatic life and make the water unsafe",
+            "Explain why chlorination is an important step in water treatment.\nStep 1: Recall chlorination is a disinfection method\nStep 2: Consider its effect on harmful microorganisms in water\nAnswer: Chlorination kills harmful microorganisms (like disease-causing bacteria) in the water, helping prevent waterborne diseases and making the water safer to drink"
+          ],
+          "keyTerms": {
+            "air pollution": "The contamination of air by harmful substances, often from burning fossil fuels",
+            "water cycle": "The continuous movement of water through evaporation, condensation, precipitation, and collection",
+            "water treatment": "The process of making water safe for drinking, including filtration and disinfection"
+          },
+          "quiz": [
+            {
+              "question": "What is the most abundant gas in clean, dry air?",
+              "options": [
+                "Oxygen",
+                "Carbon dioxide",
+                "Nitrogen",
+                "Argon"
+              ],
+              "correct": 2,
+              "explanation": "Nitrogen makes up about 78% of clean, dry air."
+            },
+            {
+              "question": "Which of these is a major source of air pollution?",
+              "options": [
+                "Photosynthesis in plants",
+                "Burning fossil fuels",
+                "Evaporation of water",
+                "Rainfall"
+              ],
+              "correct": 1,
+              "explanation": "Burning fossil fuels releases pollutant gases and particulate matter into the air."
+            },
+            {
+              "question": "What is the correct order of the water cycle's stages?",
+              "options": [
+                "Condensation, evaporation, collection, precipitation",
+                "Evaporation, condensation, precipitation, collection",
+                "Precipitation, evaporation, collection, condensation",
+                "Collection, precipitation, evaporation, condensation"
+              ],
+              "correct": 1,
+              "explanation": "Water evaporates, condenses into clouds, falls as precipitation, then collects before the cycle repeats."
+            },
+            {
+              "question": "Agricultural runoff pollutes water mainly with:",
+              "options": [
+                "Pure water only",
+                "Fertilisers and pesticides",
+                "Oxygen",
+                "Sand"
+              ],
+              "correct": 1,
+              "explanation": "Runoff can carry excess fertilisers and pesticides from farmland into water sources."
+            },
+            {
+              "question": "Chlorination is used in water treatment to:",
+              "options": [
+                "Add flavour to water",
+                "Kill harmful microorganisms",
+                "Remove all minerals",
+                "Make water boil faster"
+              ],
+              "correct": 1,
+              "explanation": "Chlorination disinfects water by killing disease-causing microorganisms."
+            }
+          ]
+        },
+        {
+          "title": "Rocks and Minerals",
+          "content": "What is a mineral, and what is a rock? A mineral is a naturally occurring, solid substance with a specific chemical composition and crystal structure (like quartz or calcite); a rock is a naturally occurring solid material made of one or more minerals combined together. What are the three main categories of rock, and how does each form? Igneous rocks form when molten rock (magma or lava) cools and solidifies, either underground (slowly, forming large crystals, like granite) or on the Earth's surface (quickly, forming small crystals, like basalt); sedimentary rocks form when layers of sediment (like sand, mud, or shell fragments) are compressed and cemented together over long periods of time (like sandstone or limestone); metamorphic rocks form when existing rocks are transformed by intense heat and/or pressure underground, without fully melting, changing their structure and properties (like marble, formed from limestone, or slate, formed from mudstone/shale). What is the rock cycle? The rock cycle describes the continuous, long-term transformation of rocks between the three categories — igneous rock can be broken down (weathered and eroded) into sediment that becomes sedimentary rock; any rock type can be transformed into metamorphic rock under heat and pressure; and any rock can melt into magma and eventually re-form as new igneous rock — this is a slow, ongoing geological process occurring over enormous timescales. What are some economically important minerals and rocks found in Uganda, and how are they used? Uganda has deposits of minerals including copper, gold, limestone (used to make cement), and various clays (used for bricks and pottery) — these natural resources support construction, manufacturing, and export industries important to the national economy. How does weathering break down rocks over time? Physical weathering (like repeated freezing and thawing of water in rock cracks, which gradually widens them) and chemical weathering (like acidic rainwater slowly dissolving certain minerals within a rock) both gradually break large rocks down into smaller fragments and eventually into the fine particles that make up soil.",
+          "examples": [
+            "Classify granite, which forms from magma cooling slowly underground, into its correct rock category.\nStep 1: Recall igneous rocks form from cooling molten rock\nAnswer: Granite is an igneous rock",
+            "Classify limestone, formed from compressed layers of shell fragments and sediment, into its correct rock category.\nStep 1: Recall sedimentary rocks form from compressed layers of sediment\nAnswer: Limestone is a sedimentary rock",
+            "Classify marble, formed when limestone is subjected to intense heat and pressure underground without melting, into its correct rock category.\nStep 1: Recall metamorphic rocks form from existing rock transformed by heat/pressure\nAnswer: Marble is a metamorphic rock",
+            "Explain how the rock cycle connects all three rock categories over long periods of time.\nStep 1: Recall igneous rock can weather into sediment, forming sedimentary rock\nStep 2: Recall any rock type can become metamorphic under heat/pressure, or melt into magma to form new igneous rock\nAnswer: Rocks continuously transform between categories — igneous rock can weather into sediment that becomes sedimentary rock, any rock can become metamorphic under heat and pressure, and any rock can melt into magma to eventually form new igneous rock, forming an ongoing cycle",
+            "Explain how repeated freezing and thawing of water can break apart a large rock over time.\nStep 1: Recall water expands slightly when it freezes\nStep 2: Consider the effect of this expansion inside a crack in the rock\nAnswer: Water seeping into a crack expands as it freezes, widening the crack slightly; repeated freezing and thawing gradually widens the crack further until the rock eventually splits apart — a form of physical weathering"
+          ],
+          "keyTerms": {
+            "mineral": "A naturally occurring solid with a specific chemical composition and crystal structure",
+            "rock cycle": "The continuous long-term transformation of rocks between igneous, sedimentary, and metamorphic types",
+            "weathering": "The gradual breakdown of rocks through physical or chemical processes"
+          },
+          "quiz": [
+            {
+              "question": "Igneous rock forms from:",
+              "options": [
+                "Compressed sediment layers",
+                "Cooling and solidifying molten rock",
+                "Existing rock transformed by heat/pressure without melting",
+                "Dissolved minerals only"
+              ],
+              "correct": 1,
+              "explanation": "Igneous rocks form as magma or lava cools and solidifies."
+            },
+            {
+              "question": "Which rock type forms from compressed layers of sediment over time?",
+              "options": [
+                "Igneous",
+                "Sedimentary",
+                "Metamorphic",
+                "None of these"
+              ],
+              "correct": 1,
+              "explanation": "Sedimentary rock forms from compressed and cemented sediment layers."
+            },
+            {
+              "question": "Marble is an example of which rock type?",
+              "options": [
+                "Igneous",
+                "Sedimentary",
+                "Metamorphic",
+                "It's not a rock"
+              ],
+              "correct": 2,
+              "explanation": "Marble forms when limestone is transformed by heat and pressure without melting — a metamorphic rock."
+            },
+            {
+              "question": "The rock cycle describes:",
+              "options": [
+                "A one-time event",
+                "The continuous transformation of rocks between categories over time",
+                "Only how igneous rock forms",
+                "A process that stopped occurring long ago"
+              ],
+              "correct": 1,
+              "explanation": "The rock cycle is an ongoing geological process connecting all three rock categories."
+            },
+            {
+              "question": "Physical weathering can be caused by:",
+              "options": [
+                "Repeated freezing and thawing of water in rock cracks",
+                "Only chemical reactions",
+                "Only biological activity",
+                "Rocks never physically weathering"
+              ],
+              "correct": 0,
+              "explanation": "Freeze-thaw cycles are a classic example of physical weathering, gradually breaking rocks apart."
+            }
+          ]
+        },
+        {
+          "title": "Acids, Alkalis and Salts",
+          "content": "What are acids and alkalis, and how can they be identified? An acid is a substance that releases hydrogen ions (H+) when dissolved in water, tasting sour and typically having a pH below 7 (like lemon juice or vinegar); an alkali is a soluble base that releases hydroxide ions (OH-) when dissolved in water, feeling soapy/slippery and typically having a pH above 7 (like soap solution or ammonia) — indicators like litmus paper (turning red in acid, blue in alkali) or universal indicator (showing a range of colours corresponding to different pH values) are used to identify and measure acidity or alkalinity safely, without tasting. What is the pH scale, and what does it measure? The pH scale runs from 0 to 14, measuring how acidic or alkaline a solution is — a pH of 7 is neutral (neither acidic nor alkaline, like pure water); values below 7 indicate increasing acidity as the number decreases; values above 7 indicate increasing alkalinity as the number increases. What is neutralisation, and what does it produce? Neutralisation is the chemical reaction between an acid and a base (or alkali), which cancels out their acidic and alkaline properties, producing a salt and water: acid + base → salt + water — this reaction is used practically, such as adding lime (a base) to acidic soil to improve it for farming, or taking an antacid tablet (a base) to neutralise excess stomach acid. What is a salt, in the chemical sense, and how is its name determined? A salt is an ionic compound formed when the hydrogen ion of an acid is replaced by a metal ion (or ammonium ion) — its name comes from combining the metal involved with the acid used: hydrochloric acid produces chloride salts, sulfuric acid produces sulfate salts, and nitric acid produces nitrate salts (for example, hydrochloric acid + sodium hydroxide produces sodium chloride). Why are acids and alkalis important in everyday life and industry? Acids are used in food preservation, cleaning products, and car batteries; alkalis are used in soap-making, cleaning products, and treating acidic soils — understanding their properties and safe handling is essential given their potential to cause chemical burns if handled carelessly.",
+          "examples": [
+            "A solution turns red litmus paper blue. Identify whether it is acidic or alkaline.\nStep 1: Recall litmus turns blue in alkaline conditions\nAnswer: The solution is alkaline",
+            "A solution has a pH of 3. Classify it as acidic, neutral, or alkaline.\nStep 1: Recall pH below 7 is acidic\nAnswer: The solution is acidic",
+            "Write the general word equation for a neutralisation reaction.\nStep 1: Recall an acid reacts with a base to cancel out their properties\nAnswer: Acid + base → salt + water",
+            "Predict the name of the salt formed when hydrochloric acid reacts with sodium hydroxide.\nStep 1: Recall hydrochloric acid produces 'chloride' salts\nStep 2: Recall the metal involved is sodium\nAnswer: Sodium chloride",
+            "Explain why farmers sometimes add lime (a base) to acidic soil.\nStep 1: Recall neutralisation cancels out acidity\nStep 2: Consider the effect on soil suitable for crop growth\nAnswer: Adding lime neutralises excess acidity in the soil, adjusting its pH to a range more suitable for healthy crop growth"
+          ],
+          "keyTerms": {
+            "acid": "A substance releasing hydrogen ions in water, with a pH below 7",
+            "alkali": "A soluble base releasing hydroxide ions in water, with a pH above 7",
+            "neutralisation": "The reaction between an acid and a base, producing a salt and water",
+            "pH scale": "A scale from 0 to 14 measuring acidity (below 7), neutrality (7), or alkalinity (above 7)"
+          },
+          "quiz": [
+            {
+              "question": "A solution with pH 10 is:",
+              "options": [
+                "Strongly acidic",
+                "Neutral",
+                "Alkaline",
+                "Impossible to determine"
+              ],
+              "correct": 2,
+              "explanation": "A pH above 7 indicates an alkaline solution."
+            },
+            {
+              "question": "Litmus paper turns which colour in an acidic solution?",
+              "options": [
+                "Blue",
+                "Red",
+                "Green",
+                "Colourless"
+              ],
+              "correct": 1,
+              "explanation": "Litmus paper turns red in acidic conditions."
+            },
+            {
+              "question": "Neutralisation produces:",
+              "options": [
+                "Only water",
+                "A salt and water",
+                "Only a gas",
+                "Only a new acid"
+              ],
+              "correct": 1,
+              "explanation": "The reaction between an acid and a base produces a salt and water."
+            },
+            {
+              "question": "Hydrochloric acid reacting with a metal hydroxide produces a salt ending in:",
+              "options": [
+                "-ate",
+                "-ide (chloride)",
+                "-ite",
+                "-ium"
+              ],
+              "correct": 1,
+              "explanation": "Hydrochloric acid produces chloride salts."
+            },
+            {
+              "question": "What is the pH of a neutral substance like pure water?",
+              "options": [
+                "0",
+                "7",
+                "14",
+                "-7"
+              ],
+              "correct": 1,
+              "explanation": "A pH of exactly 7 is neutral, neither acidic nor alkaline."
+            }
+          ]
+        },
+        {
+          "title": "Atomic Structure, the Periodic Table and its Trends",
+          "content": "What are the three main subatomic particles, and what are their charges and locations? Protons (positive charge, in the nucleus), neutrons (no charge, in the nucleus), and electrons (negative charge, orbiting the nucleus in shells/energy levels) — protons and neutrons have approximately equal mass, much greater than the tiny mass of an electron, so almost all of an atom's mass is concentrated in its nucleus. What do atomic number and mass number represent? The atomic number is the number of protons in an atom (and equals the number of electrons in a neutral atom), uniquely identifying the element; the mass number is the total number of protons plus neutrons in the nucleus. How are electrons arranged around the nucleus, and what determines an element's chemical properties? Electrons occupy specific shells (energy levels) around the nucleus, filling the innermost shell first before occupying the next — the electrons in the OUTERMOST shell (called valence electrons) largely determine how an element reacts chemically, since these are the electrons involved in forming bonds with other atoms. How is the periodic table organised, and what do groups and periods represent? Elements are arranged in order of increasing atomic number; a group (a vertical column) contains elements with the same number of electrons in their outer shell, giving them similar chemical properties; a period (a horizontal row) contains elements with the same number of electron shells, with properties changing gradually across the row. What are some key trends across the periodic table? Moving down a group, atoms generally get larger (more electron shells) and, for metals, become more reactive (since outer electrons are further from the nucleus and more easily lost); moving across a period from left to right, elements generally transition from metallic to non-metallic character, and atomic size generally decreases (as protons increase, pulling electrons in more tightly within the same shell count).",
+          "examples": [
+            "An atom has 11 protons and 12 neutrons. Find its mass number.\nStep 1: Use mass number = protons + neutrons\nStep 2: Substitute: 11+12\nAnswer: Mass number = 23",
+            "An atom has atomic number 12. State how many electrons it has if it is neutral.\nStep 1: Recall atomic number equals the number of protons, which equals electrons in a neutral atom\nAnswer: 12 electrons",
+            "State which subatomic particles are found in the nucleus.\nStep 1: Recall electrons orbit outside the nucleus\nAnswer: Protons and neutrons",
+            "Explain why elements in the same group of the periodic table have similar chemical properties.\nStep 1: Recall a group shares the same number of outer shell (valence) electrons\nStep 2: Recall valence electrons largely determine chemical reactivity\nAnswer: Elements in the same group have the same number of electrons in their outermost shell, and since these valence electrons largely control how an element reacts, elements in the same group behave chemically similarly",
+            "Explain why reactivity of metals generally increases moving down a group in the periodic table.\nStep 1: Recall atoms get larger moving down a group, with more electron shells\nStep 2: Recall outer electrons further from the nucleus are more easily lost\nAnswer: Moving down a group, the outer (valence) electrons are further from the nucleus and less strongly attracted to it, making them easier to lose, which increases the metal's reactivity"
+          ],
+          "keyTerms": {
+            "atomic number": "The number of protons in an atom's nucleus, identifying the element",
+            "mass number": "The total number of protons and neutrons in an atom's nucleus",
+            "valence electrons": "Electrons in an atom's outermost shell, largely determining its chemical reactivity",
+            "group/period": "A group is a vertical column (same outer electrons); a period is a horizontal row (same number of shells) in the periodic table"
+          },
+          "quiz": [
+            {
+              "question": "An atom has 8 protons and 8 neutrons. Find its mass number.",
+              "options": [
+                "8",
+                "16",
+                "0",
+                "24"
+              ],
+              "correct": 1,
+              "explanation": "Mass number = protons + neutrons = 8+8 = 16."
+            },
+            {
+              "question": "Which particle has no electric charge?",
+              "options": [
+                "Proton",
+                "Electron",
+                "Neutron",
+                "None of these"
+              ],
+              "correct": 2,
+              "explanation": "The neutron is electrically neutral."
+            },
+            {
+              "question": "Elements in the same group of the periodic table have:",
+              "options": [
+                "The same number of electron shells",
+                "The same number of outer (valence) electrons",
+                "Identical atomic numbers",
+                "No relationship at all"
+              ],
+              "correct": 1,
+              "explanation": "A group shares the same number of valence electrons, giving similar chemical properties."
+            },
+            {
+              "question": "Moving down a group of metals, reactivity generally:",
+              "options": [
+                "Decreases",
+                "Increases",
+                "Stays exactly the same",
+                "Becomes zero"
+              ],
+              "correct": 1,
+              "explanation": "Valence electrons further from the nucleus are more easily lost, increasing metal reactivity down a group."
+            },
+            {
+              "question": "The atomic number of an atom equals its number of:",
+              "options": [
+                "Neutrons",
+                "Protons",
+                "Total subatomic particles",
+                "Electron shells"
+              ],
+              "correct": 1,
+              "explanation": "Atomic number is defined as the number of protons in the nucleus."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "S3",
+      "lessons": [
+        {
+          "title": "Carbon in Life",
+          "content": "Why is carbon described as the basis of life on Earth? Carbon atoms can form four strong bonds with other atoms, including other carbon atoms, allowing them to build enormously long chains, branches, and rings — this versatility lets carbon form the vast variety of complex molecules needed for life, from simple sugars to complex proteins and DNA. What are carbohydrates, and what elements do they contain? Carbohydrates (like glucose and starch) are made of carbon, hydrogen, and oxygen, and serve as the main energy source for living organisms — simple carbohydrates (sugars, like glucose) provide quick energy, while complex carbohydrates (like starch and cellulose) are long chains of sugar units joined together, used for energy storage (starch) or structural support (cellulose in plant cell walls). What are proteins, and what elements do they contain? Proteins are made of carbon, hydrogen, oxygen, and nitrogen (and often sulfur), built from smaller units called amino acids joined together in long chains — proteins are essential for growth, tissue repair, and forming enzymes (which speed up chemical reactions in the body). What are fats and oils, and what is their role in living organisms? Fats and oils (lipids) are made of carbon, hydrogen, and oxygen, and provide a concentrated store of energy (containing more energy per gram than carbohydrates), as well as forming an important part of cell membranes and providing insulation in animals. Why is carbon dioxide important for life, despite carbon dioxide itself being a simple inorganic molecule? Carbon dioxide is the raw material plants use, together with water, to build the complex carbon-based molecules of life through photosynthesis — this is how carbon captured from the atmosphere enters the food chain and becomes part of every living organism's body.",
+          "examples": [
+            "State the three elements found in a carbohydrate molecule.\nStep 1: Recall the elements making up carbohydrates\nAnswer: Carbon, hydrogen, and oxygen",
+            "State the additional element found in proteins that is not found in carbohydrates or fats.\nStep 1: Recall carbohydrates and fats contain only carbon, hydrogen, and oxygen\nStep 2: Recall proteins contain an extra element\nAnswer: Nitrogen",
+            "Explain why carbon is uniquely suited to forming the complex molecules needed for life.\nStep 1: Recall carbon can form four strong bonds, including with other carbon atoms\nStep 2: Consider how this allows long chains and complex structures\nAnswer: Carbon's ability to form four strong bonds, including chains with other carbon atoms, allows it to build the enormous variety of large, complex molecules (like proteins and DNA) that living organisms require",
+            "Explain why fats provide more energy per gram than carbohydrates.\nStep 1: Recall fats are a more concentrated energy store than carbohydrates\nAnswer: Fats contain a higher proportion of energy-rich carbon-hydrogen bonds per gram than carbohydrates, making them a more concentrated energy source",
+            "Explain how carbon dioxide, an inorganic molecule, becomes part of complex organic molecules in living things.\nStep 1: Recall plants use carbon dioxide and water in photosynthesis\nStep 2: Recall this process builds glucose and other complex molecules\nAnswer: Through photosynthesis, plants combine carbon dioxide and water using light energy to build glucose, which is then used to build other complex carbon-based molecules, allowing atmospheric carbon to enter living organisms and the food chain"
+          ],
+          "keyTerms": {
+            "carbohydrate": "A molecule made of carbon, hydrogen, and oxygen, serving as the main energy source for organisms",
+            "protein": "A molecule made of carbon, hydrogen, oxygen, and nitrogen, built from amino acids, essential for growth and repair",
+            "lipid (fat/oil)": "A molecule made of carbon, hydrogen, and oxygen, providing concentrated energy storage"
+          },
+          "quiz": [
+            {
+              "question": "Which elements make up a carbohydrate?",
+              "options": [
+                "Carbon, hydrogen, nitrogen",
+                "Carbon, hydrogen, oxygen",
+                "Carbon, oxygen, sulfur",
+                "Only carbon"
+              ],
+              "correct": 1,
+              "explanation": "Carbohydrates consist of carbon, hydrogen, and oxygen."
+            },
+            {
+              "question": "Which element is found in proteins but not typically in carbohydrates?",
+              "options": [
+                "Oxygen",
+                "Hydrogen",
+                "Nitrogen",
+                "Carbon"
+              ],
+              "correct": 2,
+              "explanation": "Proteins contain nitrogen (from their amino acid building blocks), unlike carbohydrates."
+            },
+            {
+              "question": "Why can carbon form such a huge variety of complex molecules?",
+              "options": [
+                "It can only form one bond",
+                "It can form four strong bonds, including chains with other carbon atoms",
+                "It never bonds with hydrogen",
+                "It is radioactive"
+              ],
+              "correct": 1,
+              "explanation": "Carbon's four bonding sites, including to other carbon atoms, allow immense structural variety."
+            },
+            {
+              "question": "Fats provide more energy per gram than carbohydrates because they:",
+              "options": [
+                "Contain more energy-rich bonds per gram",
+                "Contain less carbon",
+                "Are not really an energy source",
+                "Contain water only"
+              ],
+              "correct": 0,
+              "explanation": "Fats are a more energy-dense storage molecule than carbohydrates."
+            },
+            {
+              "question": "How does atmospheric carbon dioxide become part of living organisms?",
+              "options": [
+                "It cannot; CO2 stays in the air forever",
+                "Through photosynthesis, building glucose and other organic molecules",
+                "Only through animal respiration",
+                "It is absorbed directly by animals"
+              ],
+              "correct": 1,
+              "explanation": "Photosynthesis converts CO2 into organic molecules, introducing carbon into the food chain."
+            }
+          ]
+        },
+        {
+          "title": "Carbon in the Environment",
+          "content": "What is the carbon cycle, and why is it important? The carbon cycle describes how carbon continuously moves between the atmosphere, living organisms, oceans, and rocks — this constant recycling of carbon (rather than it being permanently locked away or lost) is essential for sustaining life, since carbon is a fundamental building block of all organic molecules. What are the main processes that move carbon through the environment? Photosynthesis removes carbon dioxide from the atmosphere, converting it into carbon-based molecules in plants; respiration (in plants, animals, and decomposers) releases carbon dioxide back into the atmosphere as organisms break down food for energy; combustion (burning fuels, whether wood or fossil fuels) releases stored carbon back into the atmosphere as carbon dioxide; and decomposition breaks down dead organisms, releasing some carbon back to the atmosphere and returning some to the soil. What are fossil fuels, and how do they relate to the carbon cycle? Fossil fuels (coal, oil, and natural gas) formed from the remains of ancient plants and animals over millions of years, effectively locking away carbon from the atmosphere for an extremely long time — burning these fuels for energy releases this long-stored carbon back into the atmosphere much faster than it was originally removed, disrupting the natural balance of the carbon cycle. How does human activity affect the carbon cycle, and what is the main consequence? Burning large amounts of fossil fuels and large-scale deforestation (which reduces the number of trees available to absorb carbon dioxide through photosynthesis) have significantly increased atmospheric carbon dioxide levels beyond the natural balance — since carbon dioxide is a greenhouse gas that traps heat, this contributes to global warming and climate change. What actions can help restore balance to the carbon cycle? Reducing fossil fuel use (switching to renewable energy sources), reforestation and afforestation (planting more trees to absorb more carbon dioxide), and reducing overall energy consumption all help reduce the amount of extra carbon dioxide being added to the atmosphere.",
+          "examples": [
+            "State one process that removes carbon dioxide from the atmosphere.\nStep 1: Recall which processes take carbon dioxide OUT of the air\nAnswer: Photosynthesis",
+            "State one process that releases carbon dioxide into the atmosphere.\nStep 1: Recall which processes add carbon dioxide back to the air\nAnswer: Respiration (or combustion, or decomposition)",
+            "Explain why burning fossil fuels disrupts the natural balance of the carbon cycle.\nStep 1: Recall fossil fuels formed from ancient organisms over millions of years, locking away carbon\nStep 2: Recall burning releases this carbon back much faster than it was originally stored\nAnswer: Fossil fuels store carbon that was removed from the atmosphere over millions of years, but burning them releases this same carbon back into the atmosphere in a tiny fraction of that time, adding far more carbon dioxide than natural processes can quickly reabsorb",
+            "Explain how deforestation contributes to rising atmospheric carbon dioxide levels.\nStep 1: Recall trees remove carbon dioxide from the air through photosynthesis\nStep 2: Consider the effect of having fewer trees to perform this process\nAnswer: With fewer trees available to absorb carbon dioxide through photosynthesis, more carbon dioxide remains in the atmosphere, contributing to its rising concentration",
+            "Explain how reforestation could help address rising carbon dioxide levels.\nStep 1: Recall photosynthesis removes carbon dioxide from the atmosphere\nStep 2: Consider the effect of planting more trees\nAnswer: Planting more trees increases the total amount of photosynthesis occurring, removing more carbon dioxide from the atmosphere and helping restore balance to the carbon cycle"
+          ],
+          "keyTerms": {
+            "carbon cycle": "The continuous movement of carbon between the atmosphere, living organisms, oceans, and rocks",
+            "fossil fuels": "Coal, oil, and natural gas formed from ancient organisms, storing carbon for millions of years",
+            "greenhouse gas": "A gas like carbon dioxide that traps heat in the atmosphere, contributing to global warming"
+          },
+          "quiz": [
+            {
+              "question": "Which process removes carbon dioxide from the atmosphere?",
+              "options": [
+                "Respiration",
+                "Combustion",
+                "Photosynthesis",
+                "Decomposition"
+              ],
+              "correct": 2,
+              "explanation": "Photosynthesis takes in carbon dioxide to build organic molecules."
+            },
+            {
+              "question": "Fossil fuels formed from:",
+              "options": [
+                "Rocks and minerals only",
+                "The remains of ancient plants and animals over millions of years",
+                "Recently fallen leaves",
+                "Ocean water"
+              ],
+              "correct": 1,
+              "explanation": "Fossil fuels formed from ancient organic matter compressed over geological timescales."
+            },
+            {
+              "question": "Why does burning fossil fuels increase atmospheric carbon dioxide so significantly?",
+              "options": [
+                "It releases long-stored carbon much faster than it was originally removed",
+                "It removes carbon dioxide from the air",
+                "Fossil fuels contain no carbon",
+                "It has no effect on the atmosphere"
+              ],
+              "correct": 0,
+              "explanation": "Burning releases carbon stored over millions of years in a very short time, overwhelming natural balance."
+            },
+            {
+              "question": "Deforestation affects the carbon cycle by:",
+              "options": [
+                "Increasing photosynthesis",
+                "Reducing the number of trees available to absorb carbon dioxide",
+                "Removing all carbon dioxide instantly",
+                "Having no measurable effect"
+              ],
+              "correct": 1,
+              "explanation": "Fewer trees means less carbon dioxide is absorbed through photosynthesis."
+            },
+            {
+              "question": "Which gas, released by burning fossil fuels, is a major contributor to global warming?",
+              "options": [
+                "Nitrogen",
+                "Carbon dioxide",
+                "Argon",
+                "Helium"
+              ],
+              "correct": 1,
+              "explanation": "Carbon dioxide is a greenhouse gas that traps heat, contributing to climate change."
+            }
+          ]
+        },
+        {
+          "title": "Chemical Bonding and Structure",
+          "content": "Why do atoms form chemical bonds with each other? Atoms bond together to achieve a more stable, lower-energy arrangement of electrons — many atoms achieve this by gaining, losing, or sharing electrons to obtain a full outer electron shell, similar to the stable arrangement of the noble gases. What is ionic bonding, and how does it form? Ionic bonding occurs typically between a metal and a non-metal, where the metal atom loses one or more electrons (becoming a positively charged ion) and the non-metal atom gains those electrons (becoming a negatively charged ion) — the resulting oppositely charged ions are strongly attracted to each other by electrostatic forces, forming a giant, rigid lattice structure, as seen in sodium chloride. What is covalent bonding, and how does it form? Covalent bonding occurs typically between two non-metal atoms, where atoms share one or more pairs of electrons, with both atoms attracted to the shared electrons, holding them together — this can form simple molecules (like water or oxygen, made of just a few atoms) or giant covalent structures (like diamond, where huge numbers of atoms are covalently bonded together in a continuous lattice). What is metallic bonding, and what unique properties does it explain? Metallic bonding involves positively charged metal ions arranged in a lattice, surrounded by a 'sea' of freely moving, delocalised electrons that are not attached to any single atom — this explains why metals conduct electricity well (the free electrons can carry an electric current) and why they can be bent and shaped without breaking (the layers of metal ions can slide past each other while the surrounding electron sea holds them together). How do the properties of ionic, covalent, and metallic substances typically differ? Ionic compounds typically have high melting points (due to the strong electrostatic forces in the rigid lattice) and conduct electricity only when molten or dissolved (when the ions are free to move); simple covalent molecules typically have low melting/boiling points (due to relatively weak forces between separate molecules) and don't conduct electricity; giant covalent structures typically have extremely high melting points due to the vast network of strong covalent bonds; and metals are generally malleable, ductile, and good conductors of both electricity and heat.",
+          "examples": [
+            "Classify the bonding in sodium chloride (formed from a metal and a non-metal).\nStep 1: Recall metal + non-metal typically forms ionic bonding\nAnswer: Ionic bonding",
+            "Classify the bonding in a water molecule (formed from two non-metals, hydrogen and oxygen).\nStep 1: Recall non-metal + non-metal typically forms covalent bonding\nAnswer: Covalent bonding",
+            "Explain why ionic compounds like sodium chloride have high melting points.\nStep 1: Recall ionic compounds form a rigid lattice of oppositely charged ions\nStep 2: Recall the electrostatic attraction between these ions is very strong\nAnswer: The strong electrostatic forces of attraction between the many oppositely charged ions throughout the rigid lattice require a large amount of energy to overcome, resulting in a high melting point",
+            "Explain why metals can conduct electricity.\nStep 1: Recall metallic bonding involves a 'sea' of delocalised electrons\nStep 2: Consider how these free electrons can move through the metal\nAnswer: The delocalised electrons in metallic bonding are free to move throughout the metal's structure, allowing them to carry an electric current",
+            "Explain why simple covalent molecules like oxygen (O2) typically have low melting and boiling points, compared to ionic compounds.\nStep 1: Recall the strong covalent bonds are WITHIN each molecule\nStep 2: Recall the forces BETWEEN separate molecules are much weaker\nAnswer: While the covalent bond within each O2 molecule is strong, the forces of attraction between separate O2 molecules are much weaker, requiring only a small amount of energy to overcome, resulting in a low melting/boiling point"
+          ],
+          "keyTerms": {
+            "ionic bonding": "Bonding between oppositely charged ions, typically formed between a metal and a non-metal",
+            "covalent bonding": "Bonding formed when atoms share electron pairs, typically between non-metals",
+            "metallic bonding": "Bonding involving a lattice of positive metal ions surrounded by delocalised electrons"
+          },
+          "quiz": [
+            {
+              "question": "Ionic bonding typically forms between:",
+              "options": [
+                "Two non-metals",
+                "A metal and a non-metal",
+                "Two metals",
+                "Only noble gases"
+              ],
+              "correct": 1,
+              "explanation": "Ionic bonding involves electron transfer, typically from a metal to a non-metal."
+            },
+            {
+              "question": "Covalent bonding involves atoms:",
+              "options": [
+                "Transferring electrons completely",
+                "Sharing pairs of electrons",
+                "Losing all their electrons",
+                "Gaining protons"
+              ],
+              "correct": 1,
+              "explanation": "Covalent bonds form through shared electron pairs between atoms."
+            },
+            {
+              "question": "Why do metals conduct electricity well?",
+              "options": [
+                "They have no electrons",
+                "Delocalised electrons are free to move and carry current",
+                "They are always liquid",
+                "They contain ions only, no electrons"
+              ],
+              "correct": 1,
+              "explanation": "The 'sea' of delocalised electrons in metallic bonding allows current to flow."
+            },
+            {
+              "question": "Why do ionic compounds typically have high melting points?",
+              "options": [
+                "Weak forces between molecules",
+                "Strong electrostatic attraction throughout a rigid ion lattice",
+                "They contain no charged particles",
+                "They are always gases"
+              ],
+              "correct": 1,
+              "explanation": "The strong attractive forces between oppositely charged ions require significant energy to overcome."
+            },
+            {
+              "question": "Simple covalent molecules typically have low melting points because:",
+              "options": [
+                "The covalent bonds within molecules are weak",
+                "The forces between separate molecules are relatively weak",
+                "They contain no bonds at all",
+                "They are always solids"
+              ],
+              "correct": 1,
+              "explanation": "While intramolecular covalent bonds are strong, the forces between separate molecules are much weaker and easily overcome."
+            }
+          ]
+        },
+        {
+          "title": "The Mole",
+          "content": "What is the mole, and why is it needed in chemistry? A mole is the chemistry unit used to count a very specific, enormous number of particles (atoms, molecules, or ions) — since individual atoms and molecules are far too small and numerous to count directly, the mole provides a practical bridge between the microscopic world of atoms and the macroscopic quantities (grams) that can actually be measured on a laboratory scale. What is Avogadro's number, and what does it represent? Avogadro's number is approximately 6.02 × 10²³, and it represents the number of particles contained in exactly one mole of any substance — one mole of any substance always contains this same enormous number of particles, regardless of what the substance is. What is relative atomic mass and relative molecular mass, and how are they used to calculate moles? The relative atomic mass (Ar) is the average mass of an atom of an element compared to 1/12th the mass of a carbon-12 atom (found on the periodic table for each element); the relative molecular/formula mass (Mr) is the sum of the relative atomic masses of all atoms in a molecule or formula unit. The number of moles in a given mass of substance is calculated as: moles = mass (g) ÷ relative molecular/atomic mass (Mr or Ar). How is the mole concept used to work out the amounts of reactants and products in a chemical reaction? A balanced chemical equation shows the mole ratio in which reactants combine and products form — for example, in the equation 2H2 + O2 → 2H2O, 2 moles of hydrogen react with 1 mole of oxygen to produce 2 moles of water, and this ratio lets chemists calculate exactly how much of each substance is needed or produced in a reaction. Why is the mole concept essential in real-world chemistry applications? It allows precise, scaled-up calculations for manufacturing chemicals industrially, preparing solutions of an exact concentration, and determining exact quantities of reactants needed for a reaction to proceed efficiently without wasting materials.",
+          "examples": [
+            "Find the number of moles in 22g of a substance with relative molecular mass 44.\nStep 1: Use moles = mass/Mr\nStep 2: Substitute: 22÷44\nAnswer: 0.5 moles",
+            "Find the mass of 3 moles of a substance with relative molecular mass 18.\nStep 1: Rearrange moles = mass/Mr to mass = moles × Mr\nStep 2: Substitute: 3×18\nAnswer: 54g",
+            "Find the relative molecular mass of water (H2O), given Ar(H)=1 and Ar(O)=16.\nStep 1: Add the atomic masses of all atoms in the formula: (2×1)+16\nAnswer: Mr(H2O) = 18",
+            "State how many particles are contained in 2 moles of any substance, using Avogadro's number.\nStep 1: Recall 1 mole contains 6.02×10²³ particles\nStep 2: Multiply by 2\nAnswer: 2 × 6.02×10²³ = 1.204×10²⁴ particles",
+            "In the reaction 2H2 + O2 → 2H2O, state how many moles of oxygen are needed to react completely with 4 moles of hydrogen.\nStep 1: Recall the mole ratio from the balanced equation: 2 moles H2 : 1 mole O2\nStep 2: Scale this ratio up for 4 moles of H2\nAnswer: 2 moles of oxygen are needed (since 4 is double 2, the oxygen required is also doubled: 1×2=2)"
+          ],
+          "keyTerms": {
+            "mole": "The chemistry unit for counting a fixed, enormous number of particles (atoms, molecules, or ions)",
+            "Avogadro's number": "Approximately 6.02 × 10²³, the number of particles in one mole of any substance",
+            "relative molecular mass": "The sum of the relative atomic masses of all atoms in a molecule or formula unit"
+          },
+          "quiz": [
+            {
+              "question": "Find the number of moles in 32g of a substance with relative molecular mass 16.",
+              "options": [
+                "0.5",
+                "2",
+                "16",
+                "48"
+              ],
+              "correct": 1,
+              "explanation": "Moles = mass/Mr = 32÷16 = 2."
+            },
+            {
+              "question": "Avogadro's number is approximately:",
+              "options": [
+                "6.02 × 10²³",
+                "3.14",
+                "100",
+                "1000"
+              ],
+              "correct": 0,
+              "explanation": "Avogadro's number, 6.02×10²³, is the number of particles in one mole of a substance."
+            },
+            {
+              "question": "Find the relative molecular mass of CO2, given Ar(C)=12 and Ar(O)=16.",
+              "options": [
+                "28",
+                "44",
+                "38",
+                "16"
+              ],
+              "correct": 1,
+              "explanation": "Mr(CO2) = 12 + (2×16) = 12+32 = 44."
+            },
+            {
+              "question": "Find the mass of 2 moles of a substance with Mr=20.",
+              "options": [
+                "10g",
+                "22g",
+                "40g",
+                "0.1g"
+              ],
+              "correct": 2,
+              "explanation": "Mass = moles × Mr = 2×20 = 40g."
+            },
+            {
+              "question": "In 2H2 + O2 → 2H2O, how many moles of water form from 6 moles of hydrogen reacting completely?",
+              "options": [
+                "3 moles",
+                "6 moles",
+                "12 moles",
+                "2 moles"
+              ],
+              "correct": 1,
+              "explanation": "The ratio of H2 to H2O is 2:2 (1:1), so 6 moles of H2 produces 6 moles of H2O."
+            }
+          ]
+        },
+        {
+          "title": "Chemical Reaction Rates",
+          "content": "What is meant by the 'rate' of a chemical reaction? The rate of a reaction describes how quickly reactants are converted into products — a fast reaction reaches completion in a short time (like an explosion), while a slow reaction takes much longer (like iron rusting). What factors affect the rate of a chemical reaction? Concentration (higher concentration of reactants means more particles in a given space, leading to more frequent collisions and a faster reaction); temperature (higher temperature gives particles more kinetic energy, so they move and collide faster and with more force, increasing reaction rate significantly); surface area (breaking a solid reactant into smaller pieces increases the total surface area exposed, allowing more collisions to happen at once); and the presence of a catalyst (a substance that speeds up a reaction without being permanently used up itself). What is collision theory, and how does it explain reaction rates? Collision theory states that for a chemical reaction to occur, reactant particles must collide with each other with sufficient energy (called the activation energy) and in the correct orientation — factors that increase either the frequency of collisions or the energy of those collisions will increase the overall reaction rate. How does a catalyst speed up a reaction without being consumed? A catalyst provides an alternative reaction pathway with a lower activation energy, meaning more particle collisions have enough energy to successfully react — since the catalyst itself is regenerated at the end of the reaction, only a small amount is needed and it can be used repeatedly. How can the rate of a reaction be measured experimentally? By measuring how quickly a reactant is used up or a product is formed over time — common methods include timing how long it takes for a set volume of gas to be produced, measuring the decreasing mass of a reaction mixture as gas escapes, or timing how long it takes for a solution to become cloudy enough to obscure a mark viewed through it.",
+          "examples": [
+            "Predict the effect on reaction rate of increasing the temperature of a reaction mixture.\nStep 1: Recall higher temperature gives particles more kinetic energy\nStep 2: Recall this leads to more frequent, more energetic collisions\nAnswer: The reaction rate increases, since particles move faster and collide more often and more energetically",
+            "Predict the effect on reaction rate of crushing a solid reactant into a powder before reacting it, compared to using it as a single large lump.\nStep 1: Recall smaller pieces have a much greater total surface area\nStep 2: Recall a greater surface area allows more collisions to occur simultaneously\nAnswer: The reaction rate increases, since the powdered solid has a much greater surface area exposed for collisions with the other reactant",
+            "Explain, using collision theory, why increasing the concentration of a reactant increases the reaction rate.\nStep 1: Recall a higher concentration means more particles in the same volume\nStep 2: Recall more particles close together leads to more frequent collisions\nAnswer: A higher concentration packs more reactant particles into the same volume, increasing the frequency of collisions between particles and therefore increasing the reaction rate",
+            "Explain why a catalyst can be used repeatedly without needing to be replaced.\nStep 1: Recall a catalyst provides an alternative reaction pathway\nStep 2: Recall the catalyst itself is not permanently used up in the reaction\nAnswer: The catalyst is regenerated at the end of the reaction (it is not consumed), so the same small amount can continue speeding up the reaction repeatedly",
+            "Describe one experimental method to measure how quickly a gas-producing reaction proceeds.\nStep 1: Recall methods that track gas production over time\nAnswer: Measuring how much gas volume is collected in a syringe or inverted measuring cylinder at regular time intervals, or timing how long it takes to collect a set volume of gas"
+          ],
+          "keyTerms": {
+            "collision theory": "The idea that reactant particles must collide with enough energy and correct orientation to react",
+            "activation energy": "The minimum energy needed for a collision between particles to result in a reaction",
+            "catalyst": "A substance that speeds up a reaction without being permanently used up itself"
+          },
+          "quiz": [
+            {
+              "question": "Increasing temperature generally __ the rate of a reaction.",
+              "options": [
+                "Decreases",
+                "Increases",
+                "Has no effect on",
+                "Reverses"
+              ],
+              "correct": 1,
+              "explanation": "Higher temperature increases particle energy and collision frequency, speeding up the reaction."
+            },
+            {
+              "question": "Why does crushing a solid into a powder speed up a reaction?",
+              "options": [
+                "It removes all the solid",
+                "It increases the surface area available for collisions",
+                "It decreases temperature",
+                "It has no effect"
+              ],
+              "correct": 1,
+              "explanation": "More surface area means more contact points for reactant collisions to occur."
+            },
+            {
+              "question": "According to collision theory, a reaction occurs when particles collide with:",
+              "options": [
+                "Any amount of energy, regardless of orientation",
+                "Sufficient energy and correct orientation",
+                "No energy at all",
+                "Only at very low temperatures"
+              ],
+              "correct": 1,
+              "explanation": "Successful reactions require both enough energy (activation energy) and proper collision orientation."
+            },
+            {
+              "question": "A catalyst increases reaction rate by:",
+              "options": [
+                "Being permanently consumed in the reaction",
+                "Providing an alternative pathway with lower activation energy",
+                "Increasing the reactants' mass",
+                "Removing all reactants"
+              ],
+              "correct": 1,
+              "explanation": "Catalysts lower the activation energy needed, without being used up themselves."
+            },
+            {
+              "question": "Increasing the concentration of a reactant increases reaction rate because it:",
+              "options": [
+                "Reduces the number of particles",
+                "Increases the frequency of particle collisions",
+                "Removes all catalysts",
+                "Has no effect on collisions"
+              ],
+              "correct": 1,
+              "explanation": "More particles in the same volume leads to more frequent collisions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "S4",
+      "lessons": [
+        {
+          "title": "Oxidation, Reduction, Reactivity Series and Electrochemistry",
+          "content": "What are oxidation and reduction, in simple terms? Oxidation is the loss of electrons by a substance (or the gain of oxygen, or loss of hydrogen); reduction is the gain of electrons by a substance (or the loss of oxygen, or gain of hydrogen) — these two processes always happen together in a single reaction, called a redox reaction, since electrons lost by one substance must be gained by another. What is the reactivity series, and what does it show? The reactivity series ranks metals in order of how readily they react (lose electrons) — from most reactive (like potassium and sodium) to least reactive (like gold and platinum) — a more reactive metal can displace a less reactive metal from its compound in a displacement reaction, since the more reactive metal more readily loses its electrons. How can the reactivity series be used to predict displacement reactions? If a more reactive metal is placed in a solution containing ions of a less reactive metal, the more reactive metal will displace the less reactive one from the solution, for example: zinc + copper sulfate solution → zinc sulfate solution + copper (since zinc is more reactive than copper). What is an electrochemical cell, and how does it generate electricity? An electrochemical (voltaic) cell generates an electric current from a spontaneous redox reaction, typically using two different metals (electrodes) placed in a solution containing their ions (an electrolyte) — the more reactive metal loses electrons (is oxidised) and these electrons flow through an external wire to the less reactive metal, generating a current; the size of the voltage produced depends on the difference in reactivity between the two metals used. What is electrolysis, and what is it used for? Electrolysis uses an electric current to force a non-spontaneous chemical reaction to occur, breaking down an ionic compound (in molten form or dissolved in water) into its elements — positive ions move to the negative electrode (cathode) and are reduced (gain electrons), while negative ions move to the positive electrode (anode) and are oxidised (lose electrons); electrolysis is used industrially to extract reactive metals (like aluminium) from their ores, and to electroplate objects with a thin protective or decorative metal layer.",
+          "examples": [
+            "In the reaction Zn + CuSO4 → ZnSO4 + Cu, identify which substance is oxidised and which is reduced.\nStep 1: Recall oxidation is loss of electrons, reduction is gain of electrons\nStep 2: Recall zinc atoms become zinc ions (losing electrons), while copper ions become copper atoms (gaining electrons)\nAnswer: Zinc is oxidised (loses electrons); copper ions are reduced (gain electrons)",
+            "Using the reactivity series, predict whether magnesium can displace iron from iron sulfate solution.\nStep 1: Recall magnesium is more reactive than iron\nStep 2: Recall a more reactive metal can displace a less reactive one from its compound\nAnswer: Yes, magnesium will displace iron from iron sulfate solution, since magnesium is more reactive than iron",
+            "Explain why an electrochemical cell made from magnesium and copper produces a higher voltage than one made from zinc and copper.\nStep 1: Recall voltage depends on the difference in reactivity between the two metals\nStep 2: Recall magnesium is more reactive than zinc\nAnswer: Since magnesium is further from copper in the reactivity series than zinc is, the larger reactivity difference between magnesium and copper produces a higher voltage than the smaller difference between zinc and copper",
+            "During the electrolysis of molten lead bromide, state which electrode the positive lead ions move toward, and what happens to them there.\nStep 1: Recall positive ions move toward the negative electrode (cathode)\nStep 2: Recall they are reduced (gain electrons) at the cathode\nAnswer: The lead ions move to the cathode, where they gain electrons (are reduced) to form liquid lead metal",
+            "Explain why electrolysis is used to extract aluminium from its ore, rather than a simpler method like heating with carbon.\nStep 1: Recall aluminium is a very reactive metal\nStep 2: Consider that highly reactive metals cannot be easily displaced by carbon\nAnswer: Aluminium is too reactive to be displaced from its ore by carbon (carbon cannot reduce it), so electrolysis, which uses electrical energy to force the reduction, is needed instead"
+          ],
+          "keyTerms": {
+            "oxidation": "The loss of electrons by a substance (or gain of oxygen)",
+            "reduction": "The gain of electrons by a substance (or loss of oxygen)",
+            "reactivity series": "A ranking of metals by how readily they react (lose electrons)",
+            "electrolysis": "Using an electric current to force the breakdown of an ionic compound into its elements"
+          },
+          "quiz": [
+            {
+              "question": "Oxidation is defined as:",
+              "options": [
+                "The gain of electrons",
+                "The loss of electrons",
+                "No change in electrons",
+                "The gain of protons"
+              ],
+              "correct": 1,
+              "explanation": "Oxidation specifically means losing electrons (or gaining oxygen)."
+            },
+            {
+              "question": "In a displacement reaction, a more reactive metal will:",
+              "options": [
+                "Be displaced by a less reactive metal",
+                "Displace a less reactive metal from its compound",
+                "Have no effect at all",
+                "Always dissolve completely without reacting"
+              ],
+              "correct": 1,
+              "explanation": "A more reactive metal readily loses electrons, displacing a less reactive metal from its compound."
+            },
+            {
+              "question": "In an electrochemical cell, electrons flow from the:",
+              "options": [
+                "Less reactive metal to the more reactive metal",
+                "More reactive metal to the less reactive metal",
+                "Electrolyte directly to the air",
+                "Nowhere; no current flows"
+              ],
+              "correct": 1,
+              "explanation": "The more reactive metal is oxidised, releasing electrons that flow to the less reactive metal."
+            },
+            {
+              "question": "During electrolysis, positive ions move toward the:",
+              "options": [
+                "Anode (positive electrode)",
+                "Cathode (negative electrode)",
+                "They don't move at all",
+                "Both electrodes equally"
+              ],
+              "correct": 1,
+              "explanation": "Positive ions are attracted to the negative electrode (cathode), where they are reduced."
+            },
+            {
+              "question": "Why is electrolysis used to extract aluminium rather than heating with carbon?",
+              "options": [
+                "Aluminium is too reactive to be displaced by carbon",
+                "Aluminium doesn't exist in ores",
+                "Carbon is too expensive",
+                "Electrolysis is always cheaper"
+              ],
+              "correct": 0,
+              "explanation": "Aluminium's high reactivity means carbon cannot reduce it, so electrolysis is required instead."
+            }
+          ]
+        },
+        {
+          "title": "Energy Changes During Chemical Reactions",
+          "content": "What is the difference between an exothermic and an endothermic reaction? An exothermic reaction releases energy (usually as heat) to the surroundings, causing the temperature of the surroundings to rise — examples include combustion (burning), respiration, and neutralisation reactions; an endothermic reaction absorbs energy from the surroundings, causing the temperature of the surroundings to fall — examples include photosynthesis and the dissolving of certain salts (like ammonium nitrate) in water. Why do chemical reactions involve energy changes at all? Breaking existing chemical bonds in the reactants requires an input of energy, while forming new chemical bonds in the products releases energy — whether a reaction is overall exothermic or endothermic depends on whether more energy is released forming new bonds than was needed to break the old ones (exothermic), or vice versa (endothermic). What is an energy level diagram, and what does it show? An energy level diagram plots the energy of reactants and products, with an arrow indicating the direction and size of the overall energy change (the difference in height between the reactants' and products' energy levels) — for an exothermic reaction, the products have lower energy than the reactants (energy was released); for an endothermic reaction, the products have higher energy than the reactants (energy was absorbed). What is activation energy on an energy level diagram? Activation energy is the minimum extra energy needed to start a reaction, shown as the initial 'hump' or barrier the reactants must first overcome before the reaction can proceed to form products, regardless of whether the overall reaction is exothermic or endothermic. What are some practical applications of exothermic and endothermic reactions? Exothermic reactions are used in self-heating cans (for food or drinks) and hand warmers; endothermic reactions are used in instant cold packs (for treating sports injuries), which absorb heat from the surrounding area when activated.",
+          "examples": [
+            "A reaction causes the surrounding temperature to rise noticeably. Classify it as exothermic or endothermic.\nStep 1: Recall exothermic reactions release heat, raising surrounding temperature\nAnswer: Exothermic",
+            "A reaction causes the surrounding temperature to fall noticeably. Classify it as exothermic or endothermic.\nStep 1: Recall endothermic reactions absorb heat, lowering surrounding temperature\nAnswer: Endothermic",
+            "On an energy level diagram for an exothermic reaction, state whether the products are higher or lower in energy than the reactants.\nStep 1: Recall exothermic reactions release energy\nStep 2: Consider what this means for the products' final energy level\nAnswer: The products are lower in energy than the reactants, since energy was released to the surroundings",
+            "Explain why an instant cold pack, used to treat a sports injury, feels cold when activated.\nStep 1: Recall cold packs use an endothermic reaction\nStep 2: Recall this type of reaction absorbs heat from its surroundings\nAnswer: The chemical reaction inside the cold pack is endothermic, absorbing heat energy from the surrounding area (including the injured body part), which makes it feel cold",
+            "Explain what activation energy represents on an energy level diagram, for both exothermic and endothermic reactions.\nStep 1: Recall activation energy is needed to start any reaction, regardless of overall energy change\nStep 2: Consider it as an initial barrier that must be overcome\nAnswer: Activation energy is the initial energy barrier ('hump') that reactants must overcome before a reaction can proceed, present in both exothermic and endothermic reactions, even though the overall energy change differs between them"
+          ],
+          "keyTerms": {
+            "exothermic reaction": "A reaction that releases energy to the surroundings, raising their temperature",
+            "endothermic reaction": "A reaction that absorbs energy from the surroundings, lowering their temperature",
+            "activation energy": "The minimum energy needed to start a reaction, shown as an initial barrier on an energy diagram"
+          },
+          "quiz": [
+            {
+              "question": "An exothermic reaction:",
+              "options": [
+                "Absorbs energy, cooling the surroundings",
+                "Releases energy, warming the surroundings",
+                "Has no energy change at all",
+                "Only occurs in solids"
+              ],
+              "correct": 1,
+              "explanation": "Exothermic reactions release energy to the surroundings, raising the temperature."
+            },
+            {
+              "question": "In an endothermic reaction's energy level diagram, the products are:",
+              "options": [
+                "Lower in energy than the reactants",
+                "Higher in energy than the reactants",
+                "Exactly equal in energy to the reactants",
+                "Not shown on the diagram"
+              ],
+              "correct": 1,
+              "explanation": "Endothermic reactions absorb energy, so the products end up at a higher energy level than the reactants."
+            },
+            {
+              "question": "Combustion (burning) is an example of:",
+              "options": [
+                "An endothermic reaction",
+                "An exothermic reaction",
+                "Neither type",
+                "A reaction with no energy change"
+              ],
+              "correct": 1,
+              "explanation": "Combustion releases significant heat energy, making it exothermic."
+            },
+            {
+              "question": "Activation energy represents:",
+              "options": [
+                "The total energy released by a reaction",
+                "The minimum energy needed to start a reaction",
+                "The mass of the reactants",
+                "The final temperature of the reaction"
+              ],
+              "correct": 1,
+              "explanation": "Activation energy is the initial energy barrier that must be overcome for a reaction to proceed."
+            },
+            {
+              "question": "An instant cold pack relies on which type of reaction?",
+              "options": [
+                "Exothermic",
+                "Endothermic",
+                "No chemical reaction at all",
+                "Nuclear reaction"
+              ],
+              "correct": 1,
+              "explanation": "Cold packs use an endothermic reaction, which absorbs heat and cools the surrounding area."
+            }
+          ]
+        },
+        {
+          "title": "Chemicals for Consumers",
+          "content": "What are some common household chemical products, and what are their main active ingredients? Soaps and detergents (containing surfactant molecules that have a water-loving end and a grease-loving end, allowing them to lift grease and dirt away and let it be rinsed off with water); toothpaste (typically containing fluoride compounds, which help strengthen tooth enamel and prevent decay); and bleach (usually containing sodium hypochlorite, a strong oxidising agent that kills germs and removes stains). What is the difference between soap and synthetic detergents? Traditional soap is made from natural fats or oils reacted with an alkali (a process called saponification); synthetic detergents are manufactured from petrochemicals and are generally more effective in hard water, since soap can react with the calcium and magnesium ions present in hard water to form an insoluble 'scum', while synthetic detergents generally do not. Why must consumers read and understand product labels on chemical products? Labels provide crucial safety information (like hazard warnings and correct storage instructions), correct usage instructions (like proper dilution or application methods), and ingredient lists — following these instructions correctly ensures the product works effectively and is used safely. What are food additives, and why are they used? Food additives are substances added to food to preserve it for longer (preservatives, preventing microbial growth and food spoilage), improve or maintain its flavour (flavourings and flavour enhancers), or improve its appearance (colourings) — while approved additives undergo safety testing, excessive consumption of certain additives is still generally discouraged as part of a healthy diet. Why is it important to store and dispose of household chemicals correctly? Many household chemicals (like bleach, drain cleaners, and pesticides) can be hazardous if mishandled, so correct storage (like keeping them away from children, in their original labelled containers, away from heat) and correct disposal (not simply pouring them down a drain or into open ground, which can contaminate water supplies) protect both people and the environment.",
+          "examples": [
+            "Explain how soap molecules are able to remove grease from a dirty plate when washed with water.\nStep 1: Recall soap molecules have a water-loving end and a grease-loving end\nStep 2: Consider how this dual nature helps lift grease away\nAnswer: The grease-loving end of the soap molecule attaches to the grease, while the water-loving end allows the whole grease droplet to be lifted away and rinsed off with water",
+            "Explain why synthetic detergents generally work better than soap in hard water.\nStep 1: Recall soap reacts with calcium/magnesium ions in hard water to form insoluble scum\nStep 2: Recall synthetic detergents generally don't react this way\nAnswer: Soap reacts with the calcium and magnesium ions present in hard water, forming an insoluble scum that reduces its cleaning effectiveness, while synthetic detergents generally don't react this way, working effectively even in hard water",
+            "Identify the main active ingredient commonly found in toothpaste that helps prevent tooth decay.\nStep 1: Recall which compound strengthens tooth enamel\nAnswer: Fluoride compounds",
+            "Explain why household bleach should never be mixed with other cleaning chemicals without checking their compatibility.\nStep 1: Recall bleach contains a strong oxidising agent\nStep 2: Recall certain combinations of chemicals can produce dangerous reactions or toxic gases\nAnswer: Bleach can react dangerously with certain other chemicals (like ammonia-based cleaners), producing toxic gases, so it should never be mixed with other cleaning products without confirming they are safe to combine",
+            "Explain why food preservatives are added to many packaged food products.\nStep 1: Recall preservatives prevent microbial growth\nStep 2: Consider the effect on the food's shelf life\nAnswer: Preservatives slow down or prevent the growth of microorganisms that would otherwise spoil the food, extending its shelf life and keeping it safe to eat for longer"
+          ],
+          "keyTerms": {
+            "surfactant": "A soap or detergent molecule with a water-loving end and a grease-loving end, used for cleaning",
+            "saponification": "The chemical process of making soap from fats/oils and an alkali",
+            "food additive": "A substance added to food to preserve it, improve its flavour, or improve its appearance"
+          },
+          "quiz": [
+            {
+              "question": "Soap molecules clean grease away because they have:",
+              "options": [
+                "Only a water-loving end",
+                "Only a grease-loving end",
+                "Both a water-loving end and a grease-loving end",
+                "Neither property"
+              ],
+              "correct": 2,
+              "explanation": "This dual nature allows soap to bind grease and let it be rinsed away with water."
+            },
+            {
+              "question": "Why do synthetic detergents often outperform soap in hard water?",
+              "options": [
+                "They dissolve calcium and magnesium completely",
+                "They don't form insoluble scum with hard water ions like soap does",
+                "They are less effective than soap",
+                "There is no real difference"
+              ],
+              "correct": 1,
+              "explanation": "Unlike soap, synthetic detergents generally don't react with hard water ions to form scum."
+            },
+            {
+              "question": "Fluoride is added to toothpaste mainly to:",
+              "options": [
+                "Add flavour only",
+                "Strengthen tooth enamel and prevent decay",
+                "Make it foam more",
+                "Change its colour"
+              ],
+              "correct": 1,
+              "explanation": "Fluoride compounds help protect tooth enamel from decay."
+            },
+            {
+              "question": "Food preservatives are added to food mainly to:",
+              "options": [
+                "Make food more colourful",
+                "Prevent microbial growth and extend shelf life",
+                "Increase the food's price",
+                "Remove all nutrients"
+              ],
+              "correct": 1,
+              "explanation": "Preservatives slow spoilage caused by microorganisms, extending how long food stays safe to eat."
+            },
+            {
+              "question": "Why should household chemicals be disposed of properly, not poured down a drain?",
+              "options": [
+                "It has no environmental impact",
+                "Improper disposal can contaminate water supplies",
+                "It makes the chemical disappear safely",
+                "Drains are designed for chemical waste"
+              ],
+              "correct": 1,
+              "explanation": "Pouring chemicals down drains or onto open ground can contaminate water sources and harm the environment."
+            }
+          ]
+        },
+        {
+          "title": "Nuclear Processes",
+          "content": "What is radioactivity, and why do some atomic nuclei undergo it? Radioactivity is the spontaneous emission of particles or energy from an unstable atomic nucleus, as it changes into a more stable configuration — this instability arises from having an unfavourable ratio of protons to neutrons in the nucleus. What are the three main types of radioactive emission, and how do their penetrating abilities differ? Alpha particles (relatively large and heavy, stopped by a sheet of paper or a few centimetres of air); beta particles (fast-moving electrons, more penetrating than alpha, stopped by a few millimetres of aluminium); and gamma rays (high-energy electromagnetic waves, the most penetrating, significantly reduced only by thick lead or concrete. What is half-life, and how is it used? Half-life is the time taken for half of the radioactive nuclei in a sample to decay — it is constant for a given isotope regardless of the sample's size, and is used practically in radiometric dating (estimating the age of ancient materials, like rocks or fossils, based on how much of a known radioactive isotope remains) and in medicine (choosing isotopes with an appropriate half-life for diagnostic or treatment purposes). What are some beneficial uses of radioactivity? In medicine, radioactive isotopes are used for diagnostic imaging and for treating cancer (radiotherapy, using radiation to destroy cancerous cells); in industry, radioactive sources are used to check the thickness of materials or detect flaws in welded joints; and in nuclear power stations, controlled nuclear fission reactions generate large amounts of electricity. What are the risks of radioactivity, and how are they managed? Radiation exposure can damage living cells and DNA, potentially causing radiation sickness or increasing cancer risk — risks are managed through shielding (using lead or thick concrete to block radiation), limiting exposure time, maximising distance from radioactive sources, and careful, secure storage and disposal of radioactive waste materials.",
+          "examples": [
+            "State which type of radioactive emission is stopped by just a sheet of paper.\nStep 1: Recall alpha particles are large, heavy, and easily stopped\nAnswer: Alpha particles",
+            "A radioactive sample with a half-life of 10 years starts with 200g of material. Find how much remains after 30 years.\nStep 1: Find the number of half-lives: 30÷10=3\nStep 2: Halve the amount three times: 200→100→50→25\nAnswer: 25g remains after 30 years",
+            "Explain why a doctor would choose a radioactive isotope with a short half-life for a diagnostic medical scan.\nStep 1: Recall a short half-life means the isotope decays away (becomes inactive) relatively quickly\nStep 2: Consider the benefit of reduced patient radiation exposure over time\nAnswer: A short half-life means the isotope's radioactivity quickly decreases after the scan, minimising the patient's total radiation exposure while still providing enough activity to complete the scan",
+            "Explain two ways a nuclear power plant worker can reduce their radiation exposure while working near radioactive material.\nStep 1: Recall exposure decreases with distance and with shielding\nAnswer: The worker can increase their distance from the radioactive source and use appropriate shielding (like thick lead or concrete), both of which reduce radiation exposure",
+            "Explain how radiotherapy uses radioactivity to help treat cancer.\nStep 1: Recall radiation can damage living cells\nStep 2: Consider how this can be directed specifically at cancerous cells\nAnswer: Radiotherapy carefully directs radiation at cancerous cells to damage and destroy them, while trying to minimise damage to surrounding healthy tissue"
+          ],
+          "keyTerms": {
+            "radioactivity": "The spontaneous emission of particles or energy from an unstable atomic nucleus",
+            "half-life": "The time taken for half of the radioactive nuclei in a sample to decay",
+            "radiotherapy": "The use of radiation to destroy cancerous cells as a medical treatment"
+          },
+          "quiz": [
+            {
+              "question": "Which type of radioactive emission is the most penetrating?",
+              "options": [
+                "Alpha particles",
+                "Beta particles",
+                "Gamma rays",
+                "They are all equally penetrating"
+              ],
+              "correct": 2,
+              "explanation": "Gamma rays require thick lead or concrete to significantly reduce them, making them the most penetrating."
+            },
+            {
+              "question": "A sample with half-life 5 years starts at 400g. How much remains after 15 years?",
+              "options": [
+                "200g",
+                "100g",
+                "50g",
+                "0g"
+              ],
+              "correct": 1,
+              "explanation": "15÷5=3 half-lives: 400→200→100→50g."
+            },
+            {
+              "question": "Radiotherapy uses radiation to:",
+              "options": [
+                "Grow healthy cells faster",
+                "Destroy cancerous cells",
+                "Cure all diseases instantly",
+                "Replace surgery entirely in all cases"
+              ],
+              "correct": 1,
+              "explanation": "Radiotherapy directs radiation to damage and destroy cancerous cells."
+            },
+            {
+              "question": "Which of these reduces a worker's radiation exposure?",
+              "options": [
+                "Standing closer to the source",
+                "Increasing distance from the source and using shielding",
+                "Removing all protective equipment",
+                "Spending more time near the source"
+              ],
+              "correct": 1,
+              "explanation": "Greater distance and proper shielding both significantly reduce radiation exposure."
+            },
+            {
+              "question": "Half-life is defined as the time taken for:",
+              "options": [
+                "All radioactive nuclei in a sample to decay",
+                "Half of the radioactive nuclei in a sample to decay",
+                "A sample to double in mass",
+                "Radioactivity to increase permanently"
+              ],
+              "correct": 1,
+              "explanation": "Half-life specifically refers to the time for half of the radioactive nuclei to decay."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

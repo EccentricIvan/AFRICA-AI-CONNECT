@@ -4,11 +4,10 @@ import 'app_colors.dart';
 class AppTheme {
   AppTheme._();
 
-  // Saira carries headings — a distinctive geometric display voice.
-  // PlusJakartaSans carries body copy — optimized for legibility on
-  // cheap, dim, low-DPI screens at small sizes.
-  static const _headingFont = 'Saira';
-  static const _bodyFont = 'PlusJakartaSans';
+  // Inter is the Home mockup system face (clean neo-grotesque).
+  // Bundled offline — never fetched at runtime.
+  static const _headingFont = 'Inter';
+  static const _bodyFont = 'Inter';
 
   static ThemeData get light {
     final base = ThemeData(
@@ -16,6 +15,14 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.light,
+        // fromSeed alone desaturates the brand into slate blue / grey /
+        // mauve; pin the logo's three stops so stock widgets stay on-brand.
+        primary: AppColors.primary,
+        onPrimary: Colors.white,
+        secondary: AppColors.brandViolet,
+        onSecondary: Colors.white,
+        tertiary: AppColors.accentCyan,
+        onTertiary: Colors.white,
         surface: AppColors.light.surface,
         onSurface: AppColors.light.textPrimary,
         onSurfaceVariant: AppColors.light.textSecondary,
@@ -24,6 +31,9 @@ class AppTheme {
       scaffoldBackgroundColor: Colors.transparent,
       hintColor: AppColors.light.textHint,
       dividerColor: AppColors.light.border,
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
     );
 
     final textTheme = base.textTheme.apply(
@@ -35,33 +45,53 @@ class AppTheme {
     return base.copyWith(
       textTheme: textTheme.copyWith(
         displayLarge: TextStyle(
-          fontFamily: _headingFont, fontSize: 32, fontWeight: FontWeight.w700,
-          color: AppColors.light.textPrimary, height: 1.15, letterSpacing: -0.5,
+          fontFamily: _headingFont,
+          fontSize: 32,
+          fontWeight: FontWeight.w700,
+          color: AppColors.light.textPrimary,
+          height: 1.15,
+          letterSpacing: -0.5,
         ),
         headlineLarge: TextStyle(
-          fontFamily: _headingFont, fontSize: 24, fontWeight: FontWeight.w700,
+          fontFamily: _headingFont,
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
           color: AppColors.light.textPrimary,
         ),
         headlineSmall: TextStyle(
-          fontFamily: _headingFont, fontSize: 18, fontWeight: FontWeight.w600,
+          fontFamily: _headingFont,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
           color: AppColors.light.textPrimary,
         ),
         titleLarge: TextStyle(
-          fontFamily: _headingFont, fontSize: 16, fontWeight: FontWeight.w600,
+          fontFamily: _headingFont,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
           color: AppColors.light.textPrimary,
         ),
         titleMedium: TextStyle(
-          fontFamily: _headingFont, fontSize: 15, fontWeight: FontWeight.w500,
+          fontFamily: _headingFont,
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
           color: AppColors.light.textPrimary,
         ),
         bodyLarge: TextStyle(
-          fontFamily: _bodyFont, fontSize: 16, color: AppColors.light.textSecondary, height: 1.6,
+          fontFamily: _bodyFont,
+          fontSize: 16,
+          color: AppColors.light.textSecondary,
+          height: 1.6,
         ),
         bodyMedium: TextStyle(
-          fontFamily: _bodyFont, fontSize: 14, color: AppColors.light.textSecondary, height: 1.5,
+          fontFamily: _bodyFont,
+          fontSize: 14,
+          color: AppColors.light.textSecondary,
+          height: 1.5,
         ),
         labelLarge: TextStyle(
-          fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w600,
+          fontFamily: _bodyFont,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
           color: AppColors.light.textPrimary,
         ),
       ),
@@ -71,7 +101,9 @@ class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
-          fontFamily: _headingFont, fontSize: 18, fontWeight: FontWeight.w700,
+          fontFamily: _headingFont,
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
           color: AppColors.light.textPrimary,
         ),
         iconTheme: IconThemeData(color: AppColors.light.textPrimary),
@@ -94,7 +126,9 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: TextStyle(
-            fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w600,
+            fontFamily: _bodyFont,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -105,7 +139,9 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: TextStyle(
-            fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w500,
+            fontFamily: _bodyFont,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
@@ -124,7 +160,11 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: AppColors.accent, width: 2),
         ),
-        hintStyle: TextStyle(fontFamily: _bodyFont, color: AppColors.light.textHint, fontSize: 15),
+        hintStyle: TextStyle(
+          fontFamily: _bodyFont,
+          color: AppColors.light.textHint,
+          fontSize: 15,
+        ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       navigationBarTheme: NavigationBarThemeData(
@@ -142,15 +182,41 @@ class AppTheme {
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return TextStyle(
-              fontFamily: _bodyFont, fontSize: 11, fontWeight: FontWeight.w600,
+              fontFamily: _bodyFont,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
               color: AppColors.accent,
             );
           }
-          return TextStyle(fontFamily: _bodyFont, fontSize: 11, color: AppColors.light.textHint);
+          return TextStyle(
+            fontFamily: _bodyFont,
+            fontSize: 11,
+            color: AppColors.light.textHint,
+          );
         }),
       ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: AppColors.light.surface,
+        selectedIconTheme: const IconThemeData(color: AppColors.accent),
+        unselectedIconTheme: IconThemeData(color: AppColors.light.textHint),
+        indicatorColor: AppColors.accent.withValues(alpha: 0.16),
+        labelType: NavigationRailLabelType.selected,
+        selectedLabelTextStyle: TextStyle(
+          fontFamily: _bodyFont,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AppColors.accent,
+        ),
+        unselectedLabelTextStyle: TextStyle(
+          fontFamily: _bodyFont,
+          fontSize: 12,
+          color: AppColors.light.textHint,
+        ),
+      ),
       dividerTheme: DividerThemeData(
-        color: AppColors.light.border, thickness: 1, space: 1,
+        color: AppColors.light.border,
+        thickness: 1,
+        space: 1,
       ),
     );
   }
@@ -164,6 +230,13 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.dark,
+        // Lighter tints of the same logo stops so they read on navy.
+        primary: AppColors.primaryLight,
+        onPrimary: AppColors.navy,
+        secondary: const Color(0xFF9A6BFF), // brandViolet, lighter
+        onSecondary: AppColors.navy,
+        tertiary: const Color(0xFF40BEF5), // brandCyan, lighter
+        onTertiary: AppColors.navy,
         surface: dt.surface,
         onSurface: dt.textPrimary,
         onSurfaceVariant: dt.textSecondary,
@@ -183,33 +256,53 @@ class AppTheme {
     return base.copyWith(
       textTheme: textTheme.copyWith(
         displayLarge: TextStyle(
-          fontFamily: _headingFont, fontSize: 32, fontWeight: FontWeight.w700,
-          color: dt.textPrimary, height: 1.15, letterSpacing: -0.5,
+          fontFamily: _headingFont,
+          fontSize: 32,
+          fontWeight: FontWeight.w700,
+          color: dt.textPrimary,
+          height: 1.15,
+          letterSpacing: -0.5,
         ),
         headlineLarge: TextStyle(
-          fontFamily: _headingFont, fontSize: 24, fontWeight: FontWeight.w700,
+          fontFamily: _headingFont,
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
           color: dt.textPrimary,
         ),
         headlineSmall: TextStyle(
-          fontFamily: _headingFont, fontSize: 18, fontWeight: FontWeight.w600,
+          fontFamily: _headingFont,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
           color: dt.textPrimary,
         ),
         titleLarge: TextStyle(
-          fontFamily: _headingFont, fontSize: 16, fontWeight: FontWeight.w600,
+          fontFamily: _headingFont,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
           color: dt.textPrimary,
         ),
         titleMedium: TextStyle(
-          fontFamily: _headingFont, fontSize: 15, fontWeight: FontWeight.w500,
+          fontFamily: _headingFont,
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
           color: dt.textPrimary,
         ),
         bodyLarge: TextStyle(
-          fontFamily: _bodyFont, fontSize: 16, color: dt.textSecondary, height: 1.6,
+          fontFamily: _bodyFont,
+          fontSize: 16,
+          color: dt.textSecondary,
+          height: 1.6,
         ),
         bodyMedium: TextStyle(
-          fontFamily: _bodyFont, fontSize: 14, color: dt.textSecondary, height: 1.5,
+          fontFamily: _bodyFont,
+          fontSize: 14,
+          color: dt.textSecondary,
+          height: 1.5,
         ),
         labelLarge: TextStyle(
-          fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w600,
+          fontFamily: _bodyFont,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
           color: dt.textPrimary,
         ),
       ),
@@ -219,7 +312,9 @@ class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
-          fontFamily: _headingFont, fontSize: 18, fontWeight: FontWeight.w700,
+          fontFamily: _headingFont,
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
           color: dt.textPrimary,
         ),
         iconTheme: IconThemeData(color: dt.textPrimary),
@@ -242,7 +337,9 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: const TextStyle(
-            fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w600,
+            fontFamily: _bodyFont,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -253,13 +350,15 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: const TextStyle(
-            fontFamily: _bodyFont, fontSize: 14, fontWeight: FontWeight.w500,
+            fontFamily: _bodyFont,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF1E2D42).withValues(alpha: 0.88),
+        fillColor: dt.iconWell.withValues(alpha: 0.88),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: dt.border),
@@ -290,15 +389,37 @@ class AppTheme {
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const TextStyle(
-              fontFamily: _bodyFont, fontSize: 11, fontWeight: FontWeight.w600,
+              fontFamily: _bodyFont,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
               color: AppColors.accent,
             );
           }
           return TextStyle(fontFamily: _bodyFont, fontSize: 11, color: dt.textHint);
         }),
       ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: dt.surface,
+        selectedIconTheme: const IconThemeData(color: AppColors.accent),
+        unselectedIconTheme: IconThemeData(color: dt.textHint),
+        indicatorColor: AppColors.accent.withValues(alpha: 0.22),
+        labelType: NavigationRailLabelType.selected,
+        selectedLabelTextStyle: const TextStyle(
+          fontFamily: _bodyFont,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AppColors.accent,
+        ),
+        unselectedLabelTextStyle: TextStyle(
+          fontFamily: _bodyFont,
+          fontSize: 12,
+          color: dt.textHint,
+        ),
+      ),
       dividerTheme: DividerThemeData(
-        color: dt.border, thickness: 1, space: 1,
+        color: dt.border,
+        thickness: 1,
+        space: 1,
       ),
     );
   }

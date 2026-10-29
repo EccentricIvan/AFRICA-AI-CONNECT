@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 430" role="img" aria-label="Nutrition: green plants make food; all animals consume food. Herbivores, carnivores and omnivores are heterotrophs. Nutrient classes are a separate idea.">
+<rect width="800" height="430" rx="18" fill="#f5f9ff"/>
+<text x="400" y="31" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#183153">Nutrition: two different questions</text>
+<rect x="20" y="48" width="760" height="250" rx="14" fill="white" stroke="#b8cde6"/>
+<text x="40" y="75" font-family="Arial" font-size="18" font-weight="bold" fill="#183153">1. How does the organism get its food?</text>
+<rect x="40" y="90" width="300" height="185" rx="12" fill="#e5f5e6"/>
+<circle cx="79" cy="129" r="19" fill="#f8d54b"/>
+<path d="M170 229 L170 144 M170 177 Q112 130 136 121 Q181 128 170 177 M170 160 Q214 113 226 131 Q223 166 170 160" fill="#43a95b" stroke="#22783c" stroke-width="3"/>
+<path d="M170 229 l-16 18 m16-18 l14 18" fill="none" stroke="#8b653b" stroke-width="3"/>
+<text x="241" y="127" text-anchor="middle" font-family="Arial" font-size="15" font-weight="bold" fill="#226b36">AUTOTROPH</text>
+<text x="241" y="149" text-anchor="middle" font-family="Arial" font-size="14" fill="#226b36">Makes its own food</text>
+<text x="190" y="256" text-anchor="middle" font-family="Arial" font-size="13" fill="#226b36">Green plants: light + water + CO2 → sugars</text>
+<path d="M100 133 l35 9" stroke="#d9a300" stroke-width="3"/><polygon points="139,143 129,135 128,145" fill="#d9a300"/>
+<rect x="357" y="90" width="403" height="185" rx="12" fill="#e8eefc"/>
+<text x="558" y="119" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#274778">HETEROTROPHS</text>
+<text x="558" y="141" text-anchor="middle" font-family="Arial" font-size="14" fill="#274778">Obtain food by feeding on other organisms</text>
+<rect x="370" y="157" width="120" height="93" rx="9" fill="#fff"/><rect x="498" y="157" width="120" height="93" rx="9" fill="#fff"/><rect x="626" y="157" width="120" height="93" rx="9" fill="#fff"/>
+<text x="430" y="181" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#274778">Herbivore</text><text x="430" y="204" text-anchor="middle" font-family="Arial" font-size="14" fill="#274778">Goat / deer</text><text x="430" y="228" text-anchor="middle" font-family="Arial" font-size="13" fill="#274778">Eats plants</text>
+<text x="558" y="181" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#274778">Carnivore</text><text x="558" y="204" text-anchor="middle" font-family="Arial" font-size="14" fill="#274778">Lion</text><text x="558" y="228" text-anchor="middle" font-family="Arial" font-size="13" fill="#274778">Eats animals</text>
+<text x="686" y="181" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#274778">Omnivore</text><text x="686" y="204" text-anchor="middle" font-family="Arial" font-size="14" fill="#274778">Human</text><text x="686" y="228" text-anchor="middle" font-family="Arial" font-size="13" fill="#274778">Eats both</text>
+<text x="400" y="326" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#183153">2. Which nutrients are in the food?</text>
+<rect x="20" y="342" width="760" height="65" rx="12" fill="#fff2d9" stroke="#e5c980"/>
+<text x="400" y="369" text-anchor="middle" font-family="Arial" font-size="15" fill="#6f4c15">Carbohydrates • Proteins • Fats • Vitamins • Minerals • Fibre • Water</text>
+<text x="400" y="393" text-anchor="middle" font-family="Arial" font-size="13" fill="#6f4c15">These are nutrient classes, not modes of nutrition.</text>
+</svg>

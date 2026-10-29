@@ -1,0 +1,14 @@
+# Copy this file to android/key.properties and fill in your values.
+# key.properties is gitignored — NEVER commit the real file or the keystore.
+#
+# Generate the keystore once (needs JDK / Android Studio installed):
+#   keytool -genkey -v -keystore C:\Users\LENOVO\otic-release.jks ^
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias otic
+#
+# Then build the signed APK:
+#   flutter build apk --release
+
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=otic
+storeFile=C:/Users/LENOVO/otic-release.jks

@@ -1,0 +1,298 @@
+{
+  "subject": "physics",
+  "title": "Physics (S1–S4)",
+  "note": "Each app lesson becomes a topic; each sub-topic names the Wikipedia article that gives its reference text, pictures and clips.",
+  "topics": {
+    "Introduction to Physics": [
+      ["What physics is", "Physics"],
+      ["The scientific method", "Scientific method"],
+      ["Safety in the laboratory", "Laboratory safety"]
+    ],
+    "Measurements in Physics": [
+      ["Physical quantities", "Physical quantity"],
+      ["SI units", "International System of Units"],
+      ["Vernier calipers", "Calipers"],
+      ["Micrometer screw gauge", "Micrometer (device)"],
+      ["Measuring volume", "Graduated cylinder"],
+      ["Density", "Density"]
+    ],
+    "States of Matter": [
+      ["Solids, liquids and gases", "State of matter"],
+      ["The kinetic theory of matter", "Kinetic theory of gases"],
+      ["Brownian motion", "Brownian motion"],
+      ["Diffusion", "Diffusion"]
+    ],
+    "The Effects of Forces": [
+      ["Force", "Force"],
+      ["Friction", "Friction"],
+      ["Cohesion and adhesion", "Adhesion"],
+      ["Surface tension", "Surface tension"],
+      ["Capillary action", "Capillary action"]
+    ],
+    "Temperature Measurements": [
+      ["Temperature", "Temperature"],
+      ["Thermometers", "Thermometer"],
+      ["The clinical thermometer", "Medical thermometer"],
+      ["Temperature scales", "Kelvin"]
+    ],
+    "Heat Transfer": [
+      ["Conduction", "Thermal conduction"],
+      ["Convection", "Convection"],
+      ["Radiation", "Thermal radiation"],
+      ["The vacuum flask", "Vacuum flask"]
+    ],
+    "Expansion of Solids, Liquids and Gases": [
+      ["Thermal expansion", "Thermal expansion"],
+      ["The bimetallic strip", "Bimetallic strip"],
+      ["Expansion gaps", "Expansion joint"],
+      ["Gas laws", "Gas laws"]
+    ],
+    "Nature of Light: Reflection at Plane Surfaces": [
+      ["Light", "Light"],
+      ["Rectilinear propagation and shadows", "Shadow"],
+      ["The pinhole camera", "Pinhole camera"],
+      ["Eclipses", "Solar eclipse"],
+      ["Reflection", "Reflection (physics)"],
+      ["Plane mirrors", "Plane mirror"],
+      ["The periscope", "Periscope"]
+    ],
+    "Work, Energy and Power": [
+      ["Work", "Work (physics)"],
+      ["Energy", "Energy"],
+      ["Kinetic energy", "Kinetic energy"],
+      ["Potential energy", "Potential energy"],
+      ["Conservation of energy", "Conservation of energy"],
+      ["Power", "Power (physics)"],
+      ["Simple machines", "Simple machine"],
+      ["Pulleys", "Pulley"],
+      ["Inclined planes", "Inclined plane"]
+    ],
+    "Turning Effect of Forces, Centre of Gravity and Stability": [
+      ["Moments (torque)", "Torque"],
+      ["Levers", "Lever"],
+      ["Centre of gravity", "Center of mass"],
+      ["Equilibrium and stability", "Mechanical equilibrium"]
+    ],
+    "Pressure in Solids and Fluids": [
+      ["Pressure", "Pressure"],
+      ["Atmospheric pressure", "Atmospheric pressure"],
+      ["Barometers", "Barometer"],
+      ["Pascal's principle and hydraulics", "Pascal's law"],
+      ["Hydraulic machines", "Hydraulic press"],
+      ["Measuring pressure", "Pressure measurement"],
+      ["The siphon", "Siphon"]
+    ],
+    "Mechanical Properties of Materials; Hooke's Law": [
+      ["Hooke's law", "Hooke's law"],
+      ["Elasticity", "Elasticity (physics)"],
+      ["Stress and strain", "Stress–strain curve"],
+      ["The spring balance", "Spring scale"]
+    ],
+    "Reflection of Light by Curved Surfaces": [
+      ["Curved mirrors", "Curved mirror"],
+      ["Parabolic reflectors", "Parabolic reflector"]
+    ],
+    "Magnets and Magnetic Field": [
+      ["Magnets", "Magnet"],
+      ["Magnetic fields", "Magnetic field"],
+      ["Magnetic domains", "Magnetic domain"],
+      ["The compass", "Compass"],
+      ["The Earth's magnetic field", "Earth's magnetic field"]
+    ],
+    "Electrostatics": [
+      ["Static electricity", "Static electricity"],
+      ["Charging by rubbing", "Triboelectric effect"],
+      ["The gold-leaf electroscope", "Electroscope"],
+      ["Lightning", "Lightning"],
+      ["Lightning conductors", "Lightning rod"]
+    ],
+    "The Solar System": [
+      ["The Solar System", "Solar System"],
+      ["The Sun", "Sun"],
+      ["The Moon", "Moon"],
+      ["Phases of the Moon", "Lunar phase"],
+      ["Day and night", "Earth's rotation"],
+      ["Seasons", "Season"]
+    ],
+    "Linear and Non-linear Motion": [
+      ["Speed and velocity", "Velocity"],
+      ["Acceleration", "Acceleration"],
+      ["Equations of motion", "Equations of motion"],
+      ["Free fall", "Free fall"],
+      ["Newton's laws of motion", "Newton's laws of motion"],
+      ["Momentum", "Momentum"],
+      ["Circular motion", "Circular motion"],
+      ["Projectile motion", "Projectile motion"]
+    ],
+    "Refraction, Dispersion, and Colour": [
+      ["Refraction", "Refraction"],
+      ["Snell's law", "Snell's law"],
+      ["Total internal reflection", "Total internal reflection"],
+      ["Optical fibres", "Optical fiber"],
+      ["Dispersion and the prism", "Dispersive prism"],
+      ["Rainbows", "Rainbow"],
+      ["Colour", "Color"],
+      ["Mirages", "Mirage"]
+    ],
+    "Lenses and Optical Instruments": [
+      ["Lenses", "Lens"],
+      ["The magnifying glass", "Magnifying glass"],
+      ["The camera", "Camera"],
+      ["The human eye", "Human eye"],
+      ["Short and long sight", "Near-sightedness"],
+      ["The microscope", "Optical microscope"],
+      ["The telescope", "Refracting telescope"]
+    ],
+    "General Wave Properties": [
+      ["Waves", "Wave"],
+      ["Transverse waves", "Transverse wave"],
+      ["Longitudinal waves", "Longitudinal wave"],
+      ["Wavelength and frequency", "Wavelength"],
+      ["The ripple tank", "Ripple tank"],
+      ["Diffraction", "Diffraction"],
+      ["Interference", "Wave interference"],
+      ["The electromagnetic spectrum", "Electromagnetic spectrum"]
+    ],
+    "Sound Waves": [
+      ["Sound", "Sound"],
+      ["Speed of sound", "Speed of sound"],
+      ["Echoes", "Echo"],
+      ["Pitch", "Pitch (music)"],
+      ["Loudness", "Loudness"],
+      ["Resonance", "Resonance"],
+      ["Ultrasound", "Ultrasound"]
+    ],
+    "Heat Quantities and Vapours": [
+      ["Specific heat capacity", "Specific heat capacity"],
+      ["Latent heat", "Latent heat"],
+      ["Evaporation", "Evaporation"],
+      ["Boiling", "Boiling"],
+      ["Vapour pressure", "Vapor pressure"],
+      ["Humidity", "Humidity"],
+      ["Refrigeration", "Refrigerator"]
+    ],
+    "Stars and Galaxies": [
+      ["Stars", "Star"],
+      ["The life of a star", "Stellar evolution"],
+      ["Galaxies", "Galaxy"],
+      ["The Milky Way", "Milky Way"],
+      ["The light-year", "Light-year"],
+      ["Constellations", "Constellation"]
+    ],
+    "Satellites and Communication": [
+      ["Satellites", "Satellite"],
+      ["Geostationary orbit", "Geostationary orbit"],
+      ["Communications satellites", "Communications satellite"],
+      ["Radio waves", "Radio wave"],
+      ["GPS", "Global Positioning System"],
+      ["Mobile phones", "Mobile phone"]
+    ],
+    "Introduction to Current Electricity": [
+      ["Electric current", "Electric current"],
+      ["Electric charge", "Electric charge"],
+      ["Electric circuits", "Electrical network"],
+      ["Series and parallel circuits", "Series and parallel circuits"],
+      ["Cells and batteries", "Electric battery"],
+      ["The ammeter", "Ammeter"],
+      ["Fuses", "Fuse (electrical)"]
+    ],
+    "Voltage, Resistance and Ohm's Law": [
+      ["Voltage", "Voltage"],
+      ["Resistance", "Electrical resistance and conductance"],
+      ["Ohm's law", "Ohm's law"],
+      ["Resistors", "Resistor"],
+      ["The voltmeter", "Voltmeter"],
+      ["The rheostat", "Potentiometer"]
+    ],
+    "Electromagnetic Effects": [
+      ["Electromagnetism", "Electromagnetism"],
+      ["Electromagnets", "Electromagnet"],
+      ["The electric bell and relay", "Relay"],
+      ["The motor effect", "Electric motor"],
+      ["Fleming's left-hand rule", "Fleming's left-hand rule for motors"],
+      ["Electromagnetic induction", "Electromagnetic induction"],
+      ["Generators", "Electric generator"],
+      ["Transformers", "Transformer"]
+    ],
+    "Electric Energy Distribution and Consumption": [
+      ["Transmitting electricity", "Electric power transmission"],
+      ["The electrical grid", "Electrical grid"],
+      ["Hydroelectric power", "Hydroelectricity"],
+      ["Hydroelectric power in Uganda", "Nalubaale Hydroelectric Power Station"],
+      ["Paying for electricity: the kilowatt-hour", "Kilowatt-hour"],
+      ["Electricity meters", "Electricity meter"],
+      ["Earthing", "Ground (electricity)"],
+      ["Circuit breakers", "Circuit breaker"]
+    ],
+    "Atomic Models": [
+      ["The atom", "Atom"],
+      ["The plum pudding model", "Plum pudding model"],
+      ["The Rutherford model", "Rutherford model"],
+      ["The Bohr model", "Bohr model"],
+      ["The nucleus", "Atomic nucleus"],
+      ["Isotopes", "Isotope"]
+    ],
+    "Nuclear Processes": [
+      ["Radioactivity", "Radioactive decay"],
+      ["Alpha particles", "Alpha particle"],
+      ["Beta particles", "Beta particle"],
+      ["Gamma rays", "Gamma ray"],
+      ["Half-life", "Half-life"],
+      ["Detecting radiation", "Geiger counter"],
+      ["Background radiation", "Background radiation"],
+      ["Nuclear fission", "Nuclear fission"],
+      ["Nuclear fusion", "Nuclear fusion"]
+    ],
+    "Digital Electronics": [
+      ["Digital electronics", "Digital electronics"],
+      ["Binary numbers", "Binary number"],
+      ["Logic gates", "Logic gate"],
+      ["Semiconductors", "Semiconductor"],
+      ["Diodes", "Diode"],
+      ["Light-emitting diodes", "Light-emitting diode"],
+      ["Rectifiers", "Rectifier"],
+      ["Transistors", "Transistor"]
+    ]
+  },
+  "clip_selection_note": "Only explicitly selected demonstration filenames are eligible. Selection checks relevance, not teacher approval; the pack remains draft.",
+  "clip_allowlist": {
+    "States of Matter": [
+      "Brownian Motion.ogv"
+    ],
+    "The Effects of Forces": [
+      "Heat by friction.webm",
+      "Surface tension experimental demonstration.ogv"
+    ],
+    "Heat Transfer": [
+      "Formation-of-convection-cells.webm"
+    ],
+    "Magnets and Magnetic Field": [
+      "Magnet bar.ogv",
+      "Neodymium magnet repels a Toothpick.webm"
+    ],
+    "Electrostatics": [
+      "Static electricity demonstration.webm",
+      "Bubbles to balloon static electricity.webm"
+    ],
+    "The Solar System": [
+      "Earth's axial tilt and seasons.webm"
+    ]
+  },
+  "excluded_media_sources": {
+    "physics.s1.temperature-measurements.thermometers|https://commons.wikimedia.org/wiki/File:Very_slippy-weather.jpg": "Unrelated street cartoon, not thermometer instruction",
+    "physics.s1.nature-of-light-reflection-at-plane-surf.the-periscope|https://commons.wikimedia.org/wiki/File:XV426_(32195090654).jpg": "Aircraft photo offers no clear periscope explanation",
+    "physics.s2.the-solar-system.day-and-night|https://commons.wikimedia.org/wiki/File:The_Mysterious_Case_of_the_Disappearing_Dust.jpg": "Planet-forming dust disk is unrelated to day and night",
+    "physics.s2.the-solar-system.day-and-night|https://commons.wikimedia.org/wiki/File:Solar_system.jpg": "Planet montage does not explain day and night",
+    "physics.s3.linear-and-non-linear-motion.newton-s-laws-of-motion|https://commons.wikimedia.org/wiki/File:NewtonsPrincipia.jpg": "Book photograph does not illustrate Newton laws",
+    "physics.s3.linear-and-non-linear-motion.newton-s-laws-of-motion|https://commons.wikimedia.org/wiki/File:Newton%27s_reflecting_telescope.jpg": "Reflecting telescope is not a Newton laws demonstration",
+    "physics.s3.lenses-and-optical-instruments.the-microscope|https://commons.wikimedia.org/wiki/File:Stelluti_bees1630.jpg": "Historical insect drawing does not explain a microscope",
+    "physics.s3.heat-quantities-and-vapours.specific-heat-capacity|https://commons.wikimedia.org/wiki/File:Carnot_heat_engine_2.svg": "Carnot engine does not illustrate latent heat",
+    "physics.s3.heat-quantities-and-vapours.latent-heat|https://commons.wikimedia.org/wiki/File:Carnot_heat_engine_2.svg": "Carnot engine does not illustrate latent heat",
+    "physics.s3.heat-quantities-and-vapours.refrigeration|https://commons.wikimedia.org/wiki/File:Servel_Electrolux_Gas_Refrigerator_ad,_1941.jpg": "Historical refrigerator advertisement, not a teaching diagram",
+    "physics.s3.stars-and-galaxies.constellations|https://commons.wikimedia.org/wiki/File:Orion_constellation_-_Prodromus_astronomiae_1690_(5590584).jpg": "Historical mythological artwork; retain star charts instead",
+    "physics.s4.introduction-to-current-electricity.cells-and-batteries|https://commons.wikimedia.org/wiki/File:La_pile_de_Volta_(Le_Petit_journal).jpg": "Historical painting; retain battery apparatus instead",
+    "physics.s4.voltage-resistance-and-ohm-s-law.voltage|https://commons.wikimedia.org/wiki/File:US_Navy_110315-N-0278E-002_High-voltage_electricians_from_Naval_Facilities_Engineering_Command_(NAVFAC)_Hawaii_reconfigure_electrical_circuitry_and.jpg": "Electrical workplace photograph does not explain voltage",
+    "physics.s4.voltage-resistance-and-ohm-s-law.resistance|https://commons.wikimedia.org/wiki/File:VFPt_Solenoid_correct2.svg": "Solenoid magnetic-field diagram mismatched to electrical resistance",
+    "physics.s4.digital-electronics.transistors|https://commons.wikimedia.org/wiki/File:Transistor_on_portuguese_pavement.jpg": "Pavement mosaic; retain transistor components and circuit symbol"
+  }
+}

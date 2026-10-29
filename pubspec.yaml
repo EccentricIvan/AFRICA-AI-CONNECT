@@ -1,82 +1,150 @@
-name: otic_connect
-description: AI Connect Africa - Empowering Women Through Digital Inclusion
+name: ai_connect_africa
+description: AI Connect Africa - Offline AI Learning Operating System
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.4.0+5
 
 environment:
-  sdk: '>=3.7.0 <4.0.0'
+  sdk: '>=3.12.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
-  cupertino_icons: ^1.0.8
-
-  # Navigation + State
+  # Navigation + UI
   go_router: ^14.0.0
   flutter_riverpod: ^2.5.1
 
-  # Networking — used only by WebLookupService's clearly-labeled, verbatim
-  # web-result fallback tier (Wikimedia/DuckDuckGo/SearXNG). No LLM/backend
-  # proxy client depends on this; see CLAUDE.md's "AI Chat is fully offline"
-  # note for why that was deliberately removed.
+  # AI inference — llama.cpp (Qwen2.5-Coder-1.5B brain + AfriSLM GGUF).
+  # flutter_gemma/flutter_gemma_litertlm stay for the optional Android
+  # .litertlm path (no coder .litertlm is published yet — see CLAUDE.md).
   http: ^1.2.0
+  flutter_gemma: ^1.1.2
+  flutter_gemma_litertlm: ^1.6.1
+  llm_llamacpp: ^0.4.0
+  ffi: ^2.1.0
+  flutter_markdown: ^0.7.7+1
+  flutter_math_fork: ^0.7.4
 
-  # Fast local check of whether a network interface is up at all — gates
-  # WebLookupService so it skips straight to the offline fallback instead
-  # of waiting out several HTTP timeouts when there's clearly no network.
-  connectivity_plus: ^6.0.0
-
-  # Local storage
+  # Local storage — student memory, history summaries
+  # crypto: stable cache keys for the translation cache. Pure Dart, already
+  # in the tree transitively — declared directly because we import it.
+  crypto: ^3.0.3
   drift: ^2.20.0
   drift_flutter: ^0.2.1
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.1.4
   path: ^1.9.0
 
-  # User preferences
+  # Model installer — lets the user pick model files from USB/Downloads
+  file_picker: 8.3.7
+
+  # User preferences (theme mode)
   shared_preferences: ^2.2.3
 
-  # PDF certificate generation
+  # Voice — device TTS/STT (offline when engine supports it)
+  flutter_tts: ^4.2.0
+  speech_to_text: ^7.0.0
+
+  # Curriculum diagram assets (SVG)
+  flutter_svg: ^2.0.10+1
+
+  # Web Dev Lab / Simple Browser — Android + desktop WebViews
+  webview_flutter: ^4.10.0
+  webview_flutter_android: ^4.10.0
+  webview_flutter_windows: ^1.0.0
+
+  # PDF certificate generation (offline, pure Dart)
   pdf: ^3.10.8
 
-  # URL launcher (for external links)
-  url_launcher: ^6.2.0
+  # Teacher resource import — turning an uploaded file into retrievable text.
+  # Both are pure Dart and already in the tree transitively; declared directly
+  # because we import them. Nothing here touches the network.
+  #   archive → inflate PDF FlateDecode streams, unzip .docx
+  #   xml     → read word/document.xml out of a .docx
+  archive: ^4.0.9
+  xml: ^7.0.1
+  # Pictures students add to a website/app are downscaled on the device so
+  # a phone photo does not make the page slow. Pure Dart, already in the
+  # tree transitively, fully offline.
+  image: ^4.9.1
+  share_plus: ^12.0.2
+  package_info_plus: ^9.0.1
+  html: ^0.15.4
 
-  # File/image picking (marketplace listing photos) — file_picker over
-  # image_picker because it has real Windows desktop support, and this
-  # app is actively developed/tested on Windows, not just Android.
-  file_picker: ^8.0.0
-  firebase_core: ^4.11.0
-  firebase_auth: ^6.5.4
-  cloud_firestore: ^6.6.0
+  # Scoped class/stream/subject sync over the local network — a teacher
+  # device runs the embedded server (shelf), a student device pulls from it.
+  # Pure Dart, LAN-only (see lib/collaboration/sync/).
+  shelf: ^1.4.1
+  uuid: ^4.5.3
+
+  # Class sync crypto — AES-GCM (replies only the class can read), Ed25519
+  # (replies only the teacher's device can sign), PBKDF2 (join codes).
+  # Pure Dart, no platform code, fully offline.
+  cryptography: ^2.7.0
+
+  # mDNS/NSD sync-server discovery, additive to the UDP broadcast already
+  # used for presence — Android/iOS/macOS/Windows only, no Linux plugin
+  # exists, so lib/collaboration/sync/mdns_discovery.dart treats Linux (and
+  # web) as "unsupported, fall back to UDP" rather than failing.
+  nsd: ^5.0.1
+  pdfrx: ^2.4.8
+  google_mlkit_text_recognition: ^0.17.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
   flutter_lints: ^4.0.0
   drift_dev: ^2.20.0
   build_runner: ^2.4.12
-  flutter_launcher_icons: ^0.14.3
+  flutter_launcher_icons: ^0.14.4
 
 flutter_launcher_icons:
   android: true
-  ios: true
-  image_path: "assets/branding/ai_connect_africa_icon.png"
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/branding/ai_connect_africa_icon.png"
+  image_path: "assets/branding/ai-connect-africa-logo.png"
+  min_sdk_android: 21
+  windows:
+    generate: true
+    image_path: "assets/branding/ai-connect-africa-logo.png"
+    icon_size: 256
+  web:
+    generate: true
+    image_path: "assets/branding/ai-connect-africa-logo.png"
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/branding/
-    - assets/offline/
-    - assets/localization/
-    - assets/skills/
-    - assets/health/
+    - assets/models/        # placeholder dir, actual model files gitignored
+    - assets/prompts/       # system prompt templates
+    - assets/branding/      # official brand logo
+    - assets/illustrations/ # home screen hero art
+    - assets/curriculum/    # bundled curriculum content for all subjects
+    - assets/curriculum/diagrams/  # subject-linked teaching diagrams (pilot: biology)
+    - assets/curriculum/diagrams/biology/  # Flutter does not include subfolders on its own
+    - assets/curriculum/diagrams/mathematics/
+    - assets/topic_explanations/  # reviewed full topic explanations (topic packs)
+    - assets/topic_explanations/images/  # openly licensed lesson diagrams (credits in diagrams.json)
+    - assets/templates/     # website templates for Site Builder
+    - assets/templates/blocks/  # premium section blocks the builders assemble from
+    - assets/templates/apps/    # mobile app screen templates for App Dev Lab
 
+  # Bundled offline — google_fonts would fetch over the network at runtime
   fonts:
+    # Inter matches the Home mockup system UI (Inter / SF Pro–like).
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
     - family: PlusJakartaSans
       fonts:
         - asset: assets/fonts/PlusJakartaSans-Regular.ttf

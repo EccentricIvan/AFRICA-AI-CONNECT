@@ -1,7 +1,22 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # Manual, ad-hoc dev script — not a real test dir, so it doesn't get the
+    # analyzer's usual @visibleForTesting exemption for files under test/.
+    - test_manual/**
+    # Same story: build-time generators that are run through `flutter test`
+    # (only because loading llama.cpp needs the Flutter bindings) but live
+    # outside test/. Nothing here ships in the app. Without this,
+    # generate_ui_strings.dart's SharedPreferences.setMockInitialValues call
+    # is a *warning*, and `flutter analyze --no-fatal-infos` in CI exits 1 on
+    # warnings — which gates the APK and Windows jobs.
+    - tools/**
+
 linter:
   rules:
     prefer_const_constructors: true
-    prefer_const_declarations: true
-    avoid_print: false
+    prefer_const_literals_to_create_immutables: true
+    avoid_unnecessary_containers: true
+    sized_box_for_whitespace: true
+    use_super_parameters: true

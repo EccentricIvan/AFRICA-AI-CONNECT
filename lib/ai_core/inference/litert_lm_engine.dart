@@ -1,0 +1,491 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter_gemma/core/registry/runtime_config.dart';
+import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:flutter_gemma_litertlm/flutter_gemma_litertlm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/device_tier.dart';
+import 'decode_profile.dart';
+import 'engine_scheduler.dart';
+import 'inference_engine.dart';
+import 'pinned_prompt_cache.dart';
+import 'repetition_guard.dart';
+import 'runtime_config.dart';
+import 'sanitize_llm_response.dart';
+
+/// A model on Google's LiteRT-LM runtime — the Android runtime for both the
+/// brain (Qwen2.5-Coder-1.5B int4) and the AfriSLM translator (int8).
+///
+/// **Hardware.** Every load asks for [PreferredBackend.npu]. LiteRT-LM then
+/// tries NPU (Qualcomm QNN / MediaTek / Tensor vendor dispatch) → GPU
+/// (OpenCL/WebGPU) → its own CPU backend, and reports which one it got as
+/// [activeBackend]. There is no NNAPI in LiteRT-LM (NNAPI is deprecated in
+/// Android 15); the NPU dispatch is its successor. llama.cpp is never a
+/// fallback on Android.
+///
+/// **One engine per role.** Each instance builds its own LiteRT-LM engine
+/// with `LiteRtLmEngine().createModel`, not flutter_gemma's single "active
+/// model" slot — so the tutor and the translator stay loaded side by side
+/// instead of swapping ~1 GB in and out on every local-language turn.
+///
+/// **Remembering what works.** A GPU/NPU that fails to initialize fails
+/// again next launch, and some drivers take a long time to fail. The
+/// backend that actually came up is saved per role, and later launches start
+/// from it instead of re-trying the accelerator every time. "Reset hardware
+/// choice" in Settings clears it ([clearRememberedBackends]).
+class LiteRtLmEngineImpl extends InferenceEngine {
+  LiteRtLmEngineImpl({
+    this.roleLabel = 'Qwen2.5-Coder 1.5B',
+    this.roleKey = 'brain',
+    this.schedulerLane = EngineLane.reason,
+    this.modelType = ModelType.qwen,
+    this.contextTokens = 1024,
+    this.appendNoThink = false,
+    this.isolatedTurns = false,
+  });
+
+  /// Shown in Settings / logs.
+  final String roleLabel;
+
+  /// Stable id for the remembered backend (`brain`, `translate`).
+  final String roleKey;
+
+  /// Lane passed to [EngineScheduler] so brain and translator requests are
+  /// serialised exactly as the llama.cpp engines were.
+  final String schedulerLane;
+
+  /// flutter_gemma template family. LiteRT-LM applies the bundle's own chat
+  /// template on Android; this only matters for its fallbacks.
+  final ModelType modelType;
+
+  final int contextTokens;
+
+  /// Qwen3's `/no_think` switch on the user turn — the AfriSLM prompts the
+  /// app was tuned with (and the conversion gate) include it.
+  final bool appendNoThink;
+
+  /// Translator mode: every call is a fresh conversation with its own
+  /// system prompt, never a pinned multi-turn chat. A translation must
+  /// never see the previous sentence.
+  final bool isolatedTurns;
+
+  InferenceModel? _model;
+  InferenceChat? _pinnedChat;
+  String? _pinnedSystem;
+  bool _pinnedProse = false;
+  String? _loadedPath;
+  int _pinnedTurns = 0;
+  Future<void> _gate = Future.value();
+
+  PreferredBackend? _activeBackend;
+  Duration? _loadTime;
+  double? _lastTokensPerSecond;
+
+  /// Recreate the pinned session before KV + THREAD overflow the window.
+  static const _maxPinnedTurns = 4;
+
+  static const _prefsPrefix = 'litert_backend_';
+
+  /// Set by "Try GPU anyway": a low-memory phone probes NPU/GPU too.
+  static const _forceAccelKey = 'litert_force_accel';
+
+  /// Written before an NPU/GPU load, removed after it returns.
+  static const _loadingKey = 'litert_loading_';
+
+  /// The hardware LiteRT-LM actually runs this model on (null until loaded).
+  PreferredBackend? get activeBackend => _activeBackend;
+  Duration? get loadTime => _loadTime;
+  double? get lastTokensPerSecond => _lastTokensPerSecond;
+
+  @override
+  bool get isReady => _model != null;
+
+  @override
+  String get backendLabel =>
+      'LiteRT-LM · $roleLabel · ${backendName(_activeBackend)}';
+
+  String? get loadedPath => _loadedPath;
+
+  static String backendName(PreferredBackend? b) => switch (b) {
+        PreferredBackend.npu => 'NPU',
+        PreferredBackend.gpu => 'GPU',
+        PreferredBackend.cpu => 'CPU',
+        null => 'not loaded',
+      };
+
+  /// Forget the remembered backends so the next load tries NPU/GPU again.
+  /// With [forceAcceleration], a low-memory phone probes them too.
+  static Future<void> clearRememberedBackends({bool forceAcceleration = false}) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      for (final k in prefs.getKeys().where((k) => k.startsWith(_prefsPrefix)).toList()) {
+        await prefs.remove(k);
+      }
+      if (forceAcceleration) await prefs.setBool(_forceAccelKey, true);
+    } catch (_) {}
+  }
+
+  /// Back to the tier default (CPU on low-memory phones).
+  static Future<void> useTierDefault() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_forceAccelKey);
+      for (final k in prefs.getKeys().where((k) => k.startsWith(_prefsPrefix)).toList()) {
+        await prefs.remove(k);
+      }
+    } catch (_) {}
+  }
+
+  static Future<bool> accelerationForced() async {
+    try {
+      return (await SharedPreferences.getInstance()).getBool(_forceAccelKey) ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Where the backend chain starts:
+  /// 1. the backend that worked last time for this role;
+  /// 2. on a low-memory phone, LiteRT's CPU backend — unless the student
+  ///    asked for the GPU (see [DeviceTier] for why);
+  /// 3. otherwise NPU (→ GPU → CPU).
+  Future<PreferredBackend> _startingBackend() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      // A previous accelerated load that never finished means the app died
+      // inside the GPU/NPU init (a native crash cannot be caught). Go back to
+      // CPU instead of crashing again on every launch.
+      if (prefs.getString('$_loadingKey$roleKey') != null) {
+        await prefs.remove('$_loadingKey$roleKey');
+        await prefs.remove(_forceAccelKey);
+        await prefs.setString('$_prefsPrefix$roleKey', PreferredBackend.cpu.name);
+        debugPrint('LiteRT-LM $roleKey: last accelerated load crashed - using CPU.');
+        return PreferredBackend.cpu;
+      }
+      final saved = prefs.getString('$_prefsPrefix$roleKey');
+      for (final b in PreferredBackend.values) {
+        if (b.name == saved) return b;
+      }
+      final forced = prefs.getBool(_forceAccelKey) ?? false;
+      if (DeviceTier.current.isLowMemory && !forced) return PreferredBackend.cpu;
+    } catch (_) {
+      if (DeviceTier.current.isLowMemory) return PreferredBackend.cpu;
+    }
+    return PreferredBackend.npu;
+  }
+
+  Future<void> _remember(PreferredBackend backend) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('$_prefsPrefix$roleKey', backend.name);
+    } catch (_) {}
+  }
+
+  @override
+  Future<void> loadModel(String modelPath) async {
+    await dispose();
+    final watch = Stopwatch()..start();
+    final start = await _startingBackend();
+    final name = modelPath.split(RegExp(r'[\\/]')).last;
+    SharedPreferences? prefs;
+    try {
+      prefs = await SharedPreferences.getInstance();
+      if (start != PreferredBackend.cpu) {
+        await prefs.setString('$_loadingKey$roleKey', start.name);
+      }
+    } catch (_) {}
+    try {
+      final model = await const LiteRtLmEngine().createModel(
+        InferenceModelSpec(
+          name: name,
+          modelSource: ModelSource.file(modelPath),
+          modelType: modelType,
+          fileType: ModelFileType.litertlm,
+        ),
+        RuntimeConfig(
+          maxTokens: contextTokens,
+          modelPath: modelPath,
+          preferredBackend: start,
+        ),
+      );
+      _model = model;
+      _activeBackend = model.activeBackend ?? start;
+      _loadedPath = modelPath;
+      _loadTime = watch.elapsed;
+      await prefs?.remove('$_loadingKey$roleKey');
+      await _remember(_activeBackend!);
+      debugPrint(
+        'LiteRT-LM $roleKey loaded on ${backendName(_activeBackend)} '
+        '(asked from ${backendName(start)}) in ${_loadTime!.inMilliseconds} ms: $modelPath',
+      );
+    } catch (e) {
+      await prefs?.remove('$_loadingKey$roleKey');
+      throw ModelLoadException('LiteRT-LM failed to load "$modelPath": $e');
+    }
+  }
+
+  /// Re-bind after a dispose (kept for callers that used the old slot API).
+  Future<void> ensureLoaded(String modelPath) async {
+    if (_model != null && _loadedPath == modelPath) return;
+    await loadModel(modelPath);
+  }
+
+  /// Prefill the system contract once so the first student turn skips
+  /// re-tokenizing instructions (warm KV / low TTFT).
+  Future<void> pinSystemPrompt(String systemPrompt) async {
+    if (_model == null) {
+      throw StateError('Model not loaded. Call loadModel() first.');
+    }
+    if (isolatedTurns) return;
+    final sys = PinnedPromptCache.intern(systemPrompt.trim());
+    // Only the tutor contract is pinned, and tutor turns decode as prose —
+    // pinning it greedy would just be rebuilt on the first turn.
+    const prose = true;
+    if (_pinnedChat != null && _pinnedSystem == sys && _pinnedProse == prose) {
+      return;
+    }
+    await _pinnedChat?.close();
+    _pinnedChat = await _createChat(
+      system: sys,
+      maxTokens: kMaxNewTokens,
+      prose: prose,
+      greedyTemperature: kChatTemperature,
+    );
+    _pinnedSystem = sys;
+    _pinnedProse = prose;
+    _pinnedTurns = 0;
+  }
+
+  /// A chat decoding as prose (see decode_profile.dart) or greedily.
+  /// LiteRT-LM has no repetition penalty; prose turns rely on light
+  /// sampling plus [RepetitionGuard].
+  Future<InferenceChat> _createChat({
+    required String? system,
+    required int maxTokens,
+    required bool prose,
+    required double greedyTemperature,
+  }) {
+    return _model!.createChat(
+      temperature: prose ? kProseTemperature : greedyTemperature,
+      randomSeed: kRandomSeed,
+      topK: prose ? kProseTopK : kTopK,
+      topP: prose ? kProseTopP : kTopP,
+      systemInstruction: system,
+      maxOutputTokens: maxTokens,
+      modelType: modelType,
+      isThinking: false,
+    );
+  }
+
+  @override
+  Future<String> generate({
+    required String prompt,
+    int maxTokens = 512,
+    double temperature = 0.7,
+    TokenCallback? onToken,
+    String? systemPrompt,
+  }) async {
+    // Read synchronously in the caller's zone (see decode_profile.dart).
+    // The translator keeps its own decode and loop checks.
+    final prose = isProseDecode && !isolatedTurns;
+    final previous = _gate;
+    final done = Completer<void>();
+    _gate = done.future;
+    try {
+      try {
+        await previous;
+      } catch (_) {}
+      return await EngineScheduler.instance.exclusive(
+        () => _generateNow(
+          prompt: prompt,
+          maxTokens: maxTokens,
+          temperature: temperature,
+          prose: prose,
+          onToken: onToken,
+          systemPrompt: systemPrompt,
+        ),
+        lane: schedulerLane,
+      );
+    } catch (e) {
+      debugPrint('LiteRT-LM $roleKey generate failed: $e');
+      const fallback =
+          'I hit a brief snag finishing that answer. Please ask again in one short sentence.';
+      await emitToken(onToken, fallback);
+      return fallback;
+    } finally {
+      if (!done.isCompleted) done.complete();
+    }
+  }
+
+  String _withNoThink(String user) {
+    if (!appendNoThink) return user;
+    final t = user.trimRight();
+    return RegExp(r'/no_think\s*$').hasMatch(t) ? user : '$t\n/no_think';
+  }
+
+  Future<String> _generateNow({
+    required String prompt,
+    required int maxTokens,
+    required double temperature,
+    required bool prose,
+    TokenCallback? onToken,
+    String? systemPrompt,
+  }) async {
+    if (_model == null) {
+      throw StateError('Model not loaded. Call loadModel() first.');
+    }
+
+    final sys = (systemPrompt == null || systemPrompt.trim().isEmpty)
+        ? ''
+        : PinnedPromptCache.intern(systemPrompt.trim());
+    // Tutor prompts clip tightly; coder briefs (with systemPrompt) must keep
+    // the locked feature list — truncating mid-brief + appending "Tutor:"
+    // produced broken / empty site and app builds on Android.
+    final maxChars = sys.isEmpty ? kTutorMaxPromptChars : kCoderMaxPromptChars;
+    final clipped = prompt.length > maxChars
+        ? (sys.isEmpty
+            ? '${prompt.substring(0, maxChars)}\nTutor:'
+            : prompt.substring(0, maxChars))
+        : prompt;
+    var user = clipped;
+    if (sys.isNotEmpty && user.startsWith(sys)) {
+      user = user.substring(sys.length).trim();
+    }
+    user = _withNoThink(user);
+
+    // One-shot: session analysis / website prompts must not append onto the
+    // pinned tutor chat, and a translation never sees an earlier sentence.
+    if (sys.isEmpty || isolatedTurns) {
+      return _oneShot(
+        user: user,
+        system: sys.isEmpty ? null : sys,
+        maxTokens: maxTokens,
+        prose: prose,
+        onToken: onToken,
+      );
+    }
+
+    // Pin the tutor contract once. Later turns only add the user turn, so
+    // LiteRT does not re-prefill the system instruction (KV stays warm).
+    if (_pinnedChat == null ||
+        _pinnedSystem != sys ||
+        _pinnedProse != prose ||
+        _pinnedTurns >= _maxPinnedTurns) {
+      await _pinnedChat?.close();
+      _pinnedChat = await _createChat(
+        system: sys,
+        maxTokens: maxTokens,
+        prose: prose,
+        greedyTemperature: kDoSample ? temperature : kChatTemperature,
+      );
+      _pinnedSystem = sys;
+      _pinnedProse = prose;
+      _pinnedTurns = 0;
+    }
+
+    final (:text, :looped) = await _stream(_pinnedChat!, user, onToken, prose);
+    _pinnedTurns++;
+    if (looped) {
+      // The loop is now in the pinned chat's KV; the next turn would carry
+      // on from it. Start the next turn on a fresh conversation.
+      await resetSession();
+      return text;
+    }
+    if (text.trim().isEmpty) {
+      // The known empty follow-up turn on a reused chat (see memory
+      // flutter-gemma-325-blank-followup): drop the pin and answer once more
+      // on a fresh conversation rather than show the student nothing.
+      await resetSession();
+      return _oneShot(
+        user: user,
+        system: sys,
+        maxTokens: maxTokens,
+        prose: prose,
+        onToken: onToken,
+      );
+    }
+    return text;
+  }
+
+  Future<({String text, bool looped})> _stream(
+    InferenceChat chat,
+    String user,
+    TokenCallback? onToken,
+    bool prose,
+  ) async {
+    await chat.addQueryChunk(Message.text(text: user, isUser: true));
+    final cleaner = SanitizedTokenStream();
+    final guard = prose ? RepetitionGuard() : null;
+    final watch = Stopwatch()..start();
+    var chunks = 0;
+    await for (final response in chat.generateChatResponseAsync()) {
+      if (response is TextResponse) {
+        final token = response.token;
+        if (token.isEmpty) continue;
+        chunks++;
+        final cleaned = cleaner.add(token);
+        final visible = guard == null ? cleaned : guard.add(cleaned);
+        if (visible.isNotEmpty) await emitToken(onToken, visible);
+        if (guard != null && guard.tripped) {
+          // Leaving the loop alone doesn't stop native decode — ask it to.
+          try {
+            await chat.stopGeneration();
+          } catch (e) {
+            debugPrint('LiteRT-LM $roleKey stopGeneration failed: $e');
+          }
+          break;
+        }
+      }
+    }
+    final secs = watch.elapsedMilliseconds / 1000;
+    if (secs > 0 && chunks > 0) _lastTokensPerSecond = chunks / secs;
+    if (guard != null && guard.tripped) {
+      debugPrint('LiteRT-LM $roleKey: stopped a repeating answer.');
+      return (text: guard.text.trim(), looped: true);
+    }
+    final cleanedTail = cleaner.flush();
+    final tail = guard == null ? cleanedTail : guard.add(cleanedTail) + guard.flush();
+    if (tail.isNotEmpty) await emitToken(onToken, tail);
+    return (text: cleaner.text, looped: false);
+  }
+
+  Future<String> _oneShot({
+    required String user,
+    required String? system,
+    required int maxTokens,
+    required bool prose,
+    TokenCallback? onToken,
+  }) async {
+    final chat = await _createChat(
+      system: system,
+      maxTokens: maxTokens,
+      prose: prose,
+      greedyTemperature: isolatedTurns ? kTranslateTemperature : kCoderTemperature,
+    );
+    try {
+      return (await _stream(chat, user, onToken, prose)).text;
+    } finally {
+      await chat.close();
+    }
+  }
+
+  @override
+  Future<void> resetSession() async {
+    await _pinnedChat?.close();
+    _pinnedChat = null;
+    _pinnedSystem = null;
+    _pinnedProse = false;
+    _pinnedTurns = 0;
+  }
+
+  @override
+  Future<void> dispose() async {
+    await resetSession();
+    await _model?.close();
+    _model = null;
+    _loadedPath = null;
+    _activeBackend = null;
+  }
+}

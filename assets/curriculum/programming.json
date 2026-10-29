@@ -1,0 +1,1473 @@
+{
+    "id":  "programming",
+    "name":  "Programming",
+    "icon":  "code",
+    "color":  "#6366F1",
+    "units":  [
+                  {
+                      "title":  "Programming Fundamentals",
+                      "lessons":  [
+                                      {
+                                          "title":  "Variables and Data Types",
+                                          "content":  "A variable is a named container that stores data. In Python: name = \u0027Alice\u0027 creates a string variable. age = 15 stores an integer. The main data types: strings (text: \u0027hello\u0027), integers (whole numbers: 42), floats (decimals: 3.14), booleans (True/False). Variable names should be descriptive — student_name is better than x. Python is dynamically typed — you don\u0027t declare types explicitly.",
+                                          "examples":  [
+                                                           "name = \u0027Otic\u0027 — string",
+                                                           "score = 95 — integer",
+                                                           "pi = 3.14159 — float; is_active = True — boolean"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "variable":  "Named storage for data that can change",
+                                                           "string":  "Text data in quotes",
+                                                           "integer":  "Whole number without decimals",
+                                                           "boolean":  "True or False value",
+                                                           "float":  "Number with a decimal point"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "What type is \u0027Hello World\u0027?",
+                                                           "options":  [
+                                                                           "String",
+                                                                           "Integer",
+                                                                           "Float",
+                                                                           "Boolean"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Text in quotes = string."
+                                                       },
+                                                       {
+                                                           "question":  "age = 15 does what?",
+                                                           "options":  [
+                                                                           "Checks if age equals 15",
+                                                                           "Creates variable age with value 15",
+                                                                           "Prints 15",
+                                                                           "Deletes age"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "= assigns the value 15 to variable age."
+                                                       },
+                                                       {
+                                                           "question":  "Valid boolean value?",
+                                                           "options":  [
+                                                                           "1.5",
+                                                                           "\"yes\"",
+                                                                           "True",
+                                                                           "maybe"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Booleans are only True or False."
+                                                       },
+                                                       {
+                                                           "question":  "What type is 3.14?",
+                                                           "options":  [
+                                                                           "String",
+                                                                           "Integer",
+                                                                           "Float",
+                                                                           "Boolean"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Numbers with decimal points are floats."
+                                                       },
+                                                       {
+                                                           "question":  "Best variable name for a student\u0027s grade:",
+                                                           "options":  [
+                                                                           "x",
+                                                                           "student_grade",
+                                                                           "sg",
+                                                                           "data"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Descriptive names make code readable and maintainable."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Operators and Expressions",
+                                          "content":  "Arithmetic: + − * / // (integer division) % (modulo/remainder) ** (power). Comparison (return True/False): == != \u003c \u003e \u003c= \u003e=. Logical: and or not. Expressions combine values and operators: 3 + 4 * 2 = 11 (multiplication first). String concatenation: \u0027Hello\u0027 + \u0027 \u0027 + \u0027World\u0027 = \u0027Hello World\u0027. Type conversion: int(\u00275\u0027) = 5, str(42) = \u002742\u0027, float(\u00273.14\u0027) = 3.14.",
+                                          "examples":  [
+                                                           "10 % 3 = 1 (remainder)",
+                                                           "2 ** 3 = 8 (power)",
+                                                           "age \u003e= 18 and has_id == True — checks both conditions"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "operator":  "Symbol performing operation (+, -, *, /, ==)",
+                                                           "modulo":  "% returns remainder of division",
+                                                           "expression":  "Combination producing a result",
+                                                           "type conversion":  "Changing data from one type to another (int, str, float)"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "17 % 5?",
+                                                           "options":  [
+                                                                           "3",
+                                                                           "2",
+                                                                           "12",
+                                                                           "3.4"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "17 ÷ 5 = 3 remainder 2."
+                                                       },
+                                                       {
+                                                           "question":  "== means:",
+                                                           "options":  [
+                                                                           "Assigns value",
+                                                                           "Checks equality",
+                                                                           "Not equal",
+                                                                           "Greater than"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "== compares; = assigns."
+                                                       },
+                                                       {
+                                                           "question":  "2 ** 4?",
+                                                           "options":  [
+                                                                           "8",
+                                                                           "16",
+                                                                           "6",
+                                                                           "24"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "2⁴ = 16."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027Hello\u0027 + \u0027 World\u0027 gives:",
+                                                           "options":  [
+                                                                           "\u0027Hello World\u0027",
+                                                                           "Error",
+                                                                           "HelloWorld",
+                                                                           "11"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "String concatenation joins text with +."
+                                                       },
+                                                       {
+                                                           "question":  "int(\u002742\u0027) returns:",
+                                                           "options":  [
+                                                                           "\u002742\u0027 (string)",
+                                                                           "42 (integer)",
+                                                                           "Error",
+                                                                           "4.2"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "int() converts a string to an integer."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Input and Output",
+                                          "content":  "print() displays output. input() gets text from user — always returns a string. Convert for numbers: age = int(input(\u0027Age: \u0027)). F-strings for formatting: print(f\u0027Hi {name}, age {age}\u0027). Multiple values: print(\u0027Score:\u0027, score). Escape characters: \\n (new line), \\t (tab). Use end=\u0027\u0027 to prevent newline after print.",
+                                          "examples":  [
+                                                           "print(\u0027Welcome!\u0027) — displays text",
+                                                           "name = input(\u0027Name: \u0027) — waits for user input",
+                                                           "age = int(input(\u0027Age: \u0027)) — converts input to integer"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "print":  "Function displaying output",
+                                                           "input":  "Function receiving user text input",
+                                                           "f-string":  "Formatted string f\u0027...{var}...\u0027 for embedding variables",
+                                                           "escape character":  "Special characters like \\n (newline) and \\t (tab)"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "input() returns:",
+                                                           "options":  [
+                                                                           "An integer",
+                                                                           "A string",
+                                                                           "A boolean",
+                                                                           "Nothing"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "input() always returns a string."
+                                                       },
+                                                       {
+                                                           "question":  "Convert \u002725\u0027 to integer:",
+                                                           "options":  [
+                                                                           "int(\u002725\u0027)",
+                                                                           "str(25)",
+                                                                           "float(\u002725\u0027)",
+                                                                           "bool(\u002725\u0027)"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "int() converts string to integer."
+                                                       },
+                                                       {
+                                                           "question":  "print(f\u0027Score: {score}\u0027) does:",
+                                                           "options":  [
+                                                                           "Errors",
+                                                                           "Prints literal \u0027{score}\u0027",
+                                                                           "Prints \u0027Score: \u0027 plus the score value",
+                                                                           "Prints nothing"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "F-strings embed variable values in curly braces."
+                                                       },
+                                                       {
+                                                           "question":  "\\n in a string means:",
+                                                           "options":  [
+                                                                           "New line",
+                                                                           "Nothing",
+                                                                           "Tab",
+                                                                           "Backslash"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "\\n creates a line break in the output."
+                                                       },
+                                                       {
+                                                           "question":  "print(\u0027A\u0027, \u0027B\u0027, \u0027C\u0027) outputs:",
+                                                           "options":  [
+                                                                           "A B C",
+                                                                           "ABC",
+                                                                           "\u0027A\u0027 \u0027B\u0027 \u0027C\u0027",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "print() separates multiple arguments with spaces by default."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Comments and Code Style",
+                                          "content":  "Comments explain code to humans — Python ignores them. Single line: # This is a comment. Multi-line: use triple quotes \u0027\u0027\u0027comment\u0027\u0027\u0027. Good commenting: explain WHY, not WHAT (the code shows what). Code style matters: use consistent indentation (4 spaces in Python), meaningful variable names, blank lines between sections. PEP 8 is Python\u0027s official style guide. snake_case for variables and functions, PascalCase for classes. Keep lines under 79 characters. Clean code is readable code — you spend more time reading code than writing it.",
+                                          "examples":  [
+                                                           "# Calculate the total price including tax",
+                                                           "# BAD: x = p * 1.18  # GOOD: total_price = base_price * TAX_RATE",
+                                                           "Constants in UPPER_CASE: MAX_STUDENTS = 30, TAX_RATE = 0.18"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "comment":  "Text ignored by Python, explaining code to humans (# or \u0027\u0027\u0027...\u0027\u0027\u0027)",
+                                                           "PEP 8":  "Python\u0027s official style guide for writing clean, consistent code",
+                                                           "snake_case":  "Naming convention using underscores: my_variable_name",
+                                                           "indentation":  "Spaces at line start defining code blocks — must be consistent"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "# in Python means:",
+                                                           "options":  [
+                                                                           "Number sign for math",
+                                                                           "Hashtag",
+                                                                           "Comment — ignored by Python",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Everything after # on a line is a comment — Python skips it."
+                                                       },
+                                                       {
+                                                           "question":  "Good comments explain:",
+                                                           "options":  [
+                                                                           "The programmer\u0027s name",
+                                                                           "WHAT each line does",
+                                                                           "Nothing — comments are unnecessary",
+                                                                           "WHY the code does something"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Code shows what; comments should explain the reasoning (why)."
+                                                       },
+                                                       {
+                                                           "question":  "Python variable naming convention:",
+                                                           "options":  [
+                                                                           "snake_case (words_with_underscores)",
+                                                                           "camelCase",
+                                                                           "PascalCase",
+                                                                           "ALL_CAPS always"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "PEP 8 recommends snake_case for variables and functions."
+                                                       },
+                                                       {
+                                                           "question":  "Consistent indentation is important because:",
+                                                           "options":  [
+                                                                           "It looks nice",
+                                                                           "Python uses indentation to define code blocks",
+                                                                           "It\u0027s optional",
+                                                                           "Other languages require it"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Unlike most languages, Python REQUIRES correct indentation — it defines structure."
+                                                       },
+                                                       {
+                                                           "question":  "Constants should be written in:",
+                                                           "options":  [
+                                                                           "camelCase",
+                                                                           "lowercase",
+                                                                           "UPPER_CASE (e.g., MAX_SIZE = 100)",
+                                                                           "Any style"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "PEP 8 convention: constants use ALL_CAPS with underscores."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Type Conversion and String Formatting",
+                                          "content":  "Python can convert between types: int() for integers, float() for decimals, str() for strings, bool() for booleans. Be careful: int(\u0027hello\u0027) crashes — only convert valid values. Use try/except to handle conversion errors. String methods: .upper(), .lower(), .strip(), .replace(), .split(), .join(). String slicing: text[0] = first char, text[-1] = last, text[1:4] = chars 1-3, text[:3] = first 3. Strings are immutable — methods return new strings. Formatting: f-strings (f\u0027{name}\u0027), .format() method, or % operator (older style).",
+                                          "examples":  [
+                                                           "int(\u002742\u0027) = 42, float(\u00273.14\u0027) = 3.14, str(100) = \u0027100\u0027",
+                                                           "\u0027Hello World\u0027.split() = [\u0027Hello\u0027, \u0027World\u0027]",
+                                                           "f\u0027{price:.2f}\u0027 formats to 2 decimal places: 9.50"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "type conversion":  "Changing data from one type to another",
+                                                           "string slicing":  "Extracting part of a string using [start:end]",
+                                                           "immutable":  "Cannot be changed — operations return new values",
+                                                           "string method":  "A function called on a string: .upper(), .lower(), .split()"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "int(\u0027hello\u0027) will:",
+                                                           "options":  [
+                                                                           "Crash with a ValueError",
+                                                                           "Return 0",
+                                                                           "Return \u0027hello\u0027",
+                                                                           "Return None"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "\u0027hello\u0027 can\u0027t be converted to a number — Python raises an error."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027Python\u0027[0] returns:",
+                                                           "options":  [
+                                                                           "\u0027Python\u0027",
+                                                                           "\u0027y\u0027",
+                                                                           "\u0027P\u0027",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Index 0 = first character."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027hello\u0027.upper() returns:",
+                                                           "options":  [
+                                                                           "Error",
+                                                                           "\u0027hello\u0027",
+                                                                           "\u0027Hello\u0027",
+                                                                           "\u0027HELLO\u0027"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  ".upper() converts all characters to uppercase."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027a,b,c\u0027.split(\u0027,\u0027) returns:",
+                                                           "options":  [
+                                                                           "[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027]",
+                                                                           "\u0027abc\u0027",
+                                                                           "(\u0027a\u0027,\u0027b\u0027,\u0027c\u0027)",
+                                                                           "3"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  ".split(\u0027,\u0027) breaks the string at commas into a list."
+                                                       },
+                                                       {
+                                                           "question":  "f\u0027{3.14159:.2f}\u0027 outputs:",
+                                                           "options":  [
+                                                                           "\u00273.14\u0027",
+                                                                           "\u00273.14159\u0027",
+                                                                           "\u00273\u0027",
+                                                                           "\u00273.1\u0027"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  ":.2f formats to 2 decimal places."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Control Flow",
+                      "lessons":  [
+                                      {
+                                          "title":  "If/Else Decisions",
+                                          "content":  "Programs make decisions with if/elif/else. If condition is True, indented code runs. Elif checks another condition. Else runs if nothing matched. Indentation defines blocks in Python. Nest if statements for complex logic. Every if needs a colon (:).",
+                                          "examples":  [
+                                                           "if age \u003e= 18: print(\u0027Adult\u0027) elif age \u003e= 13: print(\u0027Teen\u0027) else: print(\u0027Child\u0027)",
+                                                           "if score \u003e= 50 and score \u003c 70: grade = \u0027C\u0027",
+                                                           "if password == \u0027secret\u0027: print(\u0027Access granted\u0027)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "if statement":  "Executes code when condition is True",
+                                                           "elif":  "Else if — checks another condition",
+                                                           "indentation":  "Spaces defining code blocks in Python",
+                                                           "nested if":  "An if statement inside another if statement"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "What prints if age=16? if age\u003e=18: print(\u0027A\u0027) else: print(\u0027B\u0027)",
+                                                           "options":  [
+                                                                           "Nothing",
+                                                                           "A",
+                                                                           "B",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "16 \u003c 18, so else runs, printing B."
+                                                       },
+                                                       {
+                                                           "question":  "How many elif blocks allowed?",
+                                                           "options":  [
+                                                                           "As many as needed",
+                                                                           "Only one",
+                                                                           "Only two",
+                                                                           "None"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Chain as many elif blocks as needed."
+                                                       },
+                                                       {
+                                                           "question":  "Missing colon after if causes:",
+                                                           "options":  [
+                                                                           "Runs else",
+                                                                           "Works fine",
+                                                                           "Prints nothing",
+                                                                           "Syntax error"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Python requires colons after if, elif, else."
+                                                       },
+                                                       {
+                                                           "question":  "if x \u003e 0: print(\u0027pos\u0027) elif x \u003c 0: print(\u0027neg\u0027) else: print(\u0027zero\u0027). If x=0:",
+                                                           "options":  [
+                                                                           "Prints \u0027zero\u0027",
+                                                                           "Prints \u0027pos\u0027",
+                                                                           "Prints \u0027neg\u0027",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "0 is not \u003e 0 or \u003c 0, so else runs: \u0027zero\u0027."
+                                                       },
+                                                       {
+                                                           "question":  "To check multiple conditions at once:",
+                                                           "options":  [
+                                                                           "It\u0027s not possible",
+                                                                           "Write separate if statements only",
+                                                                           "Use commas",
+                                                                           "Use \u0027and\u0027 or \u0027or\u0027 operators"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "\u0027and\u0027 requires both True; \u0027or\u0027 requires at least one True."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Loops",
+                                          "content":  "For loops run a set number of times: for i in range(5) runs 5 times (i=0,1,2,3,4). While loops run while condition is True. Break exits early. Continue skips to next iteration. Range(start, stop, step): range(0, 10, 2) gives 0,2,4,6,8. Careful with while — if condition never becomes False, infinite loop.",
+                                          "examples":  [
+                                                           "for i in range(3): print(i)  # 0, 1, 2",
+                                                           "while guess != answer: guess = int(input(\u0027Guess: \u0027))",
+                                                           "for name in [\u0027Alice\u0027,\u0027Bob\u0027]: print(f\u0027Hi {name}\u0027)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "for loop":  "Iterates a specific number of times or over a collection",
+                                                           "while loop":  "Continues while condition is True",
+                                                           "infinite loop":  "A loop that never ends",
+                                                           "range":  "Generates a sequence of numbers: range(start, stop, step)"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "for i in range(4) loops:",
+                                                           "options":  [
+                                                                           "4 times (0,1,2,3)",
+                                                                           "5 times",
+                                                                           "3 times",
+                                                                           "1 time"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "range(4) = 0, 1, 2, 3 — four iterations."
+                                                       },
+                                                       {
+                                                           "question":  "break does:",
+                                                           "options":  [
+                                                                           "Restarts the loop",
+                                                                           "Pauses the loop",
+                                                                           "Exits the loop immediately",
+                                                                           "Nothing"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Break stops the loop entirely."
+                                                       },
+                                                       {
+                                                           "question":  "Use while when:",
+                                                           "options":  [
+                                                                           "Always",
+                                                                           "You know exact count",
+                                                                           "Never",
+                                                                           "You don\u0027t know how many iterations"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "While loops for unknown repetitions based on a condition."
+                                                       },
+                                                       {
+                                                           "question":  "range(1, 10, 2) gives:",
+                                                           "options":  [
+                                                                           "1, 2, 3...10",
+                                                                           "1, 3, 5, 7, 9",
+                                                                           "2, 4, 6, 8, 10",
+                                                                           "1, 10, 2"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Start 1, stop before 10, step 2: 1, 3, 5, 7, 9."
+                                                       },
+                                                       {
+                                                           "question":  "continue in a loop:",
+                                                           "options":  [
+                                                                           "Exits the loop",
+                                                                           "Skips rest of current iteration, goes to next",
+                                                                           "Restarts from beginning",
+                                                                           "Pauses execution"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Continue skips the remaining code in this iteration and moves to the next."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Functions",
+                                          "content":  "Functions are reusable code blocks. Define with def, call by name. Parameters are inputs, return sends values back. Default parameters: def greet(name, greeting=\u0027Hello\u0027). Functions can call other functions. Scope: variables inside functions are local — not accessible outside. Built-in functions: len(), max(), min(), sum(), type(), sorted(), abs(), round().",
+                                          "examples":  [
+                                                           "def square(n): return n * n",
+                                                           "def is_even(n): return n % 2 == 0",
+                                                           "def greet(name, greeting=\u0027Hello\u0027): return f\u0027{greeting}, {name}!\u0027"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "function":  "Reusable code block defined with \u0027def\u0027",
+                                                           "parameter":  "Variable receiving input values",
+                                                           "return":  "Sends value back from function",
+                                                           "scope":  "Where a variable is accessible — local (inside function) or global"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "return does:",
+                                                           "options":  [
+                                                                           "Prints a value",
+                                                                           "Sends value back to caller",
+                                                                           "Stops program",
+                                                                           "Repeats function"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Return exits function and passes value back."
+                                                       },
+                                                       {
+                                                           "question":  "def double(x): return x*2. double(7)?",
+                                                           "options":  [
+                                                                           "9",
+                                                                           "7",
+                                                                           "14",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "double(7) returns 7*2 = 14."
+                                                       },
+                                                       {
+                                                           "question":  "Functions are useful for:",
+                                                           "options":  [
+                                                                           "Required by Python",
+                                                                           "Making code run faster",
+                                                                           "Code reuse and organization",
+                                                                           "Using less memory"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Write once, call many times — organized and maintainable."
+                                                       },
+                                                       {
+                                                           "question":  "A local variable is:",
+                                                           "options":  [
+                                                                           "A constant",
+                                                                           "Accessible everywhere",
+                                                                           "Only accessible inside its function",
+                                                                           "A global variable"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Local scope: created inside a function, exists only there."
+                                                       },
+                                                       {
+                                                           "question":  "def add(a, b=0): return a+b. add(5)?",
+                                                           "options":  [
+                                                                           "5",
+                                                                           "Error",
+                                                                           "0",
+                                                                           "10"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "b defaults to 0: add(5) = 5 + 0 = 5."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "List Comprehensions and Lambda",
+                                          "content":  "List comprehensions create lists in one line: [expression for item in iterable if condition]. Example: squares = [x**2 for x in range(10)] creates [0,1,4,9,16,25,36,49,64,81]. With filter: evens = [x for x in range(20) if x % 2 == 0]. Lambda functions are anonymous one-line functions: double = lambda x: x * 2. Useful with built-in functions like map(), filter(), and sorted(). Map applies a function to every item: list(map(lambda x: x*2, [1,2,3])) = [2,4,6]. These are powerful tools for writing concise, readable Python.",
+                                          "examples":  [
+                                                           "[x**2 for x in range(5)] = [0, 1, 4, 9, 16]",
+                                                           "[name.upper() for name in [\u0027alice\u0027, \u0027bob\u0027]] = [\u0027ALICE\u0027, \u0027BOB\u0027]",
+                                                           "sorted(students, key=lambda s: s[\u0027grade\u0027]) — sorts students by grade"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "list comprehension":  "A concise way to create lists: [expr for item in iterable if condition]",
+                                                           "lambda":  "An anonymous one-line function: lambda params: expression",
+                                                           "map":  "Applies a function to every item in an iterable",
+                                                           "filter":  "Selects items from an iterable that satisfy a condition"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "[x*2 for x in range(4)] gives:",
+                                                           "options":  [
+                                                                           "[0, 1, 2, 3]",
+                                                                           "[2, 4, 6, 8]",
+                                                                           "[1, 2, 3, 4]",
+                                                                           "[0, 2, 4, 6]"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "range(4) = 0,1,2,3. Multiply each by 2: 0,2,4,6."
+                                                       },
+                                                       {
+                                                           "question":  "lambda x: x + 1 is:",
+                                                           "options":  [
+                                                                           "A variable named lambda",
+                                                                           "An anonymous function that adds 1",
+                                                                           "A loop",
+                                                                           "A class"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Lambda creates a small unnamed function in one line."
+                                                       },
+                                                       {
+                                                           "question":  "[x for x in range(10) if x % 3 == 0] gives:",
+                                                           "options":  [
+                                                                           "[0, 3, 6, 9]",
+                                                                           "[3, 6, 9]",
+                                                                           "[1, 2, 3]",
+                                                                           "[0, 1, 2, 3]"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Filters numbers 0-9 divisible by 3: 0, 3, 6, 9."
+                                                       },
+                                                       {
+                                                           "question":  "List comprehensions are useful because:",
+                                                           "options":  [
+                                                                           "They create lists concisely in one line",
+                                                                           "They are faster than any loop",
+                                                                           "They are the only way to make lists",
+                                                                           "They work in all languages"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Comprehensions are a Pythonic, readable way to create lists from iterables."
+                                                       },
+                                                       {
+                                                           "question":  "sorted([3,1,2], key=lambda x: -x) gives:",
+                                                           "options":  [
+                                                                           "[1, 2, 3]",
+                                                                           "[3, 2, 1]",
+                                                                           "[2, 1, 3]",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "key=lambda x: -x sorts by negative value — descending order."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Modules and Libraries",
+                                          "content":  "Modules are Python files containing reusable code. Import with: import math, then use math.sqrt(16). Import specific items: from math import sqrt, pi. Common standard library modules: math (mathematical functions), random (random numbers), datetime (dates and times), os (operating system interaction), json (reading/writing JSON). Third-party libraries extend Python: numpy (arrays/math), pandas (data analysis), matplotlib (graphs), flask (web apps), requests (HTTP). Install with pip: pip install requests. Creating your own module: just save functions in a .py file and import it.",
+                                          "examples":  [
+                                                           "import random; random.randint(1, 100) — random number between 1 and 100",
+                                                           "from datetime import datetime; now = datetime.now() — current date and time",
+                                                           "import json; data = json.loads(\u0027{\"name\": \"Alice\"}\u0027) — parse JSON string to dictionary"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "module":  "A Python file containing reusable functions and variables",
+                                                           "import":  "Loading a module to use its contents in your program",
+                                                           "pip":  "Python\u0027s package installer for third-party libraries",
+                                                           "standard library":  "Modules included with Python — no installation needed"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "To use sqrt from math:",
+                                                           "options":  [
+                                                                           "Just type sqrt()",
+                                                                           "import math then math.sqrt()",
+                                                                           "Install it with pip",
+                                                                           "It\u0027s built-in without import"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Standard library modules need importing: import math."
+                                                       },
+                                                       {
+                                                           "question":  "pip is used to:",
+                                                           "options":  [
+                                                                           "Debug programs",
+                                                                           "Run Python code",
+                                                                           "Install third-party Python packages",
+                                                                           "Create variables"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "pip install package_name downloads and installs external libraries."
+                                                       },
+                                                       {
+                                                           "question":  "random.randint(1, 6) could return:",
+                                                           "options":  [
+                                                                           "Any integer from 1 to 6 inclusive",
+                                                                           "Only 1 or 6",
+                                                                           "A float between 1 and 6",
+                                                                           "Always 3"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "randint returns a random integer between the two values, inclusive."
+                                                       },
+                                                       {
+                                                           "question":  "from math import pi allows:",
+                                                           "options":  [
+                                                                           "Nothing different",
+                                                                           "Using all math functions",
+                                                                           "Creating pi",
+                                                                           "Using pi directly without math. prefix"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "from X import Y lets you use Y directly instead of X.Y."
+                                                       },
+                                                       {
+                                                           "question":  "To create your own module:",
+                                                           "options":  [
+                                                                           "Save functions in a .py file and import it",
+                                                                           "Register it with Python",
+                                                                           "Buy a license",
+                                                                           "Use a special tool"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Any .py file can be imported as a module — just use import filename."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Data Structures",
+                      "lessons":  [
+                                      {
+                                          "title":  "Lists",
+                                          "content":  "Lists are ordered, mutable collections. Create: fruits = [\u0027apple\u0027, \u0027banana\u0027]. Access by index (from 0): fruits[0] = \u0027apple\u0027. Add: append(), insert(). Remove: remove(), pop(). Length: len(). Sort: sort() or sorted(). Slice: fruits[1:3]. Lists hold mixed types. Loop: for item in list. Check membership: if \u0027apple\u0027 in fruits. Nested lists: matrix = [[1,2],[3,4]].",
+                                          "examples":  [
+                                                           "scores = [85, 92, 78]; scores.append(88)",
+                                                           "names = [\u0027Alice\u0027, \u0027Bob\u0027]; print(names[1])  # Bob",
+                                                           "numbers.sort()  # sorts in place"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "list":  "Ordered mutable collection in []",
+                                                           "index":  "Position starting from 0",
+                                                           "append":  "Add item to end",
+                                                           "slice":  "Extract sublist with [start:end]",
+                                                           "mutable":  "Can be changed after creation"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "First item index:",
+                                                           "options":  [
+                                                                           "0",
+                                                                           "1",
+                                                                           "-1",
+                                                                           "None"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Python starts at 0."
+                                                       },
+                                                       {
+                                                           "question":  "fruits.append(\u0027mango\u0027):",
+                                                           "options":  [
+                                                                           "Removes \u0027mango\u0027",
+                                                                           "Adds \u0027mango\u0027 to end",
+                                                                           "Replaces first",
+                                                                           "Sorts list"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "append() adds to the end."
+                                                       },
+                                                       {
+                                                           "question":  "len([1,2,3,4,5]):",
+                                                           "options":  [
+                                                                           "6",
+                                                                           "4",
+                                                                           "5",
+                                                                           "0"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "5 items in the list."
+                                                       },
+                                                       {
+                                                           "question":  "[1,2,3][1:3] gives:",
+                                                           "options":  [
+                                                                           "[3]",
+                                                                           "[1, 2]",
+                                                                           "[1, 2, 3]",
+                                                                           "[2, 3]"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Slice from index 1 up to (not including) 3."
+                                                       },
+                                                       {
+                                                           "question":  "To check if 5 is in a list:",
+                                                           "options":  [
+                                                                           "if my_list.contains(5)",
+                                                                           "if my_list.has(5)",
+                                                                           "if 5 in my_list",
+                                                                           "if 5 == my_list"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "The \u0027in\u0027 keyword checks membership."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Dictionaries",
+                                          "content":  "Dictionaries store key-value pairs: student = {\u0027name\u0027: \u0027Alice\u0027, \u0027age\u0027: 15}. Access: student[\u0027name\u0027]. Add/update: student[\u0027school\u0027] = \u0027Otic\u0027. Keys must be unique and immutable. Check: if \u0027name\u0027 in student. Loop: for key, val in student.items(). Methods: .keys(), .values(), .items(), .get(key, default). Delete: del student[\u0027age\u0027] or student.pop(\u0027age\u0027). Dictionaries are ideal for structured data.",
+                                          "examples":  [
+                                                           "prices = {\u0027apple\u0027: 1.50}; print(prices[\u0027apple\u0027])",
+                                                           "student[\u0027age\u0027] = 16  # adds/updates",
+                                                           "for k, v in student.items(): print(f\u0027{k}: {v}\u0027)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "dictionary":  "Collection of key-value pairs in {}",
+                                                           "key":  "Unique identifier for looking up values",
+                                                           "value":  "Data associated with a key",
+                                                           "items":  "Method returning all key-value pairs"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Access value for key \u0027name\u0027:",
+                                                           "options":  [
+                                                                           "student(name)",
+                                                                           "student.name",
+                                                                           "student[\u0027name\u0027]",
+                                                                           "student[0]"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Square brackets with the key."
+                                                       },
+                                                       {
+                                                           "question":  "Duplicate keys allowed?",
+                                                           "options":  [
+                                                                           "Only strings",
+                                                                           "Yes",
+                                                                           "No — keys must be unique",
+                                                                           "Only numbers"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Adding same key overwrites the old value."
+                                                       },
+                                                       {
+                                                           "question":  ".get(\u0027age\u0027, 0) does:",
+                                                           "options":  [
+                                                                           "Creates key \u0027age\u0027",
+                                                                           "Always returns 0",
+                                                                           "Returns age value or 0 if key doesn\u0027t exist",
+                                                                           "Deletes \u0027age\u0027"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  ".get() returns the value if key exists, otherwise the default (0)."
+                                                       },
+                                                       {
+                                                           "question":  "del student[\u0027age\u0027]:",
+                                                           "options":  [
+                                                                           "Deletes the student",
+                                                                           "Removes the \u0027age\u0027 key-value pair",
+                                                                           "Sets age to 0",
+                                                                           "Errors always"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "del removes a specific key and its value from the dictionary."
+                                                       },
+                                                       {
+                                                           "question":  "Dictionaries are best for:",
+                                                           "options":  [
+                                                                           "True/False data only",
+                                                                           "Ordered sequences of numbers",
+                                                                           "Single values",
+                                                                           "Structured data with named fields"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Key-value pairs are ideal for structured records like profiles and settings."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Tuples and Sets",
+                                          "content":  "Tuples are like lists but immutable — once created, they can\u0027t be changed. Create: coords = (3, 5) or point = 3, 5. Access by index like lists. Used for data that shouldn\u0027t change: coordinates, database records, function return values. Packing/unpacking: x, y = (3, 5). Sets are unordered collections of unique items: unique = {1, 2, 3}. Sets automatically remove duplicates: {1, 1, 2, 2, 3} = {1, 2, 3}. Set operations: union (|), intersection (\u0026), difference (-). Sets are fast for membership testing (much faster than lists for large datasets).",
+                                          "examples":  [
+                                                           "point = (4, 7); x, y = point  # unpacking: x=4, y=7",
+                                                           "{1, 2, 3} \u0026 {2, 3, 4} = {2, 3}  # intersection",
+                                                           "list_with_dupes = [1,1,2,2,3]; unique = list(set(list_with_dupes))  # removes duplicates"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "tuple":  "An immutable ordered collection — cannot be changed after creation",
+                                                           "set":  "An unordered collection of unique items — no duplicates allowed",
+                                                           "immutable":  "Cannot be modified after creation",
+                                                           "unpacking":  "Assigning tuple elements to individual variables"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Tuples are different from lists because:",
+                                                           "options":  [
+                                                                           "Tuples are unordered",
+                                                                           "Tuples are immutable (can\u0027t be changed)",
+                                                                           "Tuples can\u0027t hold strings",
+                                                                           "There is no difference"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Tuples can\u0027t be modified after creation — lists can."
+                                                       },
+                                                       {
+                                                           "question":  "{1, 2, 3} | {3, 4, 5} gives:",
+                                                           "options":  [
+                                                                           "{1, 2, 4, 5}",
+                                                                           "{3}",
+                                                                           "{1, 2, 3, 4, 5}",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Union combines all unique elements from both sets."
+                                                       },
+                                                       {
+                                                           "question":  "set([1, 1, 2, 2, 3]) gives:",
+                                                           "options":  [
+                                                                           "[1, 1, 2, 2, 3]",
+                                                                           "{1, 2, 3}",
+                                                                           "{1, 2, 2, 3}",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Sets automatically remove duplicates."
+                                                       },
+                                                       {
+                                                           "question":  "x, y, z = (10, 20, 30) is called:",
+                                                           "options":  [
+                                                                           "Tuple packing",
+                                                                           "Tuple unpacking",
+                                                                           "List slicing",
+                                                                           "Variable deletion"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Unpacking assigns each tuple element to a separate variable."
+                                                       },
+                                                       {
+                                                           "question":  "When to use a tuple instead of a list:",
+                                                           "options":  [
+                                                                           "When you need to add items later",
+                                                                           "When data should not be changed (coordinates, constants)",
+                                                                           "When order doesn\u0027t matter",
+                                                                           "Always"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Tuples signal intent: this data is fixed and shouldn\u0027t be modified."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Working with Strings",
+                                          "content":  "Strings are sequences. Access characters by index: \u0027hello\u0027[0] = \u0027h\u0027. Slice: \u0027hello\u0027[1:4] = \u0027ell\u0027. Methods: .upper(), .lower(), .strip(), .replace(old, new), .split(), .join(), .find(), .count(), .startswith(), .endswith(). Strings are immutable — methods return new strings. Check: \u0027ell\u0027 in \u0027hello\u0027 → True. Length: len(\u0027hello\u0027) = 5. Formatting: f-strings, .format(), or %.",
+                                          "examples":  [
+                                                           "\u0027Hello World\u0027.upper() → \u0027HELLO WORLD\u0027",
+                                                           "\u0027apple,banana\u0027.split(\u0027,\u0027) → [\u0027apple\u0027, \u0027banana\u0027]",
+                                                           "\u0027 \u0027.join([\u0027Hello\u0027, \u0027World\u0027]) → \u0027Hello World\u0027"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "string method":  "Function called on a string: .upper(), .split()",
+                                                           "slicing":  "Extracting substring with [start:end]",
+                                                           "immutable":  "Can\u0027t change — methods return new strings",
+                                                           "join":  "Combines list elements into one string with a separator"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "\u0027hello\u0027.upper():",
+                                                           "options":  [
+                                                                           "\u0027Hello\u0027",
+                                                                           "\u0027hello\u0027",
+                                                                           "\u0027HELLO\u0027",
+                                                                           "Error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  ".upper() converts all to uppercase."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027a,b,c\u0027.split(\u0027,\u0027):",
+                                                           "options":  [
+                                                                           "[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027]",
+                                                                           "\u0027abc\u0027",
+                                                                           "(\u0027a\u0027,\u0027b\u0027,\u0027c\u0027)",
+                                                                           "3"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Split at commas into a list."
+                                                       },
+                                                       {
+                                                           "question":  "Strings are:",
+                                                           "options":  [
+                                                                           "Immutable",
+                                                                           "Mutable",
+                                                                           "Both",
+                                                                           "Neither"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "Strings can\u0027t be changed — methods return new strings."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027hello world\u0027.count(\u0027o\u0027):",
+                                                           "options":  [
+                                                                           "0",
+                                                                           "1",
+                                                                           "3",
+                                                                           "2"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "\u0027o\u0027 appears twice in \u0027hello world\u0027."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027Python\u0027.startswith(\u0027Py\u0027):",
+                                                           "options":  [
+                                                                           "None",
+                                                                           "False",
+                                                                           "Error",
+                                                                           "True"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "\u0027Python\u0027 does start with \u0027Py\u0027 — returns True."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "File Handling and JSON",
+                                          "content":  "Read files: with open(\u0027file.txt\u0027, \u0027r\u0027) as f: content = f.read(). Write: with open(\u0027file.txt\u0027, \u0027w\u0027) as f: f.write(\u0027Hello\u0027). Modes: \u0027r\u0027 read, \u0027w\u0027 write (overwrites), \u0027a\u0027 append, \u0027r+\u0027 read and write. \u0027with\u0027 automatically closes. Read lines: f.readlines() or loop: for line in f. JSON for structured data: json.load(file) reads JSON to dict, json.dump(data, file) writes dict to JSON. json.loads(string) and json.dumps(dict) for strings. CSV files: import csv, reader/writer objects. Always handle FileNotFoundError for missing files.",
+                                          "examples":  [
+                                                           "with open(\u0027data.txt\u0027, \u0027w\u0027) as f: f.write(\u0027Line 1\\nLine 2\u0027)",
+                                                           "import json; data = json.load(open(\u0027config.json\u0027))",
+                                                           "with open(\u0027log.txt\u0027, \u0027a\u0027) as f: f.write(f\u0027{datetime.now()}: event\\n\u0027)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "file handling":  "Reading from and writing to files",
+                                                           "with statement":  "Automatically closes file when block ends",
+                                                           "JSON":  "JavaScript Object Notation — structured data format",
+                                                           "CSV":  "Comma-Separated Values — tabular data format"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "\u0027r\u0027 mode:",
+                                                           "options":  [
+                                                                           "Execute",
+                                                                           "Write (overwrite)",
+                                                                           "Append",
+                                                                           "Read"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "\u0027r\u0027 = read, \u0027w\u0027 = write, \u0027a\u0027 = append."
+                                                       },
+                                                       {
+                                                           "question":  "Why use \u0027with open()\u0027:",
+                                                           "options":  [
+                                                                           "Faster",
+                                                                           "Auto-closes the file",
+                                                                           "Reads more data",
+                                                                           "Required"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "With ensures proper closing even if errors occur."
+                                                       },
+                                                       {
+                                                           "question":  "\u0027w\u0027 mode on existing file:",
+                                                           "options":  [
+                                                                           "Reads",
+                                                                           "Appends",
+                                                                           "Overwrites completely",
+                                                                           "Deletes file"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "\u0027w\u0027 erases existing content. Use \u0027a\u0027 to append."
+                                                       },
+                                                       {
+                                                           "question":  "json.load(file) returns:",
+                                                           "options":  [
+                                                                           "A string",
+                                                                           "Python dictionary/list from JSON file",
+                                                                           "A file object",
+                                                                           "Nothing"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "json.load() parses JSON file content into Python data structures."
+                                                       },
+                                                       {
+                                                           "question":  "To handle a missing file:",
+                                                           "options":  [
+                                                                           "Always create first",
+                                                                           "Ignore it",
+                                                                           "try/except FileNotFoundError",
+                                                                           "Use \u0027w\u0027 mode"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "try/except catches the error and handles it gracefully."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "title":  "Building Programs",
+                      "lessons":  [
+                                      {
+                                          "title":  "Debugging and Error Handling",
+                                          "content":  "Bugs are code errors. Syntax errors: typos, missing colons — caught before running. Runtime errors: division by zero, missing files — happen during execution. Logic errors: wrong results but no crash — hardest to find. Use try/except for graceful error handling. Print statements for debugging. Read error messages: they show line number and type. Python debugger (pdb) for step-by-step execution.",
+                                          "examples":  [
+                                                           "try: result = 10/0 except ZeroDivisionError: print(\u0027Cannot divide by zero!\u0027)",
+                                                           "SyntaxError: missing colon after if",
+                                                           "IndexError: list index out of range"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "syntax error":  "Code structure mistake preventing execution",
+                                                           "runtime error":  "Error during execution",
+                                                           "try/except":  "Catches and handles errors gracefully",
+                                                           "logic error":  "Code runs but gives wrong results"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Missing colon after if is:",
+                                                           "options":  [
+                                                                           "Logic error",
+                                                                           "Runtime error",
+                                                                           "Syntax error",
+                                                                           "Type error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Syntax errors are caught before the program runs."
+                                                       },
+                                                       {
+                                                           "question":  "try/except does:",
+                                                           "options":  [
+                                                                           "Fixes bugs automatically",
+                                                                           "Makes code faster",
+                                                                           "Catches errors, handles gracefully",
+                                                                           "Skips code"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "try runs risky code; except handles failures."
+                                                       },
+                                                       {
+                                                           "question":  "Program runs but wrong answers:",
+                                                           "options":  [
+                                                                           "Runtime error",
+                                                                           "Syntax error",
+                                                                           "Logic error",
+                                                                           "Compiler error"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Logic errors give incorrect results without crashing."
+                                                       },
+                                                       {
+                                                           "question":  "Best first debugging step:",
+                                                           "options":  [
+                                                                           "Ignore it",
+                                                                           "Rewrite everything",
+                                                                           "Delete the file",
+                                                                           "Read the error message carefully"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Error messages tell you the type, line, and often what went wrong."
+                                                       },
+                                                       {
+                                                           "question":  "except Exception as e:",
+                                                           "options":  [
+                                                                           "Prevents all errors",
+                                                                           "Only catches one type",
+                                                                           "Catches any error and stores it in variable e",
+                                                                           "Crashes the program"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Exception catches all errors; \u0027as e\u0027 lets you print/inspect the error."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Object-Oriented Programming",
+                                          "content":  "OOP organizes code around objects — things that have data (attributes) and behaviors (methods). A class is a blueprint: class Dog: defines what a dog is. An object is an instance: my_dog = Dog(\u0027Rex\u0027). The __init__ method initializes attributes when an object is created. self refers to the current instance. Inheritance: a child class inherits from a parent class — class Puppy(Dog): gets all Dog\u0027s attributes and methods, plus its own. Encapsulation: keeping data private. OOP makes large programs manageable by grouping related data and behavior together.",
+                                          "examples":  [
+                                                           "class Student: def __init__(self, name, age): self.name = name; self.age = age",
+                                                           "s = Student(\u0027Alice\u0027, 15); print(s.name)  # \u0027Alice\u0027",
+                                                           "class GradStudent(Student): — inherits name and age, adds research_topic"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "class":  "A blueprint/template for creating objects",
+                                                           "object":  "An instance of a class with specific data",
+                                                           "inheritance":  "A class inheriting attributes and methods from a parent class",
+                                                           "method":  "A function defined inside a class",
+                                                           "self":  "Reference to the current instance of the class"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "A class is:",
+                                                           "options":  [
+                                                                           "A loop",
+                                                                           "A variable",
+                                                                           "A function",
+                                                                           "A blueprint for creating objects"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Classes define the structure and behavior that objects will have."
+                                                       },
+                                                       {
+                                                           "question":  "__init__ is called when:",
+                                                           "options":  [
+                                                                           "A variable is deleted",
+                                                                           "The program ends",
+                                                                           "A method is called",
+                                                                           "A new object is created"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "__init__ initializes the object\u0027s attributes at creation time."
+                                                       },
+                                                       {
+                                                           "question":  "self refers to:",
+                                                           "options":  [
+                                                                           "The parent class",
+                                                                           "The class itself",
+                                                                           "Python itself",
+                                                                           "The current instance of the class"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "self is the specific object calling the method."
+                                                       },
+                                                       {
+                                                           "question":  "Inheritance allows:",
+                                                           "options":  [
+                                                                           "Running loops",
+                                                                           "Deleting classes",
+                                                                           "Creating variables",
+                                                                           "A child class to reuse parent class code"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Child classes inherit parent attributes/methods and can add or override them."
+                                                       },
+                                                       {
+                                                           "question":  "OOP is useful because:",
+                                                           "options":  [
+                                                                           "It makes code shorter always",
+                                                                           "It\u0027s the only way to code",
+                                                                           "It organizes code around real-world concepts",
+                                                                           "It prevents all bugs"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "OOP groups related data and behavior, making large programs manageable."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Testing Your Code",
+                                          "content":  "Testing verifies that code works correctly. Manual testing: run the program and check outputs. Automated testing is better: write test functions that check expected results automatically. Unit tests test individual functions: assert add(2,3) == 5. Python\u0027s unittest module provides a framework. Test-driven development (TDD): write tests FIRST, then write code to pass them. Test edge cases: empty input, zero, negative numbers, very large values. Good tests are: independent (don\u0027t depend on each other), repeatable (same result every time), and fast. Code coverage measures what percentage of your code is tested.",
+                                          "examples":  [
+                                                           "assert add(2, 3) == 5  # passes silently if correct, raises AssertionError if wrong",
+                                                           "import unittest; class TestMath(unittest.TestCase): def test_add(self): self.assertEqual(add(2,3), 5)",
+                                                           "Edge cases for divide(a,b): test divide(10,2)=5, divide(0,5)=0, divide(5,0) should raise error"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "unit test":  "Testing a single function or method in isolation",
+                                                           "assert":  "A statement that checks if a condition is True — raises error if False",
+                                                           "TDD":  "Test-Driven Development — write tests before writing code",
+                                                           "edge case":  "Unusual input that might cause unexpected behavior"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Unit tests check:",
+                                                           "options":  [
+                                                                           "Hardware performance",
+                                                                           "The entire program at once",
+                                                                           "Individual functions work correctly",
+                                                                           "Internet speed"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Unit tests verify each function independently."
+                                                       },
+                                                       {
+                                                           "question":  "assert 2 + 2 == 5 will:",
+                                                           "options":  [
+                                                                           "Raise an AssertionError",
+                                                                           "Print True",
+                                                                           "Do nothing",
+                                                                           "Print 5"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "2+2 ≠ 5, so the assertion fails and raises an error."
+                                                       },
+                                                       {
+                                                           "question":  "TDD means:",
+                                                           "options":  [
+                                                                           "Write tests first, then write code to pass them",
+                                                                           "Test after deployment",
+                                                                           "Testing is optional",
+                                                                           "Tests drive themselves"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "TDD: write a failing test → write code to pass it → refactor."
+                                                       },
+                                                       {
+                                                           "question":  "An edge case for a function that divides two numbers:",
+                                                           "options":  [
+                                                                           "Normal inputs",
+                                                                           "10 divided by 2",
+                                                                           "100 divided by 10",
+                                                                           "Division by zero"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Edge cases test boundaries — division by zero should be handled gracefully."
+                                                       },
+                                                       {
+                                                           "question":  "Good tests should be:",
+                                                           "options":  [
+                                                                           "Dependent on other tests",
+                                                                           "Slow and complex",
+                                                                           "Run only once",
+                                                                           "Independent, repeatable, and fast"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Tests should run independently, give same results each time, and execute quickly."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "Planning and Problem Solving",
+                                          "content":  "Good programmers plan before coding. Decomposition: break problems into smaller steps. Write pseudocode first — plain English steps. Use flowcharts for logic visualization. Test with edge cases (empty, zero, very large, negative). Write clean code: meaningful names, consistent formatting, DRY (Don\u0027t Repeat Yourself). Version control (Git) tracks changes. Code review: have others read your code. Refactoring: improving code structure without changing behavior.",
+                                          "examples":  [
+                                                           "Pseudocode: 1. Ask for number 2. If \u003e 0 print \u0027positive\u0027 3. Else print \u0027not positive\u0027",
+                                                           "Edge case: what if user enters nothing? Handle with if/else",
+                                                           "DRY: same calculation 5 times → make a function"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "pseudocode":  "Plain English program description before real code",
+                                                           "decomposition":  "Breaking complex problems into smaller parts",
+                                                           "edge case":  "Unusual input that might cause errors",
+                                                           "DRY":  "Don\u0027t Repeat Yourself — use functions to avoid duplication",
+                                                           "refactoring":  "Improving code structure without changing its behavior"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "Decomposition means:",
+                                                           "options":  [
+                                                                           "Compressing files",
+                                                                           "Deleting old code",
+                                                                           "Breaking a problem into smaller parts",
+                                                                           "Running faster"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Divide big problems into smaller, solvable pieces."
+                                                       },
+                                                       {
+                                                           "question":  "DRY stands for:",
+                                                           "options":  [
+                                                                           "Don\u0027t Return Yet",
+                                                                           "Delete Redundant Yields",
+                                                                           "Debug Run Yourself",
+                                                                           "Don\u0027t Repeat Yourself"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Avoid duplicating code — use functions and loops instead."
+                                                       },
+                                                       {
+                                                           "question":  "Why test edge cases?",
+                                                           "options":  [
+                                                                           "They make code faster",
+                                                                           "They reveal hidden bugs",
+                                                                           "Required by Python",
+                                                                           "They reduce file size"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "Unusual inputs often expose errors normal testing misses."
+                                                       },
+                                                       {
+                                                           "question":  "Version control (Git) helps by:",
+                                                           "options":  [
+                                                                           "Reducing file size",
+                                                                           "Making code run faster",
+                                                                           "Fixing bugs automatically",
+                                                                           "Tracking all changes and allowing undo"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "Git records every change — you can review history and revert mistakes."
+                                                       },
+                                                       {
+                                                           "question":  "Refactoring means:",
+                                                           "options":  [
+                                                                           "Adding new features",
+                                                                           "Rewriting from scratch",
+                                                                           "Improving code structure without changing behavior",
+                                                                           "Deleting tests"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "Refactoring makes code cleaner and more maintainable — same functionality, better structure."
+                                                       }
+                                                   ]
+                                      },
+                                      {
+                                          "title":  "APIs and Web Requests",
+                                          "content":  "APIs let programs communicate over the internet. REST APIs use HTTP methods: GET (retrieve), POST (send), PUT (update), DELETE (remove). Data is usually JSON format. Python\u0027s requests library makes API calls easy: response = requests.get(\u0027https://api.example.com/data\u0027). Check status: response.status_code (200 = OK, 404 = not found, 500 = server error). Parse JSON: data = response.json(). Always handle errors: connection failures, timeouts, invalid responses. Rate limiting: APIs may restrict how many requests you can make per minute. API keys authenticate your requests — keep them secret, never commit to Git.",
+                                          "examples":  [
+                                                           "import requests; r = requests.get(\u0027https://api.github.com/users/octocat\u0027); print(r.json()[\u0027name\u0027])",
+                                                           "POST: requests.post(url, json={\u0027username\u0027: \u0027alice\u0027, \u0027email\u0027: \u0027a@b.com\u0027})",
+                                                           "Error handling: if r.status_code == 200: process(r.json()) else: print(f\u0027Error: {r.status_code}\u0027)"
+                                                       ],
+                                          "keyTerms":  {
+                                                           "API":  "Application Programming Interface — allows programs to communicate",
+                                                           "REST":  "A common API architecture using HTTP methods",
+                                                           "HTTP status code":  "Numeric code indicating request result (200=OK, 404=not found)",
+                                                           "JSON":  "JavaScript Object Notation — standard data format for APIs",
+                                                           "API key":  "A secret token authenticating your API requests"
+                                                       },
+                                          "quiz":  [
+                                                       {
+                                                           "question":  "GET request:",
+                                                           "options":  [
+                                                                           "Sends new data",
+                                                                           "Retrieves data from the server",
+                                                                           "Deletes data",
+                                                                           "Updates existing data"
+                                                                       ],
+                                                           "correct":  1,
+                                                           "explanation":  "GET asks the server to return data."
+                                                       },
+                                                       {
+                                                           "question":  "Status code 404 means:",
+                                                           "options":  [
+                                                                           "Not found",
+                                                                           "Success",
+                                                                           "Server error",
+                                                                           "Unauthorized"
+                                                                       ],
+                                                           "correct":  0,
+                                                           "explanation":  "404 = the requested resource doesn\u0027t exist at that URL."
+                                                       },
+                                                       {
+                                                           "question":  "response.json() returns:",
+                                                           "options":  [
+                                                                           "The URL",
+                                                                           "Raw HTML",
+                                                                           "A string only",
+                                                                           "Python dictionary/list from JSON response"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  ".json() parses the JSON response into Python data structures."
+                                                       },
+                                                       {
+                                                           "question":  "API keys should:",
+                                                           "options":  [
+                                                                           "Not be used",
+                                                                           "Be shared publicly",
+                                                                           "Be hard-coded everywhere",
+                                                                           "Be kept secret and never committed to Git"
+                                                                       ],
+                                                           "correct":  3,
+                                                           "explanation":  "API keys are credentials — exposing them can lead to unauthorized access and charges."
+                                                       },
+                                                       {
+                                                           "question":  "Rate limiting means:",
+                                                           "options":  [
+                                                                           "The API is broken",
+                                                                           "Your internet is slow",
+                                                                           "The API restricts how many requests you can make",
+                                                                           "You need a better computer"
+                                                                       ],
+                                                           "correct":  2,
+                                                           "explanation":  "APIs limit request frequency to prevent abuse — respect the limits or get blocked."
+                                                       }
+                                                   ]
+                                      }
+                                  ]
+                  }
+              ]
+}

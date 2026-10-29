@@ -1,0 +1,2319 @@
+{
+  "id": "physics",
+  "name": "Physics",
+  "icon": "science",
+  "color": "#0EA5E9",
+  "units": [
+    {
+      "title": "S1",
+      "lessons": [
+        {
+          "title": "Introduction to Physics",
+          "content": "What is physics? Physics is the branch of science that studies matter, energy, and the forces between them, seeking to explain how and why the physical world behaves the way it does — from why objects fall, to how light travels, to how electricity flows. What are the main branches of physics studied at this level? Mechanics (forces and motion), heat, light, waves and sound, magnetism and electricity, and modern/atomic physics — each branch focuses on a different aspect of how matter and energy interact. Why is safety so important in a physics laboratory? Experiments often involve heat, electricity, glass apparatus, and chemicals, so following safety rules — like tying back loose clothing, never tasting substances, reporting breakages immediately, and knowing where the fire extinguisher and first aid kit are — protects both the learner and others in the room. What is the scientific method, and why does physics rely on it? It's a systematic approach of observing a phenomenon, forming a hypothesis (an educated guess) about why it happens, testing that hypothesis through experiment, and drawing a conclusion from the results — this process ensures physics knowledge is based on evidence, not guesswork. Why does physics matter beyond the classroom? It underpins nearly all modern technology, from the phones we use to the electricity powering our homes, and understanding it helps learners make sense of — and safely interact with — the physical world around them.",
+          "examples": [
+            "A student wants to find out why a ball rolls further on a smooth floor than a rough one. Apply the scientific method.\nStep 1: Observe the phenomenon — the ball rolls different distances on different floors\nStep 2: Form a hypothesis — friction from the rough floor slows the ball down more\nStep 3: Test it — roll the same ball with the same force on both floors and measure the distance\nAnswer: If the ball consistently travels less far on the rough floor, the hypothesis is supported",
+            "Classify 'a magnet attracting a nail' into a branch of physics.\nStep 1: Identify what is involved — magnets and attraction\nStep 2: Match this to the branch that studies magnets\nAnswer: This falls under magnetism",
+            "Classify 'water boiling and turning to steam' into a branch of physics.\nStep 1: Identify what is involved — a substance changing state due to added energy\nStep 2: Match this to the branch that studies heat and temperature\nAnswer: This falls under heat",
+            "A learner smells a gas leak in the laboratory. State the correct safety action.\nStep 1: Recall lab safety rules for gas or chemical hazards\nStep 2: Identify that inhaling or approaching the source is unsafe\nAnswer: Immediately alert the teacher and evacuate the area — never investigate a suspected gas leak alone",
+            "Classify 'a rainbow appearing after rain' into a branch of physics.\nStep 1: Identify what is involved — light splitting into colours\nStep 2: Match this to the branch that studies light\nAnswer: This falls under light (optics)"
+          ],
+          "keyTerms": {
+            "physics": "The branch of science that studies matter, energy, and the forces between them",
+            "hypothesis": "An educated guess or proposed explanation that can be tested by experiment",
+            "laboratory safety": "Rules and practices that protect learners from injury during experiments"
+          },
+          "quiz": [
+            {
+              "question": "Which branch of physics studies forces and motion?",
+              "options": [
+                "Mechanics",
+                "Optics",
+                "Magnetism",
+                "Modern physics"
+              ],
+              "correct": 0,
+              "explanation": "Mechanics is the branch of physics dealing with forces, motion, and their effects."
+            },
+            {
+              "question": "What should you do first if you notice a chemical spill in the lab?",
+              "options": [
+                "Clean it yourself quietly",
+                "Ignore it",
+                "Report it to the teacher immediately",
+                "Taste it to identify it"
+              ],
+              "correct": 2,
+              "explanation": "Safety protocol requires immediately reporting hazards to the teacher, never handling them alone."
+            },
+            {
+              "question": "An educated guess that can be tested by experiment is called a:",
+              "options": [
+                "Law",
+                "Theory",
+                "Hypothesis",
+                "Conclusion"
+              ],
+              "correct": 2,
+              "explanation": "A hypothesis is a proposed explanation that is then tested."
+            },
+            {
+              "question": "Which branch of physics would 'a compass needle pointing north' belong to?",
+              "options": [
+                "Heat",
+                "Magnetism",
+                "Light",
+                "Sound"
+              ],
+              "correct": 1,
+              "explanation": "Compass needles align with magnetic fields, so this belongs to magnetism."
+            },
+            {
+              "question": "Physics is best described as the study of:",
+              "options": [
+                "Only electricity",
+                "Matter, energy, and the forces between them",
+                "Only living things",
+                "Only chemicals"
+              ],
+              "correct": 1,
+              "explanation": "Physics broadly studies matter, energy, and forces — living things are studied in biology, and chemicals primarily in chemistry."
+            }
+          ]
+        },
+        {
+          "title": "Measurements in Physics",
+          "content": "Why does physics rely on standard units of measurement? Without agreed standard units, measurements taken by different people in different places couldn't be compared or trusted — the SI (International System) of units gives every physical quantity a universally recognised unit, like the metre for length, the kilogram for mass, and the second for time. What is the difference between a fundamental and a derived quantity? Fundamental quantities (like length, mass, and time) are measured directly and form the basic building blocks of all other measurements; derived quantities (like area, volume, and speed) are calculated by combining fundamental quantities through a formula — for example, speed = distance ÷ time. What instruments are used to measure length precisely? A metre rule measures everyday lengths to the nearest millimetre; a vernier caliper measures small objects or internal/external diameters to 0.01cm using a sliding secondary scale; and a micrometer screw gauge measures very small thicknesses (like wire diameter) to 0.001cm using a calibrated rotating drum. How do you measure the volume of an irregular solid? Using the displacement method: submerge the object in a measuring cylinder partly filled with water, and the rise in water level equals the object's volume. Why is estimation and reading instruments correctly important? Misreading a scale (like ignoring parallax error, where your eye isn't level with the marking) introduces avoidable errors into an experiment's results.",
+          "examples": [
+            "Convert 250cm to metres.\nStep 1: Recall 100cm = 1m\nStep 2: Divide by 100: 250÷100\nAnswer: 2.5m",
+            "Convert 3.2kg to grams.\nStep 1: Recall 1kg = 1000g\nStep 2: Multiply by 1000: 3.2×1000\nAnswer: 3200g",
+            "A stone is lowered into a measuring cylinder; the water level rises from 40cm³ to 55cm³. Find the stone's volume.\nStep 1: Recall volume by displacement = final reading − initial reading\nStep 2: Subtract: 55−40\nAnswer: Volume of stone = 15cm³",
+            "A vernier caliper's main scale reads 2.3cm and the sliding (vernier) scale adds 0.04cm. Find the total reading.\nStep 1: Identify the main scale reading: 2.3cm\nStep 2: Add the vernier scale reading: 2.3+0.04\nAnswer: 2.34cm",
+            "State which instrument is best for measuring the diameter of a thin wire, and why.\nStep 1: Consider the size of the object — very small (sub-millimetre precision needed)\nStep 2: Recall the micrometer screw gauge measures to 0.001cm, the finest of the common instruments\nAnswer: A micrometer screw gauge, because it gives the highest precision for very small dimensions"
+          ],
+          "keyTerms": {
+            "fundamental quantity": "A basic physical quantity measured directly, like length, mass, or time",
+            "derived quantity": "A quantity calculated from fundamental quantities, like speed or volume",
+            "vernier caliper": "An instrument measuring length to 0.01cm using a sliding secondary scale",
+            "micrometer screw gauge": "An instrument measuring very small lengths to 0.001cm using a calibrated screw"
+          },
+          "quiz": [
+            {
+              "question": "Which of these is a fundamental quantity?",
+              "options": [
+                "Speed",
+                "Volume",
+                "Mass",
+                "Area"
+              ],
+              "correct": 2,
+              "explanation": "Mass is measured directly and is fundamental; speed, volume, and area are all derived from it or other fundamentals."
+            },
+            {
+              "question": "Convert 5000g to kilograms.",
+              "options": [
+                "5kg",
+                "50kg",
+                "0.5kg",
+                "500kg"
+              ],
+              "correct": 0,
+              "explanation": "1000g = 1kg, so 5000g = 5kg."
+            },
+            {
+              "question": "A measuring cylinder reads 30cm³ before and 42cm³ after a stone is submerged. What is the stone's volume?",
+              "options": [
+                "12cm³",
+                "72cm³",
+                "30cm³",
+                "42cm³"
+              ],
+              "correct": 0,
+              "explanation": "Volume = final − initial = 42−30 = 12cm³."
+            },
+            {
+              "question": "Which instrument measures length to the highest precision?",
+              "options": [
+                "Metre rule",
+                "Vernier caliper",
+                "Micrometer screw gauge",
+                "Measuring tape"
+              ],
+              "correct": 2,
+              "explanation": "The micrometer screw gauge measures to 0.001cm, finer than the vernier caliper's 0.01cm."
+            },
+            {
+              "question": "What is the SI unit of time?",
+              "options": [
+                "Minute",
+                "Hour",
+                "Second",
+                "Day"
+              ],
+              "correct": 2,
+              "explanation": "The second is the SI (fundamental) unit of time."
+            }
+          ]
+        },
+        {
+          "title": "States of Matter",
+          "content": "What are the three states of matter, and how does kinetic theory explain their differences? Solids, liquids, and gases differ in how their particles are arranged and how much energy they have: in a solid, particles are tightly packed in a fixed arrangement and only vibrate in place; in a liquid, particles are close together but can move past one another, giving liquids a fixed volume but no fixed shape; in a gas, particles are far apart, move rapidly in all directions, and have neither a fixed shape nor a fixed volume. What causes a substance to change from one state to another? Adding heat energy increases particle motion, eventually overcoming the forces holding particles in place — melting is solid to liquid, boiling/evaporation is liquid to gas, while removing heat causes the reverse: condensation (gas to liquid) and freezing (liquid to solid). What is sublimation? The direct change from solid to gas (or gas to solid) without passing through the liquid state at all, seen in substances like dry ice or camphor. What is the difference between evaporation and boiling? Both are liquid-to-gas changes, but evaporation happens slowly at any temperature and only at the liquid's surface, while boiling happens rapidly throughout the liquid at one fixed temperature (the boiling point). What is diffusion, and what does it reveal about particles? Diffusion is the gradual spreading of particles from an area of high concentration to low concentration (like perfume smell spreading across a room) — it happens fastest in gases because their particles move fastest and are most spread apart, providing strong evidence that matter really is made of moving particles.",
+          "examples": [
+            "Explain why a smell spreads across a room faster than a dye spreads through still water.\nStep 1: Recall gas particles move faster and are more spread out than liquid particles\nStep 2: Compare the rate of diffusion in each state\nAnswer: Gas particles diffuse faster because they have more energy and more space to move through than liquid particles",
+            "Describe what happens to ice particles as ice melts into water.\nStep 1: Recall solid particles vibrate in fixed positions\nStep 2: Consider what added heat energy does to those particles\nAnswer: Added heat gives the particles enough energy to break free of their fixed positions and move past each other, becoming a liquid",
+            "Explain why dry ice (solid carbon dioxide) 'disappears' into a smoky gas without forming a puddle.\nStep 1: Recall that sublimation skips the liquid state entirely\nStep 2: Identify that dry ice converts directly from solid to gas\nAnswer: Dry ice sublimes — it turns directly into gas, which is why no liquid puddle ever forms",
+            "Explain why washing on a clothesline dries even though the air temperature is well below 100°C.\nStep 1: Recall evaporation happens at any temperature, not just the boiling point\nStep 2: Identify that it occurs at the liquid's surface\nAnswer: Water evaporates slowly from the surface of the wet clothes even at normal air temperature, eventually drying them",
+            "Compare the particle arrangement of a gas to that of a solid.\nStep 1: Recall solid particles are tightly packed and fixed in place\nStep 2: Recall gas particles are far apart and move freely in all directions\nAnswer: Gas particles are far more spread out and move much more freely than the tightly packed, vibrating particles of a solid"
+          ],
+          "keyTerms": {
+            "kinetic theory": "The idea that matter is made of moving particles whose energy determines the state of matter",
+            "sublimation": "The direct change of state from solid to gas (or gas to solid), skipping the liquid state",
+            "diffusion": "The gradual spreading of particles from a region of high concentration to low concentration",
+            "evaporation": "The slow change of liquid to gas at the liquid's surface, at any temperature"
+          },
+          "quiz": [
+            {
+              "question": "In which state are particles most free to move and most spread apart?",
+              "options": [
+                "Solid",
+                "Liquid",
+                "Gas",
+                "All states are the same"
+              ],
+              "correct": 2,
+              "explanation": "Gas particles are far apart and move freely in all directions."
+            },
+            {
+              "question": "What is sublimation?",
+              "options": [
+                "Solid changing directly to gas",
+                "Liquid changing to gas",
+                "Gas changing to liquid",
+                "Solid changing to liquid"
+              ],
+              "correct": 0,
+              "explanation": "Sublimation is a direct solid-to-gas (or gas-to-solid) change, skipping the liquid phase."
+            },
+            {
+              "question": "What is the main difference between evaporation and boiling?",
+              "options": [
+                "There is no difference",
+                "Evaporation happens at any temperature at the surface; boiling happens at one fixed temperature throughout the liquid",
+                "Boiling only happens in solids",
+                "Evaporation only happens in gases"
+              ],
+              "correct": 1,
+              "explanation": "Evaporation is a slow surface process at any temperature; boiling is rapid, throughout the liquid, at the boiling point."
+            },
+            {
+              "question": "Diffusion happens fastest in which state of matter?",
+              "options": [
+                "Solid",
+                "Liquid",
+                "Gas",
+                "It's the same in all states"
+              ],
+              "correct": 2,
+              "explanation": "Gas particles move fastest and are most spread out, so diffusion is quickest in gases."
+            },
+            {
+              "question": "What happens to particle energy when a substance is heated?",
+              "options": [
+                "It decreases",
+                "It increases",
+                "It stays the same",
+                "Energy is unrelated to heating"
+              ],
+              "correct": 1,
+              "explanation": "Heating increases particle kinetic energy, which can eventually cause a change of state."
+            }
+          ]
+        },
+        {
+          "title": "The Effects of Forces",
+          "content": "What is a force, and what can it do to an object? A force is a push or pull that can change an object's shape, change its speed, change its direction of motion, or start/stop its motion altogether — forces are measured in newtons (N). What are common types of forces encountered in everyday life? Gravitational force (pulling objects toward the Earth), frictional force (resisting motion between two surfaces in contact), tension (a pulling force through a rope or string), upthrust/normal reaction (a supporting push from a surface or fluid), magnetic force, and electrostatic force. What is the difference between mass and weight? Mass is the amount of matter in an object, measured in kilograms, and stays the same everywhere; weight is the force of gravity acting on that mass, measured in newtons, and is calculated as Weight = mass × gravitational field strength (W = mg), where g is approximately 10 N/kg near the Earth's surface — this means weight changes depending on gravity, but mass does not. What happens when forces on an object are balanced versus unbalanced? Balanced forces (equal in size, opposite in direction) produce no change in motion — the object stays still or continues at constant velocity; unbalanced forces (a net resultant force in one direction) cause the object to accelerate, decelerate, or change direction. How do you find the resultant of two forces acting on the same object? If they act in the same direction, add them together; if they act in opposite directions, subtract the smaller from the larger, and the resultant acts in the direction of the larger force.",
+          "examples": [
+            "Find the weight of an object with mass 5kg, given g=10N/kg.\nStep 1: Use W=mg\nStep 2: Substitute: 5×10\nAnswer: Weight = 50N",
+            "A box has mass 12kg. Find its weight, given g=10N/kg.\nStep 1: Use W=mg\nStep 2: Substitute: 12×10\nAnswer: Weight = 120N",
+            "Two forces of 30N and 20N act on an object in the same direction. Find the resultant force.\nStep 1: Recognise both forces act in the same direction, so add them\nStep 2: Add: 30+20\nAnswer: Resultant force = 50N in that direction",
+            "Two forces of 45N and 25N act on an object in opposite directions. Find the resultant force.\nStep 1: Recognise the forces act in opposite directions, so subtract\nStep 2: Subtract the smaller from the larger: 45−25\nAnswer: Resultant force = 20N, in the direction of the 45N force",
+            "A book rests on a table without moving. Explain the forces acting on it.\nStep 1: Identify the two forces present — weight (pulling down) and the normal reaction from the table (pushing up)\nStep 2: Recognise the book is not accelerating, so the forces must be balanced\nAnswer: The table's upward normal reaction force exactly balances the book's downward weight, so the resultant force is zero and the book stays still"
+          ],
+          "keyTerms": {
+            "force": "A push or pull that can change an object's shape, speed, or direction, measured in newtons",
+            "weight": "The force of gravity acting on an object's mass, calculated as W=mg",
+            "mass": "The amount of matter in an object, measured in kilograms, unaffected by location",
+            "friction": "A force that resists motion between two surfaces in contact"
+          },
+          "quiz": [
+            {
+              "question": "Find the weight of an object with mass 8kg, given g=10N/kg.",
+              "options": [
+                "8N",
+                "80N",
+                "0.8N",
+                "18N"
+              ],
+              "correct": 1,
+              "explanation": "W=mg=8×10=80N."
+            },
+            {
+              "question": "What stays the same for an object regardless of location — mass or weight?",
+              "options": [
+                "Weight",
+                "Mass",
+                "Both change",
+                "Neither is measurable"
+              ],
+              "correct": 1,
+              "explanation": "Mass is constant everywhere; weight depends on gravitational field strength, which can vary."
+            },
+            {
+              "question": "Two forces of 15N and 10N act in opposite directions on an object. What is the resultant?",
+              "options": [
+                "25N",
+                "5N",
+                "150N",
+                "0N"
+              ],
+              "correct": 1,
+              "explanation": "Subtract the smaller from the larger: 15−10=5N, in the direction of the 15N force."
+            },
+            {
+              "question": "Balanced forces on an object result in:",
+              "options": [
+                "Acceleration",
+                "No change in motion",
+                "Instant stopping",
+                "Increased mass"
+              ],
+              "correct": 1,
+              "explanation": "Balanced forces produce zero resultant force, so motion (or rest) stays unchanged."
+            },
+            {
+              "question": "What is the SI unit of force?",
+              "options": [
+                "Kilogram",
+                "Joule",
+                "Newton",
+                "Watt"
+              ],
+              "correct": 2,
+              "explanation": "Force is measured in newtons (N)."
+            }
+          ]
+        },
+        {
+          "title": "Temperature Measurements",
+          "content": "What is the difference between temperature and heat? Temperature is a measure of how hot or cold something is (how much average kinetic energy its particles have), while heat is the actual energy that flows from a hotter object to a cooler one — a small cup of boiling water and a large pot of boiling water are at the same temperature, but the pot contains more heat energy. What instruments measure temperature, and how do they work? A mercury-in-glass thermometer uses the fact that mercury expands predictably as it gets hotter, rising up a thin calibrated tube; a clinical thermometer is a similar but more precise version designed for body temperature; a thermocouple uses the way two joined different metals produce a small voltage that changes with temperature, useful for very high or very low temperatures beyond a liquid thermometer's range. What are fixed points, and why are they needed to calibrate a thermometer? The ice point (0°C, the temperature of pure melting ice) and the steam point (100°C, the temperature of steam from boiling water at standard pressure) are reliable, repeatable reference temperatures used to mark a thermometer's scale accurately, with the space between them divided into 100 equal degree divisions. How do you convert between the Celsius and Kelvin scales? The Kelvin scale starts at absolute zero (the lowest possible temperature, where particles have minimal energy) rather than the freezing point of water, so Kelvin = Celsius + 273.",
+          "examples": [
+            "Convert 25°C to Kelvin.\nStep 1: Use K = °C + 273\nStep 2: Substitute: 25+273\nAnswer: 298K",
+            "Convert 373K to Celsius.\nStep 1: Rearrange K = °C + 273 to °C = K − 273\nStep 2: Substitute: 373−273\nAnswer: 100°C",
+            "Explain why a mercury-in-glass thermometer cannot measure the temperature of molten metal.\nStep 1: Recall mercury boils at a specific temperature, far below that of molten metal\nStep 2: Consider what happens if the thermometer's own liquid boils away\nAnswer: The mercury would boil and the thermometer would be destroyed, so a thermocouple is used instead for very high temperatures",
+            "A thermometer's scale is calibrated using ice point and steam point. State these two fixed points in Celsius.\nStep 1: Recall the standard fixed points used for calibration\nAnswer: Ice point = 0°C, steam point = 100°C",
+            "Convert 0°C to Kelvin.\nStep 1: Use K = °C + 273\nStep 2: Substitute: 0+273\nAnswer: 273K (this is why 0°C is often called 273 Kelvin)"
+          ],
+          "keyTerms": {
+            "temperature": "A measure of how hot or cold something is, related to the average kinetic energy of its particles",
+            "thermometer": "An instrument used to measure temperature",
+            "fixed points": "Reliable reference temperatures (ice point and steam point) used to calibrate a thermometer",
+            "absolute zero": "The lowest possible temperature (0 Kelvin), where particles have minimal energy"
+          },
+          "quiz": [
+            {
+              "question": "Convert 50°C to Kelvin.",
+              "options": [
+                "223K",
+                "323K",
+                "50K",
+                "273K"
+              ],
+              "correct": 1,
+              "explanation": "K = °C + 273 = 50+273 = 323K."
+            },
+            {
+              "question": "What is the steam point in Celsius?",
+              "options": [
+                "0°C",
+                "100°C",
+                "273°C",
+                "37°C"
+              ],
+              "correct": 1,
+              "explanation": "The steam point (boiling point of water at standard pressure) is 100°C."
+            },
+            {
+              "question": "What is the key difference between heat and temperature?",
+              "options": [
+                "They are exactly the same",
+                "Heat is energy that flows; temperature measures how hot something is",
+                "Temperature is measured in joules",
+                "Heat cannot be measured"
+              ],
+              "correct": 1,
+              "explanation": "Heat is a form of energy transfer; temperature indicates the level of hotness, related to particle kinetic energy."
+            },
+            {
+              "question": "Convert 300K to Celsius.",
+              "options": [
+                "27°C",
+                "573°C",
+                "300°C",
+                "-27°C"
+              ],
+              "correct": 0,
+              "explanation": "°C = K − 273 = 300−273 = 27°C."
+            },
+            {
+              "question": "Why is a thermocouple used instead of a mercury thermometer for very high temperatures?",
+              "options": [
+                "Thermocouples are cheaper",
+                "Mercury would boil away at very high temperatures",
+                "Thermocouples are always more accurate",
+                "There is no reason, they are identical"
+              ],
+              "correct": 1,
+              "explanation": "Mercury has a limited boiling point, so a thermocouple (which uses voltage, not liquid expansion) is needed for extreme temperatures."
+            }
+          ]
+        },
+        {
+          "title": "Heat Transfer",
+          "content": "What are the three ways heat energy can travel from one place to another? Conduction, convection, and radiation — each occurs through a different mechanism and in different materials. How does conduction work? Heat travels through a solid by particles vibrating vigorously and passing that vibration energy to neighbouring particles, without the particles themselves moving from place to place — metals are good conductors because they have free electrons that carry energy quickly, while materials like wood, plastic, and air are poor conductors (insulators). How does convection work? Heat travels through liquids and gases because heated particles gain energy, spread out, become less dense, and rise, while cooler, denser particles sink to take their place, creating a continuous convection current — this is why land and sea breezes occur, and why a room heater is placed low down. How does radiation work? Heat travels as electromagnetic waves that can pass through empty space (unlike conduction and convection, which need particles) — all objects emit and absorb radiant heat, but dull black surfaces are much better emitters and absorbers than shiny, light-coloured surfaces, which mostly reflect radiant heat. How do these three modes combine in a real device like a vacuum flask? A vacuum flask minimises heat loss from all three: a vacuum layer between its walls prevents conduction and convection (since there are no particles to carry the heat), and silvered (shiny) inner walls reflect radiant heat back inside.",
+          "examples": [
+            "Explain why the handle of a cooking pot is often made of plastic rather than metal.\nStep 1: Recall metals are good conductors of heat, plastic is a poor conductor (insulator)\nStep 2: Consider the risk of a metal handle getting too hot to touch\nAnswer: Plastic is used because it conducts heat poorly, keeping the handle cool enough to hold safely",
+            "Explain why a sea breeze blows from the sea toward the land during a hot afternoon.\nStep 1: Recall land heats up faster than the sea during the day\nStep 2: Recall hot air over the land rises, and cooler air moves in to replace it\nAnswer: The rising warm air over the land is replaced by cooler air flowing in from the sea, creating a sea breeze — a convection current",
+            "Explain why radiators (heating panels) are often painted black rather than left as shiny metal.\nStep 1: Recall dull black surfaces radiate (emit) heat more effectively than shiny surfaces\nStep 2: Consider the radiator's purpose — to release heat into the room\nAnswer: A black surface radiates heat more efficiently, helping the radiator warm the room faster",
+            "Explain how a vacuum flask keeps a hot drink hot for longer.\nStep 1: Identify the vacuum layer between the flask's walls\nStep 2: Recall conduction and convection both require particles, which the vacuum lacks\nStep 3: Recall the silvered walls reflect radiant heat back inward\nAnswer: The vacuum stops heat loss by conduction and convection, and the silvered surface reflects radiant heat back in, keeping the drink hot",
+            "State which material — copper or wood — is the better heat conductor, and why.\nStep 1: Recall metals have free electrons that transfer vibrational energy quickly\nStep 2: Recall wood lacks these free electrons\nAnswer: Copper is the better conductor, because its free electrons transfer heat energy much faster than wood can"
+          ],
+          "keyTerms": {
+            "conduction": "Heat transfer through a solid via vibrating particles passing energy to neighbours",
+            "convection": "Heat transfer in liquids and gases via the movement of heated, less dense particles",
+            "radiation": "Heat transfer via electromagnetic waves that can travel through a vacuum"
+          },
+          "quiz": [
+            {
+              "question": "Which mode of heat transfer can occur through empty space (a vacuum)?",
+              "options": [
+                "Conduction",
+                "Convection",
+                "Radiation",
+                "None of these"
+              ],
+              "correct": 2,
+              "explanation": "Radiation is electromagnetic waves, which do not need particles and can travel through a vacuum."
+            },
+            {
+              "question": "Why are metals good conductors of heat?",
+              "options": [
+                "They are heavy",
+                "They have free electrons that transfer energy quickly",
+                "They are always black",
+                "They contain water"
+              ],
+              "correct": 1,
+              "explanation": "Free electrons in metals rapidly carry vibrational (heat) energy between particles."
+            },
+            {
+              "question": "A convection current is caused by:",
+              "options": [
+                "Particles vibrating in place",
+                "Heated, less dense fluid rising while cooler, denser fluid sinks",
+                "Electromagnetic waves",
+                "Only solids moving"
+              ],
+              "correct": 1,
+              "explanation": "Convection relies on density differences causing fluid circulation."
+            },
+            {
+              "question": "Which surface radiates heat most effectively?",
+              "options": [
+                "Shiny silver",
+                "Dull black",
+                "Polished white",
+                "Transparent glass"
+              ],
+              "correct": 1,
+              "explanation": "Dull black surfaces are the most efficient absorbers and emitters of radiant heat."
+            },
+            {
+              "question": "A vacuum flask reduces heat loss by:",
+              "options": [
+                "Increasing conduction",
+                "Preventing conduction/convection with a vacuum and reflecting radiation with silvered walls",
+                "Adding more air between the walls",
+                "Painting the outside black"
+              ],
+              "correct": 1,
+              "explanation": "The vacuum blocks conduction/convection, and the silvered surface reflects radiant heat back in."
+            }
+          ]
+        },
+        {
+          "title": "Expansion of Solids, Liquids and Gases",
+          "content": "What is thermal expansion, and why does it happen? Thermal expansion is the increase in size of a substance when it is heated — as particles gain kinetic energy, they vibrate or move more vigorously and push each other slightly further apart, increasing the overall volume. Which state of matter expands the most for the same temperature rise? Gases expand the most, followed by liquids, with solids expanding the least — this is because gas particles are already far apart and loosely bonded, so extra energy has a much bigger relative effect on their spacing than in the tightly-bonded structure of a solid. How is expansion put to practical use? A bimetallic strip (two different metals joined together, which expand at different rates) bends when heated, since one metal expands more than the other — this bending is used in thermostats to automatically switch a circuit off when a set temperature is reached. What problems can thermal expansion cause, and how are they managed? Railway tracks and bridges are built with small gaps or expansion joints so that they don't buckle when they expand in hot weather; overhead power cables are hung with some slack to allow for expansion, though this also means they sag more on hot days. How can expansion be used to loosen or tighten a tight-fitting object? Running hot water over a tight metal jar lid makes the metal expand slightly faster than the glass jar underneath, loosening the lid enough to twist off.",
+          "examples": [
+            "Rank solids, liquids, and gases from least to most thermal expansion for the same temperature rise.\nStep 1: Recall gas particles are least tightly bound, solids are most tightly bound\nStep 2: Order accordingly\nAnswer: Solids expand least, then liquids, then gases expand most",
+            "Explain why railway tracks have small gaps between sections.\nStep 1: Recall metal rails expand when heated by the sun\nStep 2: Consider what would happen without a gap to accommodate this expansion\nAnswer: The gaps allow the rails to expand in hot weather without buckling or bending out of shape",
+            "Explain how a bimetallic strip in a thermostat works.\nStep 1: Recall the two metals in the strip expand at different rates\nStep 2: Consider what happens to the strip's shape when heated\nAnswer: The strip bends because one metal expands more than the other, and this bending can open or close an electrical circuit at a set temperature",
+            "Explain why a metal jar lid becomes easier to open after running it under hot water.\nStep 1: Recall metal expands faster than glass when heated\nStep 2: Consider the effect on the tightness of the lid on the jar\nAnswer: The metal lid expands slightly more than the glass jar, loosening the fit enough to twist it off",
+            "Explain why overhead power cables sag more on a hot day than on a cold day.\nStep 1: Recall the cable material expands when heated\nStep 2: Consider what a longer cable does between two fixed poles\nAnswer: The heated cable expands and becomes slightly longer, so it sags more between the supporting poles"
+          ],
+          "keyTerms": {
+            "thermal expansion": "The increase in size of a substance when heated, due to increased particle motion",
+            "bimetallic strip": "A strip of two different metals joined together that bends when heated, due to their different expansion rates",
+            "expansion joint": "A small gap left in structures like railway tracks or bridges to allow for safe thermal expansion"
+          },
+          "quiz": [
+            {
+              "question": "Which state of matter expands the most for the same temperature increase?",
+              "options": [
+                "Solid",
+                "Liquid",
+                "Gas",
+                "They expand equally"
+              ],
+              "correct": 2,
+              "explanation": "Gas particles are least tightly bound, so they expand the most for a given temperature rise."
+            },
+            {
+              "question": "Why do railway tracks include small gaps?",
+              "options": [
+                "To save material",
+                "To allow the metal to expand in hot weather without buckling",
+                "For decoration",
+                "To make trains go faster"
+              ],
+              "correct": 1,
+              "explanation": "The gaps accommodate thermal expansion, preventing the tracks from bending or buckling."
+            },
+            {
+              "question": "A bimetallic strip bends when heated because:",
+              "options": [
+                "It always breaks",
+                "The two metals expand at different rates",
+                "Metal never expands",
+                "It only bends when cooled"
+              ],
+              "correct": 1,
+              "explanation": "Since the two joined metals expand by different amounts, the strip curves."
+            },
+            {
+              "question": "Why does hot water help loosen a tight metal jar lid?",
+              "options": [
+                "It makes the lid smaller",
+                "The metal lid expands more than the glass jar, loosening the fit",
+                "It dissolves the lid",
+                "It has no effect"
+              ],
+              "correct": 1,
+              "explanation": "The metal expands faster than the glass, creating a looser fit."
+            },
+            {
+              "question": "What causes thermal expansion at the particle level?",
+              "options": [
+                "Particles disappearing",
+                "Particles gaining energy and moving further apart",
+                "Particles becoming heavier",
+                "Particles losing charge"
+              ],
+              "correct": 1,
+              "explanation": "Heating gives particles more kinetic energy, causing them to push each other slightly further apart."
+            }
+          ]
+        },
+        {
+          "title": "Nature of Light: Reflection at Plane Surfaces",
+          "content": "What is light, and how does it travel? Light is a form of energy that travels in straight lines (called rectilinear propagation) at extremely high speed, and can travel through a vacuum, unlike sound. What is the difference between luminous and non-luminous objects? Luminous objects (like the sun or a lit bulb) produce their own light, while non-luminous objects (like the moon or a book) are only visible because they reflect light from a luminous source into our eyes. What are the laws of reflection? First, the angle of incidence (between the incoming ray and the normal, an imaginary line perpendicular to the mirror's surface) always equals the angle of reflection (between the reflected ray and the normal); second, the incident ray, the normal, and the reflected ray all lie in the same flat plane. What is the difference between regular and diffuse reflection? Regular reflection occurs on smooth, polished surfaces (like a plane mirror), producing a clear image because parallel rays stay parallel after reflecting; diffuse reflection occurs on rough surfaces (like paper or a wall), scattering the reflected rays in many directions, which is why you don't see a clear image in a wall. What are the properties of an image formed by a plane mirror? The image is virtual (it cannot be projected onto a screen, since the light rays only appear to come from behind the mirror), the same size as the object, laterally inverted (left and right are swapped), and appears exactly as far behind the mirror as the object is in front of it.",
+          "examples": [
+            "A ray of light hits a plane mirror at an angle of incidence of 35°. Find the angle of reflection.\nStep 1: Recall the law of reflection: angle of incidence = angle of reflection\nAnswer: Angle of reflection = 35°",
+            "An object stands 4m in front of a plane mirror. Find how far behind the mirror its image appears.\nStep 1: Recall a plane mirror's image forms as far behind the mirror as the object is in front\nAnswer: The image appears 4m behind the mirror",
+            "State whether a wall's surface produces regular or diffuse reflection, and why.\nStep 1: Recall regular reflection needs a smooth, polished surface\nStep 2: Consider that a wall's surface is rough at a microscopic level\nAnswer: A wall produces diffuse reflection, since its rough surface scatters light in many directions",
+            "Explain why the word 'AMBULANCE' is often written in mirror (reversed) writing on the front of an ambulance.\nStep 1: Recall a plane mirror produces a laterally inverted image\nStep 2: Consider a driver viewing the front of the ambulance in their rear-view mirror\nAnswer: When seen reflected in a rear-view mirror, the laterally-inverted reversed writing appears the correct way round, so drivers can read it clearly",
+            "A ray of light hits a mirror such that the angle between the incident ray and the mirror surface (not the normal) is 60°. Find the angle of incidence measured from the normal.\nStep 1: Recall the normal is perpendicular (90°) to the mirror surface\nStep 2: Subtract the given angle from 90°: 90−60\nAnswer: Angle of incidence = 30° (measured from the normal, not the surface)"
+          ],
+          "keyTerms": {
+            "reflection": "The bouncing back of light when it hits a surface",
+            "angle of incidence": "The angle between the incoming ray and the normal at the point of reflection",
+            "angle of reflection": "The angle between the reflected ray and the normal, always equal to the angle of incidence",
+            "virtual image": "An image that cannot be projected onto a screen, formed where reflected rays appear to originate",
+            "lateral inversion": "The left-right reversal of an image seen in a plane mirror"
+          },
+          "quiz": [
+            {
+              "question": "A ray hits a plane mirror at an angle of incidence of 50°. What is the angle of reflection?",
+              "options": [
+                "40°",
+                "50°",
+                "90°",
+                "25°"
+              ],
+              "correct": 1,
+              "explanation": "By the law of reflection, angle of incidence always equals angle of reflection: 50°."
+            },
+            {
+              "question": "An image formed by a plane mirror is:",
+              "options": [
+                "Real and inverted",
+                "Virtual, same size, laterally inverted",
+                "Smaller than the object",
+                "Always upside down"
+              ],
+              "correct": 1,
+              "explanation": "Plane mirror images are virtual, the same size as the object, and laterally (left-right) inverted."
+            },
+            {
+              "question": "A rough surface like paper produces which type of reflection?",
+              "options": [
+                "Regular reflection",
+                "Diffuse reflection",
+                "No reflection at all",
+                "Only refraction"
+              ],
+              "correct": 1,
+              "explanation": "Rough surfaces scatter reflected light in many directions — diffuse reflection."
+            },
+            {
+              "question": "An object is 3m in front of a plane mirror. How far behind the mirror does its image appear?",
+              "options": [
+                "1.5m",
+                "3m",
+                "6m",
+                "0m"
+              ],
+              "correct": 1,
+              "explanation": "A plane mirror image appears exactly as far behind the mirror as the object is in front: 3m."
+            },
+            {
+              "question": "The normal at a point of reflection is:",
+              "options": [
+                "Parallel to the mirror surface",
+                "Perpendicular to the mirror surface",
+                "The same as the incident ray",
+                "Not needed for the law of reflection"
+              ],
+              "correct": 1,
+              "explanation": "The normal is an imaginary line drawn perpendicular (90°) to the mirror's surface at the point of reflection."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "S2",
+      "lessons": [
+        {
+          "title": "Work, Energy and Power",
+          "content": "What does 'work' mean in physics, and how is it calculated? Work is done whenever a force moves an object through a distance in the direction of that force — it is calculated as Work = Force × Distance (W = Fd), measured in joules (J); simply pushing hard against a wall that doesn't move does NO work in the physics sense, since there is no resulting distance moved. What is energy, and what forms can it take? Energy is the capacity to do work, and it exists in many forms — kinetic energy (energy of motion, calculated as ½mv²), potential energy (stored energy due to position or state, such as gravitational potential energy = mgh, where h is height), heat, light, sound, chemical, and electrical energy. What is the principle of conservation of energy? Energy cannot be created or destroyed, only transformed from one form to another or transferred from one object to another — for example, a falling object converts gravitational potential energy into kinetic energy as it falls. What is power, and how is it calculated? Power is the RATE at which work is done (how quickly energy is transferred), calculated as Power = Work ÷ Time (P = W/t), measured in watts (W), where one watt equals one joule of work done per second. Why does the distinction between work, energy, and power matter practically? A powerful machine isn't necessarily one that does more total work, but one that can do the same amount of work in less time.",
+          "examples": [
+            "Find the work done pushing a box with a force of 40N over a distance of 5m.\nStep 1: Use W = Fd\nStep 2: Substitute: 40×5\nAnswer: Work done = 200J",
+            "Find the kinetic energy of a 2kg ball moving at 6m/s.\nStep 1: Use KE = ½mv²\nStep 2: Substitute: ½×2×6²\nStep 3: Calculate: ½×2×36\nAnswer: Kinetic energy = 36J",
+            "Find the gravitational potential energy of a 3kg object raised 4m, given g=10N/kg.\nStep 1: Use PE = mgh\nStep 2: Substitute: 3×10×4\nAnswer: Potential energy = 120J",
+            "A machine does 600J of work in 20 seconds. Find its power.\nStep 1: Use P = W/t\nStep 2: Substitute: 600÷20\nAnswer: Power = 30W",
+            "Two machines each lift the same load to the same height, but Machine A takes 10s and Machine B takes 20s. Compare their power.\nStep 1: Recall power is work done per unit time, and both machines do the same total work\nStep 2: Recognise the machine taking less time has higher power\nAnswer: Machine A is more powerful, since it does the same work in half the time"
+          ],
+          "keyTerms": {
+            "work": "The energy transferred when a force moves an object through a distance, W=Fd",
+            "kinetic energy": "The energy an object has due to its motion, KE=½mv²",
+            "potential energy": "Stored energy due to an object's position or state, e.g. PE=mgh",
+            "power": "The rate at which work is done, P=W/t, measured in watts"
+          },
+          "quiz": [
+            {
+              "question": "Find the work done by a force of 25N moving an object 8m.",
+              "options": [
+                "200J",
+                "33J",
+                "3.125J",
+                "200W"
+              ],
+              "correct": 0,
+              "explanation": "W=Fd=25×8=200J."
+            },
+            {
+              "question": "Find the kinetic energy of a 4kg object moving at 5m/s.",
+              "options": [
+                "50J",
+                "100J",
+                "20J",
+                "10J"
+              ],
+              "correct": 0,
+              "explanation": "KE=½mv²=½×4×25=50J."
+            },
+            {
+              "question": "A crane does 5000J of work in 25 seconds. Find its power.",
+              "options": [
+                "125000W",
+                "200W",
+                "25W",
+                "5000W"
+              ],
+              "correct": 1,
+              "explanation": "P=W/t=5000÷25=200W."
+            },
+            {
+              "question": "Which best defines power?",
+              "options": [
+                "The total force applied",
+                "The rate at which work is done",
+                "The total energy stored",
+                "The mass of an object"
+              ],
+              "correct": 1,
+              "explanation": "Power measures how quickly work is done, not the total amount."
+            },
+            {
+              "question": "According to the conservation of energy, energy can:",
+              "options": [
+                "Be created from nothing",
+                "Be destroyed completely",
+                "Only be transformed or transferred, not created or destroyed",
+                "Only exist as heat"
+              ],
+              "correct": 2,
+              "explanation": "Energy conservation states total energy remains constant — it changes form or is transferred, never created or destroyed."
+            }
+          ]
+        },
+        {
+          "title": "Turning Effect of Forces, Centre of Gravity and Stability",
+          "content": "What is the turning effect (moment) of a force? When a force is applied at a distance from a pivot (fixed turning point), it creates a turning effect called a moment, calculated as Moment = Force × perpendicular distance from the pivot, measured in newton-metres (Nm) — this is why it's easier to loosen a tight bolt with a long spanner than a short one. What is the principle of moments, and when is an object balanced? For an object in equilibrium (balanced, not turning), the sum of clockwise moments about a pivot must exactly equal the sum of anticlockwise moments — this principle is used to balance a see-saw or beam. What is the centre of gravity of an object? The single point where an object's entire weight can be considered to act, as if all its mass were concentrated there — for a uniform, symmetrical object (like a ruler or rectangular block), the centre of gravity is exactly at its geometric centre. What determines whether an object is stable or likely to topple over? An object is more stable when it has a low centre of gravity and a wide base — if a vertical line dropped from the centre of gravity falls outside the object's base, it becomes unstable and topples over; this is why racing cars are built low and wide, and why a tall, narrow object tips over more easily than a short, wide one.",
+          "examples": [
+            "Find the moment of a 20N force applied 0.5m from a pivot.\nStep 1: Use Moment = Force × distance\nStep 2: Substitute: 20×0.5\nAnswer: Moment = 10Nm",
+            "A 30N force acts 0.4m from a pivot on one side of a beam. Find the force needed 0.6m from the pivot on the other side to balance it.\nStep 1: Use the principle of moments: clockwise moment = anticlockwise moment\nStep 2: Find the known moment: 30×0.4=12Nm\nStep 3: Set the unknown force F so F×0.6=12\nStep 4: Solve: F=12÷0.6\nAnswer: F = 20N",
+            "A seesaw balances with a 40kg child sitting 2m from the pivot. Find where a 50kg child must sit on the other side to balance it (g cancels out since both sides use weight proportionally).\nStep 1: Use moments: mass₁×distance₁ = mass₂×distance₂\nStep 2: Substitute: 40×2 = 50×d\nStep 3: Solve: d = 80÷50\nAnswer: The 50kg child must sit 1.6m from the pivot",
+            "Explain why a bus is more likely to topple over on a sharp bend if heavily loaded on its upper deck.\nStep 1: Recall that extra weight high up raises the centre of gravity\nStep 2: Recall a higher centre of gravity makes an object less stable\nAnswer: Loading weight on the upper deck raises the centre of gravity, making the bus less stable and more likely to topple on a bend",
+            "Explain why a wide-based traffic cone is harder to knock over than a tall, narrow one of the same weight.\nStep 1: Recall stability increases with a wider base and lower centre of gravity\nStep 2: Compare how far the centre of gravity can shift before it falls outside the base\nAnswer: The wide base means the centre of gravity can shift much further sideways before the vertical line from it falls outside the base, so it resists toppling better"
+          ],
+          "keyTerms": {
+            "moment": "The turning effect of a force, calculated as force × perpendicular distance from the pivot",
+            "principle of moments": "For a balanced object, the sum of clockwise moments equals the sum of anticlockwise moments",
+            "centre of gravity": "The single point where an object's entire weight can be considered to act",
+            "stability": "An object's resistance to toppling over, improved by a low centre of gravity and wide base"
+          },
+          "quiz": [
+            {
+              "question": "Find the moment of a 15N force applied 2m from a pivot.",
+              "options": [
+                "30Nm",
+                "7.5Nm",
+                "17Nm",
+                "13Nm"
+              ],
+              "correct": 0,
+              "explanation": "Moment = Force × distance = 15×2 = 30Nm."
+            },
+            {
+              "question": "According to the principle of moments, a balanced object has:",
+              "options": [
+                "No forces acting on it",
+                "Equal clockwise and anticlockwise moments",
+                "Only clockwise moments",
+                "A centre of gravity outside its base"
+              ],
+              "correct": 1,
+              "explanation": "Equilibrium requires the sum of clockwise moments to equal the sum of anticlockwise moments."
+            },
+            {
+              "question": "An object becomes unstable and topples when:",
+              "options": [
+                "Its centre of gravity is very low",
+                "A vertical line from its centre of gravity falls outside its base",
+                "It has a wide base",
+                "It is perfectly symmetrical"
+              ],
+              "correct": 1,
+              "explanation": "Toppling occurs when the centre of gravity's vertical line falls outside the base of support."
+            },
+            {
+              "question": "A 25N force at 0.8m from a pivot balances an unknown force at 0.5m. Find the unknown force.",
+              "options": [
+                "40N",
+                "15.6N",
+                "20N",
+                "12.5N"
+              ],
+              "correct": 0,
+              "explanation": "25×0.8=20Nm. Unknown force = 20÷0.5 = 40N."
+            },
+            {
+              "question": "Why are racing cars built low to the ground?",
+              "options": [
+                "To look sporty only",
+                "To lower the centre of gravity and improve stability",
+                "To reduce weight",
+                "To increase the turning moment"
+              ],
+              "correct": 1,
+              "explanation": "A low centre of gravity makes the car much more stable, especially around corners."
+            }
+          ]
+        },
+        {
+          "title": "Pressure in Solids and Fluids",
+          "content": "What is pressure, and how is it calculated in a solid? Pressure is the force acting per unit area, calculated as Pressure = Force ÷ Area (P = F/A), measured in pascals (Pa) — this is why a sharp knife (small area) cuts more easily than a blunt one for the same applied force, and why snowshoes (large area) stop a person sinking into snow. How does pressure behave in a liquid? Liquid pressure increases with depth (since deeper water has more liquid weighing down on it from above) and depends on the density of the liquid, calculated as Pressure = density × gravitational field strength × height (P = ρgh) — this is why dam walls are built thicker at the bottom, where water pressure is greatest. What is Pascal's principle, and how is it applied? Pressure applied to an enclosed liquid is transmitted equally in all directions throughout the liquid — this principle is used in hydraulic systems (like car brakes and hydraulic jacks), where a small force on a small piston can produce a much larger force on a larger piston. How does atmospheric pressure work, and how is it measured? The atmosphere's weight presses down on everything at the Earth's surface, and this is measured using a barometer — atmospheric pressure decreases with increasing altitude, which is why unpressurised aircraft cabins and high mountain climbers experience lower air pressure.",
+          "examples": [
+            "Find the pressure exerted by a force of 60N over an area of 3m².\nStep 1: Use P = F/A\nStep 2: Substitute: 60÷3\nAnswer: Pressure = 20Pa",
+            "A woman weighing 600N stands on heels with a total area of 0.002m². Find the pressure exerted.\nStep 1: Use P = F/A\nStep 2: Substitute: 600÷0.002\nAnswer: Pressure = 300,000Pa",
+            "Find the pressure at a depth of 5m in water (density=1000kg/m³, g=10N/kg).\nStep 1: Use P = ρgh\nStep 2: Substitute: 1000×10×5\nAnswer: Pressure = 50,000Pa",
+            "Explain why a dam wall is built thicker at the bottom than at the top.\nStep 1: Recall pressure increases with depth in a liquid\nStep 2: Consider that the bottom of the dam experiences the greatest water pressure\nAnswer: The wall is thickest at the bottom because water pressure is greatest there, so more strength is needed to withstand it",
+            "Explain how a hydraulic car jack allows a person to lift a heavy car with a small applied force.\nStep 1: Recall Pascal's principle — pressure is transmitted equally through an enclosed liquid\nStep 2: Consider a small force applied to a small piston, transmitted to a much larger piston\nAnswer: The pressure from the small force spreads equally through the liquid, and because the second piston has a much larger area, it produces a much greater force — enough to lift the car"
+          ],
+          "keyTerms": {
+            "pressure": "Force acting per unit area, P=F/A, measured in pascals",
+            "liquid pressure": "Pressure within a liquid, which increases with depth, P=ρgh",
+            "Pascal's principle": "Pressure applied to an enclosed liquid is transmitted equally in all directions",
+            "atmospheric pressure": "The pressure exerted by the weight of the atmosphere, decreasing with altitude"
+          },
+          "quiz": [
+            {
+              "question": "Find the pressure of a 100N force acting over an area of 4m².",
+              "options": [
+                "25Pa",
+                "400Pa",
+                "0.04Pa",
+                "104Pa"
+              ],
+              "correct": 0,
+              "explanation": "P=F/A=100÷4=25Pa."
+            },
+            {
+              "question": "Why does a sharp knife cut more easily than a blunt one for the same force?",
+              "options": [
+                "It weighs less",
+                "Its smaller area creates greater pressure",
+                "It is always heavier",
+                "There is no difference"
+              ],
+              "correct": 1,
+              "explanation": "A smaller contact area concentrates the same force into much higher pressure."
+            },
+            {
+              "question": "Liquid pressure at a given point depends on:",
+              "options": [
+                "The colour of the liquid",
+                "The depth and density of the liquid",
+                "The shape of the container only",
+                "Nothing physical"
+              ],
+              "correct": 1,
+              "explanation": "P=ρgh shows pressure depends on density, gravitational field strength, and depth."
+            },
+            {
+              "question": "Pascal's principle is applied in which device?",
+              "options": [
+                "A thermometer",
+                "A hydraulic jack",
+                "A compass",
+                "A mirror"
+              ],
+              "correct": 1,
+              "explanation": "Hydraulic jacks rely on pressure being transmitted equally through an enclosed liquid."
+            },
+            {
+              "question": "Atmospheric pressure generally does what as altitude increases?",
+              "options": [
+                "Increases",
+                "Decreases",
+                "Stays exactly the same",
+                "Becomes negative"
+              ],
+              "correct": 1,
+              "explanation": "There is less air (and less weight of air) above you at higher altitudes, so atmospheric pressure decreases."
+            }
+          ]
+        },
+        {
+          "title": "Mechanical Properties of Materials; Hooke's Law",
+          "content": "What happens to a material when a force is applied to stretch or compress it? Materials deform (change shape) under load — some return to their original shape once the force is removed (elastic deformation), while others stay permanently changed (plastic deformation), like bending a piece of wire until it stays bent. What does Hooke's Law state? For a spring (or many elastic materials) stretched within its elastic limit, the extension produced is directly proportional to the force applied: Force = spring constant × extension (F = ke), where k is the spring constant (a measure of the spring's stiffness, in N/m) — doubling the force doubles the extension, as long as the elastic limit isn't exceeded. What is the elastic limit? The maximum force (or extension) beyond which a material no longer returns to its original shape once the force is removed — stretching a spring past its elastic limit permanently deforms it, and the straight-line relationship in Hooke's Law no longer holds. How can Hooke's Law be demonstrated and verified experimentally? By hanging different known weights from a spring, measuring the resulting extension each time, and plotting force against extension — a straight line through the origin confirms Hooke's Law holds, while any curve or plateau indicates the elastic limit has been passed. Why does this topic matter practically? Understanding elastic behaviour is essential for engineering safe structures, designing springs in vehicle suspensions, and calibrating spring-based measuring devices like newton meters.",
+          "examples": [
+            "A spring has a spring constant of 50N/m. Find the extension produced by a force of 10N.\nStep 1: Use F = ke, rearranged to e = F/k\nStep 2: Substitute: 10÷50\nAnswer: Extension = 0.2m",
+            "A spring extends by 0.15m when a 30N force is applied. Find the spring constant.\nStep 1: Use F = ke, rearranged to k = F/e\nStep 2: Substitute: 30÷0.15\nAnswer: Spring constant = 200N/m",
+            "A spring with spring constant 40N/m is stretched by 0.25m. Find the force applied.\nStep 1: Use F = ke\nStep 2: Substitute: 40×0.25\nAnswer: Force = 10N",
+            "A spring stretches proportionally up to 8N, but beyond that the extension increases much faster for the same added force. Identify what has happened.\nStep 1: Recall Hooke's Law only holds up to the elastic limit\nStep 2: Recognise the change in behaviour signals this limit has been passed\nAnswer: The spring has been stretched beyond its elastic limit, so it no longer obeys Hooke's Law and may not return to its original length",
+            "Two springs, A (k=20N/m) and B (k=60N/m), are each stretched by the same 5N force. Compare their extensions.\nStep 1: Use e = F/k for each spring\nStep 2: Calculate for A: 5÷20=0.25m; for B: 5÷60≈0.083m\nAnswer: Spring A stretches more (0.25m) than spring B (about 0.083m), since B is stiffer (higher spring constant)"
+          ],
+          "keyTerms": {
+            "Hooke's Law": "Force is directly proportional to extension within the elastic limit, F=ke",
+            "spring constant": "A measure of a spring's stiffness, k=F/e, in N/m",
+            "elastic limit": "The maximum force/extension beyond which a material no longer returns to its original shape",
+            "elastic deformation": "A temporary change in shape that reverses once the applied force is removed"
+          },
+          "quiz": [
+            {
+              "question": "A spring with spring constant 25N/m is stretched by 0.4m. Find the force applied.",
+              "options": [
+                "10N",
+                "62.5N",
+                "6.25N",
+                "100N"
+              ],
+              "correct": 0,
+              "explanation": "F=ke=25×0.4=10N."
+            },
+            {
+              "question": "What does the elastic limit represent?",
+              "options": [
+                "The point where a spring breaks instantly",
+                "The maximum point beyond which the material won't return to its original shape",
+                "The minimum force needed to stretch a spring",
+                "A fixed property of all materials, always the same"
+              ],
+              "correct": 1,
+              "explanation": "Beyond the elastic limit, deformation becomes permanent (plastic), and Hooke's Law no longer applies."
+            },
+            {
+              "question": "A spring stretches 0.1m under a 20N force. Find its spring constant.",
+              "options": [
+                "2N/m",
+                "200N/m",
+                "0.005N/m",
+                "20N/m"
+              ],
+              "correct": 1,
+              "explanation": "k=F/e=20÷0.1=200N/m."
+            },
+            {
+              "question": "Hooke's Law states that extension is:",
+              "options": [
+                "Inversely proportional to force",
+                "Directly proportional to force, within the elastic limit",
+                "Unrelated to force",
+                "Always equal to force"
+              ],
+              "correct": 1,
+              "explanation": "F=ke shows a direct proportional relationship between force and extension, up to the elastic limit."
+            },
+            {
+              "question": "Bending a wire until it stays bent is an example of:",
+              "options": [
+                "Elastic deformation",
+                "Plastic deformation",
+                "No deformation",
+                "Hooke's Law in action"
+              ],
+              "correct": 1,
+              "explanation": "A permanent shape change that doesn't reverse is plastic deformation."
+            }
+          ]
+        },
+        {
+          "title": "Reflection of Light by Curved Surfaces",
+          "content": "What are the two main types of curved mirrors, and how do they differ? A concave mirror curves inward (like the inside of a spoon) and converges (brings together) parallel rays of light to a focal point, producing images that can be real or virtual depending on object distance; a convex mirror curves outward and diverges (spreads out) parallel rays, always producing a virtual, upright, and diminished (smaller) image regardless of object distance. What key terms describe a curved mirror's geometry? The centre of curvature (C) is the centre of the sphere the mirror is part of; the pole (P) is the centre point of the mirror's surface; the principal axis is the straight line through both C and P; and the focal point (F) is the point where parallel rays converge (or appear to diverge from), located exactly halfway between the pole and the centre of curvature. How does the image formed by a concave mirror change depending on where the object is placed? When the object is beyond the centre of curvature, the image is real, inverted, and smaller; when the object is between the focal point and the centre of curvature, the image is real, inverted, and enlarged; when the object is between the focal point and the mirror, the image becomes virtual, upright, and enlarged. Where are concave and convex mirrors used in real life? Concave mirrors are used in torches and car headlights (to focus light into a beam) and shaving/makeup mirrors (to magnify); convex mirrors are used as car side mirrors and shop security mirrors, since their wide, diminished field of view lets the driver or shopkeeper see a much larger area at once.",
+          "examples": [
+            "State the type of image produced by a convex mirror, regardless of object position.\nStep 1: Recall a convex mirror always diverges reflected rays\nAnswer: A convex mirror always produces a virtual, upright, and diminished (smaller) image",
+            "An object is placed beyond the centre of curvature of a concave mirror. Describe the image formed.\nStep 1: Recall the rule for an object beyond the centre of curvature\nAnswer: The image is real, inverted, and smaller than the object",
+            "Explain why convex mirrors are used as car side mirrors instead of plane mirrors.\nStep 1: Recall convex mirrors diverge light, giving a wider field of view\nStep 2: Consider the safety benefit of seeing more of the road\nAnswer: Convex mirrors show a wider area behind the car (a larger field of view) than a plane mirror of the same size, helping drivers see more of their surroundings",
+            "Explain why a concave mirror is used inside a car headlight.\nStep 1: Recall a concave mirror converges light rays from a source placed at its focal point\nStep 2: Consider the effect of parallel, focused light\nAnswer: Placing the bulb at the focal point makes the concave mirror reflect the light out as a strong, parallel, focused beam",
+            "An object is placed between the focal point and a concave mirror's surface. Describe the resulting image.\nStep 1: Recall the rule for an object between the focal point and the mirror\nAnswer: The image is virtual, upright, and enlarged (magnified) — as used in a shaving or makeup mirror"
+          ],
+          "keyTerms": {
+            "concave mirror": "A mirror curving inward that converges light rays to a focal point",
+            "convex mirror": "A mirror curving outward that diverges light rays, always giving a virtual, diminished image",
+            "focal point": "The point where parallel rays converge (or appear to diverge from) after reflecting off a curved mirror",
+            "centre of curvature": "The centre of the sphere that the curved mirror's surface is part of"
+          },
+          "quiz": [
+            {
+              "question": "A convex mirror always produces an image that is:",
+              "options": [
+                "Real and inverted",
+                "Virtual, upright, and diminished",
+                "Real and enlarged",
+                "Upside down and enlarged"
+              ],
+              "correct": 1,
+              "explanation": "Convex mirrors always diverge light, giving a virtual, upright, smaller image."
+            },
+            {
+              "question": "Why are convex mirrors used as shop security mirrors?",
+              "options": [
+                "They magnify everything",
+                "They give a wider field of view in a small mirror",
+                "They are cheaper to make",
+                "They produce real images"
+              ],
+              "correct": 1,
+              "explanation": "Convex mirrors show a much wider area, letting one mirror cover more of the shop."
+            },
+            {
+              "question": "The focal point of a curved mirror is located:",
+              "options": [
+                "At the mirror's edge",
+                "Halfway between the pole and the centre of curvature",
+                "Behind the mirror always",
+                "Nowhere in particular"
+              ],
+              "correct": 1,
+              "explanation": "The focal point sits midway between the pole (P) and the centre of curvature (C)."
+            },
+            {
+              "question": "An object placed between the focal point and a concave mirror produces an image that is:",
+              "options": [
+                "Real, inverted, smaller",
+                "Virtual, upright, enlarged",
+                "Real, upright, same size",
+                "Virtual, inverted, smaller"
+              ],
+              "correct": 1,
+              "explanation": "This object position gives a magnified, upright, virtual image, as in a shaving mirror."
+            },
+            {
+              "question": "Concave mirrors are used in torches because they:",
+              "options": [
+                "Diverge the light widely",
+                "Converge light from the bulb into a focused beam",
+                "Absorb all the light",
+                "Are cheaper than convex mirrors"
+              ],
+              "correct": 1,
+              "explanation": "Placing the bulb at the focal point lets the concave mirror direct the light into a strong, focused beam."
+            }
+          ]
+        },
+        {
+          "title": "Magnets and Magnetic Field",
+          "content": "What is a magnet, and what are its key properties? A magnet is an object that attracts magnetic materials (like iron, steel, cobalt, and nickel) and has two poles — north and south — where its magnetic effect is strongest; like poles repel each other, while unlike poles attract. What is a magnetic field, and how can it be shown? A magnetic field is the region around a magnet where its magnetic force can be detected, and it can be visualised using field lines that run from the north pole to the south pole outside the magnet — these lines can be mapped using iron filings sprinkled around a magnet, or by tracing the direction a small plotting compass points at different positions. How can a permanent magnet be made? By stroking a piece of magnetic material repeatedly in the same direction with one pole of an existing magnet, or by placing the material inside a coil of wire carrying direct current (electromagnetic induction) — both methods align the material's internal magnetic domains (tiny regions that each act like a mini-magnet) so they all point the same way. What is the difference between a magnetically 'hard' and 'soft' material? Hard magnetic materials (like steel) are difficult to magnetise but retain their magnetism well, making them suitable for permanent magnets; soft magnetic materials (like pure iron) are easy to magnetise and demagnetise quickly, making them ideal for electromagnets that need to switch on and off. How can you test whether an object is a magnet or just a magnetic material? Bring a known pole of a magnet near each end of the object — if it attracts at both ends, the object is simply magnetic material; if one end attracts and the other repels, the object is itself a magnet (since only a true magnet can repel).",
+          "examples": [
+            "Two magnets are brought close together and they repel each other. State what this indicates about their poles.\nStep 1: Recall like poles repel, unlike poles attract\nAnswer: The two poles facing each other must be alike (both north or both south)",
+            "Describe how to test whether an unmarked steel bar is a magnet or just an unmagnetised piece of magnetic material.\nStep 1: Bring a known magnet pole near each end of the steel bar\nStep 2: Observe whether both ends attract, or one attracts and one repels\nAnswer: If both ends attract the magnet, the bar is just magnetic material; if one end attracts and the other repels, the bar is itself a magnet",
+            "Explain why steel is preferred over soft iron for making a permanent magnet.\nStep 1: Recall hard magnetic materials retain their magnetism well\nStep 2: Recall steel is a hard magnetic material, iron is soft\nAnswer: Steel retains its magnetism for a long time once magnetised, making it ideal for permanent magnets, unlike soft iron which loses magnetism quickly",
+            "Explain why soft iron, not steel, is used as the core of an electromagnet that must switch on and off.\nStep 1: Recall soft magnetic materials magnetise and demagnetise easily\nStep 2: Consider the need for the magnetism to disappear when the current is switched off\nAnswer: Soft iron quickly loses its magnetism once the current stops, allowing the electromagnet to switch off completely, unlike steel which would stay magnetised",
+            "Describe the direction of magnetic field lines around a bar magnet, outside the magnet.\nStep 1: Recall field lines run from north pole to south pole outside the magnet\nAnswer: The field lines emerge from the north pole, curve around, and enter the south pole"
+          ],
+          "keyTerms": {
+            "magnet": "An object with two poles that attracts magnetic materials and can attract or repel other magnets",
+            "magnetic field": "The region around a magnet where its magnetic force can be detected",
+            "magnetic domain": "A tiny region within a material where atoms' magnetic effects all align in the same direction",
+            "electromagnet": "A magnet created by passing electric current through a coil of wire, often around a soft iron core"
+          },
+          "quiz": [
+            {
+              "question": "When two magnetic poles attract each other, they must be:",
+              "options": [
+                "The same pole (both north or both south)",
+                "Unlike poles (one north, one south)",
+                "Neither pole, just random material",
+                "It's impossible to tell"
+              ],
+              "correct": 1,
+              "explanation": "Unlike poles attract; like poles repel."
+            },
+            {
+              "question": "Which material is better suited for a permanent magnet?",
+              "options": [
+                "Soft iron",
+                "Steel",
+                "Plastic",
+                "Copper"
+              ],
+              "correct": 1,
+              "explanation": "Steel is magnetically 'hard' and retains magnetism well, ideal for permanent magnets."
+            },
+            {
+              "question": "How can you confirm an object is a true magnet, not just magnetic material?",
+              "options": [
+                "It attracts at both ends when tested with a known pole",
+                "It repels at one end and attracts at the other when tested",
+                "It is made of plastic",
+                "It has no poles"
+              ],
+              "correct": 1,
+              "explanation": "Only a true magnet can repel a known pole — unmagnetised material always attracts."
+            },
+            {
+              "question": "Magnetic field lines around a bar magnet run:",
+              "options": [
+                "From south to north outside the magnet",
+                "From north to south outside the magnet",
+                "In random directions",
+                "Only inside the magnet"
+              ],
+              "correct": 1,
+              "explanation": "By convention, field lines emerge from the north pole and enter the south pole outside the magnet."
+            },
+            {
+              "question": "Why is soft iron used in electromagnets rather than steel?",
+              "options": [
+                "It's cheaper only",
+                "It magnetises and demagnetises quickly, letting the magnet switch off",
+                "It looks better",
+                "It's a non-magnetic material"
+              ],
+              "correct": 1,
+              "explanation": "Soft iron loses its magnetism almost instantly once current stops, which is essential for an on/off electromagnet."
+            }
+          ]
+        },
+        {
+          "title": "Electrostatics",
+          "content": "What is static electricity, and how does an object become electrically charged? Static electricity is the build-up of electric charge on the surface of an object, usually caused by friction — when two different materials are rubbed together, electrons (negatively charged particles) can transfer from one material to the other, leaving one object with a surplus of electrons (negatively charged) and the other with a deficit (positively charged). What is the law of electrostatic charges? Like charges repel each other, and unlike charges attract each other — this mirrors the behaviour of magnetic poles, but involves electric charge rather than magnetism. What is the difference between charging by induction and charging by contact? Charging by contact involves physically touching a charged object to a neutral one, transferring some charge directly onto it (both objects end up with the same type of charge); charging by induction involves bringing a charged object NEAR (but not touching) a neutral conductor, causing charges within the neutral object to redistribute, so that briefly earthing it while the charged object is still nearby leaves it with the opposite charge to the original object. What are common real-world examples and effects of static electricity? A comb rubbed on dry hair can pick up small pieces of paper; walking across a synthetic carpet and then touching a metal door handle can cause a small static shock; and fuel trucks are earthed with a conducting strap before refuelling to safely discharge built-up static and prevent dangerous sparks near flammable vapour.",
+          "examples": [
+            "A plastic rod is rubbed with a cloth and becomes negatively charged. Explain what happened to the electrons.\nStep 1: Recall friction transfers electrons between two different materials\nStep 2: Consider which object gained electrons if the rod became negative\nAnswer: Electrons transferred from the cloth onto the rod, giving the rod a surplus of electrons (negative charge) and leaving the cloth positively charged",
+            "Two identically charged balloons are brought close together. Predict what happens.\nStep 1: Recall like charges repel\nAnswer: The balloons repel each other and move apart",
+            "A positively charged rod is brought near (not touching) a neutral metal sphere. Describe how the charges in the sphere redistribute.\nStep 1: Recall induction causes charge redistribution without contact\nStep 2: Recall opposite charges are attracted toward the nearby charged rod\nAnswer: Electrons (negative charge) in the sphere are attracted toward the rod's side, leaving that side negative and the far side positive",
+            "Explain why fuel tankers are earthed with a conducting strap before refuelling.\nStep 1: Recall static charge can build up from friction during fuel movement\nStep 2: Consider the danger of a spark near flammable vapour\nAnswer: Earthing safely discharges any built-up static electricity, preventing a spark that could ignite the fuel vapour",
+            "A comb is rubbed on dry hair and then held near small pieces of paper. Explain why the paper is attracted to the comb.\nStep 1: Recall friction charges the comb\nStep 2: Recall a charged object can attract light, neutral objects nearby\nAnswer: The charged comb induces an opposite charge on the near side of the paper pieces, attracting them to the comb"
+          ],
+          "keyTerms": {
+            "static electricity": "The build-up of electric charge on the surface of an object, often from friction",
+            "law of electrostatic charges": "Like charges repel, unlike charges attract",
+            "charging by induction": "Charging a neutral object by bringing a charged object near it, without direct contact",
+            "earthing": "Connecting an object to the ground to safely remove built-up static charge"
+          },
+          "quiz": [
+            {
+              "question": "Two negatively charged objects are brought near each other. They will:",
+              "options": [
+                "Attract",
+                "Repel",
+                "Have no effect on each other",
+                "Instantly become neutral"
+              ],
+              "correct": 1,
+              "explanation": "Like charges (both negative) always repel."
+            },
+            {
+              "question": "What causes an object to build up static charge through friction?",
+              "options": [
+                "Protons moving between objects",
+                "Electrons transferring between two materials",
+                "Heat alone",
+                "Magnetism"
+              ],
+              "correct": 1,
+              "explanation": "Friction transfers electrons from one material to another, charging both objects oppositely."
+            },
+            {
+              "question": "Charging by induction requires:",
+              "options": [
+                "Direct contact between the objects",
+                "The charged object to be brought near, without touching",
+                "Both objects to already be charged",
+                "No charged object at all"
+              ],
+              "correct": 1,
+              "explanation": "Induction redistributes charge in a nearby object without any direct contact."
+            },
+            {
+              "question": "Why are fuel tankers earthed before refuelling?",
+              "options": [
+                "To make them heavier",
+                "To safely discharge static electricity and prevent sparks",
+                "To charge the fuel",
+                "It has no real purpose"
+              ],
+              "correct": 1,
+              "explanation": "Earthing removes dangerous static build-up that could otherwise spark near flammable fuel vapour."
+            },
+            {
+              "question": "According to the law of electrostatic charges, unlike charges:",
+              "options": [
+                "Repel",
+                "Attract",
+                "Have no interaction",
+                "Cancel out instantly"
+              ],
+              "correct": 1,
+              "explanation": "Unlike (opposite) charges attract each other."
+            }
+          ]
+        },
+        {
+          "title": "The Solar System",
+          "content": "What is the solar system, and what is at its centre? The solar system consists of the Sun (a star that produces its own light and heat through nuclear fusion) and everything that orbits it — eight planets, their moons, dwarf planets, asteroids, comets, and other debris — all held in orbit by the Sun's gravitational pull. What are the eight planets, in order from the Sun? Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune — the four closest to the Sun (Mercury, Venus, Earth, Mars) are small, rocky 'terrestrial' planets, while the four furthest (Jupiter, Saturn, Uranus, Neptune) are much larger 'gas giants' made mostly of hydrogen and helium. What causes day and night, and what causes the seasons? Day and night are caused by the Earth's rotation on its own axis (one full rotation takes about 24 hours), while the seasons are caused by the tilt of the Earth's axis (about 23.5°) combined with its orbit around the Sun, meaning different hemispheres receive more or less direct sunlight at different times of the year. What is the difference between a planet's rotation and its revolution (orbit)? Rotation is a planet spinning on its own axis; revolution (or orbit) is a planet travelling all the way around the Sun — Earth's revolution takes approximately 365.25 days, which is why an extra day is added every four years (a leap year). What are moons, asteroids, and comets? A moon is a natural satellite that orbits a planet; an asteroid is a small, rocky object (smaller than a planet) mostly found in the asteroid belt between Mars and Jupiter; a comet is an icy body that develops a glowing tail of gas and dust as it approaches the Sun and some of its ice vaporises.",
+          "examples": [
+            "State the order of the four rocky (terrestrial) planets from the Sun.\nStep 1: Recall the terrestrial planets are the four closest to the Sun\nAnswer: Mercury, Venus, Earth, Mars",
+            "Explain what causes day and night on Earth.\nStep 1: Recall the Earth spins on its own axis\nStep 2: Consider that only the side facing the Sun receives daylight at any moment\nAnswer: The Earth's rotation on its axis means different parts face the Sun (day) or face away (night) as it spins, completing one full rotation approximately every 24 hours",
+            "Explain why the Earth has an extra day added every four years (a leap year).\nStep 1: Recall one orbit of the Sun takes about 365.25 days, not exactly 365\nStep 2: Consider that the extra quarter-day accumulates over four years\nAnswer: The quarter-day surplus each year adds up to roughly one full extra day every four years, which is added as 29 February in a leap year",
+            "Distinguish between an asteroid and a comet.\nStep 1: Recall an asteroid is a rocky object, mostly found between Mars and Jupiter\nStep 2: Recall a comet is icy and develops a glowing tail near the Sun\nAnswer: An asteroid is a small rocky body without a tail, while a comet is icy and forms a visible tail of gas and dust as it nears the Sun",
+            "Explain why Uganda, near the equator, experiences less variation in seasons than countries far from the equator.\nStep 1: Recall seasons are caused by the tilt of the Earth's axis affecting how directly sunlight hits different latitudes\nStep 2: Consider that regions near the equator receive fairly direct sunlight all year round\nAnswer: Because Uganda is close to the equator, the tilt of the Earth's axis causes only a small change in how directly sunlight reaches it through the year, so seasonal temperature variation is much smaller than at higher latitudes"
+          ],
+          "keyTerms": {
+            "solar system": "The Sun and everything that orbits it, including planets, moons, asteroids, and comets",
+            "rotation": "A planet spinning on its own axis, causing day and night",
+            "revolution (orbit)": "A planet's full journey around the Sun",
+            "terrestrial planet": "A small, rocky planet close to the Sun (Mercury, Venus, Earth, Mars)"
+          },
+          "quiz": [
+            {
+              "question": "Which planet is closest to the Sun?",
+              "options": [
+                "Venus",
+                "Earth",
+                "Mercury",
+                "Mars"
+              ],
+              "correct": 2,
+              "explanation": "Mercury is the closest planet to the Sun."
+            },
+            {
+              "question": "What causes day and night on Earth?",
+              "options": [
+                "Earth's orbit around the Sun",
+                "Earth's rotation on its own axis",
+                "The Moon's orbit",
+                "The tilt of the Sun"
+              ],
+              "correct": 1,
+              "explanation": "Earth's spin on its axis brings each location into and out of sunlight roughly every 24 hours."
+            },
+            {
+              "question": "What causes the seasons?",
+              "options": [
+                "The Earth's rotation alone",
+                "The tilt of the Earth's axis combined with its orbit around the Sun",
+                "The phases of the Moon",
+                "Random weather patterns"
+              ],
+              "correct": 1,
+              "explanation": "The axial tilt means different hemispheres get more or less direct sunlight at different points in Earth's orbit."
+            },
+            {
+              "question": "Which of these are the 'gas giant' planets?",
+              "options": [
+                "Mercury, Venus, Earth, Mars",
+                "Jupiter, Saturn, Uranus, Neptune",
+                "Only Jupiter and Saturn",
+                "Only Neptune"
+              ],
+              "correct": 1,
+              "explanation": "The four outer planets are large and made mostly of hydrogen and helium, unlike the small rocky inner planets."
+            },
+            {
+              "question": "A comet is best described as:",
+              "options": [
+                "A rocky object between Mars and Jupiter",
+                "An icy body that forms a glowing tail near the Sun",
+                "A moon orbiting a planet",
+                "A star smaller than the Sun"
+              ],
+              "correct": 1,
+              "explanation": "Comets are icy bodies; as ice vaporises near the Sun, it forms the characteristic glowing tail."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "S3",
+      "lessons": [
+        {
+          "title": "Linear and Non-linear Motion",
+          "content": "What is the difference between distance/speed and displacement/velocity? Distance and speed are scalar quantities (they only have size, no direction) — speed = distance ÷ time; displacement and velocity are vector quantities (they have both size AND direction) — velocity = displacement ÷ time, so a runner completing one full lap back to the starting point has covered a real distance but has zero net displacement. What is acceleration? The rate of change of velocity, calculated as acceleration = (final velocity − initial velocity) ÷ time, measured in m/s² — a positive acceleration means speeding up, and a negative acceleration (deceleration) means slowing down. What is the difference between linear and non-linear (circular) motion? Linear motion is movement in a straight line; non-linear motion includes movement along a curved path, such as circular motion, where an object moves in a circle at constant speed but constantly changing direction (and therefore constantly changing velocity, since velocity includes direction). What is momentum, and what does the law of conservation of momentum state? Momentum is a measure of how hard it is to stop a moving object, calculated as momentum = mass × velocity (p = mv) — the law of conservation of momentum states that in a collision (with no external forces), the total momentum before the collision equals the total momentum after it. What do Newton's laws of motion state? Newton's first law: an object stays at rest or moves at constant velocity unless acted on by a resultant force; Newton's second law: force = mass × acceleration (F = ma); Newton's third law: for every action force, there is an equal and opposite reaction force.",
+          "examples": [
+            "A car travels 300m in 15 seconds. Find its average speed.\nStep 1: Use speed = distance/time\nStep 2: Substitute: 300÷15\nAnswer: Speed = 20m/s",
+            "A cyclist accelerates from 4m/s to 12m/s in 4 seconds. Find the acceleration.\nStep 1: Use acceleration = (final velocity − initial velocity)/time\nStep 2: Substitute: (12−4)/4\nAnswer: Acceleration = 2m/s²",
+            "Find the momentum of a 60kg person running at 5m/s.\nStep 1: Use momentum = mass × velocity\nStep 2: Substitute: 60×5\nAnswer: Momentum = 300kg·m/s",
+            "Use Newton's second law to find the force needed to accelerate a 1000kg car at 3m/s².\nStep 1: Use F = ma\nStep 2: Substitute: 1000×3\nAnswer: Force = 3000N",
+            "A 2kg trolley moving at 3m/s collides and sticks to a stationary 1kg trolley. Find their common velocity after collision, using conservation of momentum.\nStep 1: Find total momentum before collision: (2×3)+(1×0)=6kg·m/s\nStep 2: Find total mass after collision: 2+1=3kg\nStep 3: Divide total momentum by total mass: 6÷3\nAnswer: Common velocity after collision = 2m/s"
+          ],
+          "keyTerms": {
+            "velocity": "Speed in a given direction; a vector quantity, unlike scalar speed",
+            "acceleration": "The rate of change of velocity, measured in m/s²",
+            "momentum": "A measure of how hard it is to stop a moving object, p=mv",
+            "Newton's second law": "Force equals mass times acceleration, F=ma"
+          },
+          "quiz": [
+            {
+              "question": "A runner completes one full lap of a track and returns to the start. What is their displacement?",
+              "options": [
+                "Equal to the distance run",
+                "Zero",
+                "Negative",
+                "Cannot be determined"
+              ],
+              "correct": 1,
+              "explanation": "Displacement measures net change in position; returning to the start gives zero displacement, even though distance travelled is not zero."
+            },
+            {
+              "question": "A car speeds up from 10m/s to 25m/s in 5 seconds. Find its acceleration.",
+              "options": [
+                "3m/s²",
+                "5m/s²",
+                "7m/s²",
+                "35m/s²"
+              ],
+              "correct": 1,
+              "explanation": "(25−10)/5 = 3m/s². Correct answer is 3m/s², so option representing 3 is correct."
+            },
+            {
+              "question": "Find the momentum of an 8kg object moving at 4m/s.",
+              "options": [
+                "2kg·m/s",
+                "12kg·m/s",
+                "32kg·m/s",
+                "4kg·m/s"
+              ],
+              "correct": 2,
+              "explanation": "Momentum = mass×velocity = 8×4 = 32kg·m/s."
+            },
+            {
+              "question": "Newton's first law states that an object at rest or in motion will:",
+              "options": [
+                "Always accelerate",
+                "Stay that way unless acted on by a resultant force",
+                "Immediately stop",
+                "Speed up on its own"
+              ],
+              "correct": 1,
+              "explanation": "This is the law of inertia — no change in motion without a net external force."
+            },
+            {
+              "question": "In a collision with no external forces, total momentum:",
+              "options": [
+                "Increases",
+                "Decreases",
+                "Is conserved (stays the same)",
+                "Becomes zero"
+              ],
+              "correct": 2,
+              "explanation": "The law of conservation of momentum states total momentum before equals total momentum after."
+            }
+          ]
+        },
+        {
+          "title": "Refraction, Dispersion, and Colour",
+          "content": "What is refraction, and why does it happen? Refraction is the bending of light as it passes from one transparent medium into another (like from air into water or glass), caused by the change in the speed of light between the two media — light slows down when entering a denser medium, bending toward the normal, and speeds up when leaving a denser medium for a less dense one, bending away from the normal. What is the refractive index, and how is it used? The refractive index of a material is a measure of how much it slows down and bends light compared to a vacuum (or air), calculated as the ratio sin(angle of incidence) ÷ sin(angle of refraction) for light entering that material — a higher refractive index means light bends more and travels more slowly through that material. What causes total internal reflection, and where is it used? When light travels from a denser to a less dense medium at an angle greater than the material's critical angle, it reflects entirely back into the denser medium instead of refracting out — this principle is used in optical fibres (which carry light signals over long distances by repeated total internal reflection) and in periscopes and binoculars using prisms. What is dispersion, and what causes the colours of a rainbow? Dispersion is the splitting of white light into its full spectrum of colours (red, orange, yellow, green, blue, indigo, violet) because each colour has a slightly different wavelength and therefore bends by a slightly different amount when refracted through a prism or water droplet — a rainbow forms when sunlight is refracted, reflected internally, and dispersed by countless tiny water droplets in the air after rain.",
+          "examples": [
+            "Light travels from air into glass and bends toward the normal. State whether it is speeding up or slowing down.\nStep 1: Recall light bends toward the normal when entering a denser medium\nStep 2: Recall entering a denser medium means the light slows down\nAnswer: The light is slowing down as it enters the glass",
+            "A ray of light hits a glass surface at an angle of incidence of 40°, refracting at 25°. Find the refractive index of the glass.\nStep 1: Use refractive index = sin(incidence)/sin(refraction)\nStep 2: Substitute: sin(40°)/sin(25°) ≈ 0.643/0.423\nAnswer: Refractive index ≈ 1.52",
+            "Explain why an optical fibre can carry a light signal around bends without the light escaping.\nStep 1: Recall total internal reflection occurs beyond the critical angle\nStep 2: Consider that the fibre is designed so light always hits its walls beyond this angle\nAnswer: The light repeatedly undergoes total internal reflection off the inner walls of the fibre, keeping it trapped inside as it travels around bends",
+            "Explain why white light splits into a spectrum of colours when passing through a glass prism.\nStep 1: Recall each colour of light has a slightly different wavelength\nStep 2: Recall each wavelength refracts (bends) by a slightly different amount\nAnswer: Because each colour bends by a different amount as it refracts through the prism, the colours separate out — this is dispersion",
+            "Explain the sequence of events that produces a rainbow after rainfall.\nStep 1: Recall sunlight enters water droplets and refracts\nStep 2: Recall the light also reflects internally off the back of the droplet\nStep 3: Recall the light disperses into its component colours as it exits\nAnswer: Sunlight refracts as it enters the raindrop, reflects internally off the back of the droplet, and disperses into separate colours as it exits, producing the rainbow's spectrum"
+          ],
+          "keyTerms": {
+            "refraction": "The bending of light as it passes between two media of different density",
+            "refractive index": "A measure of how much a material slows and bends light, sin(i)/sin(r)",
+            "total internal reflection": "Light reflecting entirely within a denser medium when hitting a boundary beyond the critical angle",
+            "dispersion": "The splitting of white light into its spectrum of colours due to different wavelengths refracting by different amounts"
+          },
+          "quiz": [
+            {
+              "question": "Light bends toward the normal when it enters a medium that is:",
+              "options": [
+                "Less dense",
+                "Denser (causing it to slow down)",
+                "Exactly the same density",
+                "A vacuum"
+              ],
+              "correct": 1,
+              "explanation": "Entering a denser medium slows the light, bending it toward the normal."
+            },
+            {
+              "question": "Total internal reflection occurs when light travels from a denser to a less dense medium at an angle:",
+              "options": [
+                "Less than the critical angle",
+                "Greater than the critical angle",
+                "Exactly 0°",
+                "It never occurs"
+              ],
+              "correct": 1,
+              "explanation": "Beyond the critical angle, light is entirely reflected back rather than refracting out."
+            },
+            {
+              "question": "Dispersion of white light occurs because:",
+              "options": [
+                "All colours travel at the same speed and bend equally",
+                "Each colour has a different wavelength and bends by a different amount",
+                "Prisms absorb some colours",
+                "White light has no colours in it"
+              ],
+              "correct": 1,
+              "explanation": "Differing wavelengths refract by differing amounts, spreading the colours apart."
+            },
+            {
+              "question": "Optical fibres transmit light signals using:",
+              "options": [
+                "Dispersion",
+                "Total internal reflection",
+                "Magnetism",
+                "Convection"
+              ],
+              "correct": 1,
+              "explanation": "Repeated total internal reflection keeps light trapped inside the fibre as it travels."
+            },
+            {
+              "question": "A ray hits a boundary with angle of incidence 50° and refracts at 30°. Find the refractive index (sin50°≈0.766, sin30°=0.5).",
+              "options": [
+                "1.53",
+                "0.65",
+                "20",
+                "0.38"
+              ],
+              "correct": 0,
+              "explanation": "Refractive index = sin(i)/sin(r) = 0.766/0.5 ≈ 1.53."
+            }
+          ]
+        },
+        {
+          "title": "Lenses and Optical Instruments",
+          "content": "What are the two main types of lenses, and how do they behave? A convex (converging) lens is thicker in the middle and bends parallel light rays inward to meet at a focal point, and can produce either real or virtual images depending on where the object is placed; a concave (diverging) lens is thinner in the middle and spreads parallel light rays outward, always producing a virtual, upright, diminished image, similar to a convex mirror's behaviour. How does the image formed by a convex lens change with object position? When the object is beyond twice the focal length, the image is real, inverted, and smaller; when exactly at twice the focal length, the image is real, inverted, and the same size; when between the focal length and twice the focal length, the image is real, inverted, and enlarged; and when the object is closer than the focal length, the image becomes virtual, upright, and enlarged (as in a magnifying glass). How does the human eye work as an optical instrument? The eye uses a convex lens to focus light onto the retina at the back of the eye, with the lens changing shape (accommodation) to focus on objects at different distances — short-sightedness (unable to focus on distant objects) is corrected with a concave lens, and long-sightedness (unable to focus on close objects) is corrected with a convex lens. How does a simple camera or magnifying glass use a convex lens? A camera lens forms a real, inverted, smaller image on a light-sensitive sensor or film, similar to the eye; a magnifying glass uses a convex lens with the object placed closer than the focal length, producing a virtual, upright, enlarged image that appears bigger than the actual object.",
+          "examples": [
+            "State the type of lens used to correct short-sightedness.\nStep 1: Recall short-sightedness means the eye focuses images in front of the retina, needing rays spread out slightly before entering the eye\nAnswer: A concave (diverging) lens is used to correct short-sightedness",
+            "State the type of lens used to correct long-sightedness.\nStep 1: Recall long-sightedness means the eye can't converge light enough for close objects\nAnswer: A convex (converging) lens is used to correct long-sightedness",
+            "An object is placed beyond twice the focal length of a convex lens. Describe the image formed.\nStep 1: Recall the rule for an object beyond 2F\nAnswer: The image is real, inverted, and smaller than the object",
+            "Explain how a magnifying glass produces an enlarged image of a small object.\nStep 1: Recall a convex lens is used, with the object placed closer than the focal length\nStep 2: Recall this object position produces a virtual, upright, enlarged image\nAnswer: Placing the object within the focal length of the convex lens causes the diverging rays entering your eye to appear to come from a much larger virtual image behind the lens",
+            "Explain how the eye's lens changes to focus on both a nearby book and a distant mountain.\nStep 1: Recall the eye's lens can change shape, a process called accommodation\nStep 2: Recall a more curved (rounder) lens is needed to focus on closer objects\nAnswer: The eye's lens becomes more curved (rounder) to focus on the nearby book, and flatter to focus on the distant mountain, through the process of accommodation"
+          ],
+          "keyTerms": {
+            "convex lens": "A converging lens, thicker in the middle, that bends light rays inward",
+            "concave lens": "A diverging lens, thinner in the middle, that spreads light rays outward",
+            "accommodation": "The eye lens changing shape to focus on objects at different distances",
+            "focal length": "The distance from a lens to its focal point"
+          },
+          "quiz": [
+            {
+              "question": "Which lens is used to correct short-sightedness?",
+              "options": [
+                "Convex lens",
+                "Concave lens",
+                "No lens is needed",
+                "A flat piece of glass"
+              ],
+              "correct": 1,
+              "explanation": "A concave (diverging) lens spreads the light slightly before it enters the eye, correcting short-sightedness."
+            },
+            {
+              "question": "An object placed within the focal length of a convex lens produces an image that is:",
+              "options": [
+                "Real, inverted, smaller",
+                "Virtual, upright, enlarged",
+                "Real, upright, same size",
+                "Virtual, inverted, smaller"
+              ],
+              "correct": 1,
+              "explanation": "This is exactly how a magnifying glass works — a virtual, upright, enlarged image."
+            },
+            {
+              "question": "The eye's ability to change lens shape to focus at different distances is called:",
+              "options": [
+                "Refraction",
+                "Accommodation",
+                "Dispersion",
+                "Reflection"
+              ],
+              "correct": 1,
+              "explanation": "Accommodation is the term for the eye lens adjusting its curvature."
+            },
+            {
+              "question": "A concave lens always produces an image that is:",
+              "options": [
+                "Real and inverted",
+                "Virtual, upright, and diminished",
+                "Real and enlarged",
+                "Upside down and life-sized"
+              ],
+              "correct": 1,
+              "explanation": "Concave (diverging) lenses always produce virtual, upright, smaller images, regardless of object distance."
+            },
+            {
+              "question": "Which lens type is thicker in the middle than at the edges?",
+              "options": [
+                "Concave lens",
+                "Convex lens",
+                "Both are the same thickness",
+                "Neither has varying thickness"
+              ],
+              "correct": 1,
+              "explanation": "A convex lens bulges outward, being thickest in the middle."
+            }
+          ]
+        },
+        {
+          "title": "General Wave Properties",
+          "content": "What is a wave, and what are the two main categories of waves? A wave is a disturbance that transfers energy from one place to another without transferring matter itself. Transverse waves (like light and water waves) have their vibrations perpendicular (at right angles) to the direction the wave travels; longitudinal waves (like sound) have their vibrations parallel to (in the same direction as) the direction of travel, forming compressions (regions of high pressure/density) and rarefactions (regions of low pressure/density). What are the key measurements used to describe a wave? Wavelength (λ) is the distance from one point on a wave to the identical point on the next wave (like crest to crest); frequency (f) is the number of complete waves passing a point per second, measured in hertz (Hz); amplitude is the maximum displacement of the wave from its rest position, related to the wave's energy; and period (T) is the time taken for one complete wave, calculated as T = 1/f. What is the wave equation, and how is it used? Wave speed = frequency × wavelength (v = fλ) connects these three quantities — knowing any two lets you calculate the third. What is the difference between reflection, refraction, and diffraction of waves? Reflection is a wave bouncing back off a surface (following the same law as light); refraction is a wave changing speed and direction when entering a new medium; diffraction is a wave spreading out after passing through a narrow gap or around an obstacle — the effect is most noticeable when the gap size is similar to the wavelength.",
+          "examples": [
+            "A wave has frequency 50Hz and wavelength 4m. Find its speed.\nStep 1: Use v = fλ\nStep 2: Substitute: 50×4\nAnswer: Speed = 200m/s",
+            "A wave travels at 340m/s with a wavelength of 0.85m. Find its frequency.\nStep 1: Rearrange v=fλ to f=v/λ\nStep 2: Substitute: 340÷0.85\nAnswer: Frequency = 400Hz",
+            "A wave has a frequency of 20Hz. Find its period.\nStep 1: Use T = 1/f\nStep 2: Substitute: 1/20\nAnswer: Period = 0.05s",
+            "Classify sound waves as transverse or longitudinal, and justify your answer.\nStep 1: Recall transverse waves vibrate perpendicular to travel direction, longitudinal vibrate parallel\nStep 2: Recall sound travels as compressions and rarefactions along its direction of travel\nAnswer: Sound is a longitudinal wave, since its vibrations (compressions and rarefactions) are parallel to the direction the wave travels",
+            "Explain why diffraction of water waves is more noticeable through a narrow harbour entrance than a wide one.\nStep 1: Recall diffraction is most noticeable when the gap size is similar to the wavelength\nStep 2: Consider that a narrow gap is closer in size to the wavelength than a wide gap\nAnswer: A narrow gap causes the waves to spread out (diffract) much more noticeably, since its width is closer to the wavelength of the water waves"
+          ],
+          "keyTerms": {
+            "wavelength": "The distance from one point on a wave to the identical point on the next wave",
+            "frequency": "The number of complete waves passing a point per second, in hertz",
+            "amplitude": "The maximum displacement of a wave from its rest position",
+            "transverse wave": "A wave whose vibrations are perpendicular to its direction of travel",
+            "longitudinal wave": "A wave whose vibrations are parallel to its direction of travel"
+          },
+          "quiz": [
+            {
+              "question": "A wave has frequency 25Hz and wavelength 8m. Find its speed.",
+              "options": [
+                "200m/s",
+                "33m/s",
+                "3.125m/s",
+                "0.32m/s"
+              ],
+              "correct": 0,
+              "explanation": "v=fλ=25×8=200m/s."
+            },
+            {
+              "question": "Which type of wave has vibrations parallel to its direction of travel?",
+              "options": [
+                "Transverse",
+                "Longitudinal",
+                "Both equally",
+                "Neither"
+              ],
+              "correct": 1,
+              "explanation": "Longitudinal waves (like sound) vibrate along their direction of travel."
+            },
+            {
+              "question": "A wave with frequency 10Hz has a period of:",
+              "options": [
+                "10s",
+                "0.1s",
+                "1s",
+                "100s"
+              ],
+              "correct": 1,
+              "explanation": "T=1/f=1/10=0.1s."
+            },
+            {
+              "question": "Diffraction is most noticeable when:",
+              "options": [
+                "The gap is much larger than the wavelength",
+                "The gap size is similar to the wavelength",
+                "There is no gap at all",
+                "The wave has zero amplitude"
+              ],
+              "correct": 1,
+              "explanation": "Diffraction effects are strongest when the gap and wavelength are comparable in size."
+            },
+            {
+              "question": "Amplitude of a wave is related to its:",
+              "options": [
+                "Speed only",
+                "Energy",
+                "Wavelength only",
+                "Frequency only"
+              ],
+              "correct": 1,
+              "explanation": "A larger amplitude generally means the wave carries more energy."
+            }
+          ]
+        },
+        {
+          "title": "Sound Waves",
+          "content": "What is sound, and how does it travel? Sound is a longitudinal wave produced by a vibrating object, which needs a medium (solid, liquid, or gas) to travel through — unlike light, sound cannot travel through a vacuum, since there are no particles to carry the vibration. How fast does sound travel, and what affects its speed? Sound travels fastest through solids (particles are closest together, transferring vibrations quickest), slower through liquids, and slowest through gases like air (approximately 340m/s at normal conditions) — this is why you can sometimes hear an approaching train through the rails before hearing it through the air. What determines the pitch and loudness of a sound? Pitch (how high or low a sound seems) depends on frequency — higher frequency means higher pitch; loudness depends on amplitude — a larger amplitude vibration produces a louder sound. What is an echo, and how can it be used to measure distance? An echo is a reflected sound wave bouncing back off a hard, distant surface — since sound travels at a known, roughly constant speed in air, timing how long an echo takes to return lets you calculate the distance to the reflecting surface using distance = (speed × time) ÷ 2 (dividing by 2 since the sound travels there and back). What is the range of human hearing? Humans typically hear frequencies between about 20Hz and 20,000Hz (20kHz) — sounds below this range are called infrasound, and sounds above it are called ultrasound, which is used in medical scanning and cleaning equipment.",
+          "examples": [
+            "A person shouts toward a cliff and hears the echo 2 seconds later. Find the distance to the cliff, given the speed of sound is 340m/s.\nStep 1: Use distance = (speed × time)/2\nStep 2: Substitute: (340×2)/2\nAnswer: Distance to the cliff = 340m",
+            "Explain why sound cannot travel through outer space.\nStep 1: Recall sound needs a medium of particles to vibrate and carry the wave\nStep 2: Recall outer space is a vacuum, with no particles\nAnswer: Since space is a vacuum with no particles, there is nothing for sound vibrations to travel through, so sound cannot be heard there",
+            "A tuning fork vibrates faster, increasing its frequency. Describe the effect on the pitch heard.\nStep 1: Recall pitch increases with frequency\nAnswer: The pitch of the sound becomes higher",
+            "Explain why you can sometimes hear an approaching train by placing your ear on the railway track before you can hear it through the air.\nStep 1: Recall sound travels fastest through solids\nStep 2: Consider that the rail (a solid) carries the vibration faster than air\nAnswer: Sound travels faster through the solid rail than through air, so the vibrations reach your ear through the track sooner than through the air",
+            "A ship sends a sound pulse toward the seabed and detects the echo 0.4 seconds later. Find the depth of the water, given the speed of sound in water is 1500m/s.\nStep 1: Use distance = (speed × time)/2\nStep 2: Substitute: (1500×0.4)/2\nAnswer: Depth = 300m"
+          ],
+          "keyTerms": {
+            "pitch": "How high or low a sound seems, determined by its frequency",
+            "loudness": "How loud a sound is, determined by its amplitude",
+            "echo": "A reflected sound wave bouncing back off a distant surface",
+            "ultrasound": "Sound with frequency above the human hearing range (above about 20,000Hz)"
+          },
+          "quiz": [
+            {
+              "question": "Sound travels fastest through which medium?",
+              "options": [
+                "Gas",
+                "Liquid",
+                "Solid",
+                "Vacuum"
+              ],
+              "correct": 2,
+              "explanation": "Particles in a solid are closest together, transferring vibrations fastest."
+            },
+            {
+              "question": "A shout produces an echo off a wall 3 seconds later. Find the distance to the wall (speed of sound = 340m/s).",
+              "options": [
+                "1020m",
+                "510m",
+                "170m",
+                "680m"
+              ],
+              "correct": 1,
+              "explanation": "Distance = (340×3)/2 = 510m."
+            },
+            {
+              "question": "Increasing the frequency of a sound wave increases its:",
+              "options": [
+                "Loudness",
+                "Pitch",
+                "Amplitude",
+                "Wavelength"
+              ],
+              "correct": 1,
+              "explanation": "Higher frequency corresponds to higher pitch."
+            },
+            {
+              "question": "Why can't sound travel through a vacuum?",
+              "options": [
+                "Sound needs light to travel",
+                "There are no particles to carry the vibration",
+                "Vacuums are too cold",
+                "Sound only travels through solids"
+              ],
+              "correct": 1,
+              "explanation": "Sound is a mechanical wave requiring particles to transmit vibrations, which a vacuum lacks."
+            },
+            {
+              "question": "The typical range of human hearing is approximately:",
+              "options": [
+                "0Hz to 10Hz",
+                "20Hz to 20,000Hz",
+                "20,000Hz to 200,000Hz",
+                "There is no upper or lower limit"
+              ],
+              "correct": 1,
+              "explanation": "Humans generally hear frequencies from about 20Hz to 20kHz."
+            }
+          ]
+        },
+        {
+          "title": "Heat Quantities and Vapours",
+          "content": "What is specific heat capacity, and how is it used to calculate heat energy? Specific heat capacity is the amount of heat energy needed to raise the temperature of 1kg of a substance by 1°C, and it explains why different materials heat up or cool down at different rates for the same energy input — the heat energy needed is calculated as Heat = mass × specific heat capacity × temperature change (Q = mcΔT). What is latent heat, and how is it different from the heat that changes temperature? Latent heat is the heat energy absorbed or released during a change of state (like melting or boiling) WITHOUT any change in temperature — all the energy goes into breaking or forming the bonds between particles, not speeding them up; specific latent heat is the amount of energy needed to change the state of 1kg of a substance, calculated as Heat = mass × specific latent heat (Q = mL). What is the difference between specific latent heat of fusion and of vaporisation? Latent heat of fusion is for the solid-liquid change (melting/freezing); latent heat of vaporisation is for the liquid-gas change (boiling/condensing) — vaporisation typically requires much more energy than fusion, since particles must be given enough energy to escape each other's attraction almost entirely, rather than just becoming able to move past each other. What is vapour, and how does evaporation depend on conditions? A vapour is the gaseous form of a substance that is normally liquid or solid at room temperature; the rate of evaporation increases with higher temperature, larger surface area, lower humidity, and greater air movement (wind) — which is why washing dries faster on a hot, windy day than a cool, still one.",
+          "examples": [
+            "Find the heat energy needed to raise the temperature of 2kg of water by 10°C, given the specific heat capacity of water is 4200J/kg°C.\nStep 1: Use Q = mcΔT\nStep 2: Substitute: 2×4200×10\nAnswer: Heat energy = 84,000J",
+            "Find the heat energy needed to melt 0.5kg of ice, given the specific latent heat of fusion of ice is 334,000J/kg.\nStep 1: Use Q = mL\nStep 2: Substitute: 0.5×334,000\nAnswer: Heat energy = 167,000J",
+            "Explain why the temperature of melting ice stays at 0°C throughout the melting process, even while heat is being continuously added.\nStep 1: Recall latent heat goes into breaking particle bonds, not increasing particle speed\nStep 2: Consider that temperature only rises once melting is complete\nAnswer: All the added heat energy is used to break the bonds holding the ice's particles in a fixed structure, so the temperature stays constant at 0°C until melting is complete",
+            "Compare the energy needed to boil 1kg of water to the energy needed to melt 1kg of ice, given latent heat of vaporisation (2,260,000J/kg) is much larger than latent heat of fusion (334,000J/kg).\nStep 1: Compare the two given values directly\nAnswer: Boiling 1kg of water requires far more energy than melting 1kg of ice, since vaporisation must fully separate particles rather than just let them move past each other",
+            "Explain why washing on a line dries faster on a hot, windy day than on a cool, still day.\nStep 1: Recall evaporation rate increases with higher temperature and greater air movement\nStep 2: Consider both factors acting together\nAnswer: The higher temperature gives water particles more energy to escape as vapour, and the wind carries the vapour away quickly, both speeding up evaporation"
+          ],
+          "keyTerms": {
+            "specific heat capacity": "The heat energy needed to raise the temperature of 1kg of a substance by 1°C",
+            "latent heat": "Heat energy absorbed or released during a change of state, without a change in temperature",
+            "specific latent heat": "The heat energy needed to change the state of 1kg of a substance",
+            "vapour": "The gaseous form of a substance that is normally liquid or solid at room temperature"
+          },
+          "quiz": [
+            {
+              "question": "Find the heat needed to raise 3kg of water by 5°C (specific heat capacity of water = 4200J/kg°C).",
+              "options": [
+                "63,000J",
+                "12,600J",
+                "21,000J",
+                "4200J"
+              ],
+              "correct": 0,
+              "explanation": "Q=mcΔT=3×4200×5=63,000J."
+            },
+            {
+              "question": "Why does the temperature stay constant while a substance is melting?",
+              "options": [
+                "No heat is being added",
+                "The added heat breaks particle bonds instead of raising temperature",
+                "Melting doesn't need energy",
+                "Temperature always rises during melting"
+              ],
+              "correct": 1,
+              "explanation": "Latent heat during melting goes entirely into breaking bonds, not increasing particle kinetic energy."
+            },
+            {
+              "question": "Specific latent heat of vaporisation is generally __ specific latent heat of fusion for the same substance.",
+              "options": [
+                "Much smaller than",
+                "Much larger than",
+                "Exactly equal to",
+                "Unrelated to"
+              ],
+              "correct": 1,
+              "explanation": "Vaporisation requires far more energy since particles must overcome much stronger attractive forces to fully separate."
+            },
+            {
+              "question": "Which factor does NOT increase the rate of evaporation?",
+              "options": [
+                "Higher temperature",
+                "Larger surface area",
+                "Higher humidity",
+                "More air movement (wind)"
+              ],
+              "correct": 2,
+              "explanation": "Higher humidity means the air already holds more moisture, which slows evaporation, not speeds it up."
+            },
+            {
+              "question": "Find the heat energy to melt 2kg of a substance with specific latent heat of fusion 200,000J/kg.",
+              "options": [
+                "400,000J",
+                "100,000J",
+                "200,000J",
+                "40,000J"
+              ],
+              "correct": 0,
+              "explanation": "Q=mL=2×200,000=400,000J."
+            }
+          ]
+        },
+        {
+          "title": "Stars and Galaxies",
+          "content": "What is a star, and how does it produce light and heat? A star is a massive ball of hot gas (mostly hydrogen and helium) that produces enormous amounts of energy through nuclear fusion in its core, where hydrogen atoms combine to form helium, releasing huge amounts of light and heat — our Sun is a star, just much closer to us than any other. What is a galaxy? A galaxy is an enormous collection of billions of stars, along with gas, dust, and dark matter, all held together by gravity — our Sun and solar system are part of the Milky Way galaxy. What is the life cycle of a star, in broad terms? A star forms from a collapsing cloud of gas and dust (a nebula); it spends most of its life fusing hydrogen into helium in a stable stage; once its fuel runs low, smaller stars expand into a red giant then shrink into a white dwarf, while much larger stars explode as a supernova, potentially leaving behind a neutron star or a black hole. Why do stars appear as tiny points of light, despite being enormous? Stars are so incredibly far away that even though they are vastly larger than the Earth, their apparent size in the sky is reduced to a point — this vast distance is why light from distant stars takes years (measured in light-years, the distance light travels in one year) to reach us. What is the difference between a star and a planet as seen in the night sky? Stars produce their own light through nuclear fusion and tend to twinkle due to atmospheric disturbance, while planets shine only by reflecting sunlight and generally appear as steadier, non-twinkling points of light.",
+          "examples": [
+            "Explain why the Sun appears far larger and brighter in our sky than any other star.\nStep 1: Recall all other stars are vastly further away than the Sun\nStep 2: Consider how distance affects apparent size and brightness\nAnswer: The Sun only appears larger and brighter because it is enormously closer to Earth than any other star, not because it is bigger",
+            "Describe what a light-year measures.\nStep 1: Recall a light-year is a unit of distance, not time\nStep 2: Recall it is defined by how far light travels in one year\nAnswer: A light-year is the distance light travels in one year, used to measure the vast distances between stars",
+            "Explain what powers a star's light and heat output.\nStep 1: Recall nuclear fusion occurs in a star's core\nStep 2: Recall hydrogen atoms combine to form helium, releasing energy\nAnswer: Nuclear fusion of hydrogen into helium in the star's core releases enormous amounts of energy as light and heat",
+            "Describe the difference in appearance between a star and a planet in the night sky.\nStep 1: Recall stars produce their own light and tend to twinkle\nStep 2: Recall planets only reflect sunlight and appear steadier\nAnswer: Stars twinkle due to atmospheric disturbance of their own emitted light, while planets shine with steadier reflected light and generally do not twinkle",
+            "Describe what happens to a very large star once it runs out of nuclear fuel.\nStep 1: Recall large stars expand and then explode dramatically\nStep 2: Recall what can remain after the explosion\nAnswer: A very large star explodes as a supernova, potentially leaving behind an extremely dense neutron star or, for the largest stars, a black hole"
+          ],
+          "keyTerms": {
+            "star": "A massive ball of hot gas producing light and heat through nuclear fusion",
+            "galaxy": "A vast collection of billions of stars, gas, dust, and dark matter, held together by gravity",
+            "nuclear fusion": "The combining of hydrogen atoms into helium in a star's core, releasing energy",
+            "light-year": "The distance light travels in one year, used to measure distances between stars"
+          },
+          "quiz": [
+            {
+              "question": "What powers the light and heat produced by a star?",
+              "options": [
+                "Chemical burning",
+                "Nuclear fusion of hydrogen into helium",
+                "Reflected sunlight",
+                "Friction"
+              ],
+              "correct": 1,
+              "explanation": "Stars generate energy through nuclear fusion in their cores."
+            },
+            {
+              "question": "A light-year measures:",
+              "options": [
+                "Time",
+                "Distance",
+                "Brightness",
+                "Temperature"
+              ],
+              "correct": 1,
+              "explanation": "A light-year is a unit of distance — how far light travels in one year."
+            },
+            {
+              "question": "Our solar system belongs to which galaxy?",
+              "options": [
+                "Andromeda",
+                "The Milky Way",
+                "The Sombrero Galaxy",
+                "It doesn't belong to any galaxy"
+              ],
+              "correct": 1,
+              "explanation": "The Sun and solar system are part of the Milky Way galaxy."
+            },
+            {
+              "question": "Why do stars typically twinkle in the night sky, but planets usually don't?",
+              "options": [
+                "Planets are too far away to twinkle",
+                "Stars' point-like light is disturbed by the atmosphere more noticeably than planets' reflected light",
+                "Only stars produce light",
+                "There is no real difference"
+              ],
+              "correct": 1,
+              "explanation": "Atmospheric turbulence disturbs the tiny point of starlight more visibly than the slightly larger apparent disc of a planet."
+            },
+            {
+              "question": "What can remain after a very massive star explodes as a supernova?",
+              "options": [
+                "Nothing at all",
+                "A neutron star or a black hole",
+                "A new planet",
+                "A comet"
+              ],
+              "correct": 1,
+              "explanation": "Depending on the star's original mass, the remnant can be a neutron star or a black hole."
+            }
+          ]
+        },
+        {
+          "title": "Satellites and Communication",
+          "content": "What is a satellite, and what are the two main categories? A satellite is any object that orbits a larger body due to gravity — natural satellites (like the Moon orbiting Earth) occur without human involvement, while artificial satellites are human-made objects launched into orbit for specific purposes, such as communication, weather monitoring, navigation (GPS), or scientific research. What is a geostationary orbit, and why is it useful? A geostationary orbit is a specific circular orbit (directly above the equator, at a set altitude) where a satellite orbits at exactly the same rate as the Earth rotates, so it appears to stay fixed above the same point on Earth's surface at all times — this makes geostationary satellites ideal for continuous communication and television broadcasting, since a ground dish can stay pointed at one fixed spot in the sky. How do communication satellites work? A signal is transmitted up from a ground station (uplink) to the satellite, which receives it, boosts its strength, and retransmits it back down to a different location on Earth (downlink) — this lets signals travel across vast distances and around the curve of the Earth, well beyond the reach of direct line-of-sight ground transmission. What is a low Earth orbit satellite, and what is it used for? Low Earth orbit (LEO) satellites orbit much closer to Earth and complete an orbit in a much shorter time (often under two hours), moving across the sky relative to the ground — these are commonly used for Earth observation, weather imaging, and increasingly for satellite internet, requiring many satellites working together since each one is only overhead briefly. How has satellite technology impacted Uganda and similar countries? Satellite communication and GPS navigation allow remote or rural areas without extensive ground infrastructure (like cables) to access phone networks, television, internet, and accurate positioning, helping to bridge the digital divide.",
+          "examples": [
+            "Explain why a geostationary satellite is well suited to broadcasting television signals continuously to one region.\nStep 1: Recall a geostationary satellite stays above the same point on Earth at all times\nStep 2: Consider what this means for a fixed ground-based satellite dish\nAnswer: Because the satellite always stays in the same position relative to the ground, a dish can remain permanently pointed at it without needing to track its movement",
+            "Describe the path a communication signal follows from a football match broadcast to a viewer's home.\nStep 1: Recall the uplink from the ground station to the satellite\nStep 2: Recall the downlink from the satellite to the receiving location\nAnswer: The signal is transmitted up (uplink) to the satellite, boosted, and sent back down (downlink) to be received by television providers and eventually broadcast to homes",
+            "Explain why several low Earth orbit satellites are needed together to provide continuous internet coverage, unlike a single geostationary satellite.\nStep 1: Recall LEO satellites orbit quickly and move across the sky relative to the ground\nStep 2: Consider that each LEO satellite is only overhead for a short time\nAnswer: Since each LEO satellite passes overhead only briefly before moving on, many must work together in a coordinated network to ensure at least one is always in range",
+            "Explain how satellite technology can help a remote village without any telephone cables gain access to a phone network.\nStep 1: Recall satellites can transmit signals without needing ground-based cables\nStep 2: Consider a receiving station or device that connects directly to the satellite\nAnswer: A satellite can send and receive signals directly to a village's receiving equipment, giving it phone or internet access without needing miles of cable infrastructure",
+            "Distinguish between a natural and an artificial satellite, giving one example of each.\nStep 1: Recall natural satellites occur without human involvement\nStep 2: Recall artificial satellites are human-made and launched into orbit\nAnswer: The Moon is a natural satellite of Earth, while a communication or weather satellite launched by a space agency is an artificial satellite"
+          ],
+          "keyTerms": {
+            "satellite": "An object orbiting a larger body due to gravity, either natural or artificial",
+            "geostationary orbit": "An orbit where a satellite stays fixed above the same point on Earth at all times",
+            "low Earth orbit (LEO)": "A satellite orbit much closer to Earth, completing an orbit quickly and moving across the sky",
+            "uplink/downlink": "The transmission of a signal up to a satellite (uplink) and back down to Earth (downlink)"
+          },
+          "quiz": [
+            {
+              "question": "A geostationary satellite is useful for broadcasting because it:",
+              "options": [
+                "Moves rapidly across the sky",
+                "Stays fixed above the same point on Earth",
+                "Orbits very close to Earth",
+                "Cannot receive any signals"
+              ],
+              "correct": 1,
+              "explanation": "Its orbit matches Earth's rotation, so it appears stationary relative to the ground."
+            },
+            {
+              "question": "The Moon is an example of a:",
+              "options": [
+                "Artificial satellite",
+                "Natural satellite",
+                "Communication satellite",
+                "Weather station"
+              ],
+              "correct": 1,
+              "explanation": "The Moon orbits Earth naturally, without human involvement."
+            },
+            {
+              "question": "Why do low Earth orbit (LEO) satellites need to work in large networks for continuous coverage?",
+              "options": [
+                "They are too expensive to launch alone",
+                "Each one is only overhead for a short time before moving on",
+                "They cannot transmit signals at all",
+                "They never move"
+              ],
+              "correct": 1,
+              "explanation": "LEO satellites orbit quickly and pass out of range, so many are needed to maintain continuous coverage."
+            },
+            {
+              "question": "What does 'uplink' refer to in satellite communication?",
+              "options": [
+                "The satellite sending a signal down to Earth",
+                "A ground station transmitting a signal up to the satellite",
+                "A signal moving between two satellites only",
+                "A malfunction in the satellite"
+              ],
+              "correct": 1,
+              "explanation": "Uplink is the transmission from the ground up to the satellite."
+            },
+            {
+              "question": "Satellite technology can benefit remote areas mainly because it:",
+              "options": [
+                "Requires extensive underground cabling",
+                "Provides communication without needing ground-based cable infrastructure",
+                "Only works in cities",
+                "Is slower than any other method"
+              ],
+              "correct": 1,
+              "explanation": "Satellites can reach remote areas directly, bypassing the need for extensive local infrastructure."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "S4",
+      "lessons": [
+        {
+          "title": "Introduction to Current Electricity",
+          "content": "What is electric current, and what causes it to flow? Electric current is the flow of electric charge (carried by electrons in a conductor) around a complete circuit, measured in amperes (A) — current only flows when there is a complete, unbroken path (circuit) and a source of energy, like a battery, to push the charges around. What is the difference between a series and a parallel circuit? In a series circuit, components are connected one after another in a single loop, so the same current flows through every component, and if one component fails or is removed, the whole circuit is broken; in a parallel circuit, components are connected across separate branches, so current can take multiple paths, meaning each branch can be switched independently and the current splits between them according to each branch's resistance. What basic circuit components and symbols should be recognised? A cell/battery (the energy source), a switch (opens or closes the circuit), a resistor (limits current flow), an ammeter (measures current, connected in series), a voltmeter (measures potential difference, connected in parallel across a component), and a bulb/lamp (converts electrical energy to light). What is the difference between conductors and insulators? Conductors (like copper and other metals) allow electric charge to flow through them easily, because they have free electrons; insulators (like rubber, plastic, and glass) do not allow charge to flow easily, which is why electrical wires are covered in insulating plastic for safety.",
+          "examples": [
+            "State what happens to the other bulbs in a series circuit if one bulb burns out.\nStep 1: Recall a series circuit has only one path for current\nStep 2: Consider what a broken bulb does to that single path\nAnswer: All the bulbs go out, since the broken bulb breaks the only current path in the circuit",
+            "State what happens to the other bulbs in a parallel circuit if one bulb burns out.\nStep 1: Recall a parallel circuit has separate branches for current\nStep 2: Consider that other branches remain complete\nAnswer: The other bulbs stay lit, since each branch operates independently in a parallel circuit",
+            "Identify the correct way to connect an ammeter in a circuit to measure current.\nStep 1: Recall an ammeter measures the current flowing through a component\nStep 2: Recall this requires being part of the same current path\nAnswer: An ammeter must be connected in series with the component being measured",
+            "Identify the correct way to connect a voltmeter to measure the potential difference across a bulb.\nStep 1: Recall a voltmeter measures potential difference between two points\nStep 2: Recall this requires connecting across (parallel to) the component\nAnswer: A voltmeter must be connected in parallel across the bulb",
+            "Explain why electrical wires are covered in plastic rather than left as bare metal.\nStep 1: Recall metal is a good conductor, plastic is a good insulator\nStep 2: Consider the risk of a person touching bare, current-carrying metal\nAnswer: The plastic insulation prevents electric current from flowing into anyone who touches the wire, protecting against electric shock"
+          ],
+          "keyTerms": {
+            "electric current": "The flow of electric charge around a circuit, measured in amperes",
+            "series circuit": "A circuit where components are connected in a single loop, sharing the same current",
+            "parallel circuit": "A circuit where components are connected across separate branches",
+            "conductor": "A material that allows electric charge to flow through it easily"
+          },
+          "quiz": [
+            {
+              "question": "In a series circuit, if one bulb burns out, the other bulbs will:",
+              "options": [
+                "Stay lit as normal",
+                "Go out, since the circuit is broken",
+                "Get brighter",
+                "Explode"
+              ],
+              "correct": 1,
+              "explanation": "A series circuit has only one current path, so breaking it anywhere stops all current flow."
+            },
+            {
+              "question": "An ammeter should be connected:",
+              "options": [
+                "In parallel with the component",
+                "In series with the component",
+                "Anywhere in the circuit",
+                "Only across the battery"
+              ],
+              "correct": 1,
+              "explanation": "An ammeter measures current, which requires it to be part of the same current path (in series)."
+            },
+            {
+              "question": "Which of these is a good electrical conductor?",
+              "options": [
+                "Rubber",
+                "Plastic",
+                "Copper",
+                "Glass"
+              ],
+              "correct": 2,
+              "explanation": "Copper is a metal with free electrons, making it an excellent conductor."
+            },
+            {
+              "question": "In a parallel circuit, if one branch is switched off, the other branches:",
+              "options": [
+                "Also switch off",
+                "Continue to operate normally",
+                "Immediately break",
+                "Reverse direction"
+              ],
+              "correct": 1,
+              "explanation": "Each branch in a parallel circuit operates independently."
+            },
+            {
+              "question": "A voltmeter should be connected:",
+              "options": [
+                "In series with the component",
+                "In parallel across the component",
+                "Directly to the earth only",
+                "Nowhere near the circuit"
+              ],
+              "correct": 1,
+              "explanation": "A voltmeter measures potential difference between two points, requiring a parallel connection."
+            }
+          ]
+        },
+        {
+          "title": "Voltage, Resistance and Ohm's Law",
+          "content": "What is voltage (potential difference), and what does it represent? Voltage, also called potential difference, is the amount of electrical energy transferred per unit of charge as it moves between two points in a circuit, measured in volts (V) — it represents the 'push' driving current around the circuit, similar to how pressure drives water through a pipe. What is resistance, and what factors affect it? Resistance is a measure of how much a component opposes the flow of electric current, measured in ohms (Ω) — a longer or thinner conductor, or one made from a material with naturally higher resistance, will have greater resistance, restricting current flow more. What does Ohm's Law state, and how is it used? For many conductors at constant temperature, voltage is directly proportional to current, expressed as Voltage = Current × Resistance (V = IR) — this means for a fixed resistance, doubling the voltage doubles the current, and the formula can be rearranged to find any one of the three quantities if the other two are known. How does total resistance behave in series versus parallel circuits? In series, resistances simply add together to give the total resistance (R_total = R1 + R2 + ...), since the current must pass through each one in turn; in parallel, adding more resistors actually DECREASES the total resistance, since each additional branch gives current more alternative paths to flow through.",
+          "examples": [
+            "Find the current through a 20Ω resistor connected to a 10V supply.\nStep 1: Use V = IR, rearranged to I = V/R\nStep 2: Substitute: 10÷20\nAnswer: Current = 0.5A",
+            "Find the voltage across a 15Ω resistor carrying a current of 2A.\nStep 1: Use V = IR\nStep 2: Substitute: 2×15\nAnswer: Voltage = 30V",
+            "Find the resistance of a component that has 12V across it and carries a current of 3A.\nStep 1: Use V = IR, rearranged to R = V/I\nStep 2: Substitute: 12÷3\nAnswer: Resistance = 4Ω",
+            "Two resistors of 5Ω and 8Ω are connected in series. Find the total resistance.\nStep 1: Recall series resistances simply add\nStep 2: Add: 5+8\nAnswer: Total resistance = 13Ω",
+            "Explain why adding another resistor in parallel to an existing one decreases the circuit's total resistance, rather than increasing it.\nStep 1: Recall each parallel branch offers current an additional path\nStep 2: Consider that more available paths make it easier overall for current to flow\nAnswer: Because current has more alternative paths to take, the overall opposition to current flow decreases, so total resistance goes down even though more components have been added"
+          ],
+          "keyTerms": {
+            "voltage (potential difference)": "The energy transferred per unit charge between two points in a circuit, in volts",
+            "resistance": "A measure of how much a component opposes current flow, in ohms",
+            "Ohm's Law": "Voltage = Current × Resistance (V=IR) for many conductors at constant temperature"
+          },
+          "quiz": [
+            {
+              "question": "Find the current through a 10Ω resistor with 5V across it.",
+              "options": [
+                "0.5A",
+                "2A",
+                "50A",
+                "15A"
+              ],
+              "correct": 0,
+              "explanation": "I=V/R=5÷10=0.5A."
+            },
+            {
+              "question": "Find the voltage across a 6Ω resistor carrying 4A.",
+              "options": [
+                "1.5V",
+                "10V",
+                "24V",
+                "2V"
+              ],
+              "correct": 2,
+              "explanation": "V=IR=4×6=24V."
+            },
+            {
+              "question": "Two resistors, 4Ω and 6Ω, are connected in series. Find the total resistance.",
+              "options": [
+                "2Ω",
+                "10Ω",
+                "24Ω",
+                "1.5Ω"
+              ],
+              "correct": 1,
+              "explanation": "Series resistances add directly: 4+6=10Ω."
+            },
+            {
+              "question": "Adding more resistors in parallel to a circuit generally makes the total resistance:",
+              "options": [
+                "Increase",
+                "Decrease",
+                "Stay exactly the same",
+                "Become zero"
+              ],
+              "correct": 1,
+              "explanation": "More parallel branches give current more paths, lowering total resistance."
+            },
+            {
+              "question": "Ohm's Law is expressed as:",
+              "options": [
+                "V = I + R",
+                "V = IR",
+                "V = I/R",
+                "V = R/I"
+              ],
+              "correct": 1,
+              "explanation": "Ohm's Law: Voltage = Current × Resistance."
+            }
+          ]
+        },
+        {
+          "title": "Electromagnetic Effects",
+          "content": "What is electromagnetic induction? The generation of an electric current in a conductor caused by a changing magnetic field around it — this happens whenever a conductor moves through a magnetic field, or a magnetic field near a conductor changes strength, and it is the basic principle behind how generators produce electricity. What factors increase the size of an induced current? A stronger magnet, a faster relative movement between the conductor and the magnetic field, and more turns of wire in a coil all increase the induced current — this relationship is used in the design of practical generators and dynamos. How does an electric motor work? An electric motor uses the opposite effect of induction: when a current-carrying wire is placed in a magnetic field, it experiences a force (this is sometimes called the motor effect) — in a simple motor, a coil carrying current sits within a magnetic field, and the resulting force on each side of the coil creates a continuous turning effect, converting electrical energy into mechanical (rotational) motion. What is the difference between a simple generator and a motor in terms of energy conversion? A generator converts mechanical energy (motion) INTO electrical energy through electromagnetic induction; a motor converts electrical energy INTO mechanical energy through the motor effect — they use the same core electromagnetic principles, but in opposite directions. How does a transformer use electromagnetic induction? A transformer uses a changing current in one coil (the primary) to induce a changing magnetic field, which then induces a current in a nearby second coil (the secondary) — this only works with alternating current (AC), since direct current (DC) produces no changing magnetic field to induce anything.",
+          "examples": [
+            "State what happens to the induced current if a magnet is pushed into a coil faster.\nStep 1: Recall faster relative movement increases induced current\nAnswer: The induced current increases",
+            "State what happens to the induced current if a coil has more turns of wire, for the same magnet movement.\nStep 1: Recall more turns increase the induced current\nAnswer: The induced current increases",
+            "Explain the basic energy conversion that occurs inside an electric generator.\nStep 1: Recall a generator uses electromagnetic induction\nStep 2: Identify what type of energy goes in, and what comes out\nAnswer: A generator converts mechanical energy (motion, e.g. turning a coil) into electrical energy",
+            "Explain the basic energy conversion that occurs inside an electric motor.\nStep 1: Recall a motor uses the motor effect (force on a current-carrying wire in a magnetic field)\nStep 2: Identify what type of energy goes in, and what comes out\nAnswer: A motor converts electrical energy into mechanical energy (motion)",
+            "Explain why a transformer does not work with direct current (DC).\nStep 1: Recall a transformer relies on a changing magnetic field to induce current in the secondary coil\nStep 2: Recall DC produces a constant (unchanging) magnetic field\nAnswer: Since DC does not produce a changing magnetic field, no current can be induced in the secondary coil, so transformers only work with alternating current (AC)"
+          ],
+          "keyTerms": {
+            "electromagnetic induction": "The generation of current in a conductor due to a changing magnetic field",
+            "motor effect": "The force experienced by a current-carrying wire placed in a magnetic field",
+            "generator": "A device converting mechanical energy into electrical energy via electromagnetic induction",
+            "transformer": "A device that changes voltage using electromagnetic induction between two coils, requiring AC"
+          },
+          "quiz": [
+            {
+              "question": "Electromagnetic induction requires:",
+              "options": [
+                "A stationary magnet and a stationary conductor",
+                "A changing magnetic field relative to a conductor",
+                "Only direct current",
+                "No magnetic field at all"
+              ],
+              "correct": 1,
+              "explanation": "Induction depends on relative motion or a changing field between a magnet and a conductor."
+            },
+            {
+              "question": "A generator converts:",
+              "options": [
+                "Electrical energy into mechanical energy",
+                "Mechanical energy into electrical energy",
+                "Heat into light",
+                "Light into sound"
+              ],
+              "correct": 1,
+              "explanation": "Generators use induction to turn motion into electrical energy."
+            },
+            {
+              "question": "The 'motor effect' refers to:",
+              "options": [
+                "A magnet losing its field",
+                "A current-carrying wire experiencing a force in a magnetic field",
+                "A wire heating up",
+                "A capacitor charging"
+              ],
+              "correct": 1,
+              "explanation": "This force is what makes electric motors spin."
+            },
+            {
+              "question": "Why does a transformer require alternating current (AC), not direct current (DC)?",
+              "options": [
+                "DC is too dangerous",
+                "AC produces a changing magnetic field needed for induction",
+                "Transformers work equally well with either",
+                "DC is too weak"
+              ],
+              "correct": 1,
+              "explanation": "Only a changing magnetic field (from AC) can induce a current in the secondary coil."
+            },
+            {
+              "question": "Which of these increases the induced current in a coil?",
+              "options": [
+                "Moving the magnet more slowly",
+                "Using fewer turns of wire",
+                "Using a stronger magnet",
+                "Removing the magnet entirely"
+              ],
+              "correct": 2,
+              "explanation": "A stronger magnetic field increases the induced current, along with faster movement and more coil turns."
+            }
+          ]
+        },
+        {
+          "title": "Electric Energy Distribution and Consumption",
+          "content": "How is electrical energy generated and transported from a power station to homes? Power stations generate electricity, which then passes through step-up transformers to a very high voltage for transmission across the national grid — transmitting at high voltage (and correspondingly low current) greatly reduces energy lost as heat in the cables, since power loss depends on the SQUARE of the current; step-down transformers then reduce the voltage to safe levels before it reaches homes and businesses. How is the electrical energy used by an appliance calculated? Electrical power is calculated as Power = Voltage × Current (P = VI), measured in watts; the total energy consumed over time is Energy = Power × Time (E = Pt), often measured in kilowatt-hours (kWh) for billing purposes, where 1 kWh is the energy used by a 1000W appliance running for 1 hour. Why is it more efficient to transmit electricity at high voltage over long distances? Since power loss in a cable equals (current)² × resistance, transmitting the same power at a much higher voltage requires a much lower current, drastically cutting the energy wasted as heat in the transmission cables. What are some ways to use electrical energy more efficiently at home? Switching off appliances and lights when not in use, using energy-efficient bulbs (like LEDs, which convert more electrical energy into light and less into wasted heat), and choosing appliances with a good energy efficiency rating all reduce electricity consumption and cost.",
+          "examples": [
+            "Find the power consumed by an appliance operating at 240V with a current of 5A.\nStep 1: Use P = VI\nStep 2: Substitute: 240×5\nAnswer: Power = 1200W",
+            "Find the energy consumed by a 2000W heater running for 3 hours.\nStep 1: Use E = Pt\nStep 2: Substitute: 2000×3\nAnswer: Energy = 6000Wh = 6kWh",
+            "A household uses 15kWh of electricity in a day at a cost of UGX 700 per kWh. Find the total cost.\nStep 1: Multiply energy used by cost per unit: 15×700\nAnswer: Total cost = UGX 10,500",
+            "Explain why power is transmitted across the national grid at very high voltage rather than low voltage.\nStep 1: Recall power loss in a cable depends on current squared\nStep 2: Recall a higher voltage means a lower current for the same transmitted power\nAnswer: Transmitting at high voltage keeps the current low, and since power loss depends on current squared, this greatly reduces the energy wasted as heat in the cables",
+            "Explain why switching from ordinary bulbs to LED bulbs reduces a household's electricity bill.\nStep 1: Recall LEDs convert more electrical energy into light and less into wasted heat\nStep 2: Consider that less energy used means lower energy cost over time\nAnswer: LEDs are more efficient at converting electrical energy into light, so they use less power for the same brightness, reducing the total energy consumed and therefore the electricity bill"
+          ],
+          "keyTerms": {
+            "electrical power": "The rate of energy transfer in a circuit, P=VI, measured in watts",
+            "kilowatt-hour (kWh)": "A unit of energy equal to the energy used by a 1000W appliance running for 1 hour",
+            "step-up/step-down transformer": "Transformers that increase (step-up) or decrease (step-down) voltage for transmission and safe use"
+          },
+          "quiz": [
+            {
+              "question": "Find the power of an appliance using 3A at 240V.",
+              "options": [
+                "720W",
+                "80W",
+                "243W",
+                "237W"
+              ],
+              "correct": 0,
+              "explanation": "P=VI=3×240=720W."
+            },
+            {
+              "question": "Find the energy used by a 1500W appliance running for 2 hours.",
+              "options": [
+                "3kWh",
+                "750kWh",
+                "1.5kWh",
+                "3000kWh"
+              ],
+              "correct": 0,
+              "explanation": "E=Pt=1500×2=3000Wh=3kWh."
+            },
+            {
+              "question": "Why is electricity transmitted at very high voltage across the national grid?",
+              "options": [
+                "To make it more dangerous",
+                "To reduce energy loss by keeping current low",
+                "To make transformers unnecessary",
+                "It has no particular benefit"
+              ],
+              "correct": 1,
+              "explanation": "High voltage transmission keeps current (and therefore heat loss, which depends on current squared) low."
+            },
+            {
+              "question": "A step-down transformer is used to:",
+              "options": [
+                "Increase voltage for transmission",
+                "Decrease voltage to safe levels for use in homes",
+                "Generate electricity from scratch",
+                "Store electrical energy"
+              ],
+              "correct": 1,
+              "explanation": "Step-down transformers reduce the very high transmission voltage to safer household levels."
+            },
+            {
+              "question": "One kilowatt-hour (kWh) is the energy used by:",
+              "options": [
+                "A 1W device running for 1000 hours",
+                "A 1000W device running for 1 hour",
+                "Any device for exactly 1 second",
+                "A device using 1 volt for 1 hour"
+              ],
+              "correct": 1,
+              "explanation": "1kWh = 1000W × 1 hour of use."
+            }
+          ]
+        },
+        {
+          "title": "Atomic Models",
+          "content": "How has the scientific model of the atom changed over time? Early models pictured the atom as a solid, indivisible sphere; J.J. Thomson's 'plum pudding' model proposed a positively charged sphere with negatively charged electrons scattered through it; Ernest Rutherford's gold foil experiment (firing alpha particles at thin gold foil, and observing that most passed straight through but a small number bounced back sharply) revealed that an atom is mostly empty space with a small, dense, positively charged nucleus at its centre; Niels Bohr then refined this by proposing that electrons orbit the nucleus in fixed, defined energy levels (shells), rather than moving randomly. What are the three main subatomic particles, and their properties? Protons (positive charge, found in the nucleus), neutrons (no charge, also found in the nucleus), and electrons (negative charge, found in shells orbiting the nucleus) — protons and neutrons have approximately equal, much larger mass than electrons, which is why almost all of an atom's mass is concentrated in its tiny nucleus. What do atomic number and mass number tell you about an atom? The atomic number equals the number of protons (and, in a neutral atom, also the number of electrons), and uniquely identifies which element the atom is; the mass number equals the total number of protons plus neutrons in the nucleus. What is an isotope? Atoms of the same element (same atomic number, same number of protons) that have a different number of neutrons, and therefore a different mass number — isotopes of the same element behave almost identically chemically, but can have very different physical and nuclear properties.",
+          "examples": [
+            "Describe what Rutherford's gold foil experiment revealed about the structure of the atom.\nStep 1: Recall most alpha particles passed straight through the foil\nStep 2: Recall a small number bounced back sharply\nAnswer: The atom is mostly empty space, with a small, dense, positively charged nucleus at its centre that occasionally deflects alpha particles",
+            "An atom has 11 protons and 12 neutrons. Find its mass number.\nStep 1: Use mass number = protons + neutrons\nStep 2: Substitute: 11+12\nAnswer: Mass number = 23",
+            "An atom has atomic number 8 and mass number 16. Find the number of neutrons.\nStep 1: Recall neutrons = mass number − atomic number (protons)\nStep 2: Substitute: 16−8\nAnswer: Number of neutrons = 8",
+            "Two atoms of the same element have mass numbers 12 and 14. Explain what this tells you about them.\nStep 1: Recall isotopes share the same atomic number (protons) but differ in neutrons\nStep 2: Consider that different mass numbers with the same element mean different neutron counts\nAnswer: These are isotopes of the same element — they have the same number of protons but different numbers of neutrons",
+            "State the charge and location of a neutron within an atom.\nStep 1: Recall a neutron has no electric charge\nStep 2: Recall neutrons are found in the nucleus, alongside protons\nAnswer: A neutron has no charge and is located in the nucleus"
+          ],
+          "keyTerms": {
+            "nucleus": "The small, dense, positively charged centre of an atom, containing protons and neutrons",
+            "isotope": "Atoms of the same element with the same number of protons but different numbers of neutrons",
+            "atomic number": "The number of protons in an atom's nucleus, identifying the element",
+            "mass number": "The total number of protons and neutrons in an atom's nucleus"
+          },
+          "quiz": [
+            {
+              "question": "Rutherford's gold foil experiment showed that the atom:",
+              "options": [
+                "Is a solid sphere with no structure",
+                "Is mostly empty space with a small, dense nucleus",
+                "Has no nucleus at all",
+                "Is entirely negatively charged"
+              ],
+              "correct": 1,
+              "explanation": "The unexpected deflection of some alpha particles revealed a small, dense, positively charged nucleus."
+            },
+            {
+              "question": "An atom has 6 protons and 6 neutrons. Find its mass number.",
+              "options": [
+                "6",
+                "12",
+                "0",
+                "36"
+              ],
+              "correct": 1,
+              "explanation": "Mass number = protons + neutrons = 6+6 = 12."
+            },
+            {
+              "question": "Which particle has no electric charge?",
+              "options": [
+                "Proton",
+                "Electron",
+                "Neutron",
+                "None of these"
+              ],
+              "correct": 2,
+              "explanation": "The neutron is electrically neutral (uncharged)."
+            },
+            {
+              "question": "Isotopes of an element have:",
+              "options": [
+                "Different atomic numbers",
+                "The same atomic number but different mass numbers",
+                "The same mass number but different atomic numbers",
+                "No protons at all"
+              ],
+              "correct": 1,
+              "explanation": "Isotopes share the same proton count (atomic number) but differ in neutron count, giving different mass numbers."
+            },
+            {
+              "question": "The atomic number of an atom tells you its number of:",
+              "options": [
+                "Neutrons only",
+                "Protons",
+                "Total subatomic particles",
+                "Electrons in the nucleus"
+              ],
+              "correct": 1,
+              "explanation": "Atomic number is defined as the number of protons in the nucleus."
+            }
+          ]
+        },
+        {
+          "title": "Nuclear Processes",
+          "content": "What is radioactivity, and why do some atomic nuclei undergo it? Radioactivity is the spontaneous emission of particles or energy from an unstable atomic nucleus as it changes into a more stable configuration — this happens in isotopes whose combination of protons and neutrons makes the nucleus unstable. What are the three main types of radioactive emission, and how do they differ? Alpha particles (two protons and two neutrons, relatively large and heavy, stopped by just a sheet of paper or a few centimetres of air); beta particles (fast-moving electrons, more penetrating than alpha, stopped by a few millimetres of aluminium); and gamma rays (high-energy electromagnetic waves, the most penetrating, requiring thick lead or concrete to significantly reduce them). What is half-life? The time taken for half of the radioactive nuclei in a sample to decay — half-life is constant for a given isotope regardless of the sample's size, and after each half-life period, the remaining radioactivity is halved again. What is nuclear fission, and where is it used? Fission is the splitting of a large, unstable nucleus (like uranium-235) into two smaller nuclei, releasing a large amount of energy — this is the process used in nuclear power stations to generate electricity, and in a controlled chain reaction, one fission event can trigger further fission events. What safety precautions are needed when handling radioactive materials? Minimising exposure time, keeping as much distance as possible from the source, and using appropriate shielding (like lead) all reduce the radiation dose received, since radiation exposure decreases sharply with distance and shielding.",
+          "examples": [
+            "State which type of radioactive emission is stopped by just a sheet of paper.\nStep 1: Recall alpha particles are large, heavy, and easily stopped\nAnswer: Alpha particles",
+            "State which type of radioactive emission requires thick lead or concrete to significantly reduce it.\nStep 1: Recall gamma rays are the most penetrating form of radiation\nAnswer: Gamma rays",
+            "A radioactive sample has a half-life of 5 years and starts with 80g of radioactive material. Find how much remains after 15 years.\nStep 1: Find how many half-lives have passed: 15÷5=3 half-lives\nStep 2: Halve the amount three times: 80→40→20→10\nAnswer: 10g remains after 15 years",
+            "A sample starts with 100g of a radioactive isotope with a half-life of 10 years. Find how much remains after 20 years.\nStep 1: Find the number of half-lives: 20÷10=2\nStep 2: Halve the amount twice: 100→50→25\nAnswer: 25g remains after 20 years",
+            "Explain two ways a laboratory worker can reduce their radiation exposure when handling a radioactive source.\nStep 1: Recall exposure decreases with distance from the source\nStep 2: Recall shielding materials absorb radiation before it reaches the worker\nAnswer: The worker can increase their distance from the source and use appropriate shielding (such as lead), both of which significantly reduce the radiation dose received"
+          ],
+          "keyTerms": {
+            "radioactivity": "The spontaneous emission of particles or energy from an unstable atomic nucleus",
+            "half-life": "The time taken for half of the radioactive nuclei in a sample to decay",
+            "nuclear fission": "The splitting of a large, unstable nucleus into two smaller nuclei, releasing energy",
+            "alpha, beta, gamma": "The three main types of radioactive emission, differing in penetrating power"
+          },
+          "quiz": [
+            {
+              "question": "Which type of radioactive emission is the most penetrating?",
+              "options": [
+                "Alpha particles",
+                "Beta particles",
+                "Gamma rays",
+                "They are all equally penetrating"
+              ],
+              "correct": 2,
+              "explanation": "Gamma rays are high-energy electromagnetic waves and the most penetrating, requiring thick lead or concrete to significantly block them."
+            },
+            {
+              "question": "A sample with half-life 4 years starts at 200g. How much remains after 8 years?",
+              "options": [
+                "100g",
+                "50g",
+                "150g",
+                "0g"
+              ],
+              "correct": 1,
+              "explanation": "8÷4=2 half-lives: 200→100→50g."
+            },
+            {
+              "question": "Nuclear fission involves:",
+              "options": [
+                "Combining two small nuclei into one",
+                "Splitting a large nucleus into two smaller ones",
+                "Adding electrons to an atom",
+                "Removing all neutrons from a nucleus"
+              ],
+              "correct": 1,
+              "explanation": "Fission splits a large unstable nucleus, releasing energy."
+            },
+            {
+              "question": "Which type of radiation is stopped by a few millimetres of aluminium?",
+              "options": [
+                "Alpha particles",
+                "Beta particles",
+                "Gamma rays",
+                "None of these"
+              ],
+              "correct": 1,
+              "explanation": "Beta particles are more penetrating than alpha but are stopped by a few millimetres of aluminium."
+            },
+            {
+              "question": "Increasing your distance from a radioactive source will:",
+              "options": [
+                "Increase your radiation exposure",
+                "Decrease your radiation exposure",
+                "Have no effect on exposure",
+                "Instantly stop all radiation"
+              ],
+              "correct": 1,
+              "explanation": "Radiation exposure decreases significantly as distance from the source increases."
+            }
+          ]
+        },
+        {
+          "title": "Digital Electronics",
+          "content": "What is the difference between analogue and digital signals? An analogue signal varies continuously and can take any value within a range (like a dimmer light switch); a digital signal only takes discrete, specific values — most commonly just two: HIGH (often represented as 1) and LOW (often represented as 0) — digital systems are widely used because they are more resistant to interference and easier to process and store accurately. What is a logic gate, and what are the basic types? A logic gate is an electronic component that takes one or more digital inputs and produces a single digital output based on a fixed rule — an AND gate outputs HIGH only if ALL its inputs are HIGH; an OR gate outputs HIGH if AT LEAST ONE input is HIGH; and a NOT gate (inverter) simply reverses its single input, turning HIGH into LOW and LOW into HIGH. How is a logic gate's behaviour summarised? Using a truth table, which lists every possible combination of inputs alongside the resulting output — this makes it easy to see and verify exactly how a gate behaves in every situation. What are logic gates used for in real devices? Combinations of logic gates form the basis of all digital circuits, from simple alarm systems (e.g., an AND gate that only triggers an alarm if BOTH a door sensor AND a motion sensor detect activity) to the vastly more complex processors inside computers and phones. Why are digital circuits generally preferred over analogue ones for processing and storing information? Digital signals are less affected by noise and interference (since a signal only needs to be roughly HIGH or LOW to be read correctly), and can be copied, processed, and stored without gradually losing quality, unlike analogue signals.",
+          "examples": [
+            "State the output of an AND gate with inputs 1 and 0.\nStep 1: Recall an AND gate only outputs 1 if ALL inputs are 1\nStep 2: Note that one input here is 0\nAnswer: Output = 0",
+            "State the output of an OR gate with inputs 0 and 1.\nStep 1: Recall an OR gate outputs 1 if AT LEAST ONE input is 1\nStep 2: Note that one input here is 1\nAnswer: Output = 1",
+            "State the output of a NOT gate with an input of 1.\nStep 1: Recall a NOT gate reverses its input\nAnswer: Output = 0",
+            "A security system uses an AND gate connected to a door sensor and a motion sensor, both giving 1 when triggered. Both sensors detect activity at once. Determine if the alarm (output) activates.\nStep 1: Identify both inputs as 1\nStep 2: Recall an AND gate outputs 1 only when all inputs are 1\nAnswer: The alarm activates, since both sensor inputs are 1, satisfying the AND condition",
+            "Explain why digital signals are generally more reliable for long-distance data transmission than analogue signals.\nStep 1: Recall digital signals only need to be recognised as roughly HIGH or LOW\nStep 2: Recall analogue signals can be gradually distorted by interference, changing their exact value\nAnswer: Because digital signals only require a rough HIGH/LOW distinction, small amounts of interference don't change the interpreted value, whereas analogue signals can be permanently distorted by the same interference"
+          ],
+          "keyTerms": {
+            "digital signal": "A signal that only takes discrete values, typically HIGH (1) or LOW (0)",
+            "logic gate": "An electronic component producing a digital output based on a fixed rule applied to its inputs",
+            "truth table": "A table listing every input combination of a logic gate alongside its resulting output",
+            "AND/OR/NOT gate": "Basic logic gates: AND needs all inputs HIGH, OR needs at least one HIGH, NOT reverses its input"
+          },
+          "quiz": [
+            {
+              "question": "An AND gate with inputs 1 and 1 produces an output of:",
+              "options": [
+                "0",
+                "1",
+                "Undefined",
+                "It depends on voltage"
+              ],
+              "correct": 1,
+              "explanation": "AND gates output 1 only when all inputs are 1."
+            },
+            {
+              "question": "An OR gate with inputs 0 and 0 produces an output of:",
+              "options": [
+                "0",
+                "1",
+                "Both 0 and 1",
+                "Undefined"
+              ],
+              "correct": 0,
+              "explanation": "OR requires at least one input to be 1; with both 0, the output is 0."
+            },
+            {
+              "question": "A NOT gate with input 0 produces an output of:",
+              "options": [
+                "0",
+                "1",
+                "Undefined",
+                "-1"
+              ],
+              "correct": 1,
+              "explanation": "A NOT gate reverses its input: 0 becomes 1."
+            },
+            {
+              "question": "A truth table is used to:",
+              "options": [
+                "Store analogue data",
+                "Show every input combination and the resulting output of a logic gate",
+                "Measure voltage directly",
+                "Replace a logic gate entirely"
+              ],
+              "correct": 1,
+              "explanation": "Truth tables summarise a gate's complete behaviour for all possible inputs."
+            },
+            {
+              "question": "Digital signals are generally preferred over analogue signals because they:",
+              "options": [
+                "Can take any continuous value",
+                "Are more resistant to interference and easier to store accurately",
+                "Cannot be processed by computers",
+                "Are always louder"
+              ],
+              "correct": 1,
+              "explanation": "Digital HIGH/LOW values remain distinguishable even with some interference, unlike continuously varying analogue signals."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+name: Test builds (Android APK + Windows zip)
+
+# Branch-only build: pushes to build/** produce a single arm64 release APK with
+# both models embedded, plus a Windows zip with a models/ folder beside the
+# exe, both published to the `android-test` prerelease so a phone or PC can
+# download them directly. Never touches main's `latest-build` release.
+on:
+  push:
+    branches: ['build/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-fat-apk
+  cancel-in-progress: true
+
+env:
+  # Android runs LiteRT-LM only (lib/ai_core/model/model_runtime_policy.dart):
+  # the APK embeds the two .litertlm builds, the Windows zip the two GGUFs.
+  # Same repo, filenames and SHA-256 pins as the in-app installer
+  # (ModelFetchFiles in lib/services/model_fetch_service.dart). Both
+  # Apache-2.0. The LiteRT files also live on the `litert-models` release
+  # made by convert-afrislm-litertlm.yml, used while HF is being filled.
+  MODELS_BASE: https://huggingface.co/Oticgroup/ai-connect-africa-packages/resolve/main
+  LITERT_RELEASE: https://github.com/EccentricIvan/AI-CONNECT-AFRICA/releases/download/litert-models
+  BRAIN_FILE: qwen2.5-coder-1.5b-instruct.gguf
+  BRAIN_SHA: cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046
+  TRANSLATE_FILE: afrislm-0.8b-q4_k_m.gguf
+  TRANSLATE_SHA: 4af8ee1df3ec9008f763ebe95e6f21df3acd8d42c541feeb13314ca22e560afc
+  BRAIN_LITERT_FILE: qwen2.5-coder-1.5b-instruct_int4.litertlm
+  BRAIN_LITERT_SHA: 273ecc7771ba2dd5fe1bb6d4d4726ad0353102f04ad094082ccf59bca9f21213
+  TRANSLATE_LITERT_FILE: afrislm-0.8b_int8.litertlm
+  RELEASE_TAG: android-test
+
+jobs:
+  build:
+    name: Build fat APK (arm64)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show disk space
+        run: df -h /
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # GitHub ubuntu-latest already has an Android SDK. android-actions/setup-android
+      # currently fails with `Failed to find package 'tools'` (obsolete package).
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses >/dev/null || true
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.x'
+          cache: true
+
+      - name: Fetch LiteRT models into APK assets
+        run: |
+          set -euo pipefail
+          dest=android/app/src/main/assets/models
+          mkdir -p "$dest"
+          fetch() {  # file  -> Oticgroup HF first, then the litert-models release
+            curl -fL --retry 3 --retry-all-errors -o "$dest/$1" "$MODELS_BASE/$1" ||
+              curl -fL --retry 3 --retry-all-errors -o "$dest/$1" "$LITERT_RELEASE/$1"
+          }
+          fetch "$BRAIN_LITERT_FILE"
+          fetch "$TRANSLATE_LITERT_FILE"
+          echo "$BRAIN_LITERT_SHA  $dest/$BRAIN_LITERT_FILE" | sha256sum -c -
+          # The translator's hash is published next to it by the conversion job.
+          curl -fL "$LITERT_RELEASE/$TRANSLATE_LITERT_FILE.sha256" | sed "s#  .*#  $dest/$TRANSLATE_LITERT_FILE#" | sha256sum -c -
+          ls -lh "$dest"
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: |
+          flutter config --enable-native-assets || true
+          flutter build apk --release --target-platform android-arm64
+
+      - name: Name the APK
+        id: apk
+        run: |
+          set -euo pipefail
+          version=$(grep -m1 '^version:' pubspec.yaml | sed 's/version: *//' | cut -d+ -f1)
+          name="ai-connect-africa-${version}-with-models-arm64.apk"
+          cp build/app/outputs/flutter-apk/app-release.apk "$name"
+          ls -lh "$name"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Publish to android-test prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --prerelease \
+              --title "Android test build (models included)" \
+              --notes "Unsigned-for-store test APK built from a build/** branch. arm64-v8a only. LiteRT-LM builds of the brain (Qwen2.5-Coder-1.5B int4) and translator (AfriSLM int8) are embedded; first launch copies ~2 GB into app storage, so keep ~5 GB free. Not a stable release."
+          fi
+          gh release upload "$RELEASE_TAG" "${{ steps.apk.outputs.name }}" \
+            --repo "$GITHUB_REPOSITORY" --clobber
+          echo "Download: https://github.com/$GITHUB_REPOSITORY/releases/download/$RELEASE_TAG/${{ steps.apk.outputs.name }}"
+
+  windows:
+    name: Build Windows zip (with models)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.x'
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # ggml.dll carries a load-time import on ggml-vulkan.dll -> vulkan-1.dll,
+      # which only ever arrives with GPU drivers. Without it llama.dll cannot
+      # load at all (error 126), llm_llamacpp's helper isolate dies during
+      # backend init, and translation stops working. See the script for detail.
+      - name: Fetch Vulkan loader
+        shell: pwsh
+        run: ./tools/fetch_vulkan_loader.ps1
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      # ModelManager/AfriSlmModelManager both check <exe dir>/models/ first, so
+      # dropping the files beside the exe makes the zip self-contained.
+      - name: Fetch models beside the exe
+        shell: pwsh
+        run: |
+          $dest = 'build/windows/x64/runner/Release/models'
+          New-Item -ItemType Directory -Force $dest | Out-Null
+          # Invoke-WebRequest's progress bar slows large downloads badly.
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest -Uri "$env:MODELS_BASE/$env:BRAIN_FILE" -OutFile "$dest/$env:BRAIN_FILE" -UseBasicParsing
+          Invoke-WebRequest -Uri "$env:MODELS_BASE/$env:TRANSLATE_FILE" -OutFile "$dest/$env:TRANSLATE_FILE" -UseBasicParsing
+          foreach ($p in @(@("$dest/$env:BRAIN_FILE", $env:BRAIN_SHA), @("$dest/$env:TRANSLATE_FILE", $env:TRANSLATE_SHA))) {
+            $actual = (Get-FileHash $p[0] -Algorithm SHA256).Hash.ToLower()
+            if ($actual -ne $p[1]) { throw "Checksum mismatch for $($p[0]): $actual" }
+          }
+          Get-ChildItem $dest | Format-Table Name, Length
+
+      - name: Sign Windows binaries
+        shell: pwsh
+        env:
+          WINDOWS_CERT_PFX_BASE64: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+          WINDOWS_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        run: |
+          if (-not $env:WINDOWS_CERT_PFX_BASE64) {
+            Write-Host '::warning::Unsigned Windows build - machines with Smart App Control on will refuse to start it (0xC0E90002).'
+            exit 0
+          }
+          $pfx = Join-Path $env:RUNNER_TEMP 'signing.pfx'
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERT_PFX_BASE64))
+          try {
+            ./tools/sign_windows_build.ps1 -Path 'build/windows/x64/runner/Release' -PfxPath $pfx -PfxPassword $env:WINDOWS_CERT_PASSWORD
+          } finally {
+            Remove-Item $pfx -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Zip and publish
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = (Select-String -Path pubspec.yaml -Pattern '^version:').Line -replace 'version:\s*','' -replace '\+.*',''
+          $name = "ai-connect-africa-$version-windows-with-models.zip"
+          # Fastest: the model files are already compressed, so effort is wasted.
+          Compress-Archive -Path 'build/windows/x64/runner/Release/*' -DestinationPath $name -CompressionLevel Fastest -Force
+          Get-Item $name | Format-List Name, Length
+          gh release upload $env:RELEASE_TAG $name --repo $env:GITHUB_REPOSITORY --clobber
+          Write-Host "Download: https://github.com/$env:GITHUB_REPOSITORY/releases/download/$env:RELEASE_TAG/$name"

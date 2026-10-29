@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Download AI Connect Africa, the offline AI learning app for Android phones and tablets.">
+  <meta name="theme-color" content="#0b6b64">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="AI Connect Africa">
+  <link rel="apple-touch-icon" href="web/icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="web/favicon.png">
+  <title>AI Connect Africa Download</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #13201f;
+      --muted: #5c6c69;
+      --teal: #0b6b64;
+      --teal-dark: #064b46;
+      --coral: #e85d3f;
+      --paper: #f8faf6;
+      --line: #d8e1dc;
+      --white: #ffffff;
+      --shadow: 0 20px 50px rgba(19, 32, 31, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 68px;
+      padding: 12px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid rgba(216, 225, 220, 0.85);
+      background: rgba(248, 250, 246, 0.94);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .brand img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .topbar .release-link {
+      font-size: 14px;
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    main {
+      min-height: calc(100vh - 68px);
+    }
+
+    .hero {
+      display: grid;
+      align-content: center;
+      min-height: calc(100svh - 68px);
+      padding: clamp(28px, 7vw, 80px) clamp(18px, 6vw, 72px) 36px;
+      background:
+        linear-gradient(90deg, rgba(248, 250, 246, 0.98), rgba(248, 250, 246, 0.82)),
+        url("assets/branding/otic_logo.png") right clamp(24px, 8vw, 88px) center / min(36vw, 380px) no-repeat,
+        var(--paper);
+    }
+
+    .hero-inner {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--coral);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(40px, 9vw, 88px);
+      line-height: 0.95;
+      font-weight: 900;
+    }
+
+    .lede {
+      max-width: 700px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2.4vw, 22px);
+      line-height: 1.55;
+    }
+
+    .download-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 14px 20px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .button:focus-visible {
+      outline: 3px solid rgba(232, 93, 63, 0.45);
+      outline-offset: 3px;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .primary {
+      background: var(--teal);
+      color: var(--white);
+      box-shadow: 0 12px 30px rgba(11, 107, 100, 0.25);
+    }
+
+    .primary:hover {
+      background: var(--teal-dark);
+    }
+
+    .secondary {
+      color: var(--teal);
+      background: var(--white);
+      border-color: var(--line);
+    }
+
+    .status {
+      width: min(680px, 100%);
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .download-panel {
+      margin-top: clamp(34px, 8vw, 64px);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .info-card {
+      min-height: 152px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .info-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .steps {
+      padding: 44px clamp(18px, 6vw, 72px) 60px;
+      background: var(--white);
+      border-top: 1px solid var(--line);
+    }
+
+    .steps-inner {
+      width: min(960px, 100%);
+      margin: 0 auto;
+    }
+
+    .steps h2 {
+      margin: 0 0 18px;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.05;
+    }
+
+    .steps ol {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      counter-increment: step;
+      min-height: 148px;
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      background: var(--coral);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .fine-print {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        min-height: 62px;
+      }
+
+      .topbar .release-link {
+        font-size: 13px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 34px;
+      }
+
+      .download-strip {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .download-panel,
+      .steps ol {
+        grid-template-columns: 1fr;
+      }
+
+      .info-card,
+      .steps li {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="AI Connect Africa home">
+      <img src="assets/branding/otic_logo.png" alt="">
+      <span>AI Connect Africa</span>
+    </a>
+    <a class="release-link" href="https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/tag/latest-build">
+      Latest release
+    </a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-inner">
+        <p class="eyebrow">Android APK now available</p>
+        <h1 id="page-title">AI Connect Africa</h1>
+        <p class="lede">
+          Offline AI learning for Android phones and tablets. Download the APK,
+          install it on the device, and keep learning without accounts, cloud
+          sync, or a live internet connection.
+        </p>
+
+        <div class="download-strip" aria-label="Download options">
+          <a
+            class="button primary"
+            data-apk-download
+            href="https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/download/latest-build/ai-connect-africa-latest-with-models.apk"
+            download
+          >
+            Download Android APK (with AI models)
+          </a>
+          <a
+            class="button secondary"
+            href="https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/tag/latest-build"
+          >
+            Open release page
+          </a>
+        </div>
+        <p class="status" data-platform-note>
+          Prefer the <strong>with-models</strong> APK (~1–1.5 GB) for a complete
+          offline install. Slim builds are
+          <code>ai-connect-africa-latest.apk</code> if you install models separately.
+          Needs an Android device with 4 GB+ RAM and ~1 GB free storage on first launch.
+        </p>
+
+        <div class="download-panel" aria-label="Download details">
+          <article class="info-card">
+            <strong>Works offline</strong>
+            <p>The app and student data stay on the device. The AI model is added separately from USB or a local server.</p>
+          </article>
+          <article class="info-card">
+            <strong>Mobile first</strong>
+            <p>The APK installs on Android phones and tablets. Existing student data is preserved during updates.</p>
+          </article>
+          <article class="info-card">
+            <strong>Windows included</strong>
+            <p>Desktop users can download the Windows zip from the same release page.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="steps" aria-labelledby="install-title">
+      <div class="steps-inner">
+        <h2 id="install-title">Install on Android</h2>
+        <ol>
+          <li>Tap the APK download button on the Android device (prefer the <em>with-models</em> build).</li>
+          <li>Open the downloaded file and allow "Install unknown apps" if Android asks.</li>
+          <li>Launch AI Connect Africa. The with-models APK unpacks chat + translation models on first launch (~1 GB free space).</li>
+        </ol>
+        <p class="fine-print">
+          iPhone and iPad cannot install Android APK files. For classroom distribution,
+          copy the APK to devices by browser download, USB, Bluetooth, or a local school server.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const note = document.querySelector('[data-platform-note]');
+    const apk = document.querySelector('[data-apk-download]');
+    const ua = navigator.userAgent || '';
+    const isIos = /iPhone|iPad|iPod/i.test(ua);
+
+    if (/Android/i.test(ua)) {
+      note.textContent = 'Android detected. Tap the APK button, then open the downloaded file to install AI Connect Africa.';
+    } else if (isIos) {
+      note.textContent = 'This is an Android APK. Use an Android phone or tablet, or open the release page from a desktop to download the Windows build.';
+      apk.textContent = 'Open release page';
+      apk.href = 'https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/tag/latest-build';
+      apk.removeAttribute('download');
+    }
+
+    apk.addEventListener('click', () => {
+      note.textContent = isIos
+        ? 'Opening the release page. Android devices can install the APK from there.'
+        : 'Download started. If your browser blocks the APK, use the release page and choose "ai-connect-africa-latest-with-models.apk".';
+    });
+  </script>
+</body>
+</html>

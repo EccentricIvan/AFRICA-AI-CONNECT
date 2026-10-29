@@ -1,0 +1,34 @@
+{
+  "triangle": {
+    "asset": "assets/curriculum/diagrams/mathematics/triangles.svg",
+    "credit": ""
+  },
+  "trigonometry": {
+    "asset": "assets/curriculum/diagrams/mathematics/triangles.svg",
+    "credit": ""
+  },
+  "pythagoras": {
+    "asset": "assets/curriculum/diagrams/mathematics/triangles.svg",
+    "credit": ""
+  },
+  "photosynthesis": {
+    "asset": "assets/curriculum/diagrams/biology/photosynthesis.svg",
+    "credit": ""
+  },
+  "nutrition": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
+  },
+  "nutrient": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
+  },
+  "autotroph": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
+  },
+  "heterotroph": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
+  }
+}

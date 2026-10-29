@@ -12,12 +12,6 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
-# Environment / secrets
-.env
-.env.*
-*.env
-*.env.*
-*.env.txt
-.env.txt
-AI_BACKEND/.env.txt
-AI_BACKEND/.env
+
+# Kotlin compiler daemon session files
+.kotlin/

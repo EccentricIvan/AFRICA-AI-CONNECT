@@ -1,0 +1,82 @@
+{
+  "subject": "Biology",
+  "topics": [
+    {
+      "id": "biology.photosynthesis",
+      "version": 1,
+      "level": "S2",
+      "title": "Photosynthesis",
+      "aliases": [
+        "photosynthesis",
+        "photosynthesise",
+        "photosynthesize",
+        "process of photosynthesis",
+        "nutrition in green plants",
+        "how plants make food",
+        "how plants make their food",
+        "how plants make their own food",
+        "how green plants make food",
+        "how do plants make food",
+        "how do plants make their food",
+        "how do plants make their own food"
+      ],
+      "summary": "Photosynthesis is the process by which green plants make their own food (glucose) from carbon dioxide and water, using light energy trapped by chlorophyll. Oxygen is given off as a by-product. It happens mainly in the leaves, inside the chloroplasts.",
+      "sections": [
+        {
+          "heading": "The equation",
+          "body": "Word equation: carbon dioxide + water → glucose + oxygen (light energy and chlorophyll are needed).\nChemical equation: 6CO2 + 6H2O → C6H12O6 + 6O2.\nThe raw materials are carbon dioxide and water. The products are glucose and oxygen."
+        },
+        {
+          "heading": "Where it happens",
+          "body": "Photosynthesis takes place in the chloroplasts, which contain the green pigment chlorophyll. Most chloroplasts are in the palisade mesophyll cells near the upper surface of the leaf, where they get the most light. Carbon dioxide enters the leaf through tiny pores called stomata (mostly on the lower surface). Water is taken up by the roots and carried to the leaf in the xylem vessels of the veins."
+        },
+        {
+          "heading": "How the leaf is suited for photosynthesis",
+          "body": "- Broad and flat: a large surface area to absorb light and carbon dioxide.\n- Thin: gases travel only a short distance to the cells.\n- Many stomata: let carbon dioxide in and oxygen out.\n- Palisade cells packed with chloroplasts near the top surface: trap as much light as possible.\n- Air spaces in the spongy mesophyll: let gases move through the leaf.\n- A network of veins: xylem brings water, phloem carries the food made away."
+        },
+        {
+          "heading": "What happens, step by step",
+          "body": "1. Light stage: chlorophyll absorbs light energy. The energy splits water molecules into hydrogen and oxygen (photolysis). The oxygen is released as a gas.\n2. Dark stage (it does not need light directly): the hydrogen from the light stage joins with carbon dioxide to make glucose. Enzymes control this stage, so temperature affects it.\nSo the oxygen a plant gives off comes from water, not from carbon dioxide."
+        },
+        {
+          "heading": "Conditions needed",
+          "body": "Light, carbon dioxide, water, chlorophyll and a suitable temperature (because enzymes are involved). If any one of these is missing, photosynthesis stops."
+        },
+        {
+          "heading": "Factors that affect the rate (limiting factors)",
+          "body": "- Light intensity: more light gives a faster rate, up to a point.\n- Carbon dioxide concentration: more carbon dioxide gives a faster rate, up to a point.\n- Temperature: the rate rises up to an optimum (about 25–35 °C); very high temperatures denature the enzymes and the rate falls.\nThe factor in shortest supply controls the rate. It is called the limiting factor. Example: on a bright but cold morning, temperature is the limiting factor."
+        },
+        {
+          "heading": "What the plant does with the glucose",
+          "body": "- Used in respiration to release energy.\n- Changed into starch and stored (in leaves, roots, seeds and tubers such as cassava and Irish potato).\n- Changed into sucrose and carried around the plant in the phloem.\n- Used to make cellulose for new cell walls.\n- Combined with nitrates from the soil to make amino acids and proteins.\n- Changed into fats and oils, stored in seeds such as groundnuts."
+        },
+        {
+          "heading": "Experiments you should know",
+          "body": "- Testing a leaf for starch: boil the leaf in water (kills the cells), then in alcohol over a water bath (removes chlorophyll), rinse in warm water (softens it), then add iodine solution. Blue-black means starch is present; brown means no starch.\n- Destarching: keep the plant in the dark for 48 hours first, so any starch found later was made during the experiment.\n- Chlorophyll is needed: test a variegated leaf. Only the green parts turn blue-black.\n- Light is needed: cover part of a leaf with black paper. The covered part has no starch.\n- Carbon dioxide is needed: put a leaf in a flask with sodium hydroxide (or potassium hydroxide), which absorbs carbon dioxide. That leaf has no starch.\n- Oxygen is produced: collect the gas given off by pondweed in light. It relights a glowing splint."
+        },
+        {
+          "heading": "Why photosynthesis matters",
+          "body": "It is the source of food for almost all living things: plants make the food, and animals eat plants or other animals that ate plants (food chains start with green plants). It releases the oxygen that plants and animals need for respiration, and it removes carbon dioxide from the air. In Uganda, crops such as maize, beans, cassava, bananas and coffee depend on it, so farming and food supply depend on it too."
+        },
+        {
+          "heading": "Common mistakes",
+          "body": "- Plants do not get their food from the soil. They make it; from the soil they take water and mineral salts.\n- Plants respire all the time, day and night. They photosynthesise only when there is light.\n- The oxygen released comes from water, not carbon dioxide.\n- Glucose is the first food made; starch is how it is stored."
+        }
+      ],
+      "keyTerms": {
+        "photosynthesis": "The process by which green plants make glucose from carbon dioxide and water using light energy trapped by chlorophyll, releasing oxygen",
+        "chlorophyll": "The green pigment in chloroplasts that absorbs light energy",
+        "stomata": "Tiny pores, mostly on the lower surface of a leaf, through which gases enter and leave",
+        "limiting factor": "The factor in shortest supply, which controls the rate of photosynthesis",
+        "photolysis": "The splitting of water by light energy during the light stage"
+      },
+      "diagram": "assets/curriculum/diagrams/biology/photosynthesis.svg",
+      "checkQuestions": [
+        "Write the word equation for photosynthesis.",
+        "Why do the palisade cells have more chloroplasts than other cells in the leaf?",
+        "A plant is kept in the dark for two days and a leaf is then tested with iodine. What colour do you expect, and why?",
+        "Name two things a plant does with the glucose it makes."
+      ]
+    }
+  ]
+}
