@@ -10,6 +10,7 @@ import '../../app.dart';
 import '../../db/providers/db_provider.dart';
 import '../../features/achievements/achievements_screen.dart';
 import '../../features/admin/admin_screen.dart';
+import '../../features/access/school_access_screen.dart';
 import '../../features/admin/admin_service.dart';
 import '../../features/assignments/assignments_screens.dart';
 import '../../features/notes/my_notes_screen.dart';
@@ -38,7 +39,6 @@ import '../../features/teacher/lesson_materials_screen.dart';
 import '../../features/teacher/teacher_sync_screen.dart';
 import '../../features/teacher/teacher_dashboard_screen.dart';
 import '../../features/teacher/teacher_pin.dart';
-import '../../features/teacher/teacher_pin_screen.dart';
 import '../../features/teacher/teacher_profiles.dart';
 import '../../features/site_builder/site_chat_builder_screen.dart';
 import '../../features/web_dev_lab/web_dev_lab_screen.dart';
@@ -48,13 +48,18 @@ import '../../shared/widgets/app_shell.dart';
 final _rootKey = GlobalKey<NavigatorState>();
 final _shellKey = GlobalKey<NavigatorState>();
 
-/// The screen navigated to just before this one, so the gate can tell
-/// opening Teachers/Admin afresh from the unlock flow returning to it.
-String? _lastRouterLocation;
-
 /// Provider-aware router so the redirect can read [hasProfileProvider].
+class _AccessRouterRefresh extends ChangeNotifier {
+  void refresh() => notifyListeners();
+}
+
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final accessRefresh = _AccessRouterRefresh();
+  ref.onDispose(accessRefresh.dispose);
+  ref.listen(activeTeacherProvider, (_, __) => accessRefresh.refresh());
+  ref.listen(adminSessionProvider, (_, __) => accessRefresh.refresh());
   return GoRouter(
+    refreshListenable: accessRefresh,
     navigatorKey: _rootKey,
     initialLocation: '/',
     redirect: (context, state) async {
@@ -64,33 +69,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final onboarding = await _onboardingRedirect(ref, path);
       if (onboarding != null) return onboarding;
 
-      // Opening Teachers or Admin re-asks for the PIN every time: entering
-      // from anywhere outside that area re-locks it, so a prior unlock is
-      // never reused. The unlock screen navigates back to /teachers itself,
-      // so a return from /unlock must not re-lock.
-      final prev = _lastRouterLocation;
-      _lastRouterLocation = path;
-      if (path == '/teachers' &&
-          prev != '/unlock' &&
-          (prev == null || !isTeacherRoute(prev))) {
-        ref.read(teacherUnlockedProvider.notifier).state = false;
-      }
-      if (path == '/admin' && prev != '/admin') {
-        ref.read(adminSessionProvider.notifier).state = null;
-      }
-
-      // Teachers sits behind the Teachers PIN, when one is set…
-      if (!isTeacherRoute(path)) return null;
-      final gate = teacherGateRedirect(
-        state.uri,
-        unlocked: ref.read(teacherUnlockedProvider),
-        pinSet: await ref.read(teacherPinProvider).isSet(),
-      );
-      if (gate != null) return gate;
-      // …and the teacher tools need a teacher signed in, on any device.
+      // The personal teacher PIN is the only teacher sign-in. Sessions
+      // last until sign-out, learner handover, expiry or app restart.
       return teacherProfileRedirect(
         state.uri,
-        signedIn: kIsWeb || ref.read(activeTeacherProvider) != null,
+        signedIn: ref.read(activeTeacherProvider) != null,
       );
     },
     routes: [
@@ -156,16 +139,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (_, __) => const TeacherSyncScreen(),
           ),
           // Co-teaching and standby screens were removed (2026-10-06).
-          GoRoute(path: '/teacher/co-teach', redirect: (_, __) => '/teacher/sync'),
-          GoRoute(path: '/teacher/standby', redirect: (_, __) => '/teacher/sync'),
+          GoRoute(
+            path: '/teacher/co-teach',
+            redirect: (_, __) => '/teacher/sync',
+          ),
+          GoRoute(
+            path: '/teacher/standby',
+            redirect: (_, __) => '/teacher/sync',
+          ),
           GoRoute(
             path: '/learn/subject/:id',
-            builder: (_, state) =>
-                UnitsScreen(
-                  subjectId: state.pathParameters['id'] ?? '',
-                  initialTab:
-                      int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0,
-                ),
+            builder: (_, state) => UnitsScreen(
+              subjectId: state.pathParameters['id'] ?? '',
+              initialTab:
+                  int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0,
+            ),
           ),
           GoRoute(
             path: '/learn/subject/:id/lesson/:unit/:lesson',
@@ -210,10 +198,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: '/achievements',
             builder: (_, __) => const AchievementsScreen(),
           ),
-          GoRoute(
-            path: '/my-notes',
-            builder: (_, __) => const MyNotesScreen(),
-          ),
+          GoRoute(path: '/my-notes', builder: (_, __) => const MyNotesScreen()),
           // Student side of class sync — deliberately outside /teacher*, so
           // no teacher PIN: the join code is what grants access.
           GoRoute(
@@ -261,9 +246,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (_, __) => const CloudScreen(),
           ),
           GoRoute(
-            path: '/admin',
-            builder: (_, __) => const AdminScreen(),
+            path: '/access',
+            builder: (_, __) => const SchoolAccessScreen(),
           ),
+          GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
           GoRoute(
             path: '/assignments',
             builder: (_, __) => const AssignmentsScreen(),
@@ -286,16 +272,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/unlock',
-            builder: (_, state) {
-              final to = state.uri.queryParameters['to'] ?? '/teacher';
-              // Only ever continue into the gated area, never to an
-              // arbitrary location passed in the query string.
-              return TeacherUnlockScreen(
-                destination: isTeacherRoute(Uri.parse(to).path)
-                    ? to
-                    : '/teacher',
-              );
-            },
+            redirect: (_, state) => Uri(
+              path: '/teachers',
+              queryParameters: {
+                'to': teacherDestination(state.uri.queryParameters['to']),
+              },
+            ).toString(),
           ),
         ],
       ),
@@ -305,6 +287,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
 /// Where to send someone who has not finished onboarding, or null.
 Future<String?> _onboardingRedirect(Ref ref, String location) async {
+  // School setup and staff sign-in do not require a student profile first.
+  if (location == '/access' ||
+      location == '/admin' ||
+      location == '/unlock' ||
+      isTeacherRoute(location))
+    return null;
   // Fast path: SharedPreferences is written synchronously by onboarding
   // before it navigates away, so a name here means onboarding is done —
   // no need to wait on the (slower, background-written) database.
@@ -319,7 +307,12 @@ Future<String?> _onboardingRedirect(Ref ref, String location) async {
   // themselves here yet: ask who is learning rather than opening someone
   // else's profile. Teachers and the Admin can still work.
   if (prefs.getInt(kActiveStudentIdKey) == null &&
-      !const ['/learners', '/teachers', '/admin', '/unlock'].contains(location) &&
+      !const [
+        '/learners',
+        '/teachers',
+        '/admin',
+        '/unlock',
+      ].contains(location) &&
       !location.startsWith('/teacher')) {
     try {
       final learners = await ref.read(dbProvider).studentDao.getAllStudents();

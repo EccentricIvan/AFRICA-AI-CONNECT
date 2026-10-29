@@ -18,6 +18,7 @@ import '../teacher/teacher_pin.dart';
 import '../teacher/teacher_pin_screen.dart';
 import '../teacher/teacher_profiles.dart';
 import 'admin_service.dart';
+import '../access/school_access_screen.dart';
 import 'admin_sync_widgets.dart';
 
 /// The school's one Admin: set up once, then sign in with the Admin PIN.
@@ -116,27 +117,19 @@ class _SetUpState extends ConsumerState<_SetUp> {
     if (_nameError != null || _pinError != null || _againError != null) {
       return;
     }
-    // With a Teachers PIN set, only someone who knows it sets up the Admin.
-    final teachersPin = ref.read(teacherPinProvider);
-    if (await teachersPin.isSet()) {
-      if (!mounted) return;
-      final entered = await askTeacherPin(context, title: 'Teachers PIN');
-      if (entered == null) return;
-      if (!await teachersPin.verify(entered)) {
-        return setState(() => _error = 'That Teachers PIN is not right.');
-      }
-    }
     final session = await ref
         .read(adminServiceProvider)
         .setUp(name: _name.text, pin: pin);
     if (!mounted) return;
     if (session == null) {
       return setState(
-        () => _error = 'This device already has an Admin, or holds another '
+        () => _error =
+            'This device already has an Admin, or holds another '
             'Admin’s school records.',
       );
     }
     ref.invalidate(adminSetUpProvider);
+    ref.read(activeTeacherProvider.notifier).state = null;
     ref.read(adminSessionProvider.notifier).state = session;
   }
 
@@ -225,6 +218,7 @@ class _SignInState extends ConsumerState<_SignIn> {
       }
       return setState(() => _error = 'That PIN is not right.');
     }
+    ref.read(activeTeacherProvider.notifier).state = null;
     ref.read(adminSessionProvider.notifier).state = session;
   }
 
@@ -239,15 +233,15 @@ class _SignInState extends ConsumerState<_SignIn> {
           obscureText: true,
           keyboardType: TextInputType.number,
           inputFormatters: kPinInputFormatters,
-          decoration: InputDecoration(labelText: 'Admin PIN', errorText: _error),
+          decoration: InputDecoration(
+            labelText: 'Admin PIN',
+            errorText: _error,
+          ),
           onSubmitted: (_) => _submit(),
         ),
         const SizedBox(height: 16),
         FilledButton(onPressed: _submit, child: const Text('Sign in')),
-        TextButton(
-          onPressed: _recover,
-          child: const Text('Forgot PIN?'),
-        ),
+        TextButton(onPressed: _recover, child: const Text('Forgot PIN?')),
       ],
     );
   }
@@ -264,7 +258,10 @@ class _SignInState extends ConsumerState<_SignIn> {
       'the Admin PIN is a lock for a shared device, not real security.',
     );
     if (!ok || !mounted) return;
-    final next = await askTeacherPin(context, title: 'New Admin PIN (4–8 digits)');
+    final next = await askTeacherPin(
+      context,
+      title: 'New Admin PIN (4–8 digits)',
+    );
     if (next == null || !mounted) return;
     final again = await askTeacherPin(context, title: 'New Admin PIN again');
     if (again == null || !mounted) return;
@@ -284,6 +281,7 @@ class _SignInState extends ConsumerState<_SignIn> {
     }
     final signedIn = await ref.read(adminServiceProvider).signIn(next);
     if (signedIn != null) {
+      ref.read(activeTeacherProvider.notifier).state = null;
       ref.read(adminSessionProvider.notifier).state = signedIn;
     }
   }
@@ -320,16 +318,17 @@ final _registeredByProvider = StreamProvider<Map<int, int>>((ref) {
 /// This device's own subjects (never ones received from a class).
 final _subjectsProvider = StreamProvider<List<CustomSubject>>((ref) {
   final db = ref.watch(dbProvider);
-  return (db.select(db.customSubjects)
-        ..where((t) => t.classGroupUuid.isNull()))
-      .watch();
+  return (db.select(
+    db.customSubjects,
+  )..where((t) => t.classGroupUuid.isNull())).watch();
 });
 
 /// Classes made on this device (never ones joined as a student).
 final _classesProvider = StreamProvider<List<ClassGroup>>((ref) {
   final db = ref.watch(dbProvider);
-  return (db.select(db.classGroups)..where((t) => t.joined.equals(false)))
-      .watch();
+  return (db.select(
+    db.classGroups,
+  )..where((t) => t.joined.equals(false))).watch();
 });
 
 class _Records extends ConsumerWidget {
@@ -392,6 +391,52 @@ class _Records extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        _Card(
+          children: [
+            const ListTile(
+              leading: Icon(Icons.route_outlined),
+              title: Text('Set up your school in order'),
+              subtitle: Text(
+                '1. Add classes and subjects.  2. Add teachers.  3. Assign each teacher a class and subject. Students then choose their name to learn.',
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => _editClass(context, ref),
+                    child: const Text('Add class'),
+                  ),
+                  OutlinedButton(
+                    onPressed: () => _addSubject(context, ref),
+                    child: const Text('Add subject'),
+                  ),
+                  OutlinedButton(
+                    onPressed: () => _addTeacher(context, ref),
+                    child: const Text('Add teacher'),
+                  ),
+                  FilledButton(
+                    onPressed:
+                        teachers.isEmpty || classes.isEmpty || subjects.isEmpty
+                        ? null
+                        : () => _assign(
+                            context,
+                            ref,
+                            teachers,
+                            classes,
+                            subjects,
+                          ),
+                    child: const Text('Assign teacher'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
         // ── Admin ──────────────────────────────────────────────────────
         _Card(
           children: [
@@ -400,9 +445,8 @@ class _Records extends ConsumerWidget {
               title: Text(session.name),
               subtitle: const Text('Admin'),
               trailing: TextButton(
-                onPressed: () =>
-                    ref.read(adminSessionProvider.notifier).state = null,
-                child: const Text('Sign out'),
+                onPressed: () => returnToStudent(context, ref),
+                child: const Text('Return to student'),
               ),
             ),
             ListTile(
@@ -420,18 +464,15 @@ class _Records extends ConsumerWidget {
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.groups_2_rounded),
-              title: const Text('Teachers PIN'),
-              subtitle: const Text('The shared PIN that opens the Teachers area'),
-              onTap: () => _manageTeachersPin(context, ref),
-            ),
+
             ListTile(
               leading: const Icon(Icons.sync_rounded),
               title: const Text('Send school records'),
               subtitle: const Text('To another device, one way'),
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const SendRecordsPage()),
+                MaterialPageRoute<void>(
+                  builder: (_) => const SendRecordsPage(),
+                ),
               ),
             ),
           ],
@@ -442,10 +483,7 @@ class _Records extends ConsumerWidget {
         const _SchoolCard(),
 
         // ── Teachers ───────────────────────────────────────────────────
-        _Title(
-          'Teachers',
-          onAdd: () => _addTeacher(context, ref),
-        ),
+        _Title('Teachers', onAdd: () => _addTeacher(context, ref)),
         _Card(
           children: [
             if (teachers.isEmpty) const ListTile(title: Text('No teachers')),
@@ -492,9 +530,7 @@ class _Records extends ConsumerWidget {
             if (classesOfTeacher.isEmpty)
               ListTile(
                 title: Text(
-                  classes.isEmpty
-                      ? 'Add a class first'
-                      : 'No class teachers',
+                  classes.isEmpty ? 'Add a class first' : 'No class teachers',
                 ),
               ),
             for (final e in classesOfTeacher.entries)
@@ -515,7 +551,8 @@ class _Records extends ConsumerWidget {
                     );
                     if (picked == null) return;
                     await run(
-                      () => admin.setClassTeacherClasses(session, e.key, picked),
+                      () =>
+                          admin.setClassTeacherClasses(session, e.key, picked),
                     );
                   },
                   'Remove role': () async {
@@ -539,10 +576,7 @@ class _Records extends ConsumerWidget {
         ),
 
         // ── Classes and streams ────────────────────────────────────────
-        _Title(
-          'Classes & streams',
-          onAdd: () => _editClass(context, ref),
-        ),
+        _Title('Classes & streams', onAdd: () => _editClass(context, ref)),
         _Card(
           children: [
             if (classes.isEmpty) const ListTile(title: Text('No classes')),
@@ -584,7 +618,9 @@ class _Records extends ConsumerWidget {
                   'Rename': () async {
                     final name = await _ask(context, 'Subject', s.name);
                     if (name == null) return;
-                    await run(() => admin.renameSubject(session, s.subjectId, name));
+                    await run(
+                      () => admin.renameSubject(session, s.subjectId, name),
+                    );
                     ref.invalidate(customSubjectsProvider);
                     ref.invalidate(mergedSubjectsProvider);
                   },
@@ -593,7 +629,9 @@ class _Records extends ConsumerWidget {
                       context,
                       'Delete ${s.name} and all its materials?',
                     )) {
-                      await run(() => admin.deleteSubject(session, s.subjectId));
+                      await run(
+                        () => admin.deleteSubject(session, s.subjectId),
+                      );
                       ref.invalidate(customSubjectsProvider);
                       ref.invalidate(mergedSubjectsProvider);
                     }
@@ -740,63 +778,6 @@ class _Records extends ConsumerWidget {
     );
   }
 
-  /// The shared Teachers PIN: show it, change it, or clear it (cleared,
-  /// nothing gates the Teachers area).
-  Future<void> _manageTeachersPin(BuildContext context, WidgetRef ref) async {
-    final pin = ref.read(teacherPinProvider);
-    final current = await pin.plain();
-    final isSet = await pin.isSet();
-    if (!context.mounted) return;
-    final messenger = ScaffoldMessenger.of(context);
-    await showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Teachers PIN'),
-        content: Text(
-          !isSet
-              ? 'No Teachers PIN is set, so the Teachers area is open to '
-                    'anyone on this device.'
-              : current == null
-              ? 'A Teachers PIN is set. It was set before PINs were stored, '
-                    'so it can’t be shown — set a new one to see it.'
-              : 'The current Teachers PIN is $current.',
-        ),
-        actions: [
-          if (isSet)
-            TextButton(
-              onPressed: () async {
-                await pin.clear();
-                if (ctx.mounted) Navigator.pop(ctx);
-                messenger.showSnackBar(
-                  const SnackBar(content: Text('Teachers PIN cleared.')),
-                );
-              },
-              child: const Text('Clear'),
-            ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
-          ),
-          FilledButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              final next = await askTeacherPin(
-                context,
-                title: 'New Teachers PIN (4–8 digits)',
-              );
-              if (next == null) return;
-              await pin.set(next);
-              messenger.showSnackBar(
-                const SnackBar(content: Text('Teachers PIN set.')),
-              );
-            },
-            child: Text(isSet ? 'Change' : 'Set'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _changeMyPin(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
     final current = await askTeacherPin(context, title: 'Current PIN');
@@ -817,7 +798,10 @@ class _Records extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final name = await _ask(context, 'Teacher’s name', '');
     if (name == null || !context.mounted) return;
-    final pin = await askTeacherPin(context, title: 'PIN for $name (4–8 digits)');
+    final pin = await askTeacherPin(
+      context,
+      title: 'PIN for $name (4–8 digits)',
+    );
     if (pin == null) return;
     final error = await ref
         .read(adminServiceProvider)
@@ -857,7 +841,10 @@ class _Records extends ConsumerWidget {
     }
     final name = await _ask(context, 'Class teacher’s name', '');
     if (name == null || !context.mounted) return;
-    final pin = await askTeacherPin(context, title: 'PIN for $name (4–8 digits)');
+    final pin = await askTeacherPin(
+      context,
+      title: 'PIN for $name (4–8 digits)',
+    );
     if (pin == null || !context.mounted) return;
     final again = await askTeacherPin(context, title: 'PIN again');
     if (again == null) return;
@@ -904,7 +891,12 @@ class _Records extends ConsumerWidget {
     if (existing == null) {
       await admin.addClass(session, className: c, streamName: s);
     } else {
-      await admin.renameClass(session, existing.id, className: c, streamName: s);
+      await admin.renameClass(
+        session,
+        existing.id,
+        className: c,
+        streamName: s,
+      );
     }
   }
 
@@ -975,7 +967,10 @@ class _Records extends ConsumerWidget {
     Student learner,
   ) async {
     final router = GoRouter.of(context);
-    if (!await _confirm(context, 'Delete ${learner.name}? This cannot be undone.')) {
+    if (!await _confirm(
+      context,
+      'Delete ${learner.name}? This cannot be undone.',
+    )) {
       return;
     }
     final wasActive =
@@ -1065,10 +1060,7 @@ class _Title extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            child: Text(text, style: Theme.of(context).textTheme.titleMedium),
           ),
           if (onAdd != null)
             TextButton.icon(
@@ -1087,8 +1079,10 @@ class _Card extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) =>
-      Card(margin: EdgeInsets.zero, child: Column(children: children));
+  Widget build(BuildContext context) => Card(
+    margin: EdgeInsets.zero,
+    child: Column(children: children),
+  );
 }
 
 /// A row's actions, by label.
@@ -1361,10 +1355,8 @@ class _ClassDialogState extends State<_ClassDialog> {
           child: const Text('Cancel'),
         ),
         FilledButton(
-          onPressed: () => Navigator.pop(
-            context,
-            (_name.text.trim(), _stream.text.trim()),
-          ),
+          onPressed: () =>
+              Navigator.pop(context, (_name.text.trim(), _stream.text.trim())),
           child: const Text('Save'),
         ),
       ],

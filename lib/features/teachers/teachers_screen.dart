@@ -18,21 +18,38 @@ import '../teacher/class_providers.dart';
 import '../teacher/register_learners_screen.dart';
 import '../teacher/teacher_pin_screen.dart';
 import '../teacher/teacher_profiles.dart';
+import '../teacher/teacher_pin.dart';
+import '../admin/admin_service.dart';
+import '../access/school_access_screen.dart';
 
-/// Teachers — the school's teacher devices and everything that manages this
-/// one: the teacher tools, the school, learner profiles, learning packages
-/// and updates. Replaced the separate Admin dashboard: a school has several
-/// teachers (co-teachers, a standby), and they are the ones who manage the
-/// devices.
-///
-/// PIN-gated like the rest of the teacher area, but not role-gated: a
-/// student's device has learners to manage too, so the teacher-device
-/// sections only appear where they apply.
+/// Personal teacher sign-in and the teacher's workspace. School records
+/// and account provisioning remain in Admin.
 class TeachersScreen extends ConsumerWidget {
   const TeachersScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(activeTeacherProvider) == null) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const StudioAppBar(
+          title: 'Teacher sign-in',
+          subtitle: 'Your name and your personal PIN',
+          icon: Icons.school_rounded,
+        ),
+        body: MaxWidth(
+          maxWidth: 760,
+          child: ListView(
+            padding: const EdgeInsets.all(24),
+            children: const [
+              Text('Choose your name. You only need your own teacher PIN.'),
+              SizedBox(height: 16),
+              _TeacherDevicesCard(),
+            ],
+          ),
+        ),
+      );
+    }
     final packagesAsync = ref.watch(_packagesInstalledProvider);
     final packageInfoAsync = ref.watch(packageInfoProvider);
 
@@ -55,47 +72,48 @@ class TeachersScreen extends ConsumerWidget {
             const SizedBox(height: 20),
 
             // ── Device ───────────────────────────────────────────────────
-            const _SectionTitle('Device'),
-            _InfoCard(
-              children: [
-                _InfoRow(
-                  icon: Icons.computer,
-                  label: 'Platform',
-                  value:
-                      '${Platform.operatingSystem} ${Platform.operatingSystemVersion}',
-                ),
-                _InfoRow(
-                  icon: Icons.apps,
-                  label: 'App version',
-                  value: packageInfoAsync.when(
-                    data: (info) =>
-                        'Version ${info.version} (build ${info.buildNumber})',
-                    loading: () => 'Loading…',
-                    error: (_, __) => 'Unknown',
+            if (ref.watch(activeTeacherProvider) != null) ...[
+              const _SectionTitle('Device'),
+              _InfoCard(
+                children: [
+                  _InfoRow(
+                    icon: Icons.computer,
+                    label: 'Platform',
+                    value:
+                        '${Platform.operatingSystem} ${Platform.operatingSystemVersion}',
                   ),
-                ),
-                const _InfoRow(
-                  icon: Icons.wifi_off,
-                  label: 'Network',
-                  value: 'Offline',
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+                  _InfoRow(
+                    icon: Icons.apps,
+                    label: 'App version',
+                    value: packageInfoAsync.when(
+                      data: (info) =>
+                          'Version ${info.version} (build ${info.buildNumber})',
+                      loading: () => 'Loading…',
+                      error: (_, __) => 'Unknown',
+                    ),
+                  ),
+                  const _InfoRow(
+                    icon: Icons.wifi_off,
+                    label: 'Network',
+                    value: 'Offline',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
 
-            // ── Learning packages ────────────────────────────────────────
-            const _SectionTitle('Learning packages'),
-            _InfoCard(
-              children: [
-                CheckboxListTile(
-                  value: packagesAsync.valueOrNull ?? false,
-                  onChanged: null,
-                  title: const Text('Installed'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
+              // ── Learning packages ────────────────────────────────────────
+              const _SectionTitle('Learning packages'),
+              _InfoCard(
+                children: [
+                  CheckboxListTile(
+                    value: packagesAsync.valueOrNull ?? false,
+                    onChanged: null,
+                    title: const Text('Installed'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
             const SizedBox(height: 40),
           ],
         ),
@@ -131,11 +149,11 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+    return Material(
+      color: Theme.of(context).colorScheme.surface,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).dividerColor),
+        side: BorderSide(color: Theme.of(context).dividerColor),
       ),
       child: Column(children: children),
     );
@@ -164,10 +182,7 @@ class _InfoRow extends StatelessWidget {
       title: Text(label, style: const TextStyle(fontSize: 13)),
       subtitle: Text(
         value,
-        style: TextStyle(
-          fontSize: 12,
-          color: Theme.of(context).hintColor,
-        ),
+        style: TextStyle(fontSize: 12, color: Theme.of(context).hintColor),
       ),
     );
   }
@@ -175,9 +190,13 @@ class _InfoRow extends StatelessWidget {
 
 /// Whether the learning packages (the tutor and the translator) are both
 /// installed. Re-checked each time Teachers opens.
-final _packagesInstalledProvider = FutureProvider.autoDispose<bool>((ref) async {
+final _packagesInstalledProvider = FutureProvider.autoDispose<bool>((
+  ref,
+) async {
   final brain = await ref.watch(modelInfoProvider.future);
-  final translator = await ref.watch(translateModelManagerProvider).checkModel();
+  final translator = await ref
+      .watch(translateModelManagerProvider)
+      .checkModel();
   return brain.isReady && translator.isReady;
 });
 
@@ -213,16 +232,11 @@ class _TeacherDevicesCard extends ConsumerWidget {
               subtitle: Text('The Admin adds teachers'),
             ),
           ListTile(
-            leading: const Icon(Icons.sync_rounded),
-            title: const Text('Sync'),
+            leading: const Icon(Icons.admin_panel_settings_outlined),
+            title: const Text('Ask the Admin to add your name'),
+            subtitle: const Text('Use the personal PIN your Admin gave you.'),
             trailing: chevron,
-            onTap: () => context.push('/class-sync'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.cloud_outlined),
-            title: const Text('School cloud'),
-            trailing: chevron,
-            onTap: () => context.push('/teachers/cloud'),
+            onTap: () => context.go('/admin'),
           ),
         ],
       );
@@ -234,7 +248,7 @@ class _TeacherDevicesCard extends ConsumerWidget {
         ref.watch(myClassTeacherClassesProvider).valueOrNull ??
         const <ClassGroup>[];
     final mine = owned.isEmpty
-        ? 'No classes'
+        ? 'No classes assigned yet. Ask the Admin to assign your class and subject.'
         : 'Teaches ${owned.length} ${owned.length == 1 ? 'class' : 'classes'}';
 
     return Column(
@@ -246,9 +260,8 @@ class _TeacherDevicesCard extends ConsumerWidget {
               title: Text(me.name),
               subtitle: Text(mine),
               trailing: TextButton(
-                onPressed: () =>
-                    ref.read(activeTeacherProvider.notifier).state = null,
-                child: const Text('Sign out'),
+                onPressed: () => returnToStudent(context, ref),
+                child: const Text('Return to student'),
               ),
             ),
           ],
@@ -277,6 +290,7 @@ class _TeacherDevicesCard extends ConsumerWidget {
                 '/teacher/assignments',
               ),
               (Icons.sync_rounded, 'Sync', '/teacher/sync'),
+              (Icons.cloud_outlined, 'School cloud', '/teachers/cloud'),
             ])
               ListTile(
                 leading: Icon(icon),
@@ -303,8 +317,9 @@ class _TeacherDevicesCard extends ConsumerWidget {
                 'questions. Offline, the AI on this device answers.',
               ),
               value: ref.watch(onlineTutorSettingsProvider).enabled,
-              onChanged: (on) =>
-                  ref.read(onlineTutorSettingsProvider.notifier).update(enabled: on),
+              onChanged: (on) => ref
+                  .read(onlineTutorSettingsProvider.notifier)
+                  .update(enabled: on),
             ),
             if (ref.watch(onlineTutorSettingsProvider).enabled)
               ListTile(
@@ -319,12 +334,6 @@ class _TeacherDevicesCard extends ConsumerWidget {
               title: const Text('My PIN'),
               trailing: chevron,
               onTap: () => _changeMyPin(context, ref, me),
-            ),
-            ListTile(
-              leading: const Icon(Icons.lock_outline_rounded),
-              title: const Text('Teachers PIN'),
-              trailing: chevron,
-              onTap: () => showTeacherPinSettings(context, ref),
             ),
           ],
         ),
@@ -349,7 +358,13 @@ class _TeacherDevicesCard extends ConsumerWidget {
       );
       return;
     }
+    if (!context.mounted) return;
+    final destination = teacherDestination(
+      GoRouterState.of(context).uri.queryParameters['to'],
+    );
+    ref.read(adminSessionProvider.notifier).state = null;
     ref.read(activeTeacherProvider.notifier).state = signedIn;
+    context.go(destination);
   }
 
   /// The address of the school's tutor server, and its access token if the
@@ -375,7 +390,9 @@ class _TeacherDevicesCard extends ConsumerWidget {
             TextField(
               controller: token,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Access token (if any)'),
+              decoration: const InputDecoration(
+                labelText: 'Access token (if any)',
+              ),
             ),
           ],
         ),

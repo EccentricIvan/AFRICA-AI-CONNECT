@@ -1,5 +1,19 @@
 # Changelog
 
+## Simpler school access - 2026-10-29
+
+- Replace separate sidebar staff entries with School access: Admin, Teacher,
+  Student.
+- Teachers use one personal PIN, with no shared Teachers PIN prompt. Keep the
+  requested teacher tool after sign-in and protect School cloud too.
+- Keep staff sessions during ordinary navigation; refresh protected routes on
+  session changes. Return to student signs out all staff before learner choice.
+- Allow Admin setup and teacher sign-in before creating a student profile.
+- Guide Admin setup with classes, subjects, teachers and teaching assignments.
+- Enforce school content permissions without depending on the old shared PIN.
+- Check the current learner's PIN on handover as well. All 911 app tests pass.
+- See docs/ACCESS_FLOW.md for the workflow and compatibility behavior.
+
 ## Relevant sources and illustrations - 2026-10-29
 
 - Preserve short topic words such as "aid" when matching local lessons.

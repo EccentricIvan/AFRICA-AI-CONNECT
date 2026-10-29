@@ -11,11 +11,8 @@ import 'teacher_pin.dart';
 
 /// Teachers who sign in on this device, each with their own PIN.
 ///
-/// The Admin adds teachers (`AdminService.addTeacher`); the Teachers PIN
-/// ([TeacherPin]) opens the Teachers area, where each signs in. What a
-/// teacher may do follows from the Admin's teaching assignments
-/// (`TeachingScope`). Like the other PINs, this keeps people apart on a
-/// shared device; it is not real security.
+/// The Admin adds teachers. Each teacher signs in once with their personal
+/// PIN; teaching assignments determine their classes and subjects.
 class TeacherProfileService {
   TeacherProfileService(this._db);
 

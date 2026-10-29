@@ -202,6 +202,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 )
               else
                 const SizedBox(height: 16),
+              TextButton.icon(
+                onPressed: () => context.go('/access'),
+                icon: const Icon(Icons.school_outlined),
+                label: const Text('School setup or staff sign-in'),
+              ),
               Expanded(
                 child: PageView(
                   controller: _pageController,

@@ -119,16 +119,10 @@ class AppShell extends ConsumerWidget {
       '/achievements',
     ),
     _NavDest(
-      'Teachers',
-      Icons.groups_outlined,
-      Icons.groups_rounded,
-      '/teachers',
-    ),
-    _NavDest(
-      'Admin',
-      Icons.admin_panel_settings_outlined,
-      Icons.admin_panel_settings_rounded,
-      '/admin',
+      'School access',
+      Icons.school_outlined,
+      Icons.school_rounded,
+      '/access',
     ),
   ];
 

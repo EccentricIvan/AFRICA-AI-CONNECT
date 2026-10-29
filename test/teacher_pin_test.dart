@@ -56,15 +56,29 @@ void main() {
     });
   });
 
-  group('teacherProfileRedirect — teacher tools need a teacher signed in',
-      () {
+  group('teacherProfileRedirect — teacher tools need a teacher signed in', () {
     String? gate(String path, {required bool signedIn}) =>
         teacherProfileRedirect(Uri.parse(path), signedIn: signedIn);
 
     test('signed out, the tools send the teacher to Teachers to sign in', () {
-      expect(gate('/teacher', signedIn: false), '/teachers');
-      expect(gate('/teacher/materials', signedIn: false), '/teachers');
-      expect(gate('/teacher/sync', signedIn: false), '/teachers');
+      expect(
+        gate('/teacher', signedIn: false),
+        Uri(path: '/teachers', queryParameters: {'to': '/teacher'}).toString(),
+      );
+      expect(
+        gate('/teacher/materials', signedIn: false),
+        Uri(
+          path: '/teachers',
+          queryParameters: {'to': '/teacher/materials'},
+        ).toString(),
+      );
+      expect(
+        gate('/teacher/sync', signedIn: false),
+        Uri(
+          path: '/teachers',
+          queryParameters: {'to': '/teacher/sync'},
+        ).toString(),
+      );
     });
 
     test('signed in, the tools open — on any device', () {
@@ -74,15 +88,36 @@ void main() {
 
     test('Teachers itself and other routes need no profile', () {
       expect(gate('/teachers', signedIn: false), isNull, reason: 'no loop');
+      expect(
+        gate('/teachers/cloud', signedIn: false),
+        contains('/teachers?to='),
+      );
+      expect(gate('/teachers/cloud', signedIn: true), isNull);
       expect(gate('/admin', signedIn: false), isNull);
       expect(gate('/class-sync', signedIn: false), isNull);
     });
   });
 
+  test('teacher destinations reject outside routes and sign-in loops', () {
+    expect(teacherDestination('/teacher/materials'), '/teacher/materials');
+    expect(teacherDestination('/teachers/cloud'), '/teachers/cloud');
+    for (final path in [
+      '/admin',
+      '/teachers',
+      'https://example.com/teacher',
+      '//example.com/teacher',
+    ]) {
+      expect(teacherDestination(path), '/teacher');
+    }
+  });
+
   group('teacherGateRedirect', () {
     String? gate(String path, {bool unlocked = false, bool pinSet = true}) =>
-        teacherGateRedirect(Uri.parse(path),
-            unlocked: unlocked, pinSet: pinSet);
+        teacherGateRedirect(
+          Uri.parse(path),
+          unlocked: unlocked,
+          pinSet: pinSet,
+        );
 
     test('locks teacher routes, keeping the destination', () {
       expect(gate('/teacher'), '/unlock?to=%2Fteacher');
@@ -104,8 +139,9 @@ void main() {
     });
   });
 
-  testWidgets('unlock screen: wrong PIN errors, right PIN continues',
-      (tester) async {
+  testWidgets('unlock screen: wrong PIN errors, right PIN continues', (
+    tester,
+  ) async {
     await tester.runAsync(() => TeacherPin().set('2468'));
     final container = ProviderContainer();
     addTearDown(container.dispose);

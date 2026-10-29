@@ -174,16 +174,24 @@ class Policy {
 final policyProvider = Provider<Policy>(
   (ref) => Policy(
     ref.watch(dbProvider),
-    gated: () => ref.read(teacherPinProvider).isSet(),
+    gated: () async =>
+        await ref.read(adminServiceProvider).isSetUp() ||
+        (await ref
+                .read(dbProvider)
+                .select(ref.read(dbProvider).adminRecordsState)
+                .get())
+            .isNotEmpty ||
+        (await ref.read(teacherProfileServiceProvider).all()).isNotEmpty ||
+        await ref.read(teacherPinProvider).isSet(),
   ),
 );
 
-/// The actor for the notes a person at the device may read: past the
-/// Teachers PIN is a teacher, otherwise the active learner.
+/// Notes access follows the authenticated staff role or the active learner.
 final notesActorProvider = FutureProvider.autoDispose<Actor>((ref) async {
-  if (ref.watch(teacherUnlockedProvider)) {
-    return TeacherActor(ref.watch(activeTeacherIdProvider));
-  }
+  final admin = ref.watch(adminSessionProvider);
+  if (admin != null) return AdminActor(admin);
+  final teacherId = ref.watch(activeTeacherIdProvider);
+  if (teacherId != null) return TeacherActor(teacherId);
   final me = await ref.watch(activeStudentProvider.future);
   return me == null ? const GuestActor() : LearnerActor(me.id);
 });

@@ -153,10 +153,24 @@ bool isTeacherRoute(String location) =>
 /// Where a request for a teacher tool (`/teacher*`) goes when no teacher
 /// is signed in: to Teachers, where they sign in or create a profile.
 /// Null to carry on. `/teachers` itself needs only the Teachers PIN.
+String teacherDestination(String? requested) {
+  final uri = Uri.tryParse(requested ?? '');
+  if (uri == null ||
+      uri.hasScheme ||
+      uri.hasAuthority ||
+      !isTeacherRoute(uri.path) ||
+      uri.path == '/teachers')
+    return '/teacher';
+  return uri.toString();
+}
+
 String? teacherProfileRedirect(Uri uri, {required bool signedIn}) {
-  final path = uri.path;
-  if (path != '/teacher' && !path.startsWith('/teacher/')) return null;
-  return signedIn ? null : '/teachers';
+  if (!isTeacherRoute(uri.path) || uri.path == '/teachers' || signedIn)
+    return null;
+  return Uri(
+    path: '/teachers',
+    queryParameters: {'to': uri.toString()},
+  ).toString();
 }
 
 /// Where the router should send a request for [uri], or null to let it

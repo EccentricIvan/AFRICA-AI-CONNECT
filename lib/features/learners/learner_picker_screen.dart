@@ -123,9 +123,7 @@ class _LearnerPickerScreenState extends ConsumerState<LearnerPickerScreen> {
                     trailing: s.id == activeId
                         ? Chip(label: Text(tr(context, 'Current')))
                         : const Icon(Icons.chevron_right),
-                    onTap: s.id == activeId
-                        ? () => context.go('/')
-                        : () => _switchTo(s.id, name: s.name),
+                    onTap: () => _switchTo(s.id, name: s.name),
                   ),
                 ),
             ],
