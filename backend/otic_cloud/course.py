@@ -135,11 +135,12 @@ def instruction(step: Step) -> str:
             "1. Start straight with the idea in one or two plain sentences (no greeting, no heading).\n"
             "2. Explain how it works step by step, in short paragraphs, with **key terms in bold** "
             "and what each one means.\n"
-            "3. Give one everyday example from life in Uganda or East Africa.\n"
+            "3. Give a concrete everyday example from Uganda or East Africa and explain why it fits.\n"
             "4. If the idea has a formula or calculation, give the formula with its units and one short "
             "worked example.\n"
-            "5. End with ONE short check question for the learner (do not answer it).\n"
-            "Use the FACTS; do not teach the other parts yet. About 250 to 400 words."
+            "5. Explain why this idea matters, a common misconception, and a short recap.\n"
+            "6. End with ONE short check question for the learner (do not answer it).\n"
+            "Use the FACTS; do not teach the other parts yet. About 400 to 650 useful words with meaningful subheadings."
         )
     if step.kind == "quiz":
         return (
@@ -156,7 +157,7 @@ def instruction(step: Step) -> str:
     )
 
 
-def facts_for(library: PackLibrary, step: Step, budget: int = 2600) -> list[tuple[str, str]]:
+def facts_for(library: PackLibrary, step: Step, budget: int = 5200) -> list[tuple[str, str]]:
     """The pack text for [step]: the part's own entry, then the topic's
     lesson (which has the worked examples and practice questions)."""
     t = step.topic
@@ -170,8 +171,9 @@ def facts_for(library: PackLibrary, step: Step, budget: int = 2600) -> list[tupl
     for e in chosen:
         if left < 200:
             break
-        text = e.text[:left]
-        if len(e.text) > left:
+        allowance = min(left, 3000) if len(chosen) > 1 else left
+        text = e.text[:allowance]
+        if len(e.text) > allowance:
             text = text.rsplit(". ", 1)[0] + "."
         out.append((e.title, text))
         left -= len(text)
@@ -211,7 +213,7 @@ def answer_suggestions(entry: Entry, library: PackLibrary) -> list[str]:
     whole topic."""
     topic = library.topic_of(entry)
     name = (entry.subtopic or entry.title).split(" (")[0]
-    out = [f"Give me an example of {name}", f"Explain {name} more simply"]
+    out = [f"Explain {name} in detail", f"Give me an example of {name}", f"Explain {name} more simply"]
     if topic is not None:
         out.append(f"Teach me {topic.title}")
     return out

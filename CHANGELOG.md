@@ -1,5 +1,17 @@
 # Changelog
 
+## Deeper, contextual teaching - 2026-10-29
+
+- Organise broader topic explanations with background, mechanisms, relevant
+  examples, importance, misconceptions, recaps and a check question.
+- Adapt answer/source budgets to broad lessons, worked examples and simpler
+  requests. Preserve streaming and improve context for multi-turn expansions.
+- Use a structured nutrition lesson/example for the identified misconception,
+  and add topic-specific nutrition accuracy notes, a clear offline classification
+  chart, and an Explain in detail follow-up action.
+- Verify 904 app tests and 84 backend tests; see docs/TEACHING_QUALITY.md.
+
+
 ## Pictorial explanations - 2026-10-29
 
 - Completed topic explanations automatically show a relevant labelled diagram

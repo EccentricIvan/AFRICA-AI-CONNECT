@@ -48,6 +48,21 @@ void main() {
       expect(externalCalls, 0);
     },
   );
+  test('a nutrition example gets the offline classification chart', () async {
+    final service = TopicExplanationService(
+      bundle: DiskBundle(),
+      updatesDir: () async => null,
+    );
+    final visual = await findExplanationPicture(
+      'Give me an example of Nutrition Types and Nutrient Compounds',
+      local: service.localPicture,
+    );
+    expect(
+      visual?.path,
+      'assets/curriculum/diagrams/biology/nutrition_modes.svg',
+    );
+  });
+
   test('hub picture wins and retains its credit', () async {
     var internetCalls = 0;
     final visual = await findExplanationPicture(
@@ -158,14 +173,13 @@ void main() {
       expect(find.byType(CurriculumDiagram), findsOneWidget);
       expect(find.text(illustration.guidance), findsOneWidget);
       expect(tester.takeException(), isNull);
-    await tester.tap(find.byTooltip('Enlarge picture'));
-    await tester.pumpAndSettle();
-    expect(find.byType(Dialog), findsOneWidget);
-    expect(find.byType(InteractiveViewer), findsOneWidget);
-    await tester.tap(find.byTooltip('Close'));
-    await tester.pumpAndSettle();
-    expect(find.byType(Dialog), findsNothing);
-
+      await tester.tap(find.byTooltip('Enlarge picture'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Dialog), findsOneWidget);
+      expect(find.byType(InteractiveViewer), findsOneWidget);
+      await tester.tap(find.byTooltip('Close'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Dialog), findsNothing);
     },
   );
   testWidgets('a missing visual has no loading spinner or empty picture card', (
@@ -185,4 +199,33 @@ void main() {
     expect(find.text('Picture explanation'), findsNothing);
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
+  testWidgets(
+    'nutrition classification chart renders with a clear correction caption',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: ExplanationIllustration(
+                  question: 'Explain nutrition',
+                  resolve: (_) async => const ExplanationPicture(
+                    path:
+                        'assets/curriculum/diagrams/biology/nutrition_modes.svg',
+                    subject: 'nutrition',
+                    guidance: 'A goat is a heterotroph.',
+                    credit: '',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(CurriculumDiagram), findsOneWidget);
+      expect(find.text('A goat is a heterotroph.'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

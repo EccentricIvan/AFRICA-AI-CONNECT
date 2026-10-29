@@ -14,5 +14,21 @@
   "photosynthesis": {
     "asset": "assets/curriculum/diagrams/biology/photosynthesis.svg",
     "credit": ""
+  },
+  "nutrition": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
+  },
+  "nutrient": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
+  },
+  "autotroph": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
+  },
+  "heterotroph": {
+    "asset": "assets/curriculum/diagrams/biology/nutrition_modes.svg",
+    "credit": ""
   }
 }

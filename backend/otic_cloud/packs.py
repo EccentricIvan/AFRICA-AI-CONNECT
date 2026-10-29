@@ -48,6 +48,17 @@ MIN_COVERAGE = 0.5
 
 _POINTS_BACK = re.compile(r"\b(it|its|there|they|them|their|this|that|these|those|he|she|him|her)\b")
 
+_TOPIC_FOLLOWUP = re.compile(
+    r"^(?:please\s+)?(?:tell me more|explain more|explain further|go deeper|more detail|"
+    r"expound(?: more)?|give me more context|(?:give|show) me (?:another|an?) example)"
+    r"(?: please)?[.!?]*$", re.I,
+)
+
+
+def is_topic_followup(question: str) -> bool:
+    return bool(_TOPIC_FOLLOWUP.fullmatch(question.strip()))
+
+
 _STOP = set(
     """a an the and or of to in on at for from by with without is are was were be
     been being do does did what which who whom whose where when why how this that
@@ -55,7 +66,8 @@ _STOP = set(
     she him her his can could would should will shall may might must about into
     over under than then so as if not no yes please tell explain describe define
     show give some any more most very much many also just mean meant like know
-    teach learn want need help""".split()
+    teach learn want need help example examples detail details detailed fully
+    briefly brief expound context""".split()
 )
 
 _SUFFIXES = ("ations", "ation", "ions", "ion", "ings", "ing", "ies", "ied", "ed", "es", "ic", "s", "e")
@@ -381,7 +393,7 @@ class PackLibrary:
         asked = set(words(question))
         earlier = set(words(context))
         # "Why is it hot there?" is about the earlier question's topic.
-        follow_up = bool(earlier) and bool(_POINTS_BACK.search(question.lower()))
+        follow_up = bool(earlier) and (bool(_POINTS_BACK.search(question.lower())) or is_topic_followup(question))
         query: Counter[str] = Counter()
         for w in asked:
             query[w] += 1.0

@@ -127,3 +127,18 @@ def test_only_files_inside_a_packs_media_folder_are_served(tmp_path):
     assert lib.media_file("physics", "media/../../secret.txt") is None
     assert lib.media_file("physics", "media/s1/heat/missing.png") is None
     assert lib.media_file("chemistry", "media/x.png") is None
+
+
+def test_generic_followups_use_the_existing_topic(tmp_path):
+    _pack(tmp_path, LESSONS)
+    lib=PackLibrary.load(tmp_path)
+    for question in ['Tell me more','Give me an example','Expound more']:
+        found=lib.search(question,context='Where is Africa located?')
+        assert found and found[0].entry.id=='geo.africa'
+    assert lib.search('Tell me more')==[]
+
+
+def test_teaching_style_words_do_not_distort_subject_retrieval(tmp_path):
+    _pack(tmp_path, LESSONS)
+    lib=PackLibrary.load(tmp_path)
+    assert lib.search('Explain briefly where Africa is located')[0].entry.id=='geo.africa'

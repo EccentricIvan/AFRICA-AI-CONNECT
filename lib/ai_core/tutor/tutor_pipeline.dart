@@ -187,6 +187,8 @@ class TutorPipeline {
       languageCode: languageCode,
     );
 
+    final replyTokens = !codingCoach && maxTokens == kMaxNewTokens &&
+            askedTopic(studentMessage) != null ? 1100 : maxTokens;
     final buffer = StringBuffer();
     String text;
     try {
@@ -195,7 +197,7 @@ class TutorPipeline {
         () => _engine.generate(
           prompt: prompt,
           systemPrompt: systemPrompt,
-          maxTokens: maxTokens,
+          maxTokens: replyTokens,
           temperature: kTutorTemperature,
           onToken: (token) async {
             buffer.write(token);

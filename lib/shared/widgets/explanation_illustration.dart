@@ -35,6 +35,13 @@ Future<ExplanationPicture?> findExplanationPicture(
   }
   var subject = askedTopic(question);
   if (subject == null) {
+    final example = RegExp(
+      r'^(?:give|show) me (?:an? )?(?:worked )?examples? (?:of|about|on) (.+)',
+      caseSensitive: false,
+    ).firstMatch(question.trim());
+    subject = example?.group(1)?.replaceFirst(RegExp(r'[?.!]+$'), '').trim();
+  }
+  if (subject == null) {
     final match = RegExp(
       r'^(?:how|why) (?:does|do|is|are|can) (.+)',
       caseSensitive: false,
@@ -51,12 +58,18 @@ Future<ExplanationPicture?> findExplanationPicture(
     final diagram = await local(subject);
     if (diagram?.diagram != null) {
       final photosynthesis = subject.toLowerCase().contains('photosynth');
+      final nutrition = RegExp(
+        r'nutrition|nutrient|autotroph|heterotroph',
+        caseSensitive: false,
+      ).hasMatch(subject);
       return ExplanationPicture(
         path: diagram!.diagram!,
         subject: subject,
         guidance: photosynthesis
             ? 'Follow the arrows: roots take in water, leaves take in carbon dioxide, '
                   'and sunlight helps the plant make sugar. Oxygen goes back into the air.'
+            : nutrition
+            ? 'A goat eats plant food, so it is a heterotroph. The chart separates how organisms get food from the nutrients that food contains.'
             : 'Follow the labels and arrows, and connect each part to the explanation above.',
         credit: diagram.notes
             .where((note) => note.startsWith('Diagram:'))

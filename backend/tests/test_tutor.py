@@ -269,6 +269,7 @@ def test_the_hub_teaches_a_topic_part_by_part_with_suggestions(tmp_path):
 def test_ordinary_hub_answers_suggest_going_deeper(library):
     r = _hub_client(FakeHub(), library).post("/v1/tutor/answer", json={"message": "Where is Africa?"}).json()
     assert r["suggestions"] == [
+        "Explain Africa: Location, Relief and Drainage in detail",
         "Give me an example of Africa: Location, Relief and Drainage",
         "Explain Africa: Location, Relief and Drainage more simply",
     ]
@@ -348,3 +349,60 @@ def test_unclosed_reasoning_is_not_exposed_as_a_completed_stream(library):
     response = client.post("/v1/tutor/answer/stream", json={"message": "Where is Africa?"})
     assert _events(response) == [{"error": "incomplete"}]
     assert "private reasoning" not in response.text
+
+
+def test_nutrition_example_uses_a_structured_source_checked_lesson():
+    hub = FakeHub()
+    client = _hub_client(hub, PackLibrary([]))
+    result = client.post('/v1/tutor/answer', json={'message':'Give me an example of Nutrition Types and Nutrient Compounds'}).json()
+    assert result['model'] == 'curriculum-teaching-note'
+    assert 'Worked example' in result['text']
+    assert 'a **heterotroph**' in result['text']
+    assert 'A deer is classified in the same way' in result['text']
+    assert 'carbohydrates, proteins, fats, vitamins, minerals, fibre and water' in result['text']
+    assert hub.calls == []
+
+
+def test_broad_topic_answers_have_room_for_context_and_organised_teaching(library):
+    hub = FakeHub()
+    _hub_client(hub, library).post('/v1/tutor/answer', json={'message':'What is Africa?'})
+    body = hub.calls[0][1]
+    assert body['max_tokens'] == 1800
+    assert 'Meaning and background' in body['messages'][-1]['content']
+    assert 'Common mistakes' in body['messages'][-1]['content']
+
+
+def test_generic_expansion_keeps_the_last_substantive_topic(library):
+    hub=FakeHub()
+    r=_hub_client(hub,library).post('/v1/tutor/answer',json={
+        'message':'Tell me more',
+        'history':[{'role':'user','content':'Where is Africa?'},
+                   {'role':'assistant','content':'Africa straddles the equator.'},
+                   {'role':'user','content':'Give me an example'},
+                   {'role':'assistant','content':'An example about Africa.'}],
+    })
+    assert r.status_code==200
+    assert 'FACTS:' in hub.calls[0][1]['messages'][-1]['content']
+    assert 'Africa' in r.json()['text']
+
+
+def test_full_structured_nutrition_stream_does_not_generate_new_classification_errors(library):
+    client, calls = _stream_client(library, ['unused'])
+    result = client.post('/v1/tutor/answer/stream', json={'message':'Explain Nutrition Types and Nutrient Compounds in detail'})
+    answer = _events(result)[-1]['done']
+    assert answer['model']=='curriculum-teaching-note'
+    assert 'A goat or deer eats plants and is therefore a heterotroph' in answer['text']
+    assert 'not every autotroph depends on sunlight' in answer['text']
+    assert 'How classroom food tests help' in answer['text']
+    assert calls==[]
+
+
+def test_structured_nutrition_followup_keeps_reliable_content():
+    client=_hub_client(FakeHub(),PackLibrary([]))
+    reply=client.post('/v1/tutor/answer',json={
+        'message':'Tell me more',
+        'history':[{'role':'user','content':'Explain Nutrition Types and Nutrient Compounds in detail'},
+                   {'role':'assistant','content':'A structured nutrition lesson.'}],
+    }).json()
+    assert reply['model']=='curriculum-teaching-note'
+    assert 'Nutrients and their roles' in reply['text']
