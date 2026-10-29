@@ -684,6 +684,8 @@ class _TutorBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Apply the presentation heading to previously saved answers too.
+    final text = this.text.replaceAll('(Online look-up, ', '(');
     final cs = Theme.of(context).colorScheme;
     return Align(
       alignment: Alignment.centerLeft,

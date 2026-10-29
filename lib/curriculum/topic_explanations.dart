@@ -183,7 +183,12 @@ class TopicExplanation {
   /// The whole explanation as chat text (markdown headings, as the chat
   /// bubble renders them).
   String fullText() {
-    final buf = StringBuffer()..writeln('**$title** ($subjectName, $level)');
+    final headingContext = [
+      if (subjectName != 'Online look-up' && subjectName.isNotEmpty) subjectName,
+      if (level.isNotEmpty) level,
+    ].join(', ');
+    final buf = StringBuffer()
+      ..writeln('**$title**${headingContext.isEmpty ? '' : ' ($headingContext)'}');
     if (summary.isNotEmpty) {
       buf
         ..writeln()
