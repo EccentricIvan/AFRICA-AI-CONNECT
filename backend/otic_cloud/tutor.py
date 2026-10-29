@@ -39,7 +39,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response, StreamingRes
 from pydantic import BaseModel, Field
 
 from . import course
-from .packs import Media, PackLibrary, Passage, is_topic_followup
+from .packs import Media, PackLibrary, Passage, is_topic_followup, named_topic, entry_about_topic
 from .teaching_policy import profile_for, teaching_context
 from .structured_lessons import structured_nutrition_lesson
 
@@ -380,7 +380,10 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
         app's "show me a picture of …" replies."""
         if token and not secrets.compare_digest(x_otic_tutor_token or "", token):
             return JSONResponse({"error": "unauthorized"}, status_code=401)
-        found = library.media_for(library.search(q[:300], context=context[:300]), clips=clips)
+        matches = library.search(q[:300], context=context[:300])
+        topic = named_topic(q[:300]) or q[:300].strip().lower()
+        matches = [p for p in matches if entry_about_topic(p.entry, topic)]
+        found = library.media_for(matches, clips=clips)
         base = str(request.base_url)
         return {
             "items": [
@@ -412,7 +415,7 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
         passages = library.search(req.message, context=earlier, budget=profile_for(req.message).context_chars)
         structured = structured_nutrition_lesson(req.message, earlier)
         if structured is not None:
-            return _finish_answer(structured, 'curriculum-teaching-note', passages, str(request.base_url))
+            return _finish_answer(structured, 'curriculum-teaching-note', passages, str(request.base_url), earlier if is_topic_followup(req.message) else req.message)
         # A content miss lets the app try credited internet explanations.
         # It is not an outage and must not trigger the client's retry cooldown.
         if not passages and not (req.lesson or '').strip():
@@ -432,12 +435,17 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
             return JSONResponse({"error": "offline"}, status_code=502)
         if not text:
             return JSONResponse({"error": "empty"}, status_code=502)
-        return _finish_answer(text, str(data.get("model") or "school-hub"), passages, str(request.base_url))
+        return _finish_answer(text, str(data.get("model") or "school-hub"), passages, str(request.base_url), earlier if is_topic_followup(req.message) else req.message)
 
-    def _finish_answer(text: str, model: str, passages: list[Passage], base: str):
+    def _finish_answer(text: str, model: str, passages: list[Passage], base: str, question: str):
+        topic = named_topic(question)
+        topical = [p for p in passages if not topic or entry_about_topic(p.entry, topic)]
+        suggestions = course.answer_suggestions(topical[0].entry, library) if topical else []
+        if topic and passages and not topical:
+            suggestions = [f"Explain {topic} in detail", f"Give me an example of {topic}", f"Explain {topic} more simply"]
         if passages:
-            shown = library.media_for(passages, clips=False)[:HUB_ANSWER_PICTURES]
-            shown += library.media_for(passages, clips=True)[:HUB_ANSWER_CLIPS]
+            shown = library.media_for(topical, clips=False)[:HUB_ANSWER_PICTURES]
+            shown += library.media_for(topical, clips=True)[:HUB_ANSWER_CLIPS]
             if shown:
                 text += "\n\n" + _media_markdown(base, shown)
             names = "; ".join(dict.fromkeys(p.entry.title for p in passages))
@@ -445,7 +453,7 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
         return TutorAnswer(
             text=text,
             model=model,
-            suggestions=course.answer_suggestions(passages[0].entry, library) if passages else [],
+            suggestions=suggestions,
         )
 
     def _teach(step: course.Step, req: TutorRequest, base: str):
@@ -503,7 +511,7 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
             return Response(status_code=204)
         structured = structured_nutrition_lesson(req.message, earlier) if step is None else None
         if structured is not None:
-            completed = _finish_answer(structured, 'curriculum-teaching-note', passages, str(request.base_url))
+            completed = _finish_answer(structured, 'curriculum-teaching-note', passages, str(request.base_url), earlier if is_topic_followup(req.message) else req.message)
             frames = ({'text': structured}, {'done': completed.model_dump()})
             return StreamingResponse(('data: ' + json.dumps(frame) + '\n\n' for frame in frames),
                                      media_type='text/event-stream', headers={'Cache-Control': 'no-cache'})
@@ -541,7 +549,7 @@ def _hub_app(app: FastAPI, token: str, hub: str, library: PackLibrary, post: Hub
                     yield event({"error": "incomplete"})
                     return
                 answer = (_finish_course(_visible_stream_text(text).strip(), model, step, facts, base)
-                          if step is not None else _finish_answer(_visible_stream_text(text).strip(), model, passages, base))
+                          if step is not None else _finish_answer(_visible_stream_text(text).strip(), model, passages, base, earlier if is_topic_followup(req.message) else req.message))
                 yield event({"done": answer.model_dump()})
             except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as error:
                 log.error("School hub stream unavailable: %s", error)

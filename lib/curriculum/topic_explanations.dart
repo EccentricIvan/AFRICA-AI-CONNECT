@@ -407,9 +407,21 @@ String normalizeTopicText(String text) => text
     .trim();
 
 Set<String> _words(String text) => {
-  for (final m in RegExp(r'[a-z0-9]{4,}').allMatches(text.toLowerCase()))
-    m[0]!.endsWith('s') ? m[0]!.substring(0, m[0]!.length - 1) : m[0]!,
+  for (final m in RegExp(r'[a-z0-9]{2,}').allMatches(text.toLowerCase()))
+    m[0]!.length > 4 && m[0]!.endsWith('s') && !m[0]!.endsWith('ss') ? m[0]!.substring(0, m[0]!.length - 1) : m[0]!,
 };
+
+// A passing mention such as 'know where the first aid kit is' does not
+// supply an explanation of first aid.
+bool _explainsNamedTopic(String text, String topic) {
+  final normalized = normalizeTopicText(text);
+  final name = normalizeTopicText(topic);
+  final phrase = RegExp('\\b${RegExp.escape(name)}\\b');
+  return phrase.allMatches(normalized).length >= 2 ||
+      RegExp('(?:^|[.!?]\\s+)${RegExp.escape(name)}\\s+(?:is|are|means|refers)\\b',
+              caseSensitive: false)
+          .hasMatch(text);
+}
 
 /// "What is photosynthesis?", "Explain photosynthesis fully", "Teach me about
 /// …": an ask for the whole topic rather than one detail of it.
@@ -732,6 +744,12 @@ class TopicExplanationService {
       final title = _words(t.title);
       final terms = _words(t.keyTerms.keys.join(' '));
       final body = [for (final s in t.sections) '${s.heading} ${s.body}'].join(' ').toLowerCase();
+      // A named topic must be present as a phrase, or in the lesson's
+      // title/key terms. Separate mentions of 'first' and 'aid' do not
+      // make a camera lesson about first aid.
+      if (asked.length > 1 &&
+          !asked.every({...title, ...terms}.contains) &&
+          !_explainsNamedTopic(body, topic)) continue;
       var score = 0;
       for (final w in asked) {
         if (title.contains(w)) score += 10;
@@ -776,7 +794,9 @@ class TopicExplanationService {
     if (asked.isEmpty) return null;
     bool about(String text) {
       final words = _words(text);
-      return asked.every(words.contains);
+      return asked.every(words.contains) &&
+          (asked.length == 1 ||
+              _explainsNamedTopic(text, topic));
     }
 
     final parts = <({TopicExplanation lesson, ExplanationSection section, int hits})>[];

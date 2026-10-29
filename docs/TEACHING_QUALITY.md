@@ -43,3 +43,22 @@ Ordinary replies now offer an "Explain in detail" follow-up button.
   budgets, nutrition accuracy notes and the offline nutrition diagram.
 - These checks do not establish that every generated statement is correct.
   Broader curriculum/content-pack teacher review remains a rollout requirement.
+## Source and picture relevance correction
+
+The first-aid screenshot exposed two retrieval errors: the app discarded the
+three-letter word "aid", and the hub accepted "first" and "aid" appearing
+separately in a camera article. A taxation article also matched "foreign aid".
+
+Local matching now preserves short words and requires evidence for the named
+multiword topic. Scattered words and a passing mention of a first-aid kit are
+insufficient. The hub applies the same restriction to expansion follow-ups.
+Pictures and follow-up actions must come from entries about the requested topic;
+a general lesson mentioning a narrower topic cannot supply unrelated pictures.
+
+Validation: 905 app tests and 89 backend tests pass. Against the internal hub's
+593 entries, "What is first aid?" finds no qualifying lesson, while photosynthesis
+and food chains still find the expected lessons. A content miss lets the app use
+its existing credited internet explanation fallback. JSON, streamed answers,
+and the hub picture endpoint have regression coverage for unrelated media.
+These lexical relevance checks reduce false matches; they do not independently
+verify the contents of every image or model-generated explanation.

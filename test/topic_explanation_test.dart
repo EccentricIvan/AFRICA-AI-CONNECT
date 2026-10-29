@@ -138,6 +138,19 @@ void main() {
     expect(engine.prompts.single, isNot(contains('hotosynthesis')));
   });
 
+  test('first aid keeps its short word and never selects camera or taxation', () async {
+    final service = _service(lessons: true);
+    final lesson = await service.covering('what is first aid');
+    expect(lesson, isNull);
+    expect(await service.match('what is first aid'), isNull);
+    expect(lesson?.title.toLowerCase(), isNot(contains('taxation')));
+    final picture = await service.localPicture('first aid');
+    expect(picture?.title.toLowerCase(), isNot(contains('camera')));
+    expect(picture?.title.toLowerCase(), isNot(contains('taxation')));
+    final composed = await service.compose('what is first aid');
+    expect(composed?.fullText().toLowerCase(), isNot(contains('drawing aid')));
+  });
+
   test('a topic no lesson is named after is grounded in the lesson covering it', () async {
     final service = _service(lessons: true);
     final t = await service.covering('can you teach me about triangles');

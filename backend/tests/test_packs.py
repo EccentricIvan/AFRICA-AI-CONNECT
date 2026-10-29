@@ -142,3 +142,25 @@ def test_teaching_style_words_do_not_distort_subject_retrieval(tmp_path):
     _pack(tmp_path, LESSONS)
     lib=PackLibrary.load(tmp_path)
     assert lib.search('Explain briefly where Africa is located')[0].entry.id=='geo.africa'
+
+
+def test_named_topic_does_not_match_scattered_words_or_partial_phrase(tmp_path):
+    _pack(tmp_path, [
+        {"id": "camera", "title": "The pinhole camera", "text": "The first camera was used as a drawing aid."},
+        {"id": "tax", "title": "Taxation", "text": "Foreign aid helps fund roads."},
+        {"id": "safety", "title": "School safety", "text": "First aid is immediate care before help arrives."},
+    ])
+    hits = PackLibrary.load(tmp_path).search("what is first aid")
+    assert [p.entry.id for p in hits] == ["safety"]
+
+
+def test_unknown_named_topic_is_not_grounded_in_partial_matches(tmp_path):
+    _pack(tmp_path, [{"id": "x", "title": "Camera", "text": "The first camera was a drawing aid."}])
+    assert PackLibrary.load(tmp_path).search("explain first aid in detail") == []
+    assert PackLibrary.load(tmp_path).search("Tell me more", context="What is first aid?") == []
+
+
+def test_incidental_safety_kit_mention_is_not_a_first_aid_lesson(tmp_path):
+    _pack(tmp_path, [{"id": "lab", "title": "Introduction to Physics",
+                      "text": "For laboratory safety, know where the first aid kit is."}])
+    assert PackLibrary.load(tmp_path).search("What is first aid?") == []

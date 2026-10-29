@@ -1,5 +1,13 @@
 # Changelog
 
+## Relevant sources and illustrations - 2026-10-29
+
+- Preserve short topic words such as "aid" when matching local lessons.
+- Reject scattered word matches and incidental mentions for named topics.
+- Attach hub pictures and follow-up suggestions only from lessons about the
+  requested topic; keep generic expansions focused on the previous topic.
+- A missing explanation can use the existing credited internet fallback.
+
 ## Deeper, contextual teaching - 2026-10-29
 
 - Organise broader topic explanations with background, mechanisms, relevant

@@ -70,6 +70,27 @@ _STOP = set(
     briefly brief expound context""".split()
 )
 
+def named_topic(question: str) -> str:
+    """A definition/overview request's topic, preserving short words."""
+    match = re.match(
+        r"^(?:please\s+)?(?:can you\s+|could you\s+)?"
+        r"(?:what\s+(?:is|are)|explain|describe|define|teach me(?: about)?|tell me about)\s+(.+)",
+        question.strip().lower(),
+    )
+    if not match:
+        return ""
+    topic = re.sub(r"\b(?:in detail|more simply|fully|briefly|please)\b", " ", match[1])
+    return " ".join(re.findall(r"[a-z0-9]+", topic)).strip()
+
+
+def topic_in_text(topic: str, text: str) -> bool:
+    return f" {topic} " in f" {' '.join(re.findall(r'[a-z0-9]+', text.lower()))} "
+
+
+def entry_about_topic(entry: Entry, topic: str) -> bool:
+    return set(words(topic)) <= entry._about or topic_in_text(topic, entry.title)
+
+
 _SUFFIXES = ("ations", "ation", "ions", "ion", "ings", "ing", "ies", "ied", "ed", "es", "ic", "s", "e")
 
 
@@ -394,6 +415,7 @@ class PackLibrary:
         earlier = set(words(context))
         # "Why is it hot there?" is about the earlier question's topic.
         follow_up = bool(earlier) and (bool(_POINTS_BACK.search(question.lower())) or is_topic_followup(question))
+        topic = named_topic(context if follow_up else question)
         query: Counter[str] = Counter()
         for w in asked:
             query[w] += 1.0
@@ -403,6 +425,16 @@ class PackLibrary:
             return []
         ranked = []
         for e in self.entries:
+            if topic and len(words(topic)) > 1 and not (
+                entry_about_topic(e, topic) or (
+                    topic_in_text(topic, e.text) and (
+                        len(re.findall(r"\b" + re.escape(topic) + r"\b", e.text.lower())) >= 2
+                        or re.search(r"(?:^|[.!?]\s+)" + re.escape(topic) + r"\s+(?:is|are|means|refers)\b", e.text.lower())
+                    )
+                )
+                or any(topic_in_text(topic, key) for key in e.key_terms)
+            ):
+                continue
             score = self._score(e, query)
             # Matching only the question's common words ("what causes
             # inflation" → a lesson that says "causes") is no match; a

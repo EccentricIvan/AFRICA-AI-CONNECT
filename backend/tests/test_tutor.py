@@ -406,3 +406,32 @@ def test_structured_nutrition_followup_keeps_reliable_content():
     }).json()
     assert reply['model']=='curriculum-teaching-note'
     assert 'Nutrients and their roles' in reply['text']
+
+
+def test_narrow_topic_does_not_inherit_general_lessons_media_or_suggestions(tmp_path):
+    library = subject_pack(tmp_path)
+    # The lesson mentions another subject; its heat pictures must not be
+    # attached when that subject is the actual question.
+    for entry in library.entries:
+        entry.text += " First aid is immediate care before help arrives."
+        entry.__post_init__()
+    def post(*args):
+        return {"choices": [{"message": {"content": "First aid is immediate care."}}]}
+    client = TestClient(create_tutor_app(hub_url="http://hub", packs=library, hub_post=post))
+    response = client.post("/v1/tutor/answer", json={"message": "What is first aid?"})
+    assert response.status_code == 200
+    data = response.json()
+    assert "![" not in data["text"]
+    assert all("first aid" in suggestion for suggestion in data["suggestions"])
+    assert client.get("/v1/hub/pictures", params={"q": "first aid"}).json() == {"items": []}
+
+
+def test_stream_does_not_attach_general_topic_media_to_narrow_question(tmp_path):
+    library = subject_pack(tmp_path)
+    for entry in library.entries:
+        entry.text += " First aid is immediate care before help arrives."
+        entry.__post_init__()
+    client, _ = _stream_client(library, ["First aid is immediate care."])
+    final = _events(client.post("/v1/tutor/answer/stream", json={"message": "What is first aid?"}))[-1]["done"]
+    assert "![" not in final["text"]
+    assert all("first aid" in suggestion for suggestion in final["suggestions"])
