@@ -1,5 +1,17 @@
 # Changelog
 
+## Pictorial explanations - 2026-10-29
+
+- Completed topic explanations automatically show a relevant labelled diagram
+  or picture, with a short caption connecting it to the answer.
+- Prefer bundled curriculum diagrams, then hub pictures, then credited internet
+  pictures when enabled. Missing visuals leave the text usable; image lookup
+  runs separately from streamed answer generation.
+- Photosynthesis includes its offline diagram and a caption explaining sunlight,
+  water, carbon dioxide, sugar and oxygen. Pictures can be enlarged and zoomed.
+- Existing lesson diagrams and inline images are not duplicated.
+
+
 ## Streamed hub answers - 2026-10-29
 
 - Show hub answers as they are generated, preserving final sources, media,

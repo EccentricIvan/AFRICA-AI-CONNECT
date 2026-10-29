@@ -14,6 +14,7 @@ import '../../l10n/ui_registry.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/chat_html_preview.dart';
 import '../../shared/widgets/curriculum_diagram.dart';
+import '../../shared/widgets/explanation_illustration.dart';
 import '../../shared/widgets/generating_indicator.dart';
 import '../../shared/widgets/home_atmosphere_background.dart';
 import '../../shared/widgets/responsive.dart';
@@ -33,6 +34,7 @@ class _ChatEntry {
     required this.text,
     required this.isUser,
     this.lesson,
+    this.visualQuestion,
     this.isError = false,
     this.followUp,
     this.stage,
@@ -44,6 +46,7 @@ class _ChatEntry {
     this.suggestions = const [],
   });
   final String text;
+  final String? visualQuestion;
   final bool isUser;
   final List<DiagramMarker> diagrams;
   final List<String> suggestions;
@@ -310,9 +313,12 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                   // conversation — and slot each lesson card in right after
                   // the question that matched it.
                   final allItems = <_ChatEntry>[];
+                  String? visualQuestion;
                   for (final msg in state.messages) {
+                    if (msg.isUser) visualQuestion = msg.lesson?.diagram == null ? msg.text : null;
                     allItems.add(_ChatEntry(
                       text: msg.text,
+                      visualQuestion: msg.isUser || msg.isRecap || msg.isError ? null : visualQuestion,
                       isUser: msg.isUser,
                       isError: msg.isError,
                       followUp: msg.followUp,
@@ -392,6 +398,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
 
                       return _TutorBubble(
                         text: entry.text,
+                        visualQuestion: entry.visualQuestion,
                         stage: entry.stage,
                         math: entry.math,
                         mathCoach: entry.mathCoach,
@@ -642,6 +649,7 @@ class _TutorBubble extends StatelessWidget {
   const _TutorBubble({
     required this.text,
     required this.stage,
+    this.visualQuestion,
     this.math,
     this.mathCoach = false,
     this.codingCoach = false,
@@ -655,6 +663,7 @@ class _TutorBubble extends StatelessWidget {
   });
 
   final String text;
+  final String? visualQuestion;
   final TutorStage? stage;
   final List<DiagramMarker> diagrams;
 
@@ -767,6 +776,9 @@ class _TutorBubble extends StatelessWidget {
                       height: 1.6,
                     ),
                   ),
+                if (!isStreaming && visualQuestion != null && math == null && !codingCoach &&
+                    !RegExp(r'!\[[^\]]*\]\(').hasMatch(text))
+                  ExplanationIllustration(question: visualQuestion!),
                 if (!isStreaming)
                   for (final block in extractHtmlBlocksFromChat(text))
                     ChatHtmlPreviewCard(html: block),

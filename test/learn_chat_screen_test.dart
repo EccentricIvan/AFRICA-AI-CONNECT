@@ -8,11 +8,13 @@ import 'package:ai_connect_africa/ai_core/inference/inference_engine.dart';
 import 'package:ai_connect_africa/ai_core/providers/ai_provider.dart';
 import 'package:ai_connect_africa/ai_core/tutor/tutor_pipeline.dart';
 import 'package:ai_connect_africa/db/providers/db_provider.dart';
+import 'package:ai_connect_africa/curriculum/topic_explanations.dart';
 import 'package:ai_connect_africa/features/learn/learn_screen.dart';
 import 'package:ai_connect_africa/l10n/app_locale.dart';
 import 'package:ai_connect_africa/l10n/language_provider.dart';
 import 'package:ai_connect_africa/services/chat_inference_pipeline.dart';
 import 'package:ai_connect_africa/shared/widgets/studio_page.dart';
+import 'package:ai_connect_africa/shared/widgets/explanation_illustration.dart';
 import 'package:ai_connect_africa/voice/voice_provider.dart';
 import 'package:ai_connect_africa/voice/voice_service.dart';
 
@@ -47,6 +49,14 @@ class _SeededChat extends ChatNotifier {
   Future<ChatState> build() async => const ChatState(
         messages: [ChatMessage(text: 'What is gravity?', isUser: true)],
       );
+}
+
+class _IllustratedChat extends ChatNotifier {
+  @override
+  Future<ChatState> build() async => const ChatState(messages: [
+    ChatMessage(text: 'What is photosynthesis?', isUser: true),
+    ChatMessage(text: 'Plants use sunlight to make glucose and release oxygen.', isUser: false),
+  ]);
 }
 
 Future<BuildContext> _pumpChat(
@@ -90,6 +100,26 @@ Future<BuildContext> _pumpChat(
 }
 
 void main() {
+  testWidgets('ordinary explanations automatically show a labelled picture', (tester) async {
+    final lessons = TopicExplanationService(updatesDir: () async => null);
+    final diagram = await tester.runAsync(() => lessons.localPicture('photosynthesis'));
+    expect(diagram?.diagram, isNotNull);
+    await _pumpChat(tester, 'en', overrides: [
+      chatProvider.overrideWith(_IllustratedChat.new),
+      topicExplanationServiceProvider.overrideWithValue(lessons),
+    ]);
+    await tester.pumpAndSettle();
+    final pictureFuture = tester.widget<FutureBuilder<ExplanationPicture?>>(
+      find.descendant(of: find.byType(ExplanationIllustration),
+        matching: find.byWidgetPredicate((widget) => widget is FutureBuilder<ExplanationPicture?>))).future!;
+    final resolved = await tester.runAsync(() => pictureFuture.timeout(const Duration(seconds: 3)));
+    expect(resolved?.path, 'assets/curriculum/diagrams/biology/photosynthesis.svg');
+    await tester.pumpAndSettle();
+    expect(find.text('Picture explanation'), findsOneWidget);
+    expect(find.textContaining('Follow the arrows: roots take in water'), findsOneWidget);
+    expect(find.byTooltip('Enlarge picture'), findsOneWidget);
+  });
+
   testWidgets('chat header does not show model or backend details', (tester) async {
     await _pumpChat(tester, 'en');
 
